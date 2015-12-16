@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:vivid
 
 MAINTAINER Luis Martinez de Bartolome
 

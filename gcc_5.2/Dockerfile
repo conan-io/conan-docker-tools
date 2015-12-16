@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:wily
 
 MAINTAINER Luis Martinez de Bartolome
 

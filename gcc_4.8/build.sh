@@ -1,1 +1,1 @@
-sudo docker build --no-cache -t lasote/conangcc48 .
+sudo docker build  -t lasote/conangcc48 .
