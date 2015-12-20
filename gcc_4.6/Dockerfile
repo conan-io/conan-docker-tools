@@ -9,7 +9,9 @@ RUN wget https://cmake.org/files/v3.4/cmake-3.4.1-Linux-x86_64.tar.gz --no-check
 RUN wget https://bootstrap.pypa.io/get-pip.py --no-check-certificate && python get-pip.py && pip install -U pip
 RUN pip install conan
 RUN groupadd 1001 -g 1001
-RUN useradd -ms /bin/bash conan -g 1001 && echo "conan:conan" | chpasswd && adduser conan sudo
+RUN groupadd 1000 -g 1000
+RUN useradd -ms /bin/bash conan -g 1001 -G 1000 && echo "conan:conan" | chpasswd && adduser conan sudo
+RUN echo "conan ALL= NOPASSWD: ALL\n" >> /etc/sudoers
 USER conan
 WORKDIR /home/conan
 RUN mkdir -p /home/conan/.conan
