@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM gcc:5.3
 
 MAINTAINER Luis Martinez de Bartolome
 
