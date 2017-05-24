@@ -1,9 +1,11 @@
+[![Build Status](https://travis-ci.org/lasote/conan-docker-tools.svg?branch=master)](https://travis-ci.org/lasote/conan-docker-tools)
 # conan-docker-tools
 
 Dockerfiles for different gcc compiler versions. Used in [conan-package-tools project](https://github.com/conan-io/conan-package-tools)
 
 The images are uploaded to Dockerhub:
 
+#### GCC
 - [gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)
 - [gcc 4.8](https://hub.docker.com/r/lasote/conangcc48/)
 - [gcc 4.9](https://hub.docker.com/r/lasote/conangcc49/)
@@ -12,3 +14,6 @@ The images are uploaded to Dockerhub:
 - [gcc 5.4](https://hub.docker.com/r/lasote/conangcc54/)
 - [gcc 6.2](https://hub.docker.com/r/lasote/conangcc62/)
 - [gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)
+
+#### Clang
+- [clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
