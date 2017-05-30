@@ -33,7 +33,7 @@ To setup your project, copy the contents of the folder **example_project_test** 
 You need to modify:
 
 - ``.travis.yml`` file to enable or disable more `GCC`` versions with the variable ``GCC_VERSION`` and
-      `CLANG_VERSION`` if needed.
+      ``CLANG_VERSION`` if needed.
 - ``.travis/run_project_build.sh`` With the lines that you need to build or test your project
 
 **.travis.yml**
