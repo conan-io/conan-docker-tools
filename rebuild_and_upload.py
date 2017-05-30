@@ -77,7 +77,7 @@ class ClangBuilder(Builder):
     """Specialized builder for Clang
     """
     def __init__(self):
-        Builder.__init__(self, "clang", ["3.9"])
+        Builder.__init__(self, "clang", ["3.9", "4.0"])
 
 
 if __name__ == "__main__":
