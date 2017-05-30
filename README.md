@@ -25,16 +25,16 @@ Use the images to test your c++ project in travis-ci
 These Docker images can be used to build your project using the travis-ci CI service, even if you are not using Conan.
 It's always recommended to build and test your C/C++ projects in a Docker image running in travis:
 
-    - Travis CI images are old, so installing a newer version of gcc and the needed tools can be hard. Check [this thread](https://github.com/travis-ci/travis-ci/issues/6300).
-    - The generated binaries will use the old **libc/libstdc++** installed in the system, so ABI incompatibilities
+- Travis CI images are old, so installing a newer version of gcc and the needed tools can be hard. Check [this thread](https://github.com/travis-ci/travis-ci/issues/6300).
+- The generated binaries will use the old **libc/libstdc++** installed in the system, so ABI incompatibilities
       can ocurr if you use these packages in more modern distributions.
 
 To setup your project, copy the contents of the folder **example_project_test** to your project.
 You need to modify:
 
-    - ``.travis.yml`` file to enable or disable more `GCC`` versions with the variable ``GCC_VERSION`` and
+- ``.travis.yml`` file to enable or disable more `GCC`` versions with the variable ``GCC_VERSION`` and
       `CLANG_VERSION`` if needed.
-    - ``.travis/run_project_build.sh`` With the lines that you need to build or test your project
+- ``.travis/run_project_build.sh`` With the lines that you need to build or test your project
 
 **.travis.yml**
 
