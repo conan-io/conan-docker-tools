@@ -1,0 +1,26 @@
+os: linux
+services:
+   - docker
+sudo: required
+language: python
+env:
+  matrix:
+    - GCC_VERSION=63 # 6.3
+    - CLANG_VERSION=39 # 3.9
+
+matrix:
+   include:
+       - os: osx
+         osx_image: xcode8.2 # apple-clang 8.0
+         language: generic
+         env:
+
+install:
+  - ./.travis/install.sh
+
+script:
+  - ./.travis/run.sh
+
+after_success:
+  - (cd bin && ./causal_sets_explorer)
+  - (cd bin && ./unittests)
