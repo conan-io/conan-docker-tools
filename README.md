@@ -18,6 +18,7 @@ The images are uploaded to Dockerhub:
 
 #### Clang
 - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
+- [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -91,4 +92,3 @@ docker run -v/tmp/.conan:/home/conan/.conan lasote/conangcc63 bash -c "conan ins
 
 This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
 You can change the directory or execute any other command that works for your needs.
-

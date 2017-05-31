@@ -13,7 +13,7 @@ RUN dpkg --add-architecture i386 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get -qq update \
     # Install Clang and dependencies
-    && apt-get -qq install -y python-dev sudo wget git vim clang-${LLVM_VERSION} llvm-${LLVM_VERSION} llvm-${LLVM_VERSION}-dev llvm-${LLVM_VERSION}-runtime llvm make valgrind libc6-dev-i386 g++-multilib libgmp-dev libmpfr-dev libmpc-dev nasm dh-autoreconf libffi-dev libssl-dev  ninja-build \
+    && apt-get -qq install -y python-dev sudo wget git vim clang-${LLVM_VERSION} llvm-${LLVM_VERSION} llvm-${LLVM_VERSION}-dev llvm-${LLVM_VERSION}-runtime llvm make valgrind libc6-dev-i386 g++-multilib libgmp-dev libmpfr-dev libmpc-dev nasm dh-autoreconf libffi-dev libssl-dev ninja-build \
     # Update Clang name
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
