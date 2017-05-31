@@ -2,7 +2,7 @@ FROM ubuntu:zesty
 
 MAINTAINER Luis Martinez de Bartolome
 
-ENV LLVM_VERSION=3.9 \
+ENV LLVM_VERSION=4.0 \
     CMAKE_VERSION=3.8.1 \
     CC=clang \
     CXX=clang++ \

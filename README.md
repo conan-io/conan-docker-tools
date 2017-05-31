@@ -18,6 +18,7 @@ The images are uploaded to Dockerhub:
 
 #### Clang
 - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
+- [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -27,7 +28,7 @@ It's always recommended to build and test your C/C++ projects in a Docker image 
 
 - Travis CI images are old, so installing a newer version of gcc and the needed tools can be hard. Check [this thread](https://github.com/travis-ci/travis-ci/issues/6300).
 - The generated binaries will use the old **libc/libstdc++** installed in the system, so ABI incompatibilities
-      can ocurr if you use these packages in more modern distributions.
+      can occur if you use these packages in more modern distributions.
 
 To setup your project, copy the contents of the folder **example_project_test** to your project.
 You need to modify:
@@ -91,4 +92,3 @@ docker run -v/tmp/.conan:/home/conan/.conan lasote/conangcc63 bash -c "conan ins
 
 This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
 You can change the directory or execute any other command that works for your needs.
-
