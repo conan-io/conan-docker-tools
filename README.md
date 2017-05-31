@@ -32,7 +32,7 @@ It's always recommended to build and test your C/C++ projects in a Docker image 
 To setup your project, copy the contents of the folder **example_project_test** to your project.
 You need to modify:
 
-- ``.travis.yml`` file to enable or disable more `GCC`` versions with the variable ``GCC_VERSION`` and
+- ``.travis.yml`` file to enable or disable more ``GCC`` versions with the variable ``GCC_VERSION`` and
       ``CLANG_VERSION`` if needed.
 - ``.travis/run_project_build.sh`` With the lines that you need to build or test your project
 
@@ -88,5 +88,5 @@ docker run -v/tmp/.conan:/home/conan/.conan lasote/conangcc63 bash -c "conan ins
 ```
 
 This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
-You can change the directory or execute any other command that work for your needs.
+You can change the directory or execute any other command that works for your needs.
 
