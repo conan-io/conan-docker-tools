@@ -17,7 +17,7 @@ The images are uploaded to Dockerhub:
 - [lasote/conangcc63: gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)
 
 #### Clang
-- [clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
+- [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
 
 Use the images to test your c++ project in travis-ci
 ======================================================
