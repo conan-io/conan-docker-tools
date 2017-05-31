@@ -32,8 +32,7 @@ It's always recommended to build and test your C/C++ projects in a Docker image 
 To setup your project, copy the contents of the folder **example_project_test** to your project.
 You need to modify:
 
-- ``.travis.yml`` file to enable or disable more ``GCC`` versions with the variable ``GCC_VERSION`` and
-      ``CLANG_VERSION`` if needed.
+- ``.travis.yml`` file to enable or disable more ``GCC`` or ``CLang`` versions add more entries to the matrix using DOCKER_IMAGE
 - ``.travis/run_project_build.sh`` With the lines that you need to build or test your project
 
 **.travis.yml**
@@ -46,8 +45,8 @@ You need to modify:
     language: python
     env:
       matrix:
-        - GCC_VERSION=63 # 6.3
-        - CLANG_VERSION=39 # 3.9
+        - DOCKER_IMAGE=lasote/conangcc63 # 6.3
+        - DOCKER_IMAGE=lasote/conanclang39 # 3.9
 
     matrix:
        include:
@@ -55,6 +54,9 @@ You need to modify:
              osx_image: xcode8.2 # apple-clang 8.0
              language: generic
              env:
+
+    before_install:
+      - ./.travis/before_install.sh
 
     install:
       - ./.travis/install.sh

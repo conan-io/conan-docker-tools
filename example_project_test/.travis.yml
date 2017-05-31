@@ -5,8 +5,8 @@ sudo: required
 language: python
 env:
   matrix:
-    - GCC_VERSION=63 # 6.3
-    - CLANG_VERSION=39 # 3.9
+    - DOCKER_IMAGE=lasote/conangcc63 # 6.3
+    - DOCKER_IMAGE=lasote/conanclang39 # 3.9
 
 matrix:
    include:
@@ -15,9 +15,11 @@ matrix:
          language: generic
          env:
 
+before_install:
+  - ./.travis/before_install.sh
+
 install:
   - ./.travis/install.sh
 
 script:
   - ./.travis/run.sh
-
