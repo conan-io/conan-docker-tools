@@ -62,9 +62,6 @@ You need to modify:
     script:
       - ./.travis/run.sh
 
-    after_success:
-      - (cd bin && ./causal_sets_explorer)
-      - (cd bin && ./unittests)
 
 ```
 
@@ -79,3 +76,17 @@ You need to modify:
     cmake --build .
 
 ``
+
+
+Use the images locally
+======================
+
+You can also use the images locally to build or test packages, this is an example command:
+
+```
+docker run -v/tmp/.conan:/home/conan/.conan lasote/conangcc63 bash -c "conan install Boost/1.62.0@lasote/stable --build missing"
+```
+
+This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
+You can change the directory or execute any other command that work for your needs.
+
