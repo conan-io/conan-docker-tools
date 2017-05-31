@@ -1,15 +1,9 @@
 #!/bin/bash
 
-if [[ "$(uname -s)" == 'Darwin' ]]; then
-    # Run with native OSX
+if [ -z $DOCKER_IMAGE ]; then
+    # Run with native
     .travis/run_project_build.sh
 else
     # Run with docker
-    if [ -z $CLANG_VERSION ]; then
-        docker run -v$(pwd):/home/conan lasote/conangcc$GCC_VERSION "pip install conan --upgrade && .travis/run_project_build.sh"
-    fi
-
-    if [ -z $GCC_VERSION ]; then
-        docker run -v$(pwd):/home/conan lasote/conanclang$CLANG_VERSION "pip install conan --upgrade && .travis/run_project_build.sh"
-    fi
+    docker run -v$(pwd):/home/conan $DOCKER_IMAGE bash -c "pip install conan --upgrade && .travis/run_project_build.sh"
 fi

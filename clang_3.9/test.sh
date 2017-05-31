@@ -1,1 +1,2 @@
-sudo docker run --rm lasote/conanclang39 /bin/bash -c "conan user && conan install gtest/1.8.0@lasote/stable -s arch=x86_64 -s compiler=clang -s compiler.version=3.9 --build && conan install gtest/1.8.0@lasote/stable -s arch=x86 -s compiler=clang -s compiler.version=3.9 --build"
+#!/bin/bash
+sudo docker run --rm lasote/conanclang39 /bin/bash -c "sudo pip install conan --upgrade && conan user && conan install gtest/1.8.0@lasote/stable -s arch=x86_64 --build && conan install gtest/1.8.0@lasote/stable -s arch=x86 --build"

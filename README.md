@@ -7,18 +7,17 @@ You can use these images directly in your project or with the [conan-package-too
 The images are uploaded to Dockerhub:
 
 #### GCC
-- [gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)
-- [gcc 4.8](https://hub.docker.com/r/lasote/conangcc48/)
-- [gcc 4.9](https://hub.docker.com/r/lasote/conangcc49/)
-- [gcc 5.2](https://hub.docker.com/r/lasote/conangcc52/)
-- [gcc 5.3](https://hub.docker.com/r/lasote/conangcc53/)
-- [gcc 5.4](https://hub.docker.com/r/lasote/conangcc54/)
-- [gcc 6.2](https://hub.docker.com/r/lasote/conangcc62/)
-- [gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)
+- [lasote/conangcc46: gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)
+- [lasote/conangcc48: gcc 4.8](https://hub.docker.com/r/lasote/conangcc48/)
+- [lasote/conangcc49: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49/)
+- [lasote/conangcc52: gcc 5.2](https://hub.docker.com/r/lasote/conangcc52/)
+- [lasote/conangcc53: gcc 5.3](https://hub.docker.com/r/lasote/conangcc53/)
+- [lasote/conangcc54: gcc 5.4](https://hub.docker.com/r/lasote/conangcc54/)
+- [lasote/conangcc62: gcc 6.2](https://hub.docker.com/r/lasote/conangcc62/)
+- [lasote/conangcc63: gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)
 
 #### Clang
-- [clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
-- [clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)
+- [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -33,8 +32,7 @@ It's always recommended to build and test your C/C++ projects in a Docker image 
 To setup your project, copy the contents of the folder **example_project_test** to your project.
 You need to modify:
 
-- ``.travis.yml`` file to enable or disable more `GCC`` versions with the variable ``GCC_VERSION`` and
-      ``CLANG_VERSION`` if needed.
+- ``.travis.yml`` file to enable or disable more ``GCC`` or ``CLang`` versions add more entries to the matrix using DOCKER_IMAGE
 - ``.travis/run_project_build.sh`` With the lines that you need to build or test your project
 
 **.travis.yml**
@@ -47,8 +45,8 @@ You need to modify:
     language: python
     env:
       matrix:
-        - GCC_VERSION=63 # 6.3
-        - CLANG_VERSION=39 # 3.9
+        - DOCKER_IMAGE=lasote/conangcc63 # 6.3
+        - DOCKER_IMAGE=lasote/conanclang39 # 3.9
 
     matrix:
        include:
@@ -57,19 +55,19 @@ You need to modify:
              language: generic
              env:
 
+    before_install:
+      - ./.travis/before_install.sh
+
     install:
       - ./.travis/install.sh
 
     script:
       - ./.travis/run.sh
 
-    after_success:
-      - (cd bin && ./causal_sets_explorer)
-      - (cd bin && ./unittests)
 
 ```
 
-**.travis/run_project_build.sh**. Change according your project build needed commands:
+**.travis/run_project_build.sh**. Change it according your project build needed commands:
 
 ```
     #!/bin/bash
@@ -79,4 +77,18 @@ You need to modify:
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
     cmake --build .
 
-``
+```
+
+
+Use the images locally
+======================
+
+You can also use the images locally to build or test packages, this is an example command:
+
+```
+docker run -v/tmp/.conan:/home/conan/.conan lasote/conangcc63 bash -c "conan install Boost/1.62.0@lasote/stable --build missing"
+```
+
+This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
+You can change the directory or execute any other command that works for your needs.
+
