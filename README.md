@@ -65,7 +65,7 @@ You need to modify:
 
 ```
 
-**.travis/run_project_build.sh**. Change according your project build needed commands:
+**.travis/run_project_build.sh**. Change it according your project build needed commands:
 
 ```
     #!/bin/bash
@@ -75,7 +75,7 @@ You need to modify:
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
     cmake --build .
 
-``
+```
 
 
 Use the images locally
