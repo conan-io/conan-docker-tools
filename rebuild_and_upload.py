@@ -53,9 +53,9 @@ class Builder(object):
             folder_name = "%s_%s" % (self.__compiler_name, compiler_version)
             image_name = "lasote/conan%s%s" % (
                 self.__compiler_name, compiler_version.replace(".", ""))
-            os.system("cd %s && ./build.sh" % folder_name)
+            assert(os.system("cd %s && ./build.sh" % folder_name) == os.EX_OK)
             if upload_after_build:
-                os.system("sudo docker push %s" % image_name)
+                assert(os.system("sudo docker push %s" % image_name) == os.EX_OK)
 
     @property
     def name(self):
