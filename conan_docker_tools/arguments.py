@@ -1,3 +1,5 @@
+"""COllect User arguments
+"""
 import argparse
 import os
 

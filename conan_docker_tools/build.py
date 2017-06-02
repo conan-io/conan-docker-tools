@@ -1,3 +1,5 @@
+"""Build Docker image
+"""
 import subprocess
 from image import Image
 

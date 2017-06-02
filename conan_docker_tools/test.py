@@ -1,3 +1,6 @@
+"""Test Docker image
+"""
+
 from image import Image
 import subprocess
 

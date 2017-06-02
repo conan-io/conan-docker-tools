@@ -1,3 +1,6 @@
+"""Static compiler information
+"""
+
 class Compiler(object):
     """Base builder for docker image
     """

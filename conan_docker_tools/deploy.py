@@ -1,3 +1,5 @@
+"""Deploy image to hub.docker
+"""
 from image import Image
 from variables import Variables
 import subprocess

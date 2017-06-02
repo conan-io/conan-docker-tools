@@ -1,3 +1,5 @@
+"""Entrypoint
+"""
 from application import Application
 
 

@@ -93,3 +93,45 @@ docker run -v/tmp/.conan:/home/conan/.conan lasote/conangcc63 bash -c "conan ins
 
 This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
 You can change the directory or execute any other command that works for your needs.
+
+
+Build, Test and Deploy
+======================
+
+To create all default images, this project uses a bunch of script in conan_docker_tools. These scripts run as an application,
+where you can choose compiler version, docker login and skip some stage.
+
+### Build
+The first stage collect all compiler versions listed and build their docker file.
+By default, the tag will be your ``docker_username/conan_compiler_version``.
+You can choose the compiler versions by environment variables or application arguments.
+If you do not set any compiler version, the script will execute all supported versions.
+
+### Test
+The second stage runs the new image and builds ``gtest/1.8.0`` with libstdc++, for x86 and x86_64. ``Clang`` images use libc++ and libstdc++.
+
+### Deploy
+The final stage pushes the image to docker server (hub.docker). The login uses ``DOCKER_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate. You can ignore this stage by ``DOCKER_UPLOAD``.
+
+### Arguments and variables
+
+To configure these scripts, the supported options are listed below:
+
+Supported arguments:
+
+```
+--no-build               Skip build stage
+--no-test                Skip test stage
+--conan-gcc-versions     GCC versions to build, test and deploy. This option is preferred over environment variable
+--conan-clang-versions   Clang versions to build, test and deploy. This option is preferred over environment variable
+```
+
+Supported variables:
+
+```
+CONAN_GCC_VERSIONS     GCC versions to build, test and deploy
+CONAN_CLANG_VERSIONS   Clang versions to build, test and deploy
+DOCKER_USERNAME        User name to authenticate in Docker server
+DOCKER_PASSWORD        User password to authenticate in Docker server
+DOCKER_UPLOAD          Enable deploy stable. By default is False.
+```

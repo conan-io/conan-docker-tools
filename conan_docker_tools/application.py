@@ -1,3 +1,5 @@
+"""Execute all stages
+"""
 from variables import Variables
 from compiler import GccCompiler, ClangCompiler
 from image import Image

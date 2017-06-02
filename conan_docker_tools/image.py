@@ -1,3 +1,6 @@
+"""Docker image entity
+"""
+
 from variables import Variables
 
 
