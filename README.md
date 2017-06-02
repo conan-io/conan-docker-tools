@@ -98,40 +98,76 @@ You can change the directory or execute any other command that works for your ne
 Build, Test and Deploy
 ======================
 
-To create all default images, this project uses a bunch of script in conan_docker_tools. These scripts run as an application,
-where you can choose compiler version, docker login and skip some stage.
+## Introduce
+The images are already built and uploaded to **"lasote"** dockerhub account, If you want to build your own images you can do it by:
+
+```
+$ python build.py
+```
+
+The script *build.py* will build, test and deploy your Docker image. You can configure all stages by environment variables listed below.
+
+Also, you can build only a version:
+
+E.g Build and test only a image with Conan and gcc-6.3
+```
+$ CONAN_GCC_VERSIONS="6.3" python build.py
+```
+
+E.g Build and test only the images with Conan and clang-4.0, clang-3.9
+```
+$ CONAN_CLANG_VERSIONS="3.9,4.0" python build.py
+```
+
+The stages that compose the script will be described below:
 
 ### Build
-The first stage collect all compiler versions listed and build their docker file.
-By default, the tag will be your ``docker_username/conan_compiler_version``.
-You can choose the compiler versions by environment variables or application arguments.
-If you do not set any compiler version, the script will execute all supported versions.
+The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc`` and in ``CONAN_CLANG_VERSIONS`` for ``Clang``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
+
+You can configure only a compiler version or a list, by these variables. If you skipped a compiler list, the build will not be executed for that compiler.
+
+Each image created on this stage will be tagged as  ``DOCKER_USERNAME/conan_compiler_version``.
+
+The image will not be removed after build.
 
 ### Test
-The second stage runs the new image and builds ``gtest/1.8.0`` with libstdc++, for x86 and x86_64. ``Clang`` images use libc++ and libstdc++.
+The second stage runs the new image created and builds the Conan package ``gtest/1.8.0``.
+The same build variables, as ``CONAN_GCC_VERSIONS`` and ``CONAN_CLANG_VERSIONS`` are used to select the compiler and version.
+
+All tests build the package ``gtest/1.8.0``, for x86 and x86_64.
+
+``Gcc`` images use libstdc++.  
+``Clang`` images use libc++ and libstdc++.
+
+The packages created on test, are not uploaded to Conan server, Are just to validate the image.
 
 ### Deploy
-The final stage pushes the image to docker server (hub.docker). The login uses ``DOCKER_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate. You can ignore this stage by ``DOCKER_UPLOAD``.
+The final stage pushes the image to docker server (hub.docker). First, ``DOCKER_UPLOAD`` should be true and ``CONAN_STABLE_BRANCH_PATTERN`` should match with your current branch.
 
-### Arguments and variables
+The login uses ``DOCKER_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate.
 
-To configure these scripts, the supported options are listed below:
+By default, this stage is **NOT** executed and Docker username is **"lasote"**.
 
-Supported arguments:
-
+E.g Upload Docker images to Docker hub, after build and test:
 ```
---no-build               Skip build stage
---no-test                Skip test stage
---conan-gcc-versions     GCC versions to build, test and deploy. This option is preferred over environment variable
---conan-clang-versions   Clang versions to build, test and deploy. This option is preferred over environment variable
+$ DOCKER_USERNAME="lasote" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python build.py
 ```
 
-Supported variables:
 
-```
-CONAN_GCC_VERSIONS     GCC versions to build, test and deploy
-CONAN_CLANG_VERSIONS   Clang versions to build, test and deploy
-DOCKER_USERNAME        User name to authenticate in Docker server
-DOCKER_PASSWORD        User password to authenticate in Docker server
-DOCKER_UPLOAD          Enable deploy stable. By default is False.
-```
+## Environment configuration
+
+You can also use environment variables to change the behavior of Conan Docker Tools.
+
+This is especially useful for CI integration.
+
+Build and Test variables:
+
+- **CONAN_GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
+- **CONAN_CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
+
+Upload related variables:
+
+- **DOCKER_USERNAME**: Your Docker username to authenticate in Docker server. Default "lasote".
+- **DOCKER_PASSWORD**: Your Docker password to authenticate in Docker server
+- **DOCKER_UPLOAD**:         If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
+- **CONAN_STABLE_BRANCH_PATTERN**: Regular expression, if current git branch matches this pattern, the packages will be uploaded to dockerhub. Default "master". e.g. "feature/*"
