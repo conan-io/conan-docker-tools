@@ -17,7 +17,7 @@ The images are uploaded to Dockerhub:
 - [lasote/conangcc63: gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)
 
 #### Clang
-- [lasote/conanclang39: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)
+- [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)
 - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)
 - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)
 
