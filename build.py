@@ -65,7 +65,7 @@ class ConanDockerTools(object):
         :param build_dir: Directory with Dockerfile
         """
         logging.info("Stating build for Docker image %s." % image_name)
-        subprocess.check_call("sudo docker build --no-cache -t %s %s" % (image_name, build_dir), shell=True)
+        subprocess.check_call("docker build --no-cache -t %s %s" % (image_name, build_dir), shell=True)
 
     def test(self, compiler_name, compiler_version, image_name):
         """Validate Docker image by Conan install
@@ -76,17 +76,17 @@ class ConanDockerTools(object):
         logging.info("Testing Docker image %s." % image_name)
         container_name = image_name.replace("/", "-")
         try:
-            subprocess.check_call("sudo docker run -t -d --name %s %s" % (container_name, image_name), shell=True)
-            subprocess.check_call("sudo docker exec %s sudo pip install -U conan_package_tools" % container_name, shell=True)
-            subprocess.check_call("sudo docker exec %s sudo pip install -U conan" % container_name, shell=True)
-            subprocess.check_call("sudo docker exec %s conan user" % container_name, shell=True)
+            subprocess.check_call("docker run -t -d --name %s %s" % (container_name, image_name), shell=True)
+            subprocess.check_call("docker exec %s sudo pip install -U conan_package_tools" % container_name, shell=True)
+            subprocess.check_call("docker exec %s sudo pip install -U conan" % container_name, shell=True)
+            subprocess.check_call("docker exec %s conan user" % container_name, shell=True)
 
-            subprocess.check_call("sudo docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86_64 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
-            subprocess.check_call("sudo docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
+            subprocess.check_call("docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86_64 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
+            subprocess.check_call("docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
 
             if compiler_name == "clang":
-                subprocess.check_call("sudo docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86_64 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
-                subprocess.check_call("sudo docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
+                subprocess.check_call("docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86_64 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
+                subprocess.check_call("docker exec %s conan install gtest/1.8.0@lasote/stable -s arch=x86 -s compiler=%s -s compiler.version=%s -s compiler.libcxx=libstdc++ --build" % (container_name, compiler_name, compiler_version), shell=True)
 
         finally:
             subprocess.call("docker stop %s" % container_name, shell=True)
@@ -111,12 +111,12 @@ class ConanDockerTools(object):
             return
 
         logging.info("Login to Docker hub account")
-        result = subprocess.call(['sudo', 'docker', 'login', '-p', self.variables.docker_password, '-u', self.variables.docker_username])
+        result = subprocess.call(['docker', 'login', '-p', self.variables.docker_password, '-u', self.variables.docker_username])
         if result != os.EX_OK:
             raise RuntimeError("Could not login username %s to Docker hub." % self.variables.docker_username)
 
         logging.info("Upload Docker image %s to Docker hub." % image_name)
-        subprocess.check_call("sudo docker push %s" % image_name, shell=True)
+        subprocess.check_call("docker push %s" % image_name, shell=True)
 
     def run(self):
         """Execute all 3 stages for all versions in compilers list
