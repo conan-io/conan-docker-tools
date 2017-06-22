@@ -11,7 +11,9 @@ RUN wget https://bootstrap.pypa.io/get-pip.py --no-check-certificate && python g
 RUN pip install conan
 RUN groupadd 1001 -g 1001
 RUN groupadd 1000 -g 1000
-RUN useradd -ms /bin/bash conan -g 1001 -G 1000 && echo "conan:conan" | chpasswd && adduser conan sudo
+RUN groupadd 2000 -g 2000
+RUN groupadd 999 -g 999
+RUN useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 && echo "conan:conan" | chpasswd && adduser conan sudo
 RUN echo "conan ALL= NOPASSWD: ALL\n" >> /etc/sudoers
 USER conan
 WORKDIR /home/conan
