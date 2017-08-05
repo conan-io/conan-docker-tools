@@ -70,7 +70,7 @@ class GccBuilder(Builder):
     def __init__(self):
         Builder.__init__(
             self, "gcc",
-            ["4.6", "4.8", "4.9", "5.2", "5.3", "5.4", "6.2", "6.3"])
+            ["4.6", "4.8", "4.9", "5.2", "5.3", "5.4", "6.2", "6.3", "7.1"])
 
 
 class ClangBuilder(Builder):
