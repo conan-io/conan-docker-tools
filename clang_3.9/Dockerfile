@@ -3,7 +3,7 @@ FROM ubuntu:zesty
 MAINTAINER Luis Martinez de Bartolome
 
 ENV LLVM_VERSION=3.9 \
-    CMAKE_VERSION=3.8.1 \
+    CMAKE_VERSION=3.9.0 \
     CC=clang \
     CXX=clang++ \
     CMAKE_C_COMPILER=clang \
@@ -20,7 +20,7 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     # Install CMake
-    && wget https://cmake.org/files/v3.8/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz --no-check-certificate -q \
+    && wget https://cmake.org/files/v3.9/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz --no-check-certificate -q \
     && tar -xzf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
     && cp -fR cmake-${CMAKE_VERSION}-Linux-x86_64/* /usr \
     && rm -rf cmake-${CMAKE_VERSION}-Linux-x86_64 \

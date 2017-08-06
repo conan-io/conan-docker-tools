@@ -17,11 +17,11 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --set gcc /usr/bin/gcc-7 \
     && update-alternatives --set cpp-bin /usr/bin/cpp-7 \
     # Install CMake
-    && wget https://cmake.org/files/v3.8/cmake-3.8.1-Linux-x86_64.tar.gz --no-check-certificate -q \
-    && tar -xzf cmake-3.8.1-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.8.1-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.8.1-Linux-x86_64 \
-    && rm cmake-3.8.1-Linux-x86_64.tar.gz \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.9.0-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.9.0-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.9.0-Linux-x86_64 \
+    && rm cmake-3.9.0-Linux-x86_64.tar.gz \
     # Install Python pip
     && wget https://bootstrap.pypa.io/get-pip.py --no-check-certificate \
     && python get-pip.py \
