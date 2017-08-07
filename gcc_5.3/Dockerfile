@@ -6,7 +6,7 @@ RUN dpkg --add-architecture i386 && rm -rf /var/lib/apt/lists/* && apt-get updat
 RUN ln -s /usr/bin/g++-5 /usr/bin/g++
 # RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Install CMake 3
-RUN wget https://cmake.org/files/v3.8/cmake-3.8.1-Linux-x86_64.tar.gz --no-check-certificate && tar -xzf cmake-3.8.1-Linux-x86_64.tar.gz && cp -fR cmake-3.8.1-Linux-x86_64/* /usr && rm -rf cmake-3.8.1-Linux-x86_64 && rm cmake-3.8.1-Linux-x86_64.tar.gz
+RUN wget https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz --no-check-certificate && tar -xzf cmake-3.9.0-Linux-x86_64.tar.gz && cp -fR cmake-3.9.0-Linux-x86_64/* /usr && rm -rf cmake-3.9.0-Linux-x86_64 && rm cmake-3.9.0-Linux-x86_64.tar.gz
 
 RUN wget https://bootstrap.pypa.io/get-pip.py --no-check-certificate && python get-pip.py && pip install -U pip
 RUN pip install conan

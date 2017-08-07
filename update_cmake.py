@@ -2,8 +2,8 @@ import os
 
 if __name__ == "__main__":
 
-    current_cmake_link = "3.8.1"
-    new_cmake_link = "3.8.1"
+    current_cmake_link = "3.9.0"
+    new_cmake_link = "3.9.0"
 
     for root, _, filenames in os.walk("./"):
         for filename in filenames:
