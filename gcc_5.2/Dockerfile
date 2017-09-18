@@ -2,6 +2,7 @@ FROM ubuntu:wily
 
 MAINTAINER Luis Martinez de Bartolome
 
+RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list
 RUN dpkg --add-architecture i386 && rm -rf /var/lib/apt/lists/* && apt-get update && apt-get install -y python-dev sudo build-essential wget git vim libc6-dev-i386 g++-multilib nasm dh-autoreconf valgrind ninja-build  libffi-dev libssl-dev
 # RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Install CMake 3
