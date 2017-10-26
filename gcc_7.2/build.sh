@@ -1,1 +1,1 @@
-sudo docker build --no-cache -t lasote/conangcc71 .
+sudo docker build --no-cache -t lasote/conangcc72 .
