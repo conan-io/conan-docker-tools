@@ -1,4 +1,4 @@
-FROM python:3.6.1-alpine3.6
+FROM python:3.6-alpine3.6
 
 ENV CONAN_VERSION=0.25.1
 
