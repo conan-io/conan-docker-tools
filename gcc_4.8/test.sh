@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 sudo docker run -t -d --name conangcc48 lasote/conangcc48 && \
 sudo docker exec conangcc48 sudo pip install -U conan_package_tools && \
 sudo docker exec conangcc48 sudo pip install -U conan && \

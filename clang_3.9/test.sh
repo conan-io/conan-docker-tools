@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 sudo docker run -t -d --name conanclang39 lasote/conanclang39 && \
 sudo docker exec conanclang39 sudo pip install -U conan_package_tools && \
 sudo docker exec conanclang39 sudo pip install -U conan && \
