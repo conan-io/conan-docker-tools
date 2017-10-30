@@ -9,9 +9,7 @@ RUN dpkg --add-architecture i386 \
     && apt-get -qq install -y python-dev sudo binutils wget git vim libc6-dev-i386 g++-7-multilib libgmp-dev libmpfr-dev libmpc-dev libc6-dev nasm dh-autoreconf valgrind ninja-build libffi-dev libssl-dev \
     # Update gcc order
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 10  \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 20 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 10  \
-    && update-alternatives --install /usr/bin/cpp cpp-bin /usr/bin/cpp-6 20 \
     && update-alternatives --install /usr/bin/cpp cpp-bin /usr/bin/cpp-7 10  \
     && update-alternatives --set g++ /usr/bin/g++-7 \
     && update-alternatives --set gcc /usr/bin/gcc-7 \
