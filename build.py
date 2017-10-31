@@ -56,6 +56,16 @@ class ConanDockerTools(object):
         subprocess.check_call("docker build --no-cache -t %s %s" % (image_name, build_dir),
                               shell=True)
 
+    def linter(self, build_dir):
+        """Execute hadolint to check possible prone errors
+
+        DL4000 is deprecated: https://docs.docker.com/engine/reference/builder/#maintainer-deprecated
+        :param build_dir: Directory with Dockerfile
+        """
+        logging.info("Executing hadolint on directory %s." % build_dir)
+        subprocess.call("docker run --rm -i lukasmartinelli/hadolint --ignore DL4000 < %s/Dockerfile" % build_dir,
+                              shell=True)
+
     def test(self, compiler_name, compiler_version, image_name):
         """Validate Docker image by Conan install
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
@@ -129,6 +139,7 @@ class ConanDockerTools(object):
                                                version.replace(".", ""))
                 build_dir = "%s_%s" % (compiler.name, version)
 
+                self.linter(build_dir)
                 self.build(image_name, build_dir)
                 self.test(compiler.name, version, image_name)
                 self.deploy(image_name)
@@ -136,6 +147,7 @@ class ConanDockerTools(object):
         if self.variables.build_server:
             logging.info("Bulding conan_server image...")
             image_name = "%s/conan_server" % self.variables.docker_username
+            self.linter("conan_server")
             self.build(image_name, "conan_server")
             self.deploy(image_name)
         else:
