@@ -59,12 +59,11 @@ class ConanDockerTools(object):
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
 
-        DL4000 is deprecated: https://docs.docker.com/engine/reference/builder/#maintainer-deprecated
         :param build_dir: Directory with Dockerfile
         """
         logging.info("Executing hadolint on directory %s." % build_dir)
-        subprocess.call("docker run --rm -i lukasmartinelli/hadolint --ignore DL4000 < %s/Dockerfile" % build_dir,
-                              shell=True)
+        subprocess.call('docker run --rm -i lukasmartinelli/hadolint < %s/Dockerfile' % build_dir,
+                        shell=True)
 
     def test(self, compiler_name, compiler_version, image_name):
         """Validate Docker image by Conan install
