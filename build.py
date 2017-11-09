@@ -34,7 +34,7 @@ class ConanDockerTools(object):
         docker_upload = os.getenv("DOCKER_UPLOAD", "false").lower() in ["true", "1"]
         build_server = os.getenv("BUILD_CONAN_SERVER_IMAGE", "false").lower() in ["true", "1"]
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
-        docker_username = os.getenv("DOCKER_USERNAME", "")
+        docker_username = os.getenv("DOCKER_USERNAME", "lasote")
         if not docker_username:
             raise Exception("Specify the DOCKER_USERNAME environment variable")
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
@@ -55,6 +55,15 @@ class ConanDockerTools(object):
         logging.info("Stating build for Docker image %s." % image_name)
         subprocess.check_call("docker build --no-cache -t %s %s" % (image_name, build_dir),
                               shell=True)
+
+    def linter(self, build_dir):
+        """Execute hadolint to check possible prone errors
+
+        :param build_dir: Directory with Dockerfile
+        """
+        logging.info("Executing hadolint on directory %s." % build_dir)
+        subprocess.call('docker run --rm -i lukasmartinelli/hadolint < %s/Dockerfile' % build_dir,
+                        shell=True)
 
     def test(self, compiler_name, compiler_version, image_name):
         """Validate Docker image by Conan install
@@ -129,6 +138,7 @@ class ConanDockerTools(object):
                                                version.replace(".", ""))
                 build_dir = "%s_%s" % (compiler.name, version)
 
+                self.linter(build_dir)
                 self.build(image_name, build_dir)
                 self.test(compiler.name, version, image_name)
                 self.deploy(image_name)
@@ -136,6 +146,7 @@ class ConanDockerTools(object):
         if self.variables.build_server:
             logging.info("Bulding conan_server image...")
             image_name = "%s/conan_server" % self.variables.docker_username
+            self.linter("conan_server")
             self.build(image_name, "conan_server")
             self.deploy(image_name)
         else:
