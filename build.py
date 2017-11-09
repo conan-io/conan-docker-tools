@@ -34,7 +34,7 @@ class ConanDockerTools(object):
         docker_upload = os.getenv("DOCKER_UPLOAD", "false").lower() in ["true", "1"]
         build_server = os.getenv("BUILD_CONAN_SERVER_IMAGE", "false").lower() in ["true", "1"]
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
-        docker_username = os.getenv("DOCKER_USERNAME", "")
+        docker_username = os.getenv("DOCKER_USERNAME", "lasote")
         if not docker_username:
             raise Exception("Specify the DOCKER_USERNAME environment variable")
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
