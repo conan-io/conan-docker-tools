@@ -105,16 +105,6 @@ class ConanDockerTools(object):
                                   "-s compiler.libcxx=libstdc++ --build" %
                                   (container_name, compiler_name, compiler_version), shell=True)
 
-            if compiler_name == "clang":
-                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable "
-                                      "-s arch=x86_64 -s compiler=%s -s compiler.version=%s "
-                                      "-s compiler.libcxx=libstdc++ --build" %
-                                      (container_name, compiler_name, compiler_version), shell=True)
-                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable "
-                                      "-s arch=x86 -s compiler=%s -s compiler.version=%s "
-                                      "-s compiler.libcxx=libstdc++ --build" %
-                                      (container_name, compiler_name, compiler_version), shell=True)
-
         finally:
             subprocess.call("docker stop %s" % container_name, shell=True)
             subprocess.call("docker rm %s" % container_name, shell=True)
