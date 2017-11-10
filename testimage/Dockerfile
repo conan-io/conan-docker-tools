@@ -1,5 +1,5 @@
 FROM lasote/conangcc63
 
-MAINTAINER Luis Martinez de Bartolome
+LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 RUN sudo pip uninstall -y conan
