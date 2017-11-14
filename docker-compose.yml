@@ -6,8 +6,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc46:${DOCKER_BUILD_TAG}"
         container_name: conangcc46
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc48:
         build:
@@ -15,8 +13,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc48:${DOCKER_BUILD_TAG}"
         container_name: conangcc48
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc49:
         build:
@@ -24,8 +20,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc49:${DOCKER_BUILD_TAG}"
         container_name: conangcc49
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc52:
         build:
@@ -33,8 +27,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc52:${DOCKER_BUILD_TAG}"
         container_name: conangcc52
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc53:
         build:
@@ -42,8 +34,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc53:${DOCKER_BUILD_TAG}"
         container_name: conangcc53
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc54:
         build:
@@ -51,8 +41,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc54:${DOCKER_BUILD_TAG}"
         container_name: conangcc54
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc62:
         build:
@@ -60,8 +48,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc62:${DOCKER_BUILD_TAG}"
         container_name: conangcc62
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc63:
         build:
@@ -69,8 +55,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc63:${DOCKER_BUILD_TAG}"
         container_name: conangcc63
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conangcc72:
         build:
@@ -78,8 +62,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc72:${DOCKER_BUILD_TAG}"
         container_name: conangcc72
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conanclang38:
         build:
@@ -87,8 +69,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conanclang38:${DOCKER_BUILD_TAG}"
         container_name: conanclang38
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conanclang39:
         build:
@@ -96,8 +76,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conanclang39:${DOCKER_BUILD_TAG}"
         container_name: conanclang39
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conanclang40:
         build:
@@ -105,8 +83,6 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conanclang40:${DOCKER_BUILD_TAG}"
         container_name: conanclang40
-        volumes:
-            - ~/.conan/data:/home/conan/.conan/data
         tty: true
     conan_server:
         build:

@@ -24,8 +24,5 @@ env:
     - GCC_VERSIONS="6.3"
     - GCC_VERSIONS="7.2"
 
-before:
-  - mkdir -p ~/.conan/data
-
 script:
   - python build.py
