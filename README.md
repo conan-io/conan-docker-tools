@@ -28,6 +28,7 @@ The images are uploaded to Dockerhub:
 | - [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)   |  Supported |
 | - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)   |  Supported |
 | - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)   |  Supported |
+| - [lasote/conanclang40: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)   |  Supported |
 
 
 Use the images to test your c++ project in travis-ci
