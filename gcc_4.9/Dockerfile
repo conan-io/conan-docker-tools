@@ -9,6 +9,7 @@ RUN dpkg --add-architecture i386 \
        sudo=1.8.16-0ubuntu1 \
        g++-4.9=4.9.3-13ubuntu2 \
        g++-4.9-multilib=4.9.3-13ubuntu2 \
+       gcc-multilib=4:5.3.1-1ubuntu1 \
        libc6-dev-i386=2.23-0ubuntu9 \
        wget=1.17.1-1ubuntu1 \
        git=1:2.7.4-0ubuntu1 \

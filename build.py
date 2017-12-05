@@ -75,35 +75,37 @@ class ConanDockerTools(object):
         logging.info("Testing Docker by service %s." % service)
         try:
             image = "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
+            libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
-            subprocess.check_call("docker exec %s sudo pip install -U conan" % service, shell=True)
-            subprocess.check_call("docker exec %s sudo pip install -U conan_package_tools" % service, shell=True)
+            subprocess.check_call("docker exec %s sudo pip -q install -U conan" % service, shell=True)
+            subprocess.check_call("docker exec %s sudo pip -q install -U conan_package_tools" % service, shell=True)
             subprocess.check_call("docker exec %s conan user" % service, shell=True)
-
-            subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
-                                  "arch=x86_64 -s compiler=%s -s compiler.version=%s "
-                                  "-s compiler.libcxx=libstdc++ --build" %
-                                  (service, compiler_name, compiler_version), shell=True)
-
-            subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable "
-                                  "-s arch=x86 -s compiler=%s -s compiler.version=%s "
-                                  "-s compiler.libcxx=libstdc++ --build" %
-                                  (service, compiler_name, compiler_version), shell=True)
 
             subprocess.check_call("docker exec %s conan remote add conan-community "
                                   "https://api.bintray.com/conan/conan-community/conan "
                                   "--insert" %
                                   service, shell=True)
 
-            subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
-                                  "arch=x86_64 -s compiler=%s -s compiler.version=%s "
-                                  "-s compiler.libcxx=libstdc++ --build" %
-                                  (service, compiler_name, compiler_version), shell=True)
-            subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable "
-                                  "-s arch=x86 -s compiler=%s -s compiler.version=%s "
-                                  "-s compiler.libcxx=libstdc++ --build" %
-                                  (service, compiler_name, compiler_version), shell=True)
+            for libcxx in libcxx_list:
+                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
+                                      "arch=x86_64 -s compiler=%s -s compiler.version=%s "
+                                      "-s compiler.libcxx=%s --build" %
+                                      (service, compiler_name, compiler_version, libcxx), shell=True)
+
+                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable "
+                                      "-s arch=x86 -s compiler=%s -s compiler.version=%s "
+                                      "-s compiler.libcxx=%s --build" %
+                                      (service, compiler_name, compiler_version, libcxx), shell=True)
+
+                subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
+                                      "arch=x86_64 -s compiler=%s -s compiler.version=%s "
+                                      "-s compiler.libcxx=%s --build" %
+                                      (service, compiler_name, compiler_version, libcxx), shell=True)
+                subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable "
+                                      "-s arch=x86 -s compiler=%s -s compiler.version=%s "
+                                      "-s compiler.libcxx=%s --build" %
+                                      (service, compiler_name, compiler_version, libcxx), shell=True)
 
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
