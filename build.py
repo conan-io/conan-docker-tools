@@ -74,39 +74,37 @@ class ConanDockerTools(object):
         """
         logging.info("Testing Docker by service %s." % service)
         try:
-            subprocess.check_call("docker-compose up -d %s" % service,
-                                  shell=True)
-            subprocess.check_call("docker-compose exec %s sudo pip install -U conan_package_tools" %
-                                  service, shell=True)
-            subprocess.check_call("docker-compose exec %s sudo pip install -U conan" % service,
-                                  shell=True)
-            subprocess.check_call("docker-compose exec %s conan user" % service, shell=True)
+            subprocess.check_call("docker exec %s sudo install -U conan" % service, shell=True)
+            subprocess.check_call("docker exec %s sudo install -U conan_package_tools" % service, shell=True)
+            subprocess.check_call("docker exec %s conan user" % service, shell=True)
 
-            subprocess.check_call("docker-compose exec %s conan install zlib/1.2.11@conan/stable -s "
+            subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
                                   "arch=x86_64 -s compiler=%s -s compiler.version=%s "
                                   "-s compiler.libcxx=libstdc++ --build" %
                                   (service, compiler_name, compiler_version), shell=True)
-            subprocess.check_call("docker-compose exec %s conan install zlib/1.2.11@conan/stable "
+
+            subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable "
                                   "-s arch=x86 -s compiler=%s -s compiler.version=%s "
                                   "-s compiler.libcxx=libstdc++ --build" %
                                   (service, compiler_name, compiler_version), shell=True)
 
-            subprocess.check_call("docker-compose exec %s conan remote add conan-community "
+            subprocess.check_call("docker exec %s conan remote add conan-community "
                                   "https://api.bintray.com/conan/conan-community/conan "
                                   "--insert" %
                                   service, shell=True)
 
-            subprocess.check_call("docker-compose exec %s conan install gtest/1.8.0@conan/stable -s "
+            subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
                                   "arch=x86_64 -s compiler=%s -s compiler.version=%s "
                                   "-s compiler.libcxx=libstdc++ --build" %
                                   (service, compiler_name, compiler_version), shell=True)
-            subprocess.check_call("docker-compose exec %s conan install gtest/1.8.0@conan/stable "
+            subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable "
                                   "-s arch=x86 -s compiler=%s -s compiler.version=%s "
                                   "-s compiler.libcxx=libstdc++ --build" %
                                   (service, compiler_name, compiler_version), shell=True)
 
         finally:
-            subprocess.call("docker-compose down", shell=True)
+            subprocess.call("docker stop %s" % service, shell=True)
+            subprocess.call("docker rm %s" % service, shell=True)
 
     def deploy(self, service):
         """Upload Docker image to dockerhub
