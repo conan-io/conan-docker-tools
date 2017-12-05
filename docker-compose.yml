@@ -84,6 +84,13 @@ services:
         image: "${DOCKER_USERNAME}/conanclang40:${DOCKER_BUILD_TAG}"
         container_name: conanclang40
         tty: true
+    conanclang50:
+        build:
+            context: clang_5.0
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanclang50:${DOCKER_BUILD_TAG}"
+        container_name: conanclang50
+        tty: true
     conan_server:
         build:
             context: conan_server
