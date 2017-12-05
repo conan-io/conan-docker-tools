@@ -1,25 +1,29 @@
-FROM ubuntu:vivid
+FROM ubuntu:xenial
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
-       sudo=1.8.* \
-       build-essential=11.* \
-       wget=1.16.* \
-       git=1:2.1.* \
-       vim=2:7.4.* \
-       libc6-dev-i386=2.21-* \
-       g++-multilib=4:4.9.* \
-       nasm=2.11.* \
-       dh-autoreconf=10 \
-       valgrind=1:3.10.* \
-       ninja-build=1.3.* \
-       libffi-dev=3.2.* \
-       libssl-dev=1.0.* \
+       python-dev=2.7.11-1 \
+       sudo=1.8.16-0ubuntu1 \
+       g++-4.9=4.9.3-13ubuntu2 \
+       g++-4.9-multilib=4.9.3-13ubuntu2 \
+       libc6-dev-i386=2.23-0ubuntu9 \
+       wget=1.17.1-1ubuntu1 \
+       git=1:2.7.4-0ubuntu1 \
+       vim=2:7.4.1689-3ubuntu1.2 \
+       nasm=2.11.08-1 \
+       dh-autoreconf=11 \
+       valgrind=1:3.11.0-1ubuntu4 \
+       ninja-build=1.5.1-0.1ubuntu1 \
+       libffi-dev=3.2.1-4 \
+       libssl-dev=1.0.2g-1ubuntu4.9 \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
+    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
+    && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
     && wget -q --no-check-certificate https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.9.0-Linux-x86_64.tar.gz \
     && cp -fR cmake-3.9.0-Linux-x86_64/* /usr \

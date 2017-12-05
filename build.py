@@ -74,8 +74,11 @@ class ConanDockerTools(object):
         """
         logging.info("Testing Docker by service %s." % service)
         try:
-            subprocess.check_call("docker exec %s sudo install -U conan" % service, shell=True)
-            subprocess.check_call("docker exec %s sudo install -U conan_package_tools" % service, shell=True)
+            image = "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
+            subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
+
+            subprocess.check_call("docker exec %s sudo pip install -U conan" % service, shell=True)
+            subprocess.check_call("docker exec %s sudo pip install -U conan_package_tools" % service, shell=True)
             subprocess.check_call("docker exec %s conan user" % service, shell=True)
 
             subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
