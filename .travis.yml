@@ -14,6 +14,7 @@ env:
     - CLANG_VERSIONS="3.8"
     - CLANG_VERSIONS="3.9"
     - CLANG_VERSIONS="4.0"
+    - CLANG_VERSIONS="5.0"
     - GCC_VERSIONS="4.6"
     - GCC_VERSIONS="4.8"
     - GCC_VERSIONS="4.9"
@@ -25,4 +26,4 @@ env:
     - GCC_VERSIONS="7.2"
 
 script:
-  - python build.py
+  - travis_wait python build.py
