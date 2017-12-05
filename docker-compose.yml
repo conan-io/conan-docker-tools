@@ -1,0 +1,92 @@
+version: '3'
+services:
+    conangcc46:
+        build:
+            context: gcc_4.6
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc46:${DOCKER_BUILD_TAG}"
+        container_name: conangcc46
+        tty: true
+    conangcc48:
+        build:
+            context: gcc_4.8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc48:${DOCKER_BUILD_TAG}"
+        container_name: conangcc48
+        tty: true
+    conangcc49:
+        build:
+            context: gcc_4.9
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc49:${DOCKER_BUILD_TAG}"
+        container_name: conangcc49
+        tty: true
+    conangcc52:
+        build:
+            context: gcc_5.2
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc52:${DOCKER_BUILD_TAG}"
+        container_name: conangcc52
+        tty: true
+    conangcc53:
+        build:
+            context: gcc_5.3
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc53:${DOCKER_BUILD_TAG}"
+        container_name: conangcc53
+        tty: true
+    conangcc54:
+        build:
+            context: gcc_5.4
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc54:${DOCKER_BUILD_TAG}"
+        container_name: conangcc54
+        tty: true
+    conangcc62:
+        build:
+            context: gcc_6.2
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc62:${DOCKER_BUILD_TAG}"
+        container_name: conangcc62
+        tty: true
+    conangcc63:
+        build:
+            context: gcc_6.3
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc63:${DOCKER_BUILD_TAG}"
+        container_name: conangcc63
+        tty: true
+    conangcc72:
+        build:
+            context: gcc_7.2
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc72:${DOCKER_BUILD_TAG}"
+        container_name: conangcc72
+        tty: true
+    conanclang38:
+        build:
+            context: clang_3.8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanclang38:${DOCKER_BUILD_TAG}"
+        container_name: conanclang38
+        tty: true
+    conanclang39:
+        build:
+            context: clang_3.9
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanclang39:${DOCKER_BUILD_TAG}"
+        container_name: conanclang39
+        tty: true
+    conanclang40:
+        build:
+            context: clang_4.0
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanclang40:${DOCKER_BUILD_TAG}"
+        container_name: conanclang40
+        tty: true
+    conan_server:
+        build:
+            context: conan_server
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
+        container_name: conan_server
