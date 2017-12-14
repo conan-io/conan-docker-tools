@@ -17,12 +17,16 @@ env:
     - GCC_VERSIONS="4.6"
     - GCC_VERSIONS="4.8"
     - GCC_VERSIONS="4.9"
+    - GCC_VERSIONS="5"
     - GCC_VERSIONS="5.2"
     - GCC_VERSIONS="5.3"
     - GCC_VERSIONS="5.4"
+    - GCC_VERSIONS="6"
     - GCC_VERSIONS="6.2"
     - GCC_VERSIONS="6.3"
+    - GCC_VERSIONS="7"
     - GCC_VERSIONS="7.2"
+
 
 script:
   - python build.py
