@@ -10,7 +10,9 @@ env:
     - DOCKER_UPLOAD="TRUE"
 
   matrix:
-
+    - GCC_VERSIONS="5"
+    - GCC_VERSIONS="6"
+    - GCC_VERSIONS="7"
     - CLANG_VERSIONS="3.8"
     - CLANG_VERSIONS="3.9"
     - CLANG_VERSIONS="4.0"
@@ -22,10 +24,8 @@ env:
     - GCC_VERSIONS="5.2"
     - GCC_VERSIONS="5.3"
     - GCC_VERSIONS="5.4"
-    - GCC_VERSIONS="6"
     - GCC_VERSIONS="6.2"
     - GCC_VERSIONS="6.3"
-    - GCC_VERSIONS="7"
     - GCC_VERSIONS="7.2"
 
 
