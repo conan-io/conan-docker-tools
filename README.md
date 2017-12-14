@@ -28,6 +28,7 @@ The images are uploaded to Dockerhub:
 | - [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)   |  Supported |
 | - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)   |  Supported |
 | - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)   |  Supported |
+| - [lasote/conanclang40: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)   |  Supported |
 
 
 Use the images to test your c++ project in travis-ci
@@ -103,6 +104,12 @@ docker run -v/tmp/.conan:/home/conan/.conan lasote/conangcc63 bash -c "conan ins
 This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
 You can change the directory or execute any other command that works for your needs.
 
+If you are familiarized with Docker compose, also it's possible to start a new container by:
+
+```
+docker-compose run -v/tmp/.conan:/home/conan/.conan conangcc63 bash -c "conan install zlib/1.2.11@conan/stable --build missing"
+```
+
 
 Build, Test and Deploy
 ======================
@@ -134,6 +141,8 @@ The stages that compose the script will be described below:
 The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc`` and in ``CONAN_CLANG_VERSIONS`` for ``Clang``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
 
 You can configure only a compiler version or a list, by these variables. If you skipped a compiler list, the build will not be executed for that compiler.
+
+The image tag can be configured by ``DOCKER_BUILD_TAG``. Build default will used **latest**.
 
 Each image created on this stage will be tagged as  ``DOCKER_USERNAME/conan_compiler_version``.
 
@@ -172,6 +181,7 @@ Build and Test variables:
 
 - **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
 - **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
+- **DOCKER_BUILD_TAG**: Docker image tag, e.g "latest", "0.28.1"
 
 Upload related variables:
 
