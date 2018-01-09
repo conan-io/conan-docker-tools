@@ -23,6 +23,7 @@ RUN dpkg --add-architecture i386 \
        ninja-build=1.5.*  \
        libffi-dev=3.2.* \
        libssl-dev=1.0.2* \
+       ca-certificates \
        && rm -rf /var/lib/apt/lists/* \
        && wget -q --no-check-certificate https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz \
        && tar -xzf cmake-3.9.0-Linux-x86_64.tar.gz \

@@ -20,6 +20,7 @@ RUN dpkg --add-architecture i386 \
        ninja-build=1.5.1-0.1ubuntu1 \
        libffi-dev=3.2.1-4 \
        libssl-dev=1.0.2g-1ubuntu4.9 \
+       ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
