@@ -28,11 +28,11 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.9.0-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.9.0-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.9.0-Linux-x86_64 \
-    && rm cmake-3.9.0-Linux-x86_64.tar.gz \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.1-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.10.1-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.10.1-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.10.1-Linux-x86_64 \
+    && rm cmake-3.10.1-Linux-x86_64.tar.gz \
     && wget --no-check-certificate --quiet https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \

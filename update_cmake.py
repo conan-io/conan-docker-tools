@@ -2,17 +2,16 @@ import os
 
 if __name__ == "__main__":
 
-    current_cmake_link = "3.9.0"
-    new_cmake_link = "3.9.0"
+    for old, new in [("3.10.1", "3.10.1"), ("v3.10", "v3.10")]:
 
-    for root, _, filenames in os.walk("./"):
-        for filename in filenames:
-            if filename == "Dockerfile":
-                path = os.path.join(root, filename)
-                with open(path) as file:
-                    data = file.read()
+        for root, _, filenames in os.walk("./"):
+            for filename in filenames:
+                if filename == "Dockerfile":
+                    path = os.path.join(root, filename)
+                    with open(path) as file:
+                        data = file.read()
 
-                data = data.replace(current_cmake_link, new_cmake_link)
+                    data = data.replace(old, new)
 
-                with open(path, "w") as file:
-                    file.write(data)
+                    with open(path, "w") as file:
+                        file.write(data)
