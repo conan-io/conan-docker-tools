@@ -26,6 +26,7 @@ env:
     - GCC_VERSIONS="5.4"
     - GCC_VERSIONS="6.2"
     - GCC_VERSIONS="6.3"
+    - GCC_VERSIONS="6.4"
     - GCC_VERSIONS="7.2"
 
 
