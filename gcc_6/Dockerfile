@@ -27,8 +27,8 @@ RUN dpkg --add-architecture i386 \
        ca-certificates \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-6 100 \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/g++-6 100 \
-    && update-alternatives --install /usr/bin/cc cc /usr/bin/g++-6 100 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100 \
+    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-6 100 \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.10.1-Linux-x86_64.tar.gz \
