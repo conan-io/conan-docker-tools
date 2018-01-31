@@ -18,6 +18,7 @@ The images are uploaded to Dockerhub:
 | [lasote/conangcc54: gcc 5.4](https://hub.docker.com/r/lasote/conangcc54/)   |  Supported |
 | [lasote/conangcc62: gcc 6.2](https://hub.docker.com/r/lasote/conangcc62/)   |  DEPRECATED, only frozen binary image support, No Dockerfile |
 | [lasote/conangcc63: gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)   |  Supported |
+| [lasote/conangcc64: gcc 6.4](https://hub.docker.com/r/lasote/conangcc64/)   |  Supported |
 | [lasote/conangcc71: gcc 7.1](https://hub.docker.com/r/lasote/conangcc71/)   |  DEPRECATED, only frozen binary image support, No Dockerfile |
 | [lasote/conangcc72: gcc 7.2](https://hub.docker.com/r/lasote/conangcc72/)   |  Supported |
 
