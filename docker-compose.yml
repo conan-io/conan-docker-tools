@@ -56,19 +56,19 @@ services:
         image: "${DOCKER_USERNAME}/conangcc6:${DOCKER_BUILD_TAG}"
         container_name: conangcc6
         tty: true
-    conangcc62:
-        build:
-            context: gcc_6.2
-            dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conangcc62:${DOCKER_BUILD_TAG}"
-        container_name: conangcc62
-        tty: true
     conangcc63:
         build:
             context: gcc_6.3
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc63:${DOCKER_BUILD_TAG}"
         container_name: conangcc63
+        tty: true
+    conangcc64:
+        build:
+            context: gcc_6.4
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc64:${DOCKER_BUILD_TAG}"
+        container_name: conangcc64
         tty: true
     conangcc7:
         build:
