@@ -20,7 +20,7 @@ RUN dpkg --add-architecture i386 \
        clang-5.0=1:5.0-3 \
        make=4.1-9.1 \
        valgrind=1:3.13.0-1ubuntu2 \
-       libc6-dev-i386=2.26-0ubuntu2 \
+       libc6-dev-i386=2.26-0ubuntu2.1 \
        libgmp-dev=2:6.1.2+dfsg-1 \
        libmpfr-dev=3.1.6-1 \
        libmpc-dev=1.0.3-2 \
