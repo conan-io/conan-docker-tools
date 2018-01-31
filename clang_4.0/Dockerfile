@@ -8,6 +8,8 @@ ENV LLVM_VERSION=4.0 \
     CMAKE_C_COMPILER=clang \
     CMAKE_CXX_COMPILER=clang++
 
+COPY sources.list /etc/apt/sources.list
+
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \

@@ -2,6 +2,8 @@ FROM ubuntu:yakkety
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+COPY sources.list /etc/apt/sources.list
+
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
