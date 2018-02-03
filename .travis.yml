@@ -24,6 +24,7 @@ env:
 
     - GCC_VERSIONS="4.6"
     - GCC_VERSIONS="4.8"
+    - GCC_VERSIONS="4.9" DOCKER_ARCHS="x86"
     - GCC_VERSIONS="4.9"
     - GCC_VERSIONS="5.2"
     - GCC_VERSIONS="5.3"

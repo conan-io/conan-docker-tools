@@ -7,38 +7,42 @@ You can use these images directly in your project or with the [conan-package-too
 The images are uploaded to Dockerhub:
 
 #### GCC
-| Version                                                                     |  Status, Life cycle  |
-|-----------------------------------------------------------------------------|------------|
-| [lasote/conangcc46: gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)   |  Supported |
-| [lasote/conangcc46: gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)   |  Supported |
-| [lasote/conangcc48: gcc 4.8](https://hub.docker.com/r/lasote/conangcc48/)   |  Supported |
-| [lasote/conangcc49: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49/)   |  Supported |
-| [lasote/conangcc52: gcc 5.2](https://hub.docker.com/r/lasote/conangcc52/)   |  Supported |
-| [lasote/conangcc53: gcc 5.3](https://hub.docker.com/r/lasote/conangcc53/)   |  Supported |
-| [lasote/conangcc54: gcc 5.4](https://hub.docker.com/r/lasote/conangcc54/)   |  Supported |
-| [lasote/conangcc62: gcc 6.2](https://hub.docker.com/r/lasote/conangcc62/)   |  DEPRECATED, only frozen binary image support, No Dockerfile |
-| [lasote/conangcc63: gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)   |  Supported |
-| [lasote/conangcc64: gcc 6.4](https://hub.docker.com/r/lasote/conangcc64/)   |  Supported |
-| [lasote/conangcc71: gcc 7.1](https://hub.docker.com/r/lasote/conangcc71/)   |  DEPRECATED, only frozen binary image support, No Dockerfile |
-| [lasote/conangcc72: gcc 7.2](https://hub.docker.com/r/lasote/conangcc72/)   |  Supported |
+| Version                                                                              | Arch   |  Status, Life cycle  |
+|--------------------------------------------------------------------------------------|--------|------------|
+| [lasote/conangcc46: gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)            | x86_64 |  Supported |
+| [lasote/conangcc46: gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)            | x86_64 |  Supported |
+| [lasote/conangcc48: gcc 4.8](https://hub.docker.com/r/lasote/conangcc48/)            | x86_64 |  Supported |
+| [lasote/conangcc49: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49/)            | x86_64 |  Supported |
+| [lasote/conangcc49-i386: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49-i386/)  | x86    |  Supported |
+| [lasote/conangcc52: gcc 5.2](https://hub.docker.com/r/lasote/conangcc52/)            | x86_64 |  Supported |
+| [lasote/conangcc53: gcc 5.3](https://hub.docker.com/r/lasote/conangcc53/)            | x86_64 |  Supported |
+| [lasote/conangcc54: gcc 5.4](https://hub.docker.com/r/lasote/conangcc54/)            | x86_64 |  Supported |
+| [lasote/conangcc62: gcc 6.2](https://hub.docker.com/r/lasote/conangcc62/)            | x86_64 |  DEPRECATED, only frozen binary image support, No Dockerfile |
+| [lasote/conangcc63: gcc 6.3](https://hub.docker.com/r/lasote/conangcc63/)            | x86_64 |  Supported |
+| [lasote/conangcc64: gcc 6.4](https://hub.docker.com/r/lasote/conangcc64/)            | x86_64 |  Supported |
+| [lasote/conangcc71: gcc 7.1](https://hub.docker.com/r/lasote/conangcc71/)            | x86_64 |  DEPRECATED, only frozen binary image support, No Dockerfile |
+| [lasote/conangcc72: gcc 7.2](https://hub.docker.com/r/lasote/conangcc72/)            | x86_64 |  Supported |
 
 GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are generic images by major version. If you are interested to understand the motivation, read this [issue](https://github.com/conan-io/conan/issues/1214).
 
-| Version                                                                     |  Status, Life cycle  |
-|-----------------------------------------------------------------------------|------------|
-| [lasote/conangcc5: gcc 5](https://hub.docker.com/r/lasote/conangcc5/)   |  Supported |
-| [lasote/conangcc6: gcc 6](https://hub.docker.com/r/lasote/conangcc6/)   |  Supported |
-| [lasote/conangcc7: gcc 7](https://hub.docker.com/r/lasote/conangcc7/)   |  Supported |
+| Version                                                                          | Arch   |  Status, Life cycle  |
+|----------------------------------------------------------------------------------|--------|------------|
+| [lasote/conangcc5-i386: gcc 5](https://hub.docker.com/r/lasote/conangcc5-i386/)  | x86    |  Supported |
+| [lasote/conangcc5: gcc 5](https://hub.docker.com/r/lasote/conangcc5/)            | x86_64 |  Supported |
+| [lasote/conangcc6-i386: gcc 6](https://hub.docker.com/r/lasote/conangcc6-i386/)  | x86    |  Supported |
+| [lasote/conangcc6: gcc 6](https://hub.docker.com/r/lasote/conangcc6/)            | x86_64 |  Supported |
+| [lasote/conangcc7-i386: gcc 7](https://hub.docker.com/r/lasote/conangcc7-i386/)  | x86    |  Supported |
+| [lasote/conangcc7: gcc 7](https://hub.docker.com/r/lasote/conangcc7/)            | x86_64 |  Supported |
 
 
 #### Clang
 
-| Version                                                                             |  Status, Life cycle  |
-|-------------------------------------------------------------------------------------|------------|
-| - [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)   |  Supported |
-| - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)   |  Supported |
-| - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)   |  Supported |
-| - [lasote/conanclang50: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)   |  Supported |
+| Version                                                                             | Arch   |  Status, Life cycle  |
+|-------------------------------------------------------------------------------------|--------|------------|
+| - [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)   | x86_64 |  Supported |
+| - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)   | x86_64 |  Supported |
+| - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)   | x86_64 |  Supported |
+| - [lasote/conanclang50: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)   | x86_64 |  Supported |
 
 
 Use the images to test your c++ project in travis-ci
