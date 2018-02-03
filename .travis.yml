@@ -12,7 +12,7 @@ env:
   matrix:
     - GCC_VERSIONS="5"
     - GCC_VERSIONS="6"
-    - GCC_VERSIONS="7"
+    - GCC_VERSIONS="7" DOCKER_ARCHS="x86,x86_64"
     - CLANG_VERSIONS="3.8"
     - CLANG_VERSIONS="3.9"
     - CLANG_VERSIONS="4.0"
@@ -30,4 +30,4 @@ env:
 
 
 script:
-  - travis_wait python build.py
+  - python build.py

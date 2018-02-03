@@ -77,6 +77,13 @@ services:
         image: "${DOCKER_USERNAME}/conangcc7:${DOCKER_BUILD_TAG}"
         container_name: conangcc7
         tty: true
+    conangcc7-i386:
+        build:
+            context: gcc_7-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc7-i386:${DOCKER_BUILD_TAG}"
+        container_name: conangcc7-i386
+        tty: true
     conangcc72:
         build:
             context: gcc_7.2
