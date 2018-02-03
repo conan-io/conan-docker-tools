@@ -12,7 +12,7 @@ RUN apt-get -qq update \
        vim=2:8.0.0197-4ubuntu5 \
        libc6-dev=2.26-0ubuntu2.1 \
        linux-libc-dev=4.13.0-32.35 \
-       g++-7=7.2.0-8ubuntu3 \
+       g++-6=6.4.0-8ubuntu1 \
        libgmp-dev=2:6.1.2+dfsg-1 \
        libmpfr-dev=3.1.6-1 \
        libmpc-dev=1.0.3-2 \
@@ -24,10 +24,10 @@ RUN apt-get -qq update \
        libffi-dev=3.2.1-6 \
        libssl-dev=1.0.2g-1ubuntu13.3 \
        ca-certificates=20170717 \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
-    && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 100 \
-    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-7 100 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100 \
+    && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-6 100 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100 \
+    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-6 100 \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz \
     && tar -xzf cmake-3.10.1.tar.gz \

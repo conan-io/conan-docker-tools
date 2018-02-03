@@ -56,6 +56,13 @@ services:
         image: "${DOCKER_USERNAME}/conangcc6:${DOCKER_BUILD_TAG}"
         container_name: conangcc6
         tty: true
+    conangcc6-i386:
+        build:
+            context: gcc_6-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc6-i386:${DOCKER_BUILD_TAG}"
+        container_name: conangcc6-i386
+        tty: true
     conangcc63:
         build:
             context: gcc_6.3
