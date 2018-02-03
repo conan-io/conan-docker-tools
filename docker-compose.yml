@@ -28,6 +28,13 @@ services:
         image: "${DOCKER_USERNAME}/conangcc5:${DOCKER_BUILD_TAG}"
         container_name: conangcc5
         tty: true
+    conangcc5-i386:
+        build:
+            context: gcc_5-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc5-i386:${DOCKER_BUILD_TAG}"
+        container_name: conangcc5-i386
+        tty: true
     conangcc52:
         build:
             context: gcc_5.2
