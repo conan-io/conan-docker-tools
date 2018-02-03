@@ -37,12 +37,13 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 
 #### Clang
 
-| Version                                                                             | Arch   |  Status, Life cycle  |
-|-------------------------------------------------------------------------------------|--------|------------|
-| - [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)   | x86_64 |  Supported |
-| - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)   | x86_64 |  Supported |
-| - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)   | x86_64 |  Supported |
-| - [lasote/conanclang50: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)   | x86_64 |  Supported |
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)             | x86_64 |  Supported |
+| - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)             | x86_64 |  Supported |
+| - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)             | x86_64 |  Supported |
+| - [lasote/conanclang50-i386: clang 5.0](https://hub.docker.com/r/lasote/conanclang50-i386/)   | x86    |  Supported |
+| - [lasote/conanclang50: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)             | x86_64 |  Supported |
 
 
 Use the images to test your c++ project in travis-ci
