@@ -2,6 +2,8 @@ FROM i386/ubuntu:artful
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ENV CONAN_ENV_ARCH=x86
+
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
        python-dev=2.7.14-2ubuntu1 \

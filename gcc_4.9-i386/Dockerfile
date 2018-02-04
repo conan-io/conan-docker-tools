@@ -2,6 +2,8 @@ FROM i386/ubuntu:xenial
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ENV CONAN_ENV_ARCH=x86
+
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
