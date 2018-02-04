@@ -1,4 +1,4 @@
-FROM ubuntu:zesty
+FROM ubuntu:artful
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -8,42 +8,42 @@ ENV LLVM_VERSION=3.9 \
     CMAKE_C_COMPILER=clang \
     CMAKE_CXX_COMPILER=clang++
 
-COPY sources.list /etc/apt/sources.list
-
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
-       sudo=1.8.* \
-       wget=1.18* \
-       git=1:2.* \
-       vim=2:8.* \
+       python-dev=2.7.14-2ubuntu1 \
+       sudo=1.8.20p2-1ubuntu1 \
+       wget=1.19.1-3ubuntu1 \
+       git=1:2.14.1-1ubuntu4 \
+       vim=2:8.0.0197-4ubuntu5 \
+       g++-multilib=4:7.2.0-1ubuntu1 \
        clang-${LLVM_VERSION}=1:3.9.1-* \
        llvm-${LLVM_VERSION}=1:3.9.1-* \
        llvm-${LLVM_VERSION}-dev=1:3.9.1-* \
        llvm-${LLVM_VERSION}-runtime=1:3.9.1-* \
        llvm=1:4.0-* \
-       make=4.1-* \
-       valgrind=1:3.* \
-       libc6-dev-i386=2.24-* \
-       g++-multilib=4:6.3.* \
-       libgmp-dev=2:6.1.* \
-       libmpfr-dev=3.1.* \
-       libmpc-dev=1.0.* \
-       nasm=2.12.* \
-       dh-autoreconf=13 \
-       libffi-dev=3.2.* \
-       libssl-dev=1.0.* \
-       ninja-build=1.7.* \
-       libc++-dev=3.9.* \
-       libc++-dev:i386=3.9.* \
-       libc++abi-dev=3.9.* \
-       libc++abi-dev:i386=3.9.* \
-       ca-certificates \
+       make=4.1-9.1 \
+       valgrind=1:3.13.0-1ubuntu2 \
+       libc6-dev-i386=2.26-0ubuntu2.1 \
+       libgmp-dev=2:6.1.2+dfsg-1 \
+       libmpfr-dev=3.1.6-1 \
+       libmpc-dev=1.0.3-2 \
+       nasm=2.13.01-2 \
+       dh-autoreconf=14 \
+       libffi-dev=3.2.1-6 \
+       libssl-dev=1.0.2g-1ubuntu13.3 \
+       ninja-build=1.7.2-3 \
+       libc++-dev=3.9.1-3 \
+       libc++-dev:i386=3.9.1-3 \
+       libc++abi-dev=3.9.1-3 \
+       libc++abi-dev:i386=3.9.1-3 \
+       ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${LLVM_VERSION} 100 \
+    && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-${LLVM_VERSION} 100 \
+    && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.10.1-Linux-x86_64.tar.gz \

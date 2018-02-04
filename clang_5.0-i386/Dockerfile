@@ -27,11 +27,11 @@ RUN apt-get -qq update \
        nasm=2.13.01-2 \
        dh-autoreconf=14 \
        libffi-dev=3.2.1-6 \
-       libssl-dev \
+       libssl-dev=1.0.2g-1ubuntu13.3 \
        ninja-build=1.7.2-3 \
        libc++-dev=3.9.1-3 \
        libc++abi-dev=3.9.1-3 \
-       ca-certificates \
+       ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-5.0 100 \
