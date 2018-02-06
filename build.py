@@ -36,6 +36,7 @@ class ConanDockerTools(object):
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "lasote")
         docker_build_tag = os.getenv("DOCKER_BUILD_TAG", "latest")
+        docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else ["x86_64"]
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
@@ -44,9 +45,10 @@ class ConanDockerTools(object):
 
         Variables = collections.namedtuple("Variables", "docker_upload, docker_password, "
                                                         "docker_username, gcc_versions, "
-                                                        "clang_versions build_server docker_build_tag")
+                                                        "clang_versions, build_server, docker_build_tag, "
+                                                        "docker_archs")
         return Variables(docker_upload, docker_password, docker_username,
-                         gcc_versions, clang_versions, build_server, docker_build_tag)
+                         gcc_versions, clang_versions, build_server, docker_build_tag, docker_archs)
 
     def build(self, service):
         """Call docker build to create a image
@@ -88,20 +90,22 @@ class ConanDockerTools(object):
                                   service, shell=True)
 
             for libcxx in libcxx_list:
-                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
-                                      "arch=x86_64 -s compiler=%s -s compiler.version=%s "
-                                      "-s compiler.libcxx=%s --build" %
-                                      (service, compiler_name, compiler_version, libcxx), shell=True)
+                if "i386" not in service:
+                    subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
+                                          "arch=x86_64 -s compiler=%s -s compiler.version=%s "
+                                          "-s compiler.libcxx=%s --build" %
+                                          (service, compiler_name, compiler_version, libcxx), shell=True)
+
+                    subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
+                                          "arch=x86_64 -s compiler=%s -s compiler.version=%s "
+                                          "-s compiler.libcxx=%s --build" %
+                                          (service, compiler_name, compiler_version, libcxx), shell=True)
 
                 subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable "
                                       "-s arch=x86 -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %
                                       (service, compiler_name, compiler_version, libcxx), shell=True)
 
-                subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
-                                      "arch=x86_64 -s compiler=%s -s compiler.version=%s "
-                                      "-s compiler.libcxx=%s --build" %
-                                      (service, compiler_name, compiler_version, libcxx), shell=True)
                 subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable "
                                       "-s arch=x86 -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %
@@ -137,15 +141,17 @@ class ConanDockerTools(object):
     def run(self):
         """Execute all 3 stages for all versions in compilers list
         """
-        for compiler in [self.gcc_compiler, self.clang_compiler]:
-            for version in compiler.versions:
-                service = "conan%s%s" % (compiler.name, version.replace(".", ""))
-                build_dir = "%s_%s" % (compiler.name, version)
+        for arch in self.variables.docker_archs:
+            for compiler in [self.gcc_compiler, self.clang_compiler]:
+                for version in compiler.versions:
+                    arch = "" if arch == "x86_64" else "-i386"
+                    service = "conan%s%s%s" % (compiler.name, version.replace(".", ""), arch)
+                    build_dir = "%s_%s%s" % (compiler.name, version, arch)
 
-                self.linter(build_dir)
-                self.build(service)
-                self.test(compiler.name, version, service)
-                self.deploy(service)
+                    self.linter(build_dir)
+                    self.build(service)
+                    self.test(compiler.name, version, service)
+                    self.deploy(service)
 
         if self.variables.build_server:
             logging.info("Bulding conan_server image...")

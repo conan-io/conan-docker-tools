@@ -21,12 +21,26 @@ services:
         image: "${DOCKER_USERNAME}/conangcc49:${DOCKER_BUILD_TAG}"
         container_name: conangcc49
         tty: true
+    conangcc49-i386:
+        build:
+            context: gcc_4.9-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc49-i386:${DOCKER_BUILD_TAG}"
+        container_name: conangcc49-i386
+        tty: true
     conangcc5:
         build:
             context: gcc_5
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc5:${DOCKER_BUILD_TAG}"
         container_name: conangcc5
+        tty: true
+    conangcc5-i386:
+        build:
+            context: gcc_5-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc5-i386:${DOCKER_BUILD_TAG}"
+        container_name: conangcc5-i386
         tty: true
     conangcc52:
         build:
@@ -56,6 +70,13 @@ services:
         image: "${DOCKER_USERNAME}/conangcc6:${DOCKER_BUILD_TAG}"
         container_name: conangcc6
         tty: true
+    conangcc6-i386:
+        build:
+            context: gcc_6-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc6-i386:${DOCKER_BUILD_TAG}"
+        container_name: conangcc6-i386
+        tty: true
     conangcc63:
         build:
             context: gcc_6.3
@@ -76,6 +97,13 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc7:${DOCKER_BUILD_TAG}"
         container_name: conangcc7
+        tty: true
+    conangcc7-i386:
+        build:
+            context: gcc_7-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc7-i386:${DOCKER_BUILD_TAG}"
+        container_name: conangcc7-i386
         tty: true
     conangcc72:
         build:
@@ -98,6 +126,13 @@ services:
         image: "${DOCKER_USERNAME}/conanclang39:${DOCKER_BUILD_TAG}"
         container_name: conanclang39
         tty: true
+    conanclang39-i386:
+        build:
+            context: clang_3.9-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanclang39-i386:${DOCKER_BUILD_TAG}"
+        container_name: conanclang39-i386
+        tty: true
     conanclang40:
         build:
             context: clang_4.0
@@ -105,12 +140,26 @@ services:
         image: "${DOCKER_USERNAME}/conanclang40:${DOCKER_BUILD_TAG}"
         container_name: conanclang40
         tty: true
+    conanclang40-i386:
+        build:
+            context: clang_4.0-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanclang40-i386:${DOCKER_BUILD_TAG}"
+        container_name: conanclang40-i386
+        tty: true
     conanclang50:
         build:
             context: clang_5.0
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conanclang50:${DOCKER_BUILD_TAG}"
         container_name: conanclang50
+        tty: true
+    conanclang50-i386:
+        build:
+            context: clang_5.0-i386
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanclang50-i386:${DOCKER_BUILD_TAG}"
+        container_name: conanclang50-i386
         tty: true
     conan_server:
         build:
