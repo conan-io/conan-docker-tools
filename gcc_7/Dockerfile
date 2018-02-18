@@ -27,6 +27,7 @@ RUN dpkg --add-architecture i386 \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
+    && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.10.1-Linux-x86_64.tar.gz \
