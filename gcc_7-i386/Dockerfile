@@ -1,4 +1,5 @@
 FROM i386/ubuntu:artful
+ENTRYPOINT ["linux32", "--"]
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
