@@ -1,25 +1,29 @@
-FROM ubuntu:xenial
+FROM ubuntu:trusty
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.11-1 \
-       sudo=1.8.16-0ubuntu1 \
-       g++-4.9=4.9.3-13ubuntu2 \
-       g++-4.9-multilib=4.9.3-13ubuntu2 \
-       gcc-multilib=4:5.3.1-1ubuntu1 \
-       libc6-dev-i386=2.23-0ubuntu10 \
-       wget=1.17.1-1ubuntu1 \
-       git=1:2.7.4-0ubuntu1 \
-       vim=2:7.4.1689-3ubuntu1.2 \
-       nasm=2.11.08-1 \
-       dh-autoreconf=11 \
-       valgrind=1:3.11.0-1ubuntu4 \
-       ninja-build=1.5.1-0.1ubuntu1 \
-       libffi-dev=3.2.1-4 \
-       libssl-dev \
+    && apt-get -qq install -y software-properties-common \
+    && add-apt-repository -y ppa:fkrull/deadsnakes-python2.7 \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && apt-get -qq update \
+    && apt-get -qq install -y --force-yes --no-install-recommends \
+       python-dev=2.7.* \
+       sudo=1.8.9p5-1ubuntu1.4 \
+       g++-4.9 \
+       g++-4.9-multilib \
+       libc6-dev-i386 \
+       gcc-multilib \
+       wget=1.15-1ubuntu1.14.04.3 \
+       git=1:1.9.1-1ubuntu0.7 \
+       vim=2:7.4.052-1ubuntu3.1 \
+       nasm=2.10.09-1 \
+       dh-autoreconf=9 \
+       valgrind=1:3.10.1-1ubuntu3~14.5 \
+       ninja-build=1.3.4-1.1ubuntu0.14.04.1 \
+       libffi-dev=3.1~rc1+r3.0.13-12ubuntu0.2 \
+       libssl-dev=1.0.1f-1ubuntu2.23 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
