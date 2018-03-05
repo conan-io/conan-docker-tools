@@ -14,6 +14,7 @@ RUN dpkg --add-architecture i386 \
        g++-4.9 \
        g++-4.9-multilib \
        libc6-dev-i386 \
+       gcc-multilib \
        wget=1.15-1ubuntu1.14.04.3 \
        git=1:1.9.1-1ubuntu0.7 \
        vim=2:7.4.052-1ubuntu3.1 \
