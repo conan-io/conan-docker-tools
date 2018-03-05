@@ -1,4 +1,5 @@
 FROM i386/ubuntu:artful
+ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/issues/36
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -11,7 +12,7 @@ ENV LLVM_VERSION=3.9 \
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.14-2ubuntu1 \
+       python-dev=2.7.* \
        sudo=1.8.20p2-1ubuntu1 \
        wget=1.19.1-3ubuntu1 \
        git=1:2.14.1-1ubuntu4 \

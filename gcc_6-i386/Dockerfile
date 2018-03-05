@@ -1,5 +1,5 @@
 FROM i386/ubuntu:artful
-ENTRYPOINT ["linux32", "--"]
+ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/issues/36
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -7,15 +7,15 @@ ENV CONAN_ENV_ARCH=x86
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.14-2ubuntu1 \
-       sudo=1.8.20p2-1ubuntu1 \
-       binutils=2.29.1-4ubuntu1 \
-       wget=1.19.1-3ubuntu1.1 \
-       git=1:2.14.1-1ubuntu4 \
-       vim=2:8.0.0197-4ubuntu5 \
-       libc6-dev=2.26-0ubuntu2.1 \
-       linux-libc-dev=4.13.0-32.35 \
-       g++-6=6.4.0-8ubuntu1 \
+       python-dev=2.7.* \
+       sudo=1.* \
+       binutils=2.29.* \
+       wget=1.19.* \
+       git=1:2.* \
+       vim=2:8.* \
+       libc6-dev=2.26* \
+       linux-libc-dev=4.13* \
+       g++-6=6.4.* \
        libgmp-dev=2:6.1.2+dfsg-1 \
        libmpfr-dev=3.1.6-1 \
        libmpc-dev=1.0.3-2 \

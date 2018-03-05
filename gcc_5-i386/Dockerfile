@@ -1,5 +1,5 @@
 FROM i386/ubuntu:xenial
-ENTRYPOINT ["linux32", "--"]
+ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/issues/36
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -7,18 +7,17 @@ ENV CONAN_ENV_ARCH=x86
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.11-1 \
-       sudo=1.8.16-0ubuntu1.5 \
+       python-dev=2.7.* \
+       sudo=1.8.* \
        build-essential=12.1ubuntu2 \
-       wget=1.17.1-1ubuntu1.3 \
-       git=1:2.7.4-0ubuntu1.3 \
-       vim=2:7.4.1689-3ubuntu1.2 \
-       libc6-dev=2.23-0ubuntu10 \
-       g++=4:5.3.1-1ubuntu1 \
+       wget=1.17.* \
+       git=1:2.7.* \
+       vim=2:7.* \
+       g++=4:5.3.* \
        libgmp-dev=2:6.1.0+dfsg-2 \
        libmpfr-dev=3.1.4-1 \
        libmpc-dev=1.0.3-1 \
-       libc6-dev=2.23-0ubuntu10 \
+       libc6-dev=2.23* \
        nasm=2.11.08-1 \
        dh-autoreconf=11 \
        valgrind=1:3.11.0-1ubuntu4.2 \
