@@ -70,6 +70,7 @@ class ConanDockerTools(object):
 
     def test(self, arch, compiler_name, compiler_version, service):
         """Validate Docker image by Conan install
+        :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         :param service: Docker compose service name
