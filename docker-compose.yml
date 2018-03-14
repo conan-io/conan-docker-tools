@@ -21,7 +21,7 @@ services:
         image: "${DOCKER_USERNAME}/conangcc49:${DOCKER_BUILD_TAG}"
         container_name: conangcc49
         tty: true
-    conangcc49-i386:
+    conangcc49-x86:
         build:
             context: gcc_4.9-i386
             dockerfile: Dockerfile
@@ -49,7 +49,7 @@ services:
         image: "${DOCKER_USERNAME}/conangcc5:${DOCKER_BUILD_TAG}"
         container_name: conangcc5
         tty: true
-    conangcc5-i386:
+    conangcc5-x86:
         build:
             context: gcc_5-i386
             dockerfile: Dockerfile
@@ -98,7 +98,7 @@ services:
         image: "${DOCKER_USERNAME}/conangcc6:${DOCKER_BUILD_TAG}"
         container_name: conangcc6
         tty: true
-    conangcc6-i386:
+    conangcc6-x86:
         build:
             context: gcc_6-i386
             dockerfile: Dockerfile
@@ -140,7 +140,7 @@ services:
         image: "${DOCKER_USERNAME}/conangcc7:${DOCKER_BUILD_TAG}"
         container_name: conangcc7
         tty: true
-    conangcc7-i386:
+    conangcc7-x86:
         build:
             context: gcc_7-i386
             dockerfile: Dockerfile
@@ -182,7 +182,7 @@ services:
         image: "${DOCKER_USERNAME}/conanclang39:${DOCKER_BUILD_TAG}"
         container_name: conanclang39
         tty: true
-    conanclang39-i386:
+    conanclang39-x86:
         build:
             context: clang_3.9-i386
             dockerfile: Dockerfile
@@ -196,7 +196,7 @@ services:
         image: "${DOCKER_USERNAME}/conanclang40:${DOCKER_BUILD_TAG}"
         container_name: conanclang40
         tty: true
-    conanclang40-i386:
+    conanclang40-x86:
         build:
             context: clang_4.0-i386
             dockerfile: Dockerfile
@@ -210,7 +210,7 @@ services:
         image: "${DOCKER_USERNAME}/conanclang50:${DOCKER_BUILD_TAG}"
         container_name: conanclang50
         tty: true
-    conanclang50-i386:
+    conanclang50-x86:
         build:
             context: clang_5.0-i386
             dockerfile: Dockerfile
