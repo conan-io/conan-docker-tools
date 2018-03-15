@@ -68,8 +68,9 @@ class ConanDockerTools(object):
         subprocess.call('docker run --rm -i lukasmartinelli/hadolint < %s/Dockerfile' % build_dir,
                         shell=True)
 
-    def test(self, compiler_name, compiler_version, service):
+    def test(self, arch, compiler_name, compiler_version, service):
         """Validate Docker image by Conan install
+        :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         :param service: Docker compose service name
@@ -88,28 +89,20 @@ class ConanDockerTools(object):
                                   "https://api.bintray.com/conan/conan-community/conan "
                                   "--insert" %
                                   service, shell=True)
-
+            conan_arch = {"i386": "x86"}.get(arch, arch)
             for libcxx in libcxx_list:
-                if "i386" not in service:
-                    subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
-                                          "arch=x86_64 -s compiler=%s -s compiler.version=%s "
-                                          "-s compiler.libcxx=%s --build" %
-                                          (service, compiler_name, compiler_version, libcxx), shell=True)
 
-                    subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
-                                          "arch=x86_64 -s compiler=%s -s compiler.version=%s "
-                                          "-s compiler.libcxx=%s --build" %
-                                          (service, compiler_name, compiler_version, libcxx), shell=True)
-
-                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable "
-                                      "-s arch=x86 -s compiler=%s -s compiler.version=%s "
+                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
+                                      "arch=%s -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %
-                                      (service, compiler_name, compiler_version, libcxx), shell=True)
+                                      (service, conan_arch, compiler_name,
+                                       compiler_version, libcxx), shell=True)
 
-                subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable "
-                                      "-s arch=x86 -s compiler=%s -s compiler.version=%s "
+                subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
+                                      "arch=%s -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %
-                                      (service, compiler_name, compiler_version, libcxx), shell=True)
+                                      (service, conan_arch, compiler_name,
+                                       compiler_version, libcxx), shell=True)
 
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
@@ -144,13 +137,13 @@ class ConanDockerTools(object):
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
                 for version in compiler.versions:
-                    arch = "" if arch == "x86_64" else "-i386"
-                    service = "conan%s%s%s" % (compiler.name, version.replace(".", ""), arch)
-                    build_dir = "%s_%s%s" % (compiler.name, version, arch)
+                    tag_arch = "" if arch == "x86_64" else "-%s" % arch
+                    service = "conan%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
+                    build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
 
                     self.linter(build_dir)
                     self.build(service)
-                    self.test(compiler.name, version, service)
+                    self.test(arch, compiler.name, version, service)
                     self.deploy(service)
 
         if self.variables.build_server:

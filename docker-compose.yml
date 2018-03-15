@@ -28,6 +28,20 @@ services:
         image: "${DOCKER_USERNAME}/conangcc49-i386:${DOCKER_BUILD_TAG}"
         container_name: conangcc49-i386
         tty: true
+    conangcc49-armv7:
+        build:
+            context: gcc_4.9-armv7
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc49-armv7:${DOCKER_BUILD_TAG}"
+        container_name: conangcc49-armv7
+        tty: true
+    conangcc49-armv7hf:
+        build:
+            context: gcc_4.9-armv7hf
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc49-armv7hf:${DOCKER_BUILD_TAG}"
+        container_name: conangcc49-armv7hf
+        tty: true
     conangcc5:
         build:
             context: gcc_5
@@ -41,6 +55,20 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc5-i386:${DOCKER_BUILD_TAG}"
         container_name: conangcc5-i386
+        tty: true
+    conangcc5-armv7:
+        build:
+            context: gcc_5-armv7
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc5-armv7:${DOCKER_BUILD_TAG}"
+        container_name: conangcc5-armv7
+        tty: true
+    conangcc5-armv7hf:
+        build:
+            context: gcc_5-armv7hf
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc5-armv7hf:${DOCKER_BUILD_TAG}"
+        container_name: conangcc5-armv7hf
         tty: true
     conangcc52:
         build:
@@ -77,6 +105,20 @@ services:
         image: "${DOCKER_USERNAME}/conangcc6-i386:${DOCKER_BUILD_TAG}"
         container_name: conangcc6-i386
         tty: true
+    conangcc6-armv7:
+        build:
+            context: gcc_6-armv7
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc6-armv7:${DOCKER_BUILD_TAG}"
+        container_name: conangcc6-armv7
+        tty: true
+    conangcc6-armv7hf:
+        build:
+            context: gcc_6-armv7hf
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc6-armv7hf:${DOCKER_BUILD_TAG}"
+        container_name: conangcc6-armv7hf
+        tty: true
     conangcc63:
         build:
             context: gcc_6.3
@@ -104,6 +146,20 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conangcc7-i386:${DOCKER_BUILD_TAG}"
         container_name: conangcc7-i386
+        tty: true
+    conangcc7-armv7:
+        build:
+            context: gcc_7-armv7
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc7-armv7:${DOCKER_BUILD_TAG}"
+        container_name: conangcc7-armv7
+        tty: true
+    conangcc7-armv7hf:
+        build:
+            context: gcc_7-armv7hf
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc7-armv7hf:${DOCKER_BUILD_TAG}"
+        container_name: conangcc7-armv7hf
         tty: true
     conangcc72:
         build:

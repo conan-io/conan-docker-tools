@@ -1,0 +1,7 @@
+.git/
+.idea/
+
+*.md
+*.py
+*.yml
+**/*.sh
