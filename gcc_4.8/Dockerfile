@@ -19,7 +19,7 @@ RUN dpkg --add-architecture i386 \
        ninja-build=1.3.* \
        libffi-dev=3.1* \
        libssl-dev=1.0.* \
-       pkg-config \
+       pkg-config=0.26-1ubuntu4 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.tar.gz \
