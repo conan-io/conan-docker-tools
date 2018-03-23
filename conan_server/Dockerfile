@@ -2,7 +2,7 @@ FROM python:3.6-alpine3.6
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CONAN_VERSION=1.0.3
+ENV CONAN_VERSION=1.1.1
 
 ADD https://github.com/conan-io/conan/archive/${CONAN_VERSION}.zip /
 
