@@ -22,11 +22,11 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     libssl-dev=1.0.2* \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.1-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.10.1-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.10.1-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.10.1-Linux-x86_64 \
-    && rm cmake-3.10.1-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.10.3-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.10.3-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.10.3-Linux-x86_64 \
+    && rm cmake-3.10.3-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \
