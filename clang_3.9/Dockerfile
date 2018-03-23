@@ -37,6 +37,7 @@ RUN dpkg --add-architecture i386 \
        libc++-dev:i386=3.9.1-3 \
        libc++abi-dev=3.9.1-3 \
        libc++abi-dev:i386=3.9.1-3 \
+       pkg-config \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \

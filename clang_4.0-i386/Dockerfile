@@ -36,6 +36,7 @@ RUN apt-get -qq update \
        ninja-build=1.7.2-3 \
        libc++-dev=3.9.1-3 \
        libc++abi-dev=3.9.1-3 \
+       pkg-config \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \

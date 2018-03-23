@@ -26,6 +26,7 @@ RUN apt-get -qq update \
        ninja-build=1.7.2-3 \
        libffi-dev=3.2.1-6 \
        libssl-dev=1.0.2g-1ubuntu13.3 \
+       pkg-config \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-6 100 \

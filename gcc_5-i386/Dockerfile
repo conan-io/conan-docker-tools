@@ -24,6 +24,7 @@ RUN apt-get -qq update \
        ninja-build=1.5.1-0.1ubuntu1  \
        libffi-dev=3.2.1-4 \
        libssl-dev=1.0.2g-1ubuntu4.10 \
+       pkg-config \
        ca-certificates=20170717~16.04.1 \
        && rm -rf /var/lib/apt/lists/* \
        && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.3.tar.gz \

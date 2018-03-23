@@ -20,6 +20,7 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     ninja-build=1.3.* \
     libffi-dev=3.2.* \
     libssl-dev=1.0.2* \
+    pkg-config \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.tar.gz \
