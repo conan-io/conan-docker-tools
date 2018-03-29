@@ -23,7 +23,7 @@ RUN dpkg --add-architecture i386 \
        valgrind=1:3.10.1-1ubuntu3~14.5 \
        ninja-build=1.3.4-1.1ubuntu0.14.04.1 \
        libffi-dev=3.1~rc1+r3.0.13-12ubuntu0.2 \
-       libssl-dev=1.0.1f-1ubuntu2.23 \
+       libssl-dev=1.0.1* \
        pkg-config=0.26-1ubuntu4 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
