@@ -89,19 +89,18 @@ class ConanDockerTools(object):
                                   "https://api.bintray.com/conan/conan-community/conan "
                                   "--insert" %
                                   service, shell=True)
-            conan_arch = {"i386": "x86"}.get(arch, arch)
             for libcxx in libcxx_list:
 
                 subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
                                       "arch=%s -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %
-                                      (service, conan_arch, compiler_name,
+                                      (service, arch, compiler_name,
                                        compiler_version, libcxx), shell=True)
 
                 subprocess.check_call("docker exec %s conan install gtest/1.8.0@conan/stable -s "
                                       "arch=%s -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %
-                                      (service, conan_arch, compiler_name,
+                                      (service, arch, compiler_name,
                                        compiler_version, libcxx), shell=True)
 
         finally:
