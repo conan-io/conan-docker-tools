@@ -28,7 +28,7 @@ RUN apt-get -qq update \
        nasm=2.13.01-2 \
        dh-autoreconf=14 \
        libffi-dev=3.2.1-6 \
-       libssl-dev=1.0.2g-1ubuntu13.3 \
+       libssl-dev=1.0.2* \
        ninja-build=1.7.2-3 \
        libc++-dev=3.9.1-3 \
        libc++abi-dev=3.9.1-3 \

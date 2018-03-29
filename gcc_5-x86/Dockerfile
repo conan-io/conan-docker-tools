@@ -23,7 +23,7 @@ RUN apt-get -qq update \
        valgrind=1:3.11.0-1ubuntu4.2 \
        ninja-build=1.5.1-0.1ubuntu1  \
        libffi-dev=3.2.1-4 \
-       libssl-dev=1.0.2g-1ubuntu4.10 \
+       libssl-dev=1.0.2* \
        pkg-config=0.29.1-0ubuntu1 \
        ca-certificates=20170717~16.04.1 \
        && rm -rf /var/lib/apt/lists/* \

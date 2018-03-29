@@ -25,7 +25,7 @@ RUN apt-get -qq update \
        valgrind=1:3.13.0-1ubuntu3 \
        ninja-build=1.7.2-3 \
        libffi-dev=3.2.1-6 \
-       libssl-dev=1.0.2g-1ubuntu13.3 \
+       libssl-dev=1.0.2* \
        pkg-config=0.29.1-0ubuntu2 \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
