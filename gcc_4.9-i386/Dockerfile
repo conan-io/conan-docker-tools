@@ -25,15 +25,16 @@ RUN dpkg --add-architecture i386 \
        ninja-build=1.3.4-1.1ubuntu0.14.04.1 \
        libffi-dev=3.1~rc1+r3.0.13-12ubuntu0.2 \
        libssl-dev=1.0.1f-1ubuntu2.23 \
+       pkg-config=0.26-1ubuntu4 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz \
-    && tar -xzf cmake-3.10.1.tar.gz \
-    && cd cmake-3.10.1 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.3.tar.gz \
+    && tar -xzf cmake-3.10.3.tar.gz \
+    && cd cmake-3.10.3 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \

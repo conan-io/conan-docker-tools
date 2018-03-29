@@ -39,17 +39,18 @@ RUN dpkg --add-architecture i386 \
        libc++-dev:i386=3.9.* \
        libc++abi-dev=3.9.* \
        libc++abi-dev:i386=3.9.* \
+       pkg-config=0.29.1-0ubuntu1 \
        ca-certificates \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.1-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.10.1-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.10.1-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.10.1-Linux-x86_64 \
-    && rm cmake-3.10.1-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.10.3-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.10.3-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.10.3-Linux-x86_64 \
+    && rm cmake-3.10.3-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \

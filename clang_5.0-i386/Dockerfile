@@ -32,6 +32,7 @@ RUN apt-get -qq update \
        ninja-build=1.7.2-3 \
        libc++-dev=3.9.1-3 \
        libc++abi-dev=3.9.1-3 \
+       pkg-config=0.29.1-0ubuntu2 \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100 \
@@ -40,9 +41,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-5.0 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz \
-    && tar -xzf cmake-3.10.1.tar.gz \
-    && cd cmake-3.10.1 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.3.tar.gz \
+    && tar -xzf cmake-3.10.3.tar.gz \
+    && cd cmake-3.10.3 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \

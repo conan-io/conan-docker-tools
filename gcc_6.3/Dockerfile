@@ -25,13 +25,14 @@ RUN dpkg --add-architecture i386 \
        ninja-build=1.7.* \
        libffi-dev=3.2.* \
        libssl-dev=1.0.* \
+       pkg-config=0.29.1-0ubuntu1 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.1-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.10.1-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.10.1-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.10.1-Linux-x86_64 \
-    && rm cmake-3.10.1-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.10.3-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.10.3-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.10.3-Linux-x86_64 \
+    && rm cmake-3.10.3-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \

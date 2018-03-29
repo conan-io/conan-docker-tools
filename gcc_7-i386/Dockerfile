@@ -26,6 +26,7 @@ RUN apt-get -qq update \
        ninja-build=1.7.2-3 \
        libffi-dev=3.2.1-6 \
        libssl-dev=1.0.2g-1ubuntu13.3 \
+       pkg-config=0.29.1-0ubuntu2 \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
@@ -33,9 +34,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz \
-    && tar -xzf cmake-3.10.1.tar.gz \
-    && cd cmake-3.10.1 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.3.tar.gz \
+    && tar -xzf cmake-3.10.3.tar.gz \
+    && cd cmake-3.10.3 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
