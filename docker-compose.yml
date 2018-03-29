@@ -21,12 +21,12 @@ services:
         image: "${DOCKER_USERNAME}/conangcc49:${DOCKER_BUILD_TAG}"
         container_name: conangcc49
         tty: true
-    conangcc49-i386:
+    conangcc49-x86:
         build:
-            context: gcc_4.9-i386
+            context: gcc_4.9-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conangcc49-i386:${DOCKER_BUILD_TAG}"
-        container_name: conangcc49-i386
+        image: "${DOCKER_USERNAME}/conangcc49-x86:${DOCKER_BUILD_TAG}"
+        container_name: conangcc49-x86
         tty: true
     conangcc49-armv7:
         build:
@@ -49,12 +49,12 @@ services:
         image: "${DOCKER_USERNAME}/conangcc5:${DOCKER_BUILD_TAG}"
         container_name: conangcc5
         tty: true
-    conangcc5-i386:
+    conangcc5-x86:
         build:
-            context: gcc_5-i386
+            context: gcc_5-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conangcc5-i386:${DOCKER_BUILD_TAG}"
-        container_name: conangcc5-i386
+        image: "${DOCKER_USERNAME}/conangcc5-x86:${DOCKER_BUILD_TAG}"
+        container_name: conangcc5-x86
         tty: true
     conangcc5-armv7:
         build:
@@ -98,12 +98,12 @@ services:
         image: "${DOCKER_USERNAME}/conangcc6:${DOCKER_BUILD_TAG}"
         container_name: conangcc6
         tty: true
-    conangcc6-i386:
+    conangcc6-x86:
         build:
-            context: gcc_6-i386
+            context: gcc_6-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conangcc6-i386:${DOCKER_BUILD_TAG}"
-        container_name: conangcc6-i386
+        image: "${DOCKER_USERNAME}/conangcc6-x86:${DOCKER_BUILD_TAG}"
+        container_name: conangcc6-x86
         tty: true
     conangcc6-armv7:
         build:
@@ -140,12 +140,12 @@ services:
         image: "${DOCKER_USERNAME}/conangcc7:${DOCKER_BUILD_TAG}"
         container_name: conangcc7
         tty: true
-    conangcc7-i386:
+    conangcc7-x86:
         build:
-            context: gcc_7-i386
+            context: gcc_7-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conangcc7-i386:${DOCKER_BUILD_TAG}"
-        container_name: conangcc7-i386
+        image: "${DOCKER_USERNAME}/conangcc7-x86:${DOCKER_BUILD_TAG}"
+        container_name: conangcc7-x86
         tty: true
     conangcc7-armv7:
         build:
@@ -182,12 +182,12 @@ services:
         image: "${DOCKER_USERNAME}/conanclang39:${DOCKER_BUILD_TAG}"
         container_name: conanclang39
         tty: true
-    conanclang39-i386:
+    conanclang39-x86:
         build:
-            context: clang_3.9-i386
+            context: clang_3.9-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conanclang39-i386:${DOCKER_BUILD_TAG}"
-        container_name: conanclang39-i386
+        image: "${DOCKER_USERNAME}/conanclang39-x86:${DOCKER_BUILD_TAG}"
+        container_name: conanclang39-x86
         tty: true
     conanclang40:
         build:
@@ -196,12 +196,12 @@ services:
         image: "${DOCKER_USERNAME}/conanclang40:${DOCKER_BUILD_TAG}"
         container_name: conanclang40
         tty: true
-    conanclang40-i386:
+    conanclang40-x86:
         build:
-            context: clang_4.0-i386
+            context: clang_4.0-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conanclang40-i386:${DOCKER_BUILD_TAG}"
-        container_name: conanclang40-i386
+        image: "${DOCKER_USERNAME}/conanclang40-x86:${DOCKER_BUILD_TAG}"
+        container_name: conanclang40-x86
         tty: true
     conanclang50:
         build:
@@ -210,12 +210,12 @@ services:
         image: "${DOCKER_USERNAME}/conanclang50:${DOCKER_BUILD_TAG}"
         container_name: conanclang50
         tty: true
-    conanclang50-i386:
+    conanclang50-x86:
         build:
-            context: clang_5.0-i386
+            context: clang_5.0-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conanclang50-i386:${DOCKER_BUILD_TAG}"
-        container_name: conanclang50-i386
+        image: "${DOCKER_USERNAME}/conanclang50-x86:${DOCKER_BUILD_TAG}"
+        container_name: conanclang50-x86
         tty: true
     conan_server:
         build:

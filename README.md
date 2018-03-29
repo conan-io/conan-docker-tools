@@ -13,7 +13,7 @@ The images are uploaded to Dockerhub:
 | [lasote/conangcc46: gcc 4.6](https://hub.docker.com/r/lasote/conangcc46/)                     | x86_64  |  Supported |
 | [lasote/conangcc48: gcc 4.8](https://hub.docker.com/r/lasote/conangcc48/)                     | x86_64  |  Supported |
 | [lasote/conangcc49: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49/)                     | x86_64  |  Supported |
-| [lasote/conangcc49-i386: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49-i386/)           | x86     |  Supported |
+| [lasote/conangcc49-x86: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49-x86/)             | x86     |  Supported |
 | [lasote/conangcc49-armv7: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49-armv7/)         | armv7   |  Supported |
 | [lasote/conangcc49-armv7hf: gcc 4.9](https://hub.docker.com/r/lasote/conangcc49-armv7hf/)     | armv7hf |  Supported |
 | [lasote/conangcc52: gcc 5.2](https://hub.docker.com/r/lasote/conangcc52/)                     | x86_64  |  Supported |
@@ -31,14 +31,14 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | Version                                                                                    | Arch    |  Status, Life cycle  |
 |--------------------------------------------------------------------------------------------|---------|----------------------|
 | [lasote/conangcc5: gcc 5](https://hub.docker.com/r/lasote/conangcc5/)                      | x86_64  |  Supported           |
-| [lasote/conangcc5-i386: gcc 5](https://hub.docker.com/r/lasote/conangcc5-i386/)            | x86     |  Supported           |
+| [lasote/conangcc5-x86: gcc 5](https://hub.docker.com/r/lasote/conangcc5-x86/)              | x86     |  Supported           |
 | [lasote/conangcc5-armv7: gcc 5](https://hub.docker.com/r/lasote/conangcc5-armv7/)          | armv7   |  Supported           |
 | [lasote/conangcc5-armv7hf: gcc 5](https://hub.docker.com/r/lasote/conangcc5-armv7hf/)      | armv7hf |  Supported           |
 | [lasote/conangcc6: gcc 6](https://hub.docker.com/r/lasote/conangcc6/)                      | x86_64  |  Supported           |
-| [lasote/conangcc6-i386: gcc 6](https://hub.docker.com/r/lasote/conangcc6-i386/)            | x86     |  Supported           |
+| [lasote/conangcc6-x86: gcc 6](https://hub.docker.com/r/lasote/conangcc6-x86/)              | x86     |  Supported           |
 | [lasote/conangcc6-armv7: gcc 6](https://hub.docker.com/r/lasote/conangcc6-armv7/)          | armv7   |  Supported           |
 | [lasote/conangcc6-armv7hf: gcc 6](https://hub.docker.com/r/lasote/conangcc6-armv7hf/)      | armv7hf |  Supported           |
-| [lasote/conangcc7-i386: gcc 7](https://hub.docker.com/r/lasote/conangcc7-i386/)            | x86     |  Supported           |
+| [lasote/conangcc7-x86: gcc 7](https://hub.docker.com/r/lasote/conangcc7-x86/)              | x86     |  Supported           |
 | [lasote/conangcc7: gcc 7](https://hub.docker.com/r/lasote/conangcc7/)                      | x86_64  |  Supported           |
 | [lasote/conangcc7-armv7: gcc 7](https://hub.docker.com/r/lasote/conangcc7-armv7/)          | armv7   |  Supported           |
 | [lasote/conangcc7-armv7hf: gcc 7](https://hub.docker.com/r/lasote/conangcc7-armv7hf/)      | armv7hf |  Supported           |
@@ -49,11 +49,11 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | Version                                                                                       | Arch   |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|--------|------------|
 | - [lasote/conanclang38: clang 3.8](https://hub.docker.com/r/lasote/conanclang38/)             | x86_64 |  Supported |
-| - [lasote/conanclang39-i386: clang 3.9](https://hub.docker.com/r/lasote/conanclang39-i386/)   | x86    |  Supported |
+| - [lasote/conanclang39-x86: clang 3.9](https://hub.docker.com/r/lasote/conanclang39-x86/)     | x86    |  Supported |
 | - [lasote/conanclang39: clang 3.9](https://hub.docker.com/r/lasote/conanclang39/)             | x86_64 |  Supported |
-| - [lasote/conanclang40-i386: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/-i386)   | x86    |  Supported |
+| - [lasote/conanclang40-x86: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/-x86)     | x86    |  Supported |
 | - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)             | x86_64 |  Supported |
-| - [lasote/conanclang50-i386: clang 5.0](https://hub.docker.com/r/lasote/conanclang50-i386/)   | x86    |  Supported |
+| - [lasote/conanclang50-x86: clang 5.0](https://hub.docker.com/r/lasote/conanclang50-x86/)     | x86    |  Supported |
 | - [lasote/conanclang50: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)             | x86_64 |  Supported |
 
 
