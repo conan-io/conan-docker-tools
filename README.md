@@ -55,6 +55,8 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [lasote/conanclang40: clang 4.0](https://hub.docker.com/r/lasote/conanclang40/)             | x86_64 |  Supported |
 | - [lasote/conanclang50-x86: clang 5.0](https://hub.docker.com/r/lasote/conanclang50-x86/)     | x86    |  Supported |
 | - [lasote/conanclang50: clang 5.0](https://hub.docker.com/r/lasote/conanclang50/)             | x86_64 |  Supported |
+| - [lasote/conanclang60-x86: clang 6.0](https://hub.docker.com/r/lasote/conanclang60-x86/)     | x86    |  Supported |
+| - [lasote/conanclang60: clang 6.0](https://hub.docker.com/r/lasote/conanclang60/)             | x86_64 |  Supported |
 
 
 Use the images to test your c++ project in travis-ci
