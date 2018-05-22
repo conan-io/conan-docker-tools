@@ -168,6 +168,13 @@ services:
         image: "${DOCKER_USERNAME}/conangcc72:${DOCKER_BUILD_TAG}"
         container_name: conangcc72
         tty: true
+    conangcc8:
+        build:
+            context: gcc_8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc8:${DOCKER_BUILD_TAG}"
+        container_name: conangcc8
+        tty: true
     conanclang38:
         build:
             context: clang_3.8
