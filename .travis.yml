@@ -58,6 +58,7 @@ env:
     - GCC_VERSIONS="7" DOCKER_ARCHS="armv7hf"
 
     - GCC_VERSIONS="8" DOCKER_ARCHS="armv7"
+    - GCC_VERSIONS="8" DOCKER_ARCHS="armv7hf"
 
 script:
   - python build.py

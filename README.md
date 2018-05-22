@@ -45,6 +45,7 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | [lasote/conangcc8-x86: gcc 8](https://hub.docker.com/r/lasote/conangcc8-x86/)              | x86     |  Supported           |
 | [lasote/conangcc8: gcc 8](https://hub.docker.com/r/lasote/conangcc8/)                      | x86_64  |  Supported           |
 | [lasote/conangcc8-armv7: gcc 8](https://hub.docker.com/r/lasote/conangcc8-armv7/)          | armv7   |  Supported           |
+| [lasote/conangcc8-armv7hf: gcc 8](https://hub.docker.com/r/lasote/conangcc8-armv7hf/)      | armv7hf |  Supported           |
 
 
 #### Clang

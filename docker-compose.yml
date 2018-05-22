@@ -189,6 +189,13 @@ services:
         image: "${DOCKER_USERNAME}/conangcc8-armv7:${DOCKER_BUILD_TAG}"
         container_name: conangcc8-armv7
         tty: true
+    conangcc8-armv7hf:
+        build:
+            context: gcc_8-armv7hf
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conangcc8-armv7hf:${DOCKER_BUILD_TAG}"
+        container_name: conangcc8-armv7hf
+        tty: true
     conanclang38:
         build:
             context: clang_3.8
