@@ -41,9 +41,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-5.0 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.10/cmake-3.10.3.tar.gz \
-    && tar -xzf cmake-3.10.3.tar.gz \
-    && cd cmake-3.10.3 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.11/cmake-3.11.2.tar.gz \
+    && tar -xzf cmake-3.11.2.tar.gz \
+    && cd cmake-3.11.2 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
