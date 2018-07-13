@@ -10,12 +10,12 @@ ENV CC=arm-linux-gnueabihf-gcc \
     RANLIB=arm-linux-gnueabihf-ranlib\
     AS=arm-linux-gnueabihf-as \
     AR=arm-linux-gnueabihf-ar \
-    LD=arm-linux-gnueabihf-ld
+    LD=arm-linux-gnueabihf-ld \
+    FC=arm-linux-gnueabihf-gfortran-8
 
 RUN sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
-       gcc-8-arm-linux-gnueabihf \
-       g++-8-arm-linux-gnueabihf \
+       ".*7.*arm-linux-gnueabihf.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-8 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-8 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov arm-linux-gnueabihf-gcov /usr/bin/arm-linux-gnueabihf-gcov-8 100 \

@@ -10,13 +10,12 @@ ENV CC=arm-linux-gnueabihf-gcc \
     RANLIB=arm-linux-gnueabihf-ranlib\
     AS=arm-linux-gnueabihf-as \
     AR=arm-linux-gnueabihf-ar \
-    LD=arm-linux-gnueabihf-ld
+    LD=arm-linux-gnueabihf-ld \
+    FC=arm-linux-gnueabihf-gfortran-6
 
 RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
-       gcc-6-arm-linux-gnueabihf \
-       g++-6-arm-linux-gnueabihf \
-       binutils-arm-linux-gnueabihf \
+       ".*6.*arm-linux-gnueabihf.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-6 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-c++ arm-linux-gnueabihf-c++ /usr/bin/arm-linux-gnueabihf-g++-6 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-6 100 \

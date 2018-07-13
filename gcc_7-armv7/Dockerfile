@@ -10,13 +10,12 @@ ENV CC=arm-linux-gnueabi-gcc \
     RANLIB=arm-linux-gnueabi-ranlib\
     AS=arm-linux-gnueabi-as \
     AR=arm-linux-gnueabi-ar \
-    LD=arm-linux-gnueabi-ld
+    LD=arm-linux-gnueabi-ld \
+    FC=arm-linux-gnueabi-gfortran-7
 
 RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
-       gcc-arm-linux-gnueabi \
-       g++-arm-linux-gnueabi \
-       binutils-arm-linux-gnueabi \
+       ".*7.*arm-linux-gnueabi.*" \
     && sudo rm -rf /var/lib/apt/lists/* \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7 default

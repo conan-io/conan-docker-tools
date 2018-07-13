@@ -10,11 +10,11 @@ ENV LLVM_VERSION=6.0 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
        python-dev=2.7.15~rc1-1 \
        sudo=1.8.21p2-3ubuntu1 \
        wget=1.19.4-1ubuntu2 \
-       git=1:2.17.0-1ubuntu1 \
+       git \
        vim=2:8.0.1453-1ubuntu1 \
        g++-multilib=4:7.3.0-3ubuntu2 \
        clang-6.0=1:6.0-1ubuntu2 \

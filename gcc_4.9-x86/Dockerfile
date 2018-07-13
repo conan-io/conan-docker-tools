@@ -17,14 +17,14 @@ RUN dpkg --add-architecture i386 \
        g++-4.9=4.9.4-2ubuntu1~14.04.1 \
        g++-4.9-multilib=4.9.4-2ubuntu1~14.04.1 \
        wget=1.15-1ubuntu1.14.04.4 \
-       git=1:1.9.1-1ubuntu0.7 \
+       git \
        vim=2:7.4.052-1ubuntu3.1 \
        nasm=2.10.09-1 \
        dh-autoreconf=9 \
        valgrind=1:3.10.1-1ubuntu3~14.5 \
        ninja-build=1.3.4-1.1ubuntu0.14.04.1 \
        libffi-dev=3.1~rc1+r3.0.13-12ubuntu0.2 \
-       libssl-dev=1.0.1f-1ubuntu2.25 \
+       libssl-dev=1.* \
        pkg-config=0.26-1ubuntu4 \
        ca-certificates=20170717~14.04.1 \
     && rm -rf /var/lib/apt/lists/* \

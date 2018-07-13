@@ -10,12 +10,12 @@ ENV CC=arm-linux-gnueabi-gcc \
     RANLIB=arm-linux-gnueabi-ranlib\
     AS=arm-linux-gnueabi-as \
     AR=arm-linux-gnueabi-ar \
-    LD=arm-linux-gnueabi-ld
+    LD=arm-linux-gnueabi-ld \
+    FC=arm-linux-gnueabi-gfortran-8
 
 RUN sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
-       gcc-8-arm-linux-gnueabi \
-       g++-8-arm-linux-gnueabi \
+       ".*8.*arm-linux-gnueabi.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcc arm-linux-gnueabi-gcc /usr/bin/arm-linux-gnueabi-gcc-8 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-g++ arm-linux-gnueabi-g++ /usr/bin/arm-linux-gnueabi-g++-8 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcov arm-linux-gnueabi-gcov /usr/bin/arm-linux-gnueabi-gcov-8 100 \
