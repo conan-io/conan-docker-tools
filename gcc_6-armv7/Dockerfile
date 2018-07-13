@@ -21,5 +21,6 @@ RUN sudo apt-get -qq update \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcc arm-linux-gnueabi-gcc /usr/bin/arm-linux-gnueabi-gcc-6 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-cc arm-linux-gnueabi-cc /usr/bin/arm-linux-gnueabi-gcc-6 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
+    && sudo pip install -q --no-cache-dir conan --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7 default

@@ -17,6 +17,6 @@ RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*4\.9.*arm-linux-gnueabihf.*" \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && sudo pip install conan --update \
+    && sudo pip install -q --no-cache-dir conan --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7hf default
