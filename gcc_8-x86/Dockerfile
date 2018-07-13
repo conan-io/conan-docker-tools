@@ -14,7 +14,7 @@ RUN apt-get -qq update \
        git=1:2.17.0-1ubuntu1 \
        vim=2:8.0.1453-1ubuntu1 \
        libc6-dev=2.27-3ubuntu1 \
-       linux-libc-dev=4.15.0-22.24 \
+       linux-libc-dev=4.15.* \
        g++-8=8-20180414-1ubuntu2 \
        libgmp-dev=2:6.1.2+dfsg-2 \
        libmpfr-dev=4.0.1-1 \
