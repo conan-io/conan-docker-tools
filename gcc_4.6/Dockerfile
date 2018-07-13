@@ -30,7 +30,7 @@ RUN apt-get -qq update \
     && python get-pip.py \
     && rm get-pip.py \
     && pip install -q -U pip \
-    && pip install -q --no-cache-dir conan \
+    && pip install -q --no-cache-dir conan --upgrade \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
