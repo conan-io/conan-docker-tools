@@ -34,6 +34,7 @@ RUN dpkg --add-architecture i386 \
        libc++abi-dev=6.0-2 \
        libc++abi-dev:i386=6.0-2 \
        pkg-config=0.29.1-0ubuntu2 \
+       subversion=1.9.7-4ubuntu1 \
        ca-certificates=20180409 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 100 \
