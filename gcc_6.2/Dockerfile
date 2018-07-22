@@ -26,6 +26,7 @@ RUN dpkg --add-architecture i386 \
        libffi-dev=3.2.* \
        libssl-dev=1.0.2* \
        pkg-config=0.29.1-0ubuntu1 \
+       subversion=1.9.4-1ubuntu1 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.11/cmake-3.11.2-Linux-x86_64.tar.gz \
