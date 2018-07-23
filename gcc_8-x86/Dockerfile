@@ -27,6 +27,7 @@ RUN apt-get -qq update \
        libffi-dev=3.2.1-8 \
        libssl-dev=1.* \
        pkg-config=0.29.1-0ubuntu2 \
+       subversion=1.9.7-4ubuntu1 \
        ca-certificates=20180409 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
