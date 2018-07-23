@@ -27,6 +27,7 @@ RUN apt-get -qq update \
        libffi-dev=3.2.1-6 \
        libssl-dev=1.0.2* \
        pkg-config=0.29.1-0ubuntu2 \
+       subversion=1.9.7-2ubuntu1 \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \

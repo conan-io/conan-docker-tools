@@ -34,6 +34,7 @@ RUN dpkg --add-architecture i386 \
        libc++abi-dev=3.9.1-3 \
        libc++abi-dev:i386=3.9.1-3 \
        pkg-config=0.29.1-0ubuntu2 \
+       subversion=1.9.7-2ubuntu1 \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100 \
