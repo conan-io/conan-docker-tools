@@ -1,4 +1,4 @@
-FROM i386/ubuntu:artful
+FROM i386/ubuntu:bionic
 ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/issues/36
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
@@ -12,33 +12,33 @@ ENV LLVM_VERSION=4.0 \
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.14-2ubuntu1 \
-       sudo=1.8.20p2-1ubuntu1 \
-       wget=1.19.1-3ubuntu1 \
-       git=1:2.14.1-1ubuntu4 \
-       vim=2:8.0.0197-4ubuntu5 \
-       g++=4:7.2.0-1ubuntu1 \
+       python-dev=2.7.* \
+       sudo=1.* \
+       wget=1.19.* \
+       git=1:2.* \
+       vim=2:8.* \
+       g++=4:7.3.0-3ubuntu2 \
        clang-${LLVM_VERSION}=1:4.0.1-6 \
        llvm-${LLVM_VERSION}=1:4.0.1-6 \
        llvm-${LLVM_VERSION}-dev=1:4.0.1-6 \
        llvm-${LLVM_VERSION}-runtime=1:4.0.1-6 \
        llvm=1:4.0-37~exp3ubuntu1 \
        make=4.1-9.1 \
-       valgrind=1:3.13.0-1ubuntu2 \
-       libc6-dev=2.26-0ubuntu2.1 \
-       libgmp-dev=2:6.1.2+dfsg-1 \
-       libmpfr-dev=3.1.6-1 \
-       libmpc-dev=1.0.3-2 \
-       nasm=2.13.01-2 \
-       dh-autoreconf=14 \
-       libffi-dev=3.2.1-6 \
-       libssl-dev=1.0.2* \
-       ninja-build=1.7.2-3 \
+       valgrind=1:3.13.0-2ubuntu2 \
+       libc6-dev=2.27-3ubuntu1 \
+       libgmp-dev=2:6.1.2+dfsg-2 \
+       libmpfr-dev=4.0.1-1 \
+       libmpc-dev=1.1.0-1 \
+       nasm=2.13.02-0.1 \
+       dh-autoreconf=17 \
+       libffi-dev=3.2.1-8 \
+       libssl-dev=1.* \
+       ninja-build=1.8.2-1 \
        libc++-dev=3.9.1-3 \
        libc++abi-dev=3.9.1-3 \
        pkg-config=0.29.1-0ubuntu2 \
-       subversion=1.9.7-2ubuntu1 \
-       ca-certificates=20170717 \
+       subversion=1.9.7-4ubuntu1 \
+       ca-certificates=20180409 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
