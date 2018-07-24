@@ -73,11 +73,11 @@ RUN dpkg --add-architecture i386 \
        ca-certificates \
     && ln -s /usr/bin/g++-5 /usr/bin/g++ \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.11/cmake-3.11.2-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.11.2-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.11.2-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.11.2-Linux-x86_64 \
-    && rm cmake-3.11.2-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.0-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.12.0-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.12.0-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.12.0-Linux-x86_64 \
+    && rm cmake-3.12.0-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \
