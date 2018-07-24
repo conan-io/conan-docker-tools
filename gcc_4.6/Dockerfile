@@ -1,25 +1,25 @@
-FROM ubuntu:precise
+FROM ubuntu:trusty
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
        python-dev=2.7.* \
-       sudo=1.8.* \
+       sudo=1.* \
        build-essential=11.* \
-       wget=1.13.* \
-       git=1:1.7.* \
-       vim=2:7.3.* \
-       libc6-dev-i386=2.15-* \
-       g++-multilib=4:4.6.* \
-       nasm=2.09.* \
-       dh-autoreconf=5ubuntu1 \
-       valgrind=1:3.7.* \
+       wget=1.15.* \
+       git=1:1.9.* \
+       vim=2:7.4.* \
+       libc6-dev-i386=2.19-* \
+       g++-multilib=4:4.8.* \
+       nasm=2.10.* \
+       dh-autoreconf=9 \
+       valgrind=1:3.10.* \
        ninja-build=1.3.* \
-       libffi-dev=3.0.* \
+       libffi-dev=3.1.* \
        libssl-dev=1.0.* \
-       pkg-config=0.26-1ubuntu1 \
-       subversion=1.6.17dfsg-3ubuntu3.5 \
+       pkg-config=0.26-1ubuntu4 \
+       subversion=1.8.8-1ubuntu3.3 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.11/cmake-3.11.2-Linux-x86_64.tar.gz \
