@@ -11,8 +11,8 @@ RUN dpkg --add-architecture i386 \
        wget=1.19.* \
        git=1:2.* \
        vim=2:8.* \
-       libc6-dev=2.27* \
-       linux-libc-dev=4.* \
+       libc6-dev-i386=2.27* \
+       linux-libc-dev:i386=4.* \
        g++-7-multilib \
        libgmp-dev=2:6.1.2+dfsg-2 \
        libmpfr-dev=4.0.1-1 \

@@ -12,7 +12,7 @@ RUN dpkg --add-architecture i386 \
        git=1:1.9.* \
        vim=2:7.4.* \
        libc6-dev-i386=2.19-* \
-       g++-multilib=4:4.8.* \
+       g++-4.8-multilib=4.8.* \
        nasm=2.10.* \
        dh-autoreconf=9 \
        valgrind=1:3.10.* \

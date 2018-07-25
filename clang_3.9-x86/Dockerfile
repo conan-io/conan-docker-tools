@@ -22,8 +22,8 @@ RUN apt-get -qq update \
        llvm-${LLVM_VERSION}=1:3.9.1-* \
        llvm-${LLVM_VERSION}-dev=1:3.9.1-* \
        llvm-${LLVM_VERSION}-runtime=1:3.9.1-* \
-       llvm=1:4.0-* \
-       make=4.1-9.1 \
+       llvm-4.0=1:4.0.* \
+       make=4.1-9.* \
        valgrind=1:3.13.0-2ubuntu2 \
        libc6-dev=2.27-3ubuntu1 \
        libgmp-dev=2:6.1.2+dfsg-2 \
@@ -34,8 +34,8 @@ RUN apt-get -qq update \
        libffi-dev=3.2.1-8 \
        libssl-dev=1.* \
        ninja-build=1.8.2-1 \
-       libc++-dev=3.9.1-3 \
-       libc++abi-dev=3.9.1-3 \
+       libc++-dev=6.0-2 \
+       libc++abi-dev=6.0-2 \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-4ubuntu1 \
        ca-certificates=20180409 \
