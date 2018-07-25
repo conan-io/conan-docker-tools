@@ -2,7 +2,7 @@ import os
 
 if __name__ == "__main__":
 
-    for old, new in [("3.10.3", "3.11.2"), ("v3.10", "v3.11")]:
+    for old, new in [("3.11.1", "3.12.0"), ("v3.11", "v3.12")]:
 
         for root, _, filenames in os.walk("./"):
             for filename in filenames:

@@ -12,7 +12,7 @@ RUN dpkg --add-architecture i386 \
        git=1:1.9.* \
        vim=2:7.4.* \
        libc6-dev-i386=2.19-* \
-       g++-multilib=4:4.8.* \
+       g++-4.8-multilib=4.8.* \
        nasm=2.10.* \
        dh-autoreconf=9 \
        valgrind=1:3.10.* \
@@ -23,11 +23,11 @@ RUN dpkg --add-architecture i386 \
        subversion=1.8.8-1ubuntu3.3 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.11/cmake-3.11.2-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.11.2-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.11.2-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.11.2-Linux-x86_64 \
-    && rm cmake-3.11.2-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.0-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.12.0-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.12.0-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.12.0-Linux-x86_64 \
+    && rm cmake-3.12.0-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \
