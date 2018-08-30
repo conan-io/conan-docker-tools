@@ -30,11 +30,11 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.11/cmake-3.11.2-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.11.2-Linux-x86_64.tar.gz \
-    && cp -fR cmake-3.11.2-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.11.2-Linux-x86_64 \
-    && rm cmake-3.11.2-Linux-x86_64.tar.gz \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.12.1-Linux-x86_64 \
+    && rm cmake-3.12.1-Linux-x86_64.tar.gz \
     && wget --no-check-certificate --quiet https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \

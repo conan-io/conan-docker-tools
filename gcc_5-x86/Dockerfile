@@ -28,9 +28,9 @@ RUN apt-get -qq update \
        pkg-config=0.29.1-0ubuntu1 \
        ca-certificates=20170717~16.04.1 \
        && rm -rf /var/lib/apt/lists/* \
-       && wget --no-check-certificate --quiet https://cmake.org/files/v3.11/cmake-3.11.2.tar.gz \
-       && tar -xzf cmake-3.11.2.tar.gz \
-       && cd cmake-3.11.2 \
+       && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
+       && tar -xzf cmake-3.12.1.tar.gz \
+       && cd cmake-3.12.1 \
        && ./bootstrap > /dev/null \
        && make -s -j`nproc` \
        && make -s install > /dev/null \
