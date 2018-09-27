@@ -259,19 +259,19 @@ services:
         image: "${DOCKER_USERNAME}/conanclang60-x86:${DOCKER_BUILD_TAG}"
         container_name: conanclang60-x86
         tty: true
-    conanclang70:
+    conanclang7:
         build:
-            context: clang_7.0
+            context: clang_7
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conanclang70:${DOCKER_BUILD_TAG}"
-        container_name: conanclang70
+        image: "${DOCKER_USERNAME}/conanclang7:${DOCKER_BUILD_TAG}"
+        container_name: conanclang7
         tty: true
-    conanclang70-x86:
+    conanclang7-x86:
         build:
-            context: clang_7.0-x86
+            context: clang_7-x86
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/conanclang70-x86:${DOCKER_BUILD_TAG}"
-        container_name: conanclang70-x86
+        image: "${DOCKER_USERNAME}/conanclang7-x86:${DOCKER_BUILD_TAG}"
+        container_name: conanclang7-x86
         tty: true
     conan_server:
         build:
