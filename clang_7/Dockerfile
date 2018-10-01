@@ -17,7 +17,7 @@ RUN dpkg --add-architecture i386 \
        git \
        vim=2:8.0.1766-1ubuntu1 \
        g++-multilib=4:8.2.0-1ubuntu1 \
-       clang-7=1:7-2 \
+       clang-7=1:7-3 \
        make=4.2.1-1.2 \
        valgrind=1:3.13.0-2ubuntu6 \
        libc6-dev-i386=2.28-0ubuntu1 \
