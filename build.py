@@ -140,9 +140,16 @@ class ConanDockerTools(object):
                     service = "conan%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
                     build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
 
+                    # Starting with Clang 7 all binaries and libraries are named "7" instead of "7.0"
+                    # However, Clang 7 version string still identifies as "7.0", so we need a workaround
+                    if compiler.name != "clang" or int(float(version)) < 7:
+                        identified_version = version
+                    else:
+                        identified_version = "%s.0" % (version)
+
                     self.linter(build_dir)
                     self.build(service)
-                    self.test(arch, compiler.name, version, service)
+                    self.test(arch, compiler.name, identified_version, service)
                     self.deploy(service)
 
         if self.variables.build_server:
