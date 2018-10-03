@@ -2,9 +2,9 @@ FROM microsoft/windowsservercore:10.0.14393.2068
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ADD https://aka.ms/vs/15/release/vs_buildtools.exe C:\TEMP\buildtools.exe
+ADD https://aka.ms/vs/15/release/vs_buildtools.exe %TEMP%\buildtools.exe
 
-RUN C:\TEMP\buildtools.exe --quiet --wait --norestart --nocache \
+RUN %TEMP%\buildtools.exe --quiet --wait --norestart --nocache \
     --installPath C:\BuildTools \
     --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended  \
     --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
@@ -22,7 +22,7 @@ ENV chocolateyUseWindowsCompression=false
 
 RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-RUN choco install --yes python3 --params '"/InstallDir:C:\tools\python3"'
+RUN choco install --yes python3 --params '"/InstallDir:C:/tools/python3"'
 
 RUN pip install win-unicode-console
 
@@ -31,4 +31,4 @@ RUN pip install \
     conan_package_tools \
     --upgrade --force-reinstall --no-cache
  
-WORKDIR "C:\Users\ContainerAdministrator"
+WORKDIR "C:/Users/ContainerAdministrator"
