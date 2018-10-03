@@ -43,7 +43,9 @@ class ConanDockerTools(object):
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
         clang_versions = os.getenv("CLANG_VERSIONS").split(",") if os.getenv("CLANG_VERSIONS") else []
         visual_versions = os.getenv("VISUAL_VERSIONS").split(",") if os.getenv("VISUAL_VERSIONS") else []
-        sudo_command = os.getenv("SUDO_COMMAND") or (("sudo" if platform.system() == "Linux" and os.geteuid() != 0) else "")
+        sudo_command = os.getenv("SUDO_COMMAND", "")
+        if platform.system() == "Linux" and not sudo_command:
+            sudo_command = "sudo" if os.geteuid() != 0 else sudo_command
 
         Variables = collections.namedtuple("Variables", "docker_upload, docker_password, "
                                                         "docker_username, gcc_versions, "
