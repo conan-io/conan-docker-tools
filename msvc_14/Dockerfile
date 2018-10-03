@@ -26,6 +26,8 @@ RUN choco install --yes cmake --params '"/InstallDir:C:\tools\cmake"'
 
 RUN choco install --yes python3 --params '"/InstallDir:C:\tools\python3"'
 
+RUN python -m pip install --upgrade pip
+
 RUN pip install win-unicode-console
 
 RUN pip install \
