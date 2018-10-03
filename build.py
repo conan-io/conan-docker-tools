@@ -17,16 +17,19 @@ class ConanDockerTools(object):
 
         filter_gcc_compiler_version = self.variables.gcc_versions
         filter_clang_compiler_version = self.variables.clang_versions
+        filter_visual_compiler_version = self.variables.visual_versions
 
         Compiler = collections.namedtuple("Compiler", "name, versions")
         self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version)
         self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version)
+        self.visual_compiler = Compiler(name="visual", versions=filter_visual_compiler_version)
 
         logging.info("""
     The follow compiler versions will be built:
         GCC: %s
         CLANG: %s
-        """ % (self.gcc_compiler.versions, self.clang_compiler.versions))
+        VISUAL STUDIO: %s
+        """ % (self.gcc_compiler.versions, self.clang_compiler.versions, self.visual_compiler))
 
     def _get_variables(self):
         """Load environment variables to configure
@@ -139,7 +142,7 @@ class ConanDockerTools(object):
         """Execute all 3 stages for all versions in compilers list
         """
         for arch in self.variables.docker_archs:
-            for compiler in [self.gcc_compiler, self.clang_compiler]:
+            for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
                 for version in compiler.versions:
                     tag_arch = "" if arch == "x86_64" else "-%s" % arch
                     service = "conan%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
