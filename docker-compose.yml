@@ -279,3 +279,10 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
         container_name: conan_server
+    conanmsvc14:
+        build:
+            context: msvc_14
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conanmsvc14:${DOCKER_BUILD_TAG}"
+        container_name: conanmsvc14
+        tty: true

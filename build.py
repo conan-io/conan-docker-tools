@@ -3,6 +3,7 @@ import collections
 import os
 import logging
 import subprocess
+import platform
 
 
 class ConanDockerTools(object):
@@ -40,15 +41,17 @@ class ConanDockerTools(object):
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
-        clang_versions = os.getenv("CLANG_VERSIONS").split(",") \
-            if os.getenv("CLANG_VERSIONS") else []
+        clang_versions = os.getenv("CLANG_VERSIONS").split(",") if os.getenv("CLANG_VERSIONS") else []
+        visual_versions = os.getenv("VISUAL_VERSIONS").split(",") if os.getenv("VISUAL_VERSIONS") else []
+        sudo_command = os.getenv("SUDO_COMMAND") or (("sudo" if platform.system() == "Linux" and os.geteuid() != 0) else "")
 
         Variables = collections.namedtuple("Variables", "docker_upload, docker_password, "
                                                         "docker_username, gcc_versions, "
-                                                        "clang_versions, build_server, docker_build_tag, "
-                                                        "docker_archs")
+                                                        "clang_versions, visual_versions, build_server, "
+                                                        "docker_build_tag, docker_archs, sudo_command")
         return Variables(docker_upload, docker_password, docker_username,
-                         gcc_versions, clang_versions, build_server, docker_build_tag, docker_archs)
+                         gcc_versions, clang_versions, visual_versions, build_server,
+                         docker_build_tag, docker_archs, sudo_command)
 
     def build(self, service):
         """Call docker build to create a image
@@ -81,8 +84,8 @@ class ConanDockerTools(object):
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
-            subprocess.check_call("docker exec %s sudo pip -q install -U conan" % service, shell=True)
-            subprocess.check_call("docker exec %s sudo pip -q install -U conan_package_tools" % service, shell=True)
+            subprocess.check_call("docker exec %s %s pip -q install -U conan" % (service, self.variables.sudo_command), shell=True)
+            subprocess.check_call("docker exec %s %s pip -q install -U conan_package_tools" % (service, self.variables.sudo_command), shell=True)
             subprocess.check_call("docker exec %s conan user" % service, shell=True)
 
             subprocess.check_call("docker exec %s conan remote add conan-community "
