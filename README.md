@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
+![Build status](https://ci.appveyor.com/api/projects/status/github/conan-io/conan-docker-tools.svg?svg=true)](https://ci.appveyor.com/project/conan-io/conan-docker-tools)
 # conan-docker-tools
 
 Dockerfiles for different gcc compiler versions.
@@ -64,6 +65,12 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [lasote/conanclang7-x86: clang 7](https://hub.docker.com/r/lasote/conanclang7-x86/)         | x86    |  Supported |
 | - [lasote/conanclang7: clang 7](https://hub.docker.com/r/lasote/conanclang7/)                 | x86_64 |  Supported |
 
+#### Visual Studio
+
+| Version                                                                                       | Arch       |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|------------|------------|
+| - [lasote/conanmsvc14: Visual Studio 2015 14.0](https://hub.docker.com/r/lasote/conanmsvc14/) | x86_64/x86 |  Supported |
+
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -124,6 +131,11 @@ You need to modify:
     cmake --build .
 
 ```
+
+Use the images to test your c++ project in appveyor
+======================================================
+
+# TODO (uilian): Write support for Linux and Windows
 
 
 Use the images locally
@@ -215,7 +227,9 @@ Build and Test variables:
 
 - **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
 - **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
+- **VISUAL_VERSIONS**: Visual Studio versions to build, test and deploy, comma separated, e.g. "14"
 - **DOCKER_BUILD_TAG**: Docker image tag, e.g "latest", "0.28.1"
+- **SUDO_COMMAND**: Sudo command used on Linux distros, e.g. "sudo"
 
 Upload related variables:
 
