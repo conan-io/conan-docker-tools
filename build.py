@@ -22,7 +22,7 @@ class ConanDockerTools(object):
         Compiler = collections.namedtuple("Compiler", "name, versions")
         self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version)
         self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version)
-        self.visual_compiler = Compiler(name="visual", versions=filter_visual_compiler_version)
+        self.visual_compiler = Compiler(name="msvc", versions=filter_visual_compiler_version)
 
         logging.info("""
     The follow compiler versions will be built:
