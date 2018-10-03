@@ -22,7 +22,9 @@ ENV chocolateyUseWindowsCompression=false
 
 RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-RUN choco install --yes python3 --params '"/InstallDir:C:/tools/python3"'
+RUN choco install --yes cmake --params '"/InstallDir:C:\tools\cmake"'
+
+RUN choco install --yes python3 --params '"/InstallDir:C:\tools\python3"'
 
 RUN pip install win-unicode-console
 
