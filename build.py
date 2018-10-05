@@ -19,10 +19,10 @@ class ConanDockerTools(object):
         filter_clang_compiler_version = self.variables.clang_versions
         filter_visual_compiler_version = self.variables.visual_versions
 
-        Compiler = collections.namedtuple("Compiler", "name, versions")
-        self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version)
-        self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version)
-        self.visual_compiler = Compiler(name="msvc", versions=filter_visual_compiler_version)
+        Compiler = collections.namedtuple("Compiler", "name, versions, pretty")
+        self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version, pretty="gcc")
+        self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version, pretty="clang")
+        self.visual_compiler = Compiler(name="msvc", versions=filter_visual_compiler_version, pretty="Visual Studio")
 
         logging.info("""
     The follow compiler versions will be built:
@@ -95,15 +95,15 @@ class ConanDockerTools(object):
 
             for libcxx in libcxx_list:
 
-                subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
-                                      "arch=%s -s compiler=%s -s compiler.version=%s "
-                                      "-s compiler.libcxx=%s --build" %
+                subprocess.check_call('docker exec %s conan install zlib/1.2.11@conan/stable -s '
+                                      'arch=%s -s compiler="%s" -s compiler.version=%s '
+                                      '-s compiler.libcxx=%s --build' %
                                       (service, arch, compiler_name,
                                        compiler_version, libcxx), shell=True)
 
-                subprocess.check_call("docker exec %s conan install gtest/1.8.1@bincrafters/stable -s "
-                                      "arch=%s -s compiler=%s -s compiler.version=%s "
-                                      "-s compiler.libcxx=%s --build" %
+                subprocess.check_call('docker exec %s conan install gtest/1.8.1@bincrafters/stable -s '
+                                      'arch=%s -s compiler="%s" -s compiler.version=%s '
+                                      '-s compiler.libcxx=%s --build' %
                                       (service, arch, compiler_name,
                                        compiler_version, libcxx), shell=True)
 
@@ -147,7 +147,7 @@ class ConanDockerTools(object):
                     if platform.system() == "Linux":
                         self.linter(build_dir)
                     self.build(service)
-                    self.test(arch, compiler.name, version, service)
+                    self.test(arch, compiler.pretty, version, service)
                     self.deploy(service)
 
         if self.variables.build_server:
