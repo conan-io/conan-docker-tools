@@ -2,7 +2,7 @@ version: 1.0.{build}
 image: Visual Studio 2017
 
 environment:
-  DOCKER_UPLOAD: TRUE
+  DOCKER_UPLOAD: FALSE
 
   matrix:
     - VISUAL_VERSIONS: 14
