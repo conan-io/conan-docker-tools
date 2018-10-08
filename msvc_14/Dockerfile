@@ -9,13 +9,20 @@ ENV chocolateyUseWindowsCompression=false \
 
 RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-RUN choco install --yes cmake --params '"/InstallDir:C:\tools\cmake"' --installargs 'ADD_CMAKE_TO_PATH=""System""'
-RUN choco install --yes python3 --params '"/InstallDir:C:\tools\python3"'
-RUN choco install --yes --execution-timeout=7200 vcbuildtools -ia "/Full"
+RUN choco install --no-progress --yes git --version=2.19.0 --params '"/InstallDir:C:\tools\git"'
+RUN choco install --no-progress --yes svn --version=1.8.17 --params '"/InstallDir:C:\tools\svn"'
+RUN choco install --no-progress --yes cmake --version=3.12.2 --params '"/InstallDir:C:\tools\cmake"' --installargs 'ADD_CMAKE_TO_PATH=""System""'
+RUN choco install --no-progress --yes python3 --version=3.7.0 --params '"/InstallDir:C:\tools\python3"'
+
+RUN choco install --no-progress --yes vcbuildtools --version=2015.3 -ia "/Full"
+
+RUN RefreshEnv
 
 RUN python -m pip install --upgrade pip
 RUN pip install win-unicode-console --upgrade --force-reinstall --no-cache
-RUN pip install conan conan_package_tools --upgrade --force-reinstall --no-cache
+RUN pip install conan --upgrade --force-reinstall --no-cache
+RUN pip install conan_package_tools --upgrade --force-reinstall --no-cache
+
 # FIXME (uilian): idna raises error when installed by Conan/CPT
 RUN pip install idna --upgrade --force-reinstall --no-cache
 
