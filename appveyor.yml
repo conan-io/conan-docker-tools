@@ -5,6 +5,7 @@ environment:
   DOCKER_UPLOAD: FALSE
 
   matrix:
+    - VISUAL_VERSIONS: 12
     - VISUAL_VERSIONS: 14
     - VISUAL_VERSIONS: 15
 
