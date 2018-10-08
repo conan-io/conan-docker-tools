@@ -18,13 +18,13 @@ RUN choco install --no-progress --yes microsoft-build-tools-2013 --version=2013.
 
 RUN RefreshEnv
 
-RUN python -m pip install --upgrade pip
-RUN pip install win-unicode-console --upgrade --force-reinstall --no-cache
-RUN pip install conan --upgrade --force-reinstall --no-cache
-RUN pip install conan_package_tools --upgrade --force-reinstall --no-cache
+RUN python -m pip install --quiet --upgrade pip
+RUN pip install win-unicode-console --quiet --upgrade --force-reinstall --no-cache
+RUN pip install conan --quiet --upgrade --force-reinstall --no-cache
+RUN pip install conan_package_tools --quiet --upgrade --force-reinstall --no-cache
 
 # FIXME (uilian): idna raises error when installed by Conan/CPT
-RUN pip install idna --upgrade --force-reinstall --no-cache
+RUN pip install idna --quiet --upgrade --force-reinstall --no-cache
 
 WORKDIR "C:/Users/ContainerAdministrator"
 ENTRYPOINT ["cmd.exe", "C:\\Program Files (x86)\\Microsoft Visual C++ Build Tools\\vcbuildtools_msbuild.bat"]
