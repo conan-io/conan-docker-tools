@@ -70,7 +70,6 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 
 | Version                                                                                       | Arch       |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|------------|------------|
-| - [lasote/conanmsvc12: Visual Studio 2013 12.0](https://hub.docker.com/r/lasote/conanmsvc12/) | x86_64/x86 |  Supported |
 | - [lasote/conanmsvc14: Visual Studio 2015 14.0](https://hub.docker.com/r/lasote/conanmsvc14/) | x86_64/x86 |  Supported |
 | - [lasote/conanmsvc15: Visual Studio 2017 15.0](https://hub.docker.com/r/lasote/conanmsvc15/) | x86_64/x86 |  Supported |
 
@@ -154,9 +153,6 @@ These Docker images can be used to build your project using the Appveyor CI serv
     image: Visual Studio 2017
 
     matrix:
-      - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 12
-          DOCKER_IMAGE: lasote/conanmsvc12
       - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 14
           DOCKER_IMAGE: lasote/conanmsvc14
@@ -282,7 +278,7 @@ Build and Test variables:
 
 - **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
 - **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
-- **VISUAL_VERSIONS**: Visual Studio versions to build, test and deploy, comma separated, e.g. "12,14,15"
+- **VISUAL_VERSIONS**: Visual Studio versions to build, test and deploy, comma separated, e.g. "14,15"
 - **DOCKER_BUILD_TAG**: Docker image tag, e.g "latest", "0.28.1"
 - **SUDO_COMMAND**: Sudo command used on Linux distros, e.g. "sudo"
 

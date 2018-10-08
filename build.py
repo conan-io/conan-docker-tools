@@ -29,7 +29,7 @@ class ConanDockerTools(object):
         GCC: %s
         CLANG: %s
         VISUAL STUDIO: %s
-        """ % (self.gcc_compiler.versions, self.clang_compiler.versions, self.visual_compiler))
+        """ % (self.gcc_compiler.versions, self.clang_compiler.versions, self.visual_compiler.versions))
 
     def _get_variables(self):
         """Load environment variables to configure
