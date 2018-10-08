@@ -1,0 +1,20 @@
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'VS2017-Win2016'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+  - script: |
+      choco install docker-compose
+      python build.py
+      docker images
+  strategy:
+    matrix:
+      Visual Studio 14.0:
+        VISUAL_VERSIONS: 14
+        DOCKER_UPLOAD: FALSE
+      Visual Studio 15.0:
+        VISUAL_VERSIONS: 15
+        DOCKER_UPLOAD: FALSE
