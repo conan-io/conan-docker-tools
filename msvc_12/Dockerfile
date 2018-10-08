@@ -14,7 +14,8 @@ RUN choco install --no-progress --yes svn --version=1.8.17 --params '"/InstallDi
 RUN choco install --no-progress --yes cmake --version=3.12.2 --params '"/InstallDir:C:\tools\cmake"' --installargs 'ADD_CMAKE_TO_PATH=""System""'
 RUN choco install --no-progress --yes python3 --version=3.7.0 --params '"/InstallDir:C:\tools\python3"'
 
-RUN choco install --no-progress --yes microsoft-build-tools-2013 --version=2013.1 -ia "/Full"
+RUN choco install --no-progress --yes microsoft-build-tools-2013 --version=2013.1
+RUN choco install --no-progress --yes vs2013.5 --version=2013.1 --version=1.0.0
 
 RUN RefreshEnv
 
