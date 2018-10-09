@@ -70,6 +70,7 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 
 | Version                                                                                       | Arch       |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|------------|------------|
+| - [lasote/conanmsvc12: Visual Studio 2015 12.0](https://hub.docker.com/r/lasote/conanmsvc12/) | x86_64/x86 |  Supported |
 | - [lasote/conanmsvc14: Visual Studio 2015 14.0](https://hub.docker.com/r/lasote/conanmsvc14/) | x86_64/x86 |  Supported |
 | - [lasote/conanmsvc15: Visual Studio 2017 15.0](https://hub.docker.com/r/lasote/conanmsvc15/) | x86_64/x86 |  Supported |
 
