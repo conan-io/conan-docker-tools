@@ -61,8 +61,8 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang50: clang 5.0](https://hub.docker.com/r/conanio/clang50/)             | x86_64 |  Supported |
 | - [conanio/clang60-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-x86/)     | x86    |  Supported |
 | - [conanio/clang60: clang 6.0](https://hub.docker.com/r/conanio/clang60/)             | x86_64 |  Supported |
-| - [conanio/clang7-x86: clang 7](https://hub.docker.com/r/conanio/clang7-x86/)         | x86    |  Supported |
-| - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
+| - [conanio/clang70-x86: clang 7](https://hub.docker.com/r/conanio/clang70-x86/)       | x86    |  Supported |
+| - [conanio/clang70: clang 7](https://hub.docker.com/r/conanio/clang70/)               | x86_64 |  Supported |
 
 
 #### Visual Studio
