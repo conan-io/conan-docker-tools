@@ -61,6 +61,9 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/conanclang50: clang 5.0](https://hub.docker.com/r/conanio/conanclang50/)             | x86_64 |  Supported |
 | - [conanio/conanclang60-x86: clang 6.0](https://hub.docker.com/r/conanio/conanclang60-x86/)     | x86    |  Supported |
 | - [conanio/conanclang60: clang 6.0](https://hub.docker.com/r/conanio/conanclang60/)             | x86_64 |  Supported |
+| - [conanio/conanclang7-x86: clang 7](https://hub.docker.com/r/lasote/conanclang7-x86/)         | x86    |  Supported |
+| - [conanio/conanclang7: clang 7](https://hub.docker.com/r/lasote/conanclang7/)                 | x86_64 |  Supported |
+
 
 
 Use the images to test your c++ project in travis-ci
