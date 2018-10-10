@@ -34,7 +34,7 @@ class ConanDockerTools(object):
         docker_upload = os.getenv("DOCKER_UPLOAD", "false").lower() in ["true", "1"]
         build_server = os.getenv("BUILD_CONAN_SERVER_IMAGE", "false").lower() in ["true", "1"]
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
-        docker_username = os.getenv("DOCKER_USERNAME", "lasote")
+        docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_build_tag = os.getenv("DOCKER_BUILD_TAG", "latest")
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else ["x86_64"]
         os.environ["DOCKER_USERNAME"] = docker_username
@@ -52,7 +52,7 @@ class ConanDockerTools(object):
 
     def build(self, service):
         """Call docker build to create a image
-        :param docker_username: Docker image maintainer e.g. lasote
+        :param docker_username: Docker image maintainer e.g. conanio
         :param docker_build_tag: Docker image tag e.g latest
         :param service: service in compose e.g conangcc54
         """

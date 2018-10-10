@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo docker run -t -d --name conangcc5-x86 lasote/conangcc5-x86 && \
+sudo docker run -t -d --name conangcc5-x86 conanio/conangcc5-x86 && \
 sudo docker exec conangcc5-x86 sudo pip install -U conan_package_tools && \
 sudo docker exec conangcc5-x86 sudo pip install -U conan && \
 sudo docker exec conangcc5-x86 conan user && \

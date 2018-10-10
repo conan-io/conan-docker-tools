@@ -1,4 +1,4 @@
-FROM lasote/conangcc6
+FROM conanio/conangcc6
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 

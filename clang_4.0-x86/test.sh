@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo docker run -t -d --name conanclang40-x86 lasote/conanclang40-x86 && \
+sudo docker run -t -d --name conanclang40-x86 conanio/conanclang40-x86 && \
 sudo docker exec conanclang40-x86 sudo pip install -U conan_package_tools && \
 sudo docker exec conanclang40-x86 sudo pip install -U conan && \
 sudo docker exec conanclang40-x86 conan user && \

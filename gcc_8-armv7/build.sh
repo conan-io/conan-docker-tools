@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build --no-cache -t lasote/conangcc8-armv7 .
+sudo docker build --no-cache -t conanio/conangcc8-armv7 .
