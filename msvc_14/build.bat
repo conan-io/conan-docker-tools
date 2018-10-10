@@ -1,1 +1,1 @@
-docker build --no-cache -t lasote/conanmsvc14 .
+docker build --no-cache -t conanio/msvc14 .

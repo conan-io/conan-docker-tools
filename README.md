@@ -1,6 +1,6 @@
 [![Travis Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/github/conan-io/conan-docker-tools.svg?svg=true)](https://ci.appveyor.com/project/conan-io/conan-docker-tools)
-[![Azure Build Status](https://dev.azure.com/lasote/conan-devops/_apis/build/status/conan-io.conan-docker-tools)](https://dev.azure.com/lasote/conan-devops/_build/latest)
+[![Azure Build Status](https://dev.azure.com/conanio/conan-devops/_apis/build/status/conan-io.conan-docker-tools)](https://dev.azure.com/conanio/conan-devops/_build/latest)
 # conan-docker-tools
 
 Dockerfiles for different gcc compiler versions.
@@ -61,17 +61,17 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang50: clang 5.0](https://hub.docker.com/r/conanio/clang50/)             | x86_64 |  Supported |
 | - [conanio/clang60-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-x86/)     | x86    |  Supported |
 | - [conanio/clang60: clang 6.0](https://hub.docker.com/r/conanio/clang60/)             | x86_64 |  Supported |
-| - [conanio/clang7-x86: clang 7](https://hub.docker.com/r/lasote/clang7-x86/)         | x86    |  Supported |
-| - [conanio/clang7: clang 7](https://hub.docker.com/r/lasote/clang7/)                 | x86_64 |  Supported |
+| - [conanio/clang7-x86: clang 7](https://hub.docker.com/r/conanio/clang7-x86/)         | x86    |  Supported |
+| - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
 
 
 #### Visual Studio
 
 | Version                                                                                       | Arch       |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|------------|------------|
-| - [lasote/conanmsvc12: Visual Studio 2015 12.0](https://hub.docker.com/r/lasote/conanmsvc12/) | x86_64/x86 |  Supported |
-| - [lasote/conanmsvc14: Visual Studio 2015 14.0](https://hub.docker.com/r/lasote/conanmsvc14/) | x86_64/x86 |  Supported |
-| - [lasote/conanmsvc15: Visual Studio 2017 15.0](https://hub.docker.com/r/lasote/conanmsvc15/) | x86_64/x86 |  Supported |
+| - [conanio/msvc12: Visual Studio 2015 12.0](https://hub.docker.com/r/conanio/msvc12/) | x86_64/x86 |  Supported |
+| - [conanio/msvc14: Visual Studio 2015 14.0](https://hub.docker.com/r/conanio/msvc14/) | x86_64/x86 |  Supported |
+| - [conanio/msvc15: Visual Studio 2017 15.0](https://hub.docker.com/r/conanio/msvc15/) | x86_64/x86 |  Supported |
 
 
 Use the images to test your c++ project in travis-ci
@@ -155,10 +155,10 @@ These Docker images can be used to build your project using the Appveyor CI serv
     matrix:
       - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 14
-          DOCKER_IMAGE: lasote/conanmsvc14
+          DOCKER_IMAGE: conanio/msvc14
       - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 15
-          DOCKER_IMAGE: lasote/conanmsvc15
+          DOCKER_IMAGE: conanio/msvc15
 
     install:
       - set PATH=%PATH%;%PYTHON%/Scripts/
