@@ -13,6 +13,8 @@ ENV CC=arm-linux-gnueabihf-gcc-4.9 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-4.9
 
+RUN sudo dpkg --add-architecture armhf
+
 RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*4\.9.*arm-linux-gnueabihf.*" \
