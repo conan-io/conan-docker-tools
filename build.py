@@ -39,6 +39,7 @@ class ConanDockerTools(object):
         build_server = os.getenv("BUILD_CONAN_SERVER_IMAGE", "false").lower() in ["true", "1"]
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
+        docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
         docker_build_tag = os.getenv("DOCKER_BUILD_TAG", "latest")
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else ["x86_64"]
         os.environ["DOCKER_USERNAME"] = docker_username
@@ -51,17 +52,14 @@ class ConanDockerTools(object):
             sudo_command = "sudo" if os.geteuid() != 0 else sudo_command
 
         Variables = collections.namedtuple("Variables", "docker_upload, docker_password, "
-                                                        "docker_username, gcc_versions, "
-                                                        "clang_versions, visual_versions, build_server, "
-                                                        "docker_build_tag, docker_archs, sudo_command")
-        return Variables(docker_upload, docker_password, docker_username,
-                         gcc_versions, clang_versions, visual_versions, build_server,
-                         docker_build_tag, docker_archs, sudo_command)
+                                                        "docker_username, docker_login_username, "
+                                                        "gcc_versions, clang_versions, visual_versions, "
+                                                        "build_server, docker_build_tag, docker_archs")
+        return Variables(docker_upload, docker_password, docker_username, docker_login_username,
+                         gcc_versions, clang_versions, visual_versions, build_server, docker_build_tag, docker_archs)
 
     def build(self, service):
         """Call docker build to create a image
-        :param docker_username: Docker image maintainer e.g. conanio
-        :param docker_build_tag: Docker image tag e.g latest
         :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % service)
@@ -139,10 +137,10 @@ class ConanDockerTools(object):
         logging.info("Login to Docker hub account")
         result = subprocess.call(['docker', 'login', '-p',
                                   self.variables.docker_password, '-u',
-                                  self.variables.docker_username])
+                                  self.variables.docker_login_username])
         if result != os.EX_OK:
             raise RuntimeError("Could not login username %s "
-                               "to Docker hub." % self.variables.docker_username)
+                               "to Docker hub." % self.variables.docker_login_username)
 
         logging.info("Upload Docker image from service %s to Docker hub." % service)
         subprocess.check_call("docker-compose push %s" % service, shell=True)
