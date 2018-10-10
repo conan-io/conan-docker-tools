@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo docker run -t -d --name clang7-x86 lasote/clang7-x86 && \
+sudo docker run -t -d --name clang7-x86 conanio/clang7-x86 && \
 sudo docker exec clang7-x86 sudo pip install -U conan_package_tools && \
 sudo docker exec clang7-x86 sudo pip install -U conan && \
 sudo docker exec clang7-x86 conan user && \
