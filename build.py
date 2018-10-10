@@ -105,6 +105,8 @@ class ConanDockerTools(object):
                                         compiler_version), shell=True)
             else:
                 for libcxx in libcxx_list:
+                    if compiler_name == "clang" and compiler_version == "7":
+                        compiler_version = "7.0" # FIXME: Remove this when fixed in conan
 
                     subprocess.check_call('docker exec %s conan install zlib/1.2.11@conan/stable -s '
                                         'arch=%s -s compiler="%s" -s compiler.version=%s '
