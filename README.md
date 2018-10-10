@@ -195,7 +195,7 @@ The packages created on test, are not uploaded to Conan server, Are just to vali
 ### Deploy
 The final stage pushes the image to docker server (hub.docker). ``DOCKER_UPLOAD`` should be true.
 
-The login uses ``DOCKER_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate.
+The login uses ``DOCKER_LOGIN_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate.
 
 
 E.g Upload Docker images to Docker hub, after build and test:
