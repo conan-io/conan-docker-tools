@@ -69,7 +69,6 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 
 | Version                                                                                       | Arch       |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|------------|------------|
-| - [conanio/msvc12: Visual Studio 2015 12.0](https://hub.docker.com/r/conanio/msvc12/) | x86_64/x86 |  Supported |
 | - [conanio/msvc14: Visual Studio 2015 14.0](https://hub.docker.com/r/conanio/msvc14/) | x86_64/x86 |  Supported |
 | - [conanio/msvc15: Visual Studio 2017 15.0](https://hub.docker.com/r/conanio/msvc15/) | x86_64/x86 |  Supported |
 
