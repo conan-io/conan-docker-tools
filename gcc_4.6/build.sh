@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build --no-cache -t conanio/conangcc46 .
+sudo docker build --no-cache -t conanio/gcc46 .

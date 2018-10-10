@@ -54,7 +54,7 @@ class ConanDockerTools(object):
         """Call docker build to create a image
         :param docker_username: Docker image maintainer e.g. conanio
         :param docker_build_tag: Docker image tag e.g latest
-        :param service: service in compose e.g conangcc54
+        :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % service)
         subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)

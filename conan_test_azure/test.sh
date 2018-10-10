@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo docker run -t -d --name conangcc54 conanio/conan_tests_azure && \
+sudo docker run -t -d --name gcc54 conanio/conan_tests_azure && \
 sudo docker exec conan_tests_azure sudo pip install -U conan_package_tools && \
 sudo docker exec conan_tests_azure sudo pip install -U conan && \
 sudo docker exec conan_tests_azure conan user && \

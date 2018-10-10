@@ -1,4 +1,4 @@
-FROM conanio/conangcc5
+FROM conanio/gcc5
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build --no-cache -t conanio/conanclang50 .
+sudo docker build --no-cache -t conanio/clang50 .
