@@ -93,19 +93,32 @@ class ConanDockerTools(object):
             subprocess.check_call("docker exec %s %s pip -q install -U conan_package_tools" % (service, self.variables.sudo_command), shell=True)
             subprocess.check_call("docker exec %s conan user" % service, shell=True)
 
-            for libcxx in libcxx_list:
+            if compiler_name == "Visual Studio":
+                    subprocess.check_call('docker exec %s conan install zlib/1.2.11@conan/stable -s '
+                                        'arch=%s -s compiler="%s" -s compiler.version=%s '
+                                        '-s compiler.runtime=MD --build' %
+                                        (service, arch, compiler_name,
+                                        compiler_version), shell=True)
 
-                subprocess.check_call('docker exec %s conan install zlib/1.2.11@conan/stable -s '
-                                      'arch=%s -s compiler="%s" -s compiler.version=%s '
-                                      '-s compiler.libcxx=%s --build' %
-                                      (service, arch, compiler_name,
-                                       compiler_version, libcxx), shell=True)
+                    subprocess.check_call('docker exec %s conan install gtest/1.8.1@bincrafters/stable -s '
+                                        'arch=%s -s compiler="%s" -s compiler.version=%s '
+                                        '-s compiler.runtime=MD --build' %
+                                        (service, arch, compiler_name,
+                                        compiler_version), shell=True)
+            else:
+                for libcxx in libcxx_list:
 
-                subprocess.check_call('docker exec %s conan install gtest/1.8.1@bincrafters/stable -s '
-                                      'arch=%s -s compiler="%s" -s compiler.version=%s '
-                                      '-s compiler.libcxx=%s --build' %
-                                      (service, arch, compiler_name,
-                                       compiler_version, libcxx), shell=True)
+                    subprocess.check_call('docker exec %s conan install zlib/1.2.11@conan/stable -s '
+                                        'arch=%s -s compiler="%s" -s compiler.version=%s '
+                                        '-s compiler.libcxx=%s --build' %
+                                        (service, arch, compiler_name,
+                                        compiler_version, libcxx), shell=True)
+
+                    subprocess.check_call('docker exec %s conan install gtest/1.8.1@bincrafters/stable -s '
+                                        'arch=%s -s compiler="%s" -s compiler.version=%s '
+                                        '-s compiler.libcxx=%s --build' %
+                                        (service, arch, compiler_name,
+                                        compiler_version, libcxx), shell=True)
 
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
