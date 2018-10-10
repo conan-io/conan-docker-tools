@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build -t lasote/conangcc53 .
+sudo docker build -t conanio/gcc53 .

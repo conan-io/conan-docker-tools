@@ -15,7 +15,7 @@ RUN apt-get -qq update \
        vim=2:8.0.1453-1ubuntu1 \
        libc6-dev=2.27-3ubuntu1 \
        linux-libc-dev=4.* \
-       g++-8=8-20180414-1ubuntu2 \
+       g++-8 \
        libgmp-dev=2:6.1.2+dfsg-2 \
        libmpfr-dev=4.0.1-1 \
        libmpc-dev=1.1.0-1 \

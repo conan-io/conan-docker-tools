@@ -17,7 +17,7 @@ RUN dpkg --add-architecture i386 \
        git \
        vim=2:8.0.1766-1ubuntu1 \
        g++-multilib=4:8.2.0-1ubuntu1 \
-       clang-7=1:7-2 \
+       clang-7\
        make=4.2.1-1.2 \
        valgrind=1:3.13.0-2ubuntu6 \
        libc6-dev-i386=2.28-0ubuntu1 \
@@ -27,7 +27,7 @@ RUN dpkg --add-architecture i386 \
        nasm=2.13.03-2 \
        dh-autoreconf=19 \
        libffi-dev=3.2.1-8 \
-       libssl-dev=1.1.0* \
+       libssl-dev=1* \
        ninja-build=1.8.2-1 \
        libc++-dev=6.0.1-1 \
        libc++-dev:i386=6.0.1-1 \

@@ -5,8 +5,8 @@ sudo: required
 language: python
 env:
   matrix:
-    - DOCKER_IMAGE=lasote/conangcc63 # 6.3
-    - DOCKER_IMAGE=lasote/conanclang39 # 3.9
+    - DOCKER_IMAGE=conanio/gcc63 # 6.3
+    - DOCKER_IMAGE=conanio/clang39 # 3.9
 
 matrix:
    include:

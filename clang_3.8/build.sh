@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build --no-cache -t lasote/conanclang38 .
+sudo docker build --no-cache -t conanio/clang38 .
