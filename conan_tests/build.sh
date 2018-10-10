@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build -t lasote/conantests .
+sudo docker build -t conanio/conantests .

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build --no-cache -t lasote/conangcc54 .
+sudo docker build --no-cache -t conanio/gcc54 .

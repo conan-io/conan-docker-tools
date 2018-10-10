@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker run --rm -v ~/.conan/data:/home/conan/.conan/data -it lasote/conangcc5 /bin/bash
+sudo docker run --rm -v ~/.conan/data:/home/conan/.conan/data -it conanio/gcc5 /bin/bash
