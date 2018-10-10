@@ -19,10 +19,8 @@ The images are uploaded to Dockerhub:
 | [conanio/gcc52: gcc 5.2](https://hub.docker.com/r/conanio/gcc52/)                     | x86_64  |  Supported |
 | [conanio/gcc53: gcc 5.3](https://hub.docker.com/r/conanio/gcc53/)                     | x86_64  | Supported  |
 | [conanio/gcc54: gcc 5.4](https://hub.docker.com/r/conanio/gcc54/)                     | x86_64  | Supported  |
-| [conanio/gcc62: gcc 6.2](https://hub.docker.com/r/conanio/gcc62/)                     | x86_64  | DEPRECATED, only frozen binary image support, No Dockerfile |
 | [conanio/gcc63: gcc 6.3](https://hub.docker.com/r/conanio/gcc63/)                     | x86_64  | Supported  |
 | [conanio/gcc64: gcc 6.4](https://hub.docker.com/r/conanio/gcc64/)                     | x86_64  | Supported  |
-| [conanio/gcc71: gcc 7.1](https://hub.docker.com/r/conanio/gcc71/)                     | x86_64  | DEPRECATED, only frozen binary image support, No Dockerfile |
 | [conanio/gcc72: gcc 7.2](https://hub.docker.com/r/conanio/gcc72/)                     | x86_64  | Supported  |
 
 
