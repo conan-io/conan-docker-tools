@@ -13,7 +13,7 @@ COPY sources.list /etc/apt/sources.list
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3.6-dev=3.6.1-1ubuntu0~17.04.0 \
        sudo=1.8.* \
        wget=1.18* \
        git=1:2.* \
@@ -41,11 +41,12 @@ RUN dpkg --add-architecture i386 \
        libc++abi-dev:i386=3.9.* \
        pkg-config=0.29.1-0ubuntu1 \
        subversion=1.9.5-1ubuntu1.1 \
-       ca-certificates \
+       ca-certificates=20170717~17.04.1 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${LLVM_VERSION} 100 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.6 100 \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
@@ -57,7 +58,7 @@ RUN dpkg --add-architecture i386 \
     && rm get-pip.py \
     && pip install -q -U pip \
     && pip install -q --no-cache-dir virtualenv --upgrade \
-    && pip install -q --no-cache-dir conan --upgrade\
+    && pip install -q --no-cache-dir conan --upgrade \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \

@@ -11,7 +11,7 @@ ENV LLVM_VERSION=5.0 \
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.14-2ubuntu1 \
+       python3.7-dev=3.7.0~a2-1 \
        sudo=1.8.20p2-1ubuntu1 \
        wget=1.19.1-3ubuntu1 \
        git=1:2.14.1-1ubuntu4 \
@@ -41,6 +41,7 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-5.0 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-5.0 100 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
