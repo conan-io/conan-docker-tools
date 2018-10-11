@@ -4,7 +4,7 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3-dev=3.2.3-0ubuntu1.2 \
        sudo=1.8.* \
        build-essential=11.* \
        wget=1.13.* \
@@ -22,6 +22,7 @@ RUN apt-get -qq update \
        subversion=1.6.17dfsg-3ubuntu3.5 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.2 100 \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \

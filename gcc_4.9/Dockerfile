@@ -9,7 +9,7 @@ RUN dpkg --add-architecture i386 \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get -qq update \
     && apt-get install -y --force-yes --no-install-recommends \
-       python-dev=2.7.5-5ubuntu3 \
+       python3-dev=3.4.0-0ubuntu2 \
        sudo=1.8.9p5-1ubuntu1.4 \
        g++-4.9=4.9.4-2ubuntu1~14.04.1 \
        g++-4.9-multilib=4.9.4-2ubuntu1~14.04.1 \
@@ -28,6 +28,7 @@ RUN dpkg --add-architecture i386 \
        subversion=1.8.8-1ubuntu3.3 \
        ca-certificates=20170717~14.04.1 \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.4 100 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \

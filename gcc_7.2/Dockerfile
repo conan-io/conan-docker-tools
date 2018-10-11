@@ -5,7 +5,7 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3.7-dev=3.7.0~a2-1 \
        sudo=1.8.* \
        binutils=2.29.* \
        wget=1.19.* \
@@ -29,6 +29,7 @@ RUN dpkg --add-architecture i386 \
        ca-certificates \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \

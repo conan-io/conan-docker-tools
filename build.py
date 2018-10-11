@@ -81,6 +81,10 @@ class ConanDockerTools(object):
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
+            output = subprocess.check_output("docker exec %s python --version" % service, shell=True)
+            assert "Python 3" in output.decode()
+            logging.info("Found %s" % output.decode())
+
             subprocess.check_call("docker exec %s sudo pip -q install -U conan" % service, shell=True)
             subprocess.check_call("docker exec %s sudo pip -q install -U conan_package_tools" % service, shell=True)
             subprocess.check_call("docker exec %s conan user" % service, shell=True)
@@ -92,6 +96,7 @@ class ConanDockerTools(object):
             for libcxx in libcxx_list:
                 if compiler_name == "clang" and compiler_version == "7":
                     compiler_version = "7.0" # FIXME: Remove this when fixed in conan
+
                 subprocess.check_call("docker exec %s conan install zlib/1.2.11@conan/stable -s "
                                       "arch=%s -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %
@@ -103,7 +108,6 @@ class ConanDockerTools(object):
                                       "-s compiler.libcxx=%s --build" %
                                       (service, arch, compiler_name,
                                        compiler_version, libcxx), shell=True)
-
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
             subprocess.call("docker rm %s" % service, shell=True)

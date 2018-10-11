@@ -7,7 +7,7 @@ ENV CONAN_ENV_ARCH=x86
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3.7-dev=3.7.0~a2-1 \
        sudo=1.* \
        binutils=2.29.* \
        wget=1.19.* \
@@ -29,6 +29,7 @@ RUN apt-get -qq update \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-2ubuntu1 \
        ca-certificates=20170717 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-6 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100 \

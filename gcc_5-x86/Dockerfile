@@ -7,7 +7,7 @@ ENV CONAN_ENV_ARCH=x86
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3-dev=3.5.1-3 \
        sudo=1.8.* \
        build-essential=12.1ubuntu2 \
        wget=1.17.* \
@@ -28,6 +28,7 @@ RUN apt-get -qq update \
        pkg-config=0.29.1-0ubuntu1 \
        ca-certificates=20170717~16.04.1 \
        && rm -rf /var/lib/apt/lists/* \
+       && update-alternatives --install /usr/bin/python python /usr/bin/python3.5 100 \
        && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
        && tar -xzf cmake-3.12.1.tar.gz \
        && cd cmake-3.12.1 \

@@ -7,7 +7,7 @@ COPY sources.list /etc/apt/sources.list
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3.6-dev=3.6.1-1ubuntu0~17.04.0 \
        sudo=1.8.* \
        build-essential=12.1* \
        wget=1.18* \
@@ -29,6 +29,7 @@ RUN dpkg --add-architecture i386 \
        subversion=1.9.5-1ubuntu1.1 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.6 100 \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \

@@ -5,7 +5,7 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3.7-dev=3.7.0~a2-1 \
        sudo=1.8.* \
        binutils=2.29.* \
        wget=1.19.* \
@@ -27,6 +27,7 @@ RUN dpkg --add-architecture i386 \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-2ubuntu1 \
        ca-certificates=20170717 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
