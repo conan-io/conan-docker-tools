@@ -66,4 +66,3 @@ env:
 
 script:
   - python build.py
-  - docker images

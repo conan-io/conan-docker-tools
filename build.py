@@ -58,6 +58,13 @@ class ConanDockerTools(object):
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, clang_versions, visual_versions, build_server, docker_build_tag, docker_archs, sudo_command)
 
+    def _get_image_name(self, service):
+        """Get Docker image name based on service name
+        :param service: service in compose
+        :return: Docker images name
+        """
+        return "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
+
     def build(self, service):
         """Call docker build to create a image
         :param service: service in compose e.g gcc54
@@ -83,7 +90,7 @@ class ConanDockerTools(object):
         """
         logging.info("Testing Docker by service %s." % service)
         try:
-            image = "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
+            image = self._get_image_name(service)
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
@@ -147,6 +154,16 @@ class ConanDockerTools(object):
         logging.info("Upload Docker image from service %s to Docker hub." % service)
         subprocess.check_call("docker-compose push %s" % service, shell=True)
 
+    def info(self, service):
+        """Show Docker image info
+        :param service: Docker compose service name
+        """
+        image = self._get_image_name(service)
+        logging.info("Show Docker image %s size:" % image)
+        subprocess.call('docker images %s' % image, shell=True)
+        logging.info("Show Docker image %s info:" % image)
+        subprocess.call('docker inspect %s' % image, shell=True)
+
     def run(self):
         """Execute all 3 stages for all versions in compilers list
         """
@@ -160,14 +177,17 @@ class ConanDockerTools(object):
                     if platform.system() == "Linux":
                         self.linter(build_dir)
                     self.build(service)
+                    self.info(service)
                     self.test(arch, compiler.pretty, version, service)
                     self.deploy(service)
 
         if self.variables.build_server:
-            logging.info("Bulding conan_server image...")
-            self.linter("conan_server")
-            self.build("conan_server")
-            self.deploy("conan_server")
+            service = "conan_server"
+            logging.info("Bulding %s image..." % service)
+            self.linter(service)
+            self.build(service)
+            self.info(service)
+            self.deploy(service)
         else:
             logging.info("Skipping conan_server image creation")
 
