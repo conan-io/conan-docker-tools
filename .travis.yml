@@ -6,11 +6,6 @@ services:
   - docker
 
 env:
-  global:
-    - DOCKER_UPLOAD="TRUE"
-    - DOCKER_USERNAME="conanio"
-    - DOCKER_LOGIN_USERNAME="lasote"
-
   matrix:
     - GCC_VERSIONS="5" DOCKER_ARCHS="x86"
     - GCC_VERSIONS="5"
