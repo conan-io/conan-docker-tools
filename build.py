@@ -177,9 +177,13 @@ class ConanDockerTools(object):
                     if platform.system() == "Linux":
                         self.linter(build_dir)
                     self.build(service)
-                    self.info(service)
-                    self.test(arch, compiler.pretty, version, service)
-                    self.deploy(service)
+                    try:
+                        float(version) # base versions will not be tested and deployed
+                        self.info(service)
+                        self.test(arch, compiler.pretty, version, service)
+                        self.deploy(service)
+                    except:
+                        pass
 
         if self.variables.build_server:
             service = "conan_server"
