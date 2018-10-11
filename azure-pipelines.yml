@@ -11,6 +11,8 @@ jobs:
       python build.py
   strategy:
     matrix:
+      Visual Studio 2015 Base:
+        VISUAL_VERSIONS: base
       Visual Studio 2015 14.0:
         VISUAL_VERSIONS: 14
       Visual Studio 2017 15.0:

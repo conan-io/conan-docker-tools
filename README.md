@@ -134,7 +134,7 @@ You need to modify:
 ```
 
 Use the images to test your c++ project in appveyor
-======================================================
+===================================================
 
 These Docker images can be used to build your project using the Appveyor CI service, even if you are not using Conan.
 
@@ -180,7 +180,6 @@ These Docker images can be used to build your project using the Appveyor CI serv
     cmake --build .
 
 ```
-
 
 Use the images locally
 ======================
