@@ -54,9 +54,9 @@ class ConanDockerTools(object):
         Variables = collections.namedtuple("Variables", "docker_upload, docker_password, "
                                                         "docker_username, docker_login_username, "
                                                         "gcc_versions, clang_versions, visual_versions, "
-                                                        "build_server, docker_build_tag, docker_archs")
+                                                        "build_server, docker_build_tag, docker_archs, sudo_command")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, clang_versions, visual_versions, build_server, docker_build_tag, docker_archs)
+                         gcc_versions, clang_versions, visual_versions, build_server, docker_build_tag, docker_archs, sudo_command)
 
     def build(self, service):
         """Call docker build to create a image
