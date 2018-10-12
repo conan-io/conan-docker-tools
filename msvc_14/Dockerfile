@@ -1,4 +1,4 @@
-FROM microsoft/windowsservercore:10.0.14393.2485
+FROM conanio/msvcbase
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
