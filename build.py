@@ -94,10 +94,9 @@ class ConanDockerTools(object):
                     compiler_version = "7.0" # FIXME: Remove this when fixed in conan
 
                 subprocess.check_call("docker exec %s conan install lz4/1.8.3@bincrafters/stable -s "
-                                      "arch=%s -s compiler=%s -s compiler.version=%s "
-                                      "-s compiler.libcxx=%s --build" %
+                                      "arch=%s -s compiler=%s -s compiler.version=%s --build" %
                                       (service, arch, compiler_name,
-                                       compiler_version, libcxx), shell=True)
+                                       compiler_version), shell=True)
 
                 subprocess.check_call("docker exec %s conan install gtest/1.8.1@bincrafters/stable -s "
                                       "arch=%s -s compiler=%s -s compiler.version=%s "
