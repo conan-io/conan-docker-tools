@@ -11,7 +11,7 @@ RUN apt-get -qq update \
        sudo=1.8.21p2-3ubuntu1 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
-       git \
+       git=1:2.17.1-1ubuntu0.3 \
        vim=2:8.0.1453-1ubuntu1 \
        libc6-dev=2.27-3ubuntu1 \
        linux-libc-dev=4.* \
