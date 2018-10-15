@@ -131,7 +131,7 @@ Use the images locally
 You can also use the images locally to build or test packages, this is an example command:
 
 ```
-docker run -v/tmp/.conan:/home/conan/.conan conanio/gcc63 bash -c "conan install zlib/1.2.11@conan/stable --build missing"
+docker run -v/tmp/.conan:/home/conan/.conan conanio/gcc63 bash -c "conan install lz4/1.8.3@bincrafters/stable --build missing"
 ```
 
 This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
@@ -140,7 +140,7 @@ You can change the directory or execute any other command that works for your ne
 If you are familiarized with Docker compose, also it's possible to start a new container by:
 
 ```
-docker-compose run -v/tmp/.conan:/home/conan/.conan gcc63 bash -c "conan install zlib/1.2.11@conan/stable --build missing"
+docker-compose run -v/tmp/.conan:/home/conan/.conan gcc63 bash -c "conan install lz4/1.8.3@bincrafters/stable --build missing"
 ```
 
 
