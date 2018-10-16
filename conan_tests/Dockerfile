@@ -21,7 +21,6 @@ RUN sudo apt-get update \
     golang \
     pkg-config \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
     && sudo pip install --upgrade pip \
     && cd /tmp && wget https://bootstrap.pypa.io/get-pip.py && sudo python3 get-pip.py && sudo pip3 install "meson"
 RUN sudo pip install virtualenv

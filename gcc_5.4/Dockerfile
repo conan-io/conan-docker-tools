@@ -27,14 +27,13 @@ RUN dpkg --add-architecture i386 \
        subversion=1.9.3-2ubuntu1.1 \
        ca-certificates \
        && rm -rf /var/lib/apt/lists/* \
-       && update-alternatives --install /usr/bin/python python /usr/bin/python3.5 100 \
        && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
        && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
        && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
        && rm -rf cmake-3.12.1-Linux-x86_64 \
        && rm cmake-3.12.1-Linux-x86_64.tar.gz \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-       && python get-pip.py \
+       && python3 get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
        && pip install -q --no-cache-dir virtualenv --upgrade \

@@ -28,7 +28,6 @@ RUN dpkg --add-architecture i386 \
        subversion=1.8.8-1ubuntu3.3 \
        ca-certificates=20170717~14.04.1 \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.4 100 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
@@ -39,7 +38,7 @@ RUN dpkg --add-architecture i386 \
     && rm -rf cmake-3.12.1-Linux-x86_64 \
     && rm cmake-3.12.1-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
+    && python3 get-pip.py \
     && rm get-pip.py \
     && pip install -q -U pip \
     && pip install -q --no-cache-dir virtualenv --upgrade \

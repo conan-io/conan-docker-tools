@@ -43,7 +43,6 @@ RUN dpkg --add-architecture i386 \
        golang \
        pkg-config \
        && rm -rf /var/lib/apt/lists/* \
-       && update-alternatives --install /usr/bin/python python /usr/bin/python3.5 100 \
        && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
        && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
        && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \

@@ -28,7 +28,6 @@ RUN apt-get -qq update \
        pkg-config=0.29.1-0ubuntu1 \
        ca-certificates=20170717~16.04.1 \
        && rm -rf /var/lib/apt/lists/* \
-       && update-alternatives --install /usr/bin/python python /usr/bin/python3.5 100 \
        && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
        && tar -xzf cmake-3.12.1.tar.gz \
        && cd cmake-3.12.1 \
@@ -38,7 +37,7 @@ RUN apt-get -qq update \
        && cd - \
        && rm -rf cmake-* \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-       && python get-pip.py \
+       && python3 get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
        && pip install -q --no-cache-dir virtualenv --upgrade \
