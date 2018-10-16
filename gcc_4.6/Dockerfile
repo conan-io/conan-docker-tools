@@ -3,8 +3,7 @@ FROM ubuntu:precise
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
-       python3-dev=3.2.3-0ubuntu1.2 \
+    && apt-get install -y --no-install-recommends \
        sudo=1.8.* \
        build-essential=11.* \
        wget=1.13.* \
@@ -21,6 +20,13 @@ RUN apt-get -qq update \
        pkg-config=0.26-1ubuntu1 \
        subversion=1.6.17dfsg-3ubuntu3.5 \
        ca-certificates \
+       software-properties-common \
+       python-software-properties \
+       python-setuptools \
+    && add-apt-repository ppa:fkrull/deadsnakes -y \
+    && apt-get -qq update \
+    && apt-get install -y --no-install-recommends python3.5-dev python3.5-venv \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 100 \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
