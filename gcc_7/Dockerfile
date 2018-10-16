@@ -5,7 +5,7 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python3.7-dev=3.7.0~a2-1 \
+       python3-dev=3.6.3-0ubuntu3 \
        sudo=1.8.* \
        binutils=2.29.* \
        wget=1.19.* \
@@ -27,7 +27,6 @@ RUN dpkg --add-architecture i386 \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-2ubuntu1 \
        ca-certificates=20170717 \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
@@ -38,7 +37,7 @@ RUN dpkg --add-architecture i386 \
     && rm -rf cmake-3.12.1-Linux-x86_64 \
     && rm cmake-3.12.1-Linux-x86_64.tar.gz \
     && wget --no-check-certificate --quiet https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
+    && python3 get-pip.py \
     && rm get-pip.py \
     && pip install -q -U pip \
     && pip install -q --no-cache-dir virtualenv --upgrade \

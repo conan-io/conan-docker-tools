@@ -81,23 +81,23 @@ class ConanDockerTools(object):
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
-            output = subprocess.check_output("docker exec %s python --version" % service, shell=True)
+            output = subprocess.check_output("docker exec %s python3 --version" % service, shell=True)
             assert "Python 3" in output.decode()
             logging.info("Found %s" % output.decode())
 
-            subprocess.check_call("docker exec %s sudo pip -q install -U conan" % service, shell=True)
-            subprocess.check_call("docker exec %s sudo pip -q install -U conan_package_tools" % service, shell=True)
+            subprocess.check_call("docker exec %s sudo pip install --no-cache-dir -U conan_package_tools" % service, shell=True)
+            subprocess.check_call("docker exec %s sudo pip install --no-cache-dir -U conan" % service, shell=True)
             subprocess.check_call("docker exec %s conan user" % service, shell=True)
 
-            for libcxx in libcxx_list:
-                if compiler_name == "clang" and compiler_version == "7":
+            if compiler_name == "clang" and compiler_version == "7":
                     compiler_version = "7.0" # FIXME: Remove this when fixed in conan
 
-                subprocess.check_call("docker exec %s conan install lz4/1.8.3@bincrafters/stable -s "
-                                      "arch=%s -s compiler=%s -s compiler.version=%s --build" %
-                                      (service, arch, compiler_name,
-                                       compiler_version), shell=True)
+            subprocess.check_call("docker exec %s conan install lz4/1.8.3@bincrafters/stable -s "
+                                  "arch=%s -s compiler=%s -s compiler.version=%s --build" %
+                                  (service, arch, compiler_name,
+                                   compiler_version), shell=True)
 
+            for libcxx in libcxx_list:
                 subprocess.check_call("docker exec %s conan install gtest/1.8.1@bincrafters/stable -s "
                                       "arch=%s -s compiler=%s -s compiler.version=%s "
                                       "-s compiler.libcxx=%s --build" %

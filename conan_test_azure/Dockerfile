@@ -50,7 +50,7 @@ RUN dpkg --add-architecture i386 \
        && rm -rf cmake-3.12.1-Linux-x86_64 \
        && rm cmake-3.12.1-Linux-x86_64.tar.gz \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-       && python get-pip.py \
+       && python3 get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
        && pip install -q --no-cache-dir conan --upgrade \

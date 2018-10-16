@@ -7,7 +7,7 @@ ENV CONAN_ENV_ARCH=x86
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python3.7-dev=3.7.0-1~18.04 \
+       python3-dev=3.6.5-3ubuntu1 \
        sudo=1.8.21p2-3ubuntu1 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
@@ -28,8 +28,7 @@ RUN apt-get -qq update \
        libssl-dev=1.* \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-4ubuntu1 \
-       ca-certificates=20180409 \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
+       ca-certificates=20180409 \    
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 \
@@ -45,7 +44,7 @@ RUN apt-get -qq update \
     && cd - \
     && rm -rf cmake-* \
     && wget --no-check-certificate --quiet https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
+    && python3 get-pip.py \
     && rm get-pip.py \
     && pip install -q -U pip \
     && pip install -q --no-cache-dir virtualenv --upgrade \

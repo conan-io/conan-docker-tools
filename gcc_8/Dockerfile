@@ -5,7 +5,7 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get install -y --no-install-recommends \
-       python3.7-dev=3.7.0-1~18.04 \
+       python3-dev=3.6.5-3ubuntu1 \
        sudo=1.8.21p2-3ubuntu1 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
@@ -31,7 +31,6 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-8 100 \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
@@ -40,7 +39,7 @@ RUN dpkg --add-architecture i386 \
     && rm -rf cmake-3.12.1-Linux-x86_64 \
     && rm cmake-3.12.1-Linux-x86_64.tar.gz \
     && wget --no-check-certificate --quiet https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
+    && python3 get-pip.py \
     && rm get-pip.py \
     && pip install -q -U pip \
     && pip install -q --no-cache-dir virtualenv --upgrade \
