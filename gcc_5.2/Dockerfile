@@ -6,7 +6,7 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     && dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-    python3-dev=3.5.1-3 \
+    python3-dev=3.4.3-4ubuntu1 \
     sudo=1.8.* \
     build-essential=12.* \
     wget=1.16.* \
