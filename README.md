@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
 # conan-docker-tools
 
+![logo](logo.png)
+
 Dockerfiles for different gcc compiler versions.
 You can use these images directly in your project or with the [conan-package-tools project](https://github.com/conan-io/conan-package-tools).
 
