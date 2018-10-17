@@ -30,6 +30,7 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     vim=2:7.4.* \
     nasm=2.11.* \
     dh-autoreconf=10 \
+    libc6:armhf \
     valgrind=1:3.11.* \
     ninja-build=1.3.* \
     libffi-dev=3.2.* \
