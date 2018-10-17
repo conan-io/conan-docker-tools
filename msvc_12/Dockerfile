@@ -13,11 +13,16 @@ WORKDIR "C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0"
 
 RUN Invoke-WebRequest "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile "C:\windows\nuget.exe" -UseBasicParsing
 RUN & "C:\windows\nuget.exe" Install MSBuild.Microsoft.VisualStudio.Web.targets -Version 12.0.4
-RUN mv 'C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\MSBuild.Microsoft.VisualStudio.Web.targets.12.0.4\tools\VSToolsPath\*' 'C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\'
+RUN mv "C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\MSBuild.Microsoft.VisualStudio.Web.targets.12.0.4\tools\VSToolsPath\*" "C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0"
 
-RUN Get-ChildItem 'C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\'
+RUN Get-ChildItem -Path 'C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0' -Recurse; \
+    Get-ChildItem -Path "C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\MSBuild.Microsoft.VisualStudio.Web.targets.12.0.4" -Recurse
 
-RUN setx PATH "%PATH%;C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\msbuild.exe"
+RUN OLDPATH=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name Path).Path; \
+    Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value ($OLDPATH += ';C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\')
+
+RUN NEWPATH=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name Path).Path; \
+    Write-Host "$NEWPATH"
 
 WORKDIR "C:/Users/ContainerAdministrator"
 ENTRYPOINT ["C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\msbuild.exe"]
