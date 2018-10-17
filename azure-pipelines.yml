@@ -9,9 +9,11 @@ jobs:
   - script: |
       choco install docker-compose
       python build.py
+    env:
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:
     matrix:
-      Visual Studio 2015 14.0:
+      Visual Studio 2015 12.0:
         VISUAL_VERSIONS: "base,12"
       Visual Studio 2015 14.0:
         VISUAL_VERSIONS: "base,14"

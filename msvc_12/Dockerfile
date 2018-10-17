@@ -10,12 +10,11 @@ RUN Install-WindowsFeature NET-Framework-45-ASPNET ; \
     Install-WindowsFeature Web-Asp-Net45
 
 RUN Invoke-WebRequest "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile "C:\windows\nuget.exe" -UseBasicParsing
-WORKDIR "C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0"
-
 RUN & "C:\windows\nuget.exe" Install MSBuild.Microsoft.VisualStudio.Web.targets -Version 12.0.4
 RUN mv 'C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\MSBuild.Microsoft.VisualStudio.Web.targets.12.0.4\tools\VSToolsPath\*' 'C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\'
 
-RUN setx PATH '%PATH%;C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\msbuild.exe'
+RUN Get-ChildItem 'C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0\'
 
-WORKDIR "C:/Users/ContainerAdministrator"
+RUN setx PATH "%PATH%;C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\msbuild.exe"
+
 ENTRYPOINT ["C:\\Program Files (x86)\\MSBuild\\12.0\\Bin\\msbuild.exe"]
