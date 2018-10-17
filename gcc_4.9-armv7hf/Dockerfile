@@ -13,10 +13,6 @@ ENV CC=arm-linux-gnueabihf-gcc-4.9 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-4.9
 
-FROM ubuntu:wily
-
-LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
-
 RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list \
     && dpkg --add-architecture armhf \
     && apt-get -qq update \
