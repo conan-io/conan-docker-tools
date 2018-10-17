@@ -286,6 +286,13 @@ services:
         image: "${DOCKER_USERNAME}/msvcbase:${DOCKER_BUILD_TAG}"
         container_name: msvcbase
         tty: true
+    msvc12:
+        build:
+            context: msvc_12
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/msvc12:${DOCKER_BUILD_TAG}"
+        container_name: msvc12
+        tty: true
     msvc14:
         build:
             context: msvc_14
