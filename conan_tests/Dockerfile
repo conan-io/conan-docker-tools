@@ -22,8 +22,11 @@ RUN sudo apt-get update \
     pkg-config \
     && sudo rm -rf /var/lib/apt/lists/* \
     && sudo pip install --upgrade pip \
-    && cd /tmp && wget https://bootstrap.pypa.io/get-pip.py && sudo python3 get-pip.py && sudo pip3 install "meson"
-RUN sudo pip install virtualenv
+    && cd /tmp && wget https://bootstrap.pypa.io/get-pip.py \
+    && sudo python3 get-pip.py \
+    && sudo pip3 install "meson" \
+    && sudo pip install virtualenv
+
 USER conan
 WORKDIR /home/conan
 RUN mkdir -p /home/conan/.conan

@@ -23,6 +23,7 @@ RUN dpkg --add-architecture i386 \
        subversion=1.8.8-1ubuntu3.3 \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/local/bin/python python /usr/bin/python3 300 \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \

@@ -46,6 +46,7 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${LLVM_VERSION} 100 \
+    && update-alternatives --install /usr/local/bin/python python /usr/bin/python3 300 \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \

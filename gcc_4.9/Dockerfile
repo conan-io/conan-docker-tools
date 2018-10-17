@@ -28,6 +28,7 @@ RUN dpkg --add-architecture i386 \
        subversion=1.8.8-1ubuntu3.3 \
        ca-certificates=20170717~14.04.1 \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/local/bin/python python /usr/bin/python3 300 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \

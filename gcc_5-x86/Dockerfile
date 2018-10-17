@@ -36,6 +36,7 @@ RUN apt-get -qq update \
        && make -s install > /dev/null \
        && cd - \
        && rm -rf cmake-* \
+       && update-alternatives --install /usr/local/bin/python python /usr/bin/python3 300 \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
        && python3 get-pip.py \
        && rm get-pip.py \

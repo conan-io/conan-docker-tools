@@ -73,6 +73,7 @@ RUN dpkg --add-architecture i386 \
        ca-certificates \
     && ln -s /usr/bin/g++-5 /usr/bin/g++ \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/local/bin/python python /usr/bin/python3 300 \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \

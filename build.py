@@ -57,7 +57,7 @@ class ConanDockerTools(object):
         :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % service)
-        subprocess.check_call("docker-compose build %s" % service, shell=True)
+        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
@@ -92,6 +92,12 @@ class ConanDockerTools(object):
             output = subprocess.check_output("docker exec %s pip show conan" % service, shell=True)
             assert "python3" in output.decode()
             logging.info("Found Conan (Python 3)")
+
+            output = subprocess.check_output("docker exec %s python --version" % service, shell=True)
+            # Don't override when both python2 and python3 are present
+            if compiler_name != "gcc" or str(compiler_version) != "4.6":
+                assert "Python 3" in output.decode()
+            logging.info("Python version: %s" % output.decode().rstrip())
 
             subprocess.check_call("docker exec %s sudo pip install --no-cache-dir -U conan_package_tools" % service, shell=True)
             subprocess.check_call("docker exec %s sudo pip install --no-cache-dir -U conan" % service, shell=True)
