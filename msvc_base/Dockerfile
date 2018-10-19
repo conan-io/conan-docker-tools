@@ -1,4 +1,4 @@
-FROM microsoft/windowsservercore:10.0.14393.2485
+FROM microsoft/windowsservercore:10.0.14393.2485 as msvcbase
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -24,3 +24,15 @@ RUN pip install idna --quiet --upgrade --force-reinstall --no-cache
 
 WORKDIR "C:/Users/ContainerAdministrator"
 ENTRYPOINT ["cmd.exe", "C:\\Program Files (x86)\\Microsoft Visual C++ Build Tools\\vcbuildtools_msbuild.bat"]
+
+FROM msvcbase as msvc14
+
+RUN choco install --no-progress --yes vcbuildtools --version=2015.4 -ia "/Full"
+RUN RefreshEnv
+
+FROM msvcbase as msvc15
+
+RUN choco install --no-progress --yes visualstudio2017buildtools --version=15.8.2.0
+RUN choco install --no-progress --yes visualstudio2017-workload-vctools --version=1.3.0
+RUN choco install --no-progress --yes visualstudio2017-workload-manageddesktop --version=1.2.0
+RUN RefreshEnv
