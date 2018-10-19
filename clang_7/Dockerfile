@@ -14,10 +14,10 @@ RUN dpkg --add-architecture i386 \
        python3-dev=3.6.6-1 \
        sudo=1.8.23-2ubuntu1 \
        wget=1.19.5-1ubuntu1 \
-       git \
+       git=1:2.17.1-1ubuntu1 \
        vim=2:8.0.1766-1ubuntu1 \
        g++-multilib=4:8.2.0-1ubuntu1 \
-       clang-7\
+       clang-7=1:7-3 \
        make=4.2.1-1.2 \
        valgrind=1:3.13.0-2ubuntu6 \
        libc6-dev-i386=2.28-0ubuntu1 \
@@ -27,7 +27,7 @@ RUN dpkg --add-architecture i386 \
        nasm=2.13.03-2 \
        dh-autoreconf=19 \
        libffi-dev=3.2.1-8 \
-       libssl-dev=1* \
+       libssl-dev=1.1.1-1ubuntu2 \
        ninja-build=1.8.2-1 \
        libc++-dev=6.0.1-1 \
        libc++-dev:i386=6.0.1-1 \

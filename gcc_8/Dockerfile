@@ -9,11 +9,11 @@ RUN dpkg --add-architecture i386 \
        sudo=1.8.21p2-3ubuntu1 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
-       git \
+       git=1:2.17.1-1ubuntu0.1 \
        vim=2:8.0.1453-1ubuntu1 \
        libc6-dev-i386=2.27-3ubuntu1 \
        linux-libc-dev:i386=4.* \
-       g++-8-multilib \
+       g++-8-multilib=8.2.0-1ubuntu2~18.04 \
        libgmp-dev=2:6.1.2+dfsg-2 \
        libmpfr-dev=4.0.1-1 \
        libmpc-dev=1.1.0-1 \

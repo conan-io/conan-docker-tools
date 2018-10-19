@@ -1,1 +1,21 @@
-# Override this
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'VS2017-Win2016'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+  - script: |
+      choco install docker-compose
+      python build.py
+    env:
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+  strategy:
+    matrix:
+      Visual Studio 2015 12.0:
+        VISUAL_VERSIONS: "base,12"
+      Visual Studio 2015 14.0:
+        VISUAL_VERSIONS: "base,14"
+      Visual Studio 2017 15.0:
+        VISUAL_VERSIONS: "base,15"
