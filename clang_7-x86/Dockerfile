@@ -15,7 +15,7 @@ RUN apt-get -qq update \
        python3-dev=3.6.6-1 \
        sudo=1.8.23-2ubuntu1 \
        wget=1.19.5-1ubuntu1 \
-       git=1:2.17.1-1ubuntu1 \
+       git=1:2.* \
        vim=2:8.0.1766-1ubuntu1 \
        g++-multilib=4:8.2.0-1ubuntu1 \
        clang-7=1:7-3 \

@@ -9,7 +9,7 @@ RUN dpkg --add-architecture i386 \
        sudo=1.8.21p2-3ubuntu1 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
-       git=1:2.17.1-1ubuntu0.1 \
+       git=1:2.* \
        vim=2:8.0.1453-1ubuntu1 \
        libc6-dev-i386=2.27-3ubuntu1 \
        linux-libc-dev:i386=4.* \
