@@ -3,6 +3,8 @@
 [![Azure Build Status](https://dev.azure.com/conanio/conan-devops/_apis/build/status/conan-io.conan-docker-tools)](https://dev.azure.com/conanio/conan-devops/_build/latest)
 # conan-docker-tools
 
+![logo](logo.png)
+
 Dockerfiles for different gcc compiler versions.
 You can use these images directly in your project or with the [conan-package-tools project](https://github.com/conan-io/conan-package-tools).
 
