@@ -111,16 +111,16 @@ class ConanDockerTools(object):
                                         (service, arch, compiler_name,
                                         compiler_version), shell=True)
             else:
-                for libcxx in libcxx_list:
-                    if compiler_name == "clang" and compiler_version == "7":
+                if compiler_name == "clang" and compiler_version == "7":
                         compiler_version = "7.0" # FIXME: Remove this when fixed in conan
 
-                    subprocess.check_call('docker exec %s conan install zlib/1.2.11@conan/stable -s '
+                subprocess.check_call('docker exec %s conan install zlib/1.2.11@conan/stable -s '
                                         'arch=%s -s compiler="%s" -s compiler.version=%s '
-                                        '-s compiler.libcxx=%s --build' %
+                                        '--build' %
                                         (service, arch, compiler_name,
-                                        compiler_version, libcxx), shell=True)
+                                        compiler_version), shell=True)
 
+                for libcxx in libcxx_list:
                     subprocess.check_call('docker exec %s conan install gtest/1.8.1@bincrafters/stable -s '
                                         'arch=%s -s compiler="%s" -s compiler.version=%s '
                                         '-s compiler.libcxx=%s --build' %
@@ -176,14 +176,11 @@ class ConanDockerTools(object):
 
                     if platform.system() == "Linux":
                         self.linter(build_dir)
+
                     self.build(service)
-                    try:
-                        float(version) # base versions will not be tested and deployed
-                        self.info(service)
-                        self.test(arch, compiler.pretty, version, service)
-                        self.deploy(service)
-                    except:
-                        pass
+                    self.info(service)
+                    self.test(arch, compiler.pretty, version, service)
+                    self.deploy(service)
 
         if self.variables.build_server:
             service = "conan_server"
