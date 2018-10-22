@@ -13,6 +13,19 @@ ENV CC=arm-linux-gnueabihf-gcc-5 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-5
 
+RUN sudo dpkg --add-architecture armhf
+RUN sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list
+
+USER root
+RUN PREFIX="deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/" \
+  && SUFFIX="main restricted universe multiverse" \
+  && DEST="/etc/apt/sources.list.d/armhf.list" \
+  && echo "${PREFIX} xenial ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} xenial-updates ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} xenial-security ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} xenial-backports ${SUFFIX}" >> ${DEST}
+USER conan
+
 RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*5.*arm-linux-gnueabihf.*" \

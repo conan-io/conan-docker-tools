@@ -13,6 +13,19 @@ ENV CC=arm-linux-gnueabihf-gcc \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-6
 
+RUN sudo dpkg --add-architecture armhf
+RUN sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list
+
+USER root
+RUN PREFIX="deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/" \
+  && SUFFIX="main restricted universe multiverse" \
+  && DEST="/etc/apt/sources.list.d/armhf.list" \
+  && echo "${PREFIX} artful ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} artful-updates ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} artful-security ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} artful-backports ${SUFFIX}" >> ${DEST}
+USER conan
+
 RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*6.*arm-linux-gnueabihf.*" \
