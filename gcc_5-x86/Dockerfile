@@ -29,7 +29,7 @@ RUN apt-get -qq update \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
-       libreadline-dev=7.* \
+       libreadline-dev=6.* \
        pkg-config=0.29.1-0ubuntu1 \
        ca-certificates=20170717~16.04.1 \
        && rm -rf /var/lib/apt/lists/* \
