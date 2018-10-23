@@ -59,6 +59,8 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
     && pyenv install 3.7.0 \
     && pyenv global 3.7.0 \
+    && pip install -q --upgrade --no-cache-dir pip \
+    && pip install -q --no-cache-dir conan \
     && chown -R conan:1001 /opt/pyenv
 
 USER conan
@@ -66,7 +68,5 @@ WORKDIR /home/conan
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
-    && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \        
-    && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan
+    && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc
 
