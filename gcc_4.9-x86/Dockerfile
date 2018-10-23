@@ -9,8 +9,6 @@ ENV CONAN_ENV_ARCH=x86 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y software-properties-common \
-    && add-apt-repository ppa:fkrull/deadsnakes-python2.7 \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get -qq update \
     && apt-get install -y --force-yes --no-install-recommends \
