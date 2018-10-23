@@ -26,6 +26,10 @@ RUN dpkg --add-architecture i386 \
        libssl-dev=1.* \
        pkg-config=0.26-1ubuntu4 \
        subversion=1.8.8-1ubuntu3.3 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates=20170717~14.04.1 \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \

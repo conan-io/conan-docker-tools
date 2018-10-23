@@ -26,6 +26,10 @@ RUN apt-get -qq update \
        libffi-dev=3.2.1-4 \
        libssl-dev=1.0.2* \
        subversion=1.9.3-2ubuntu1.1 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        pkg-config=0.29.1-0ubuntu1 \
        ca-certificates=20170717~16.04.1 \
        && rm -rf /var/lib/apt/lists/* \

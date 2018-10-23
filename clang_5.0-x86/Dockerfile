@@ -35,6 +35,10 @@ RUN apt-get -qq update \
        libc++abi-dev=3.9.1-3 \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-2ubuntu1 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100 \

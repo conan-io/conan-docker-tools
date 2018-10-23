@@ -42,6 +42,10 @@ RUN dpkg --add-architecture i386 \
        libc++abi-dev:i386=3.9.* \
        pkg-config=0.29.1-0ubuntu1 \
        subversion=1.9.5-1ubuntu1.1 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates=20170717~17.04.1 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \

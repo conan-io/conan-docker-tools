@@ -22,6 +22,10 @@ RUN apt-get -qq update \
        libssl-dev=1.0.* \
        pkg-config=0.26-1ubuntu1 \
        subversion=1.6.17dfsg-3ubuntu3.5 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates \
        software-properties-common \
     && rm -rf /var/lib/apt/lists/* \

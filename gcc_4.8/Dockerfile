@@ -23,6 +23,10 @@ RUN dpkg --add-architecture i386 \
        libssl-dev=1.0.* \
        pkg-config=0.26-1ubuntu4 \
        subversion=1.8.8-1ubuntu3.3 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \

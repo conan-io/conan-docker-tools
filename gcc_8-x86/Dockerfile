@@ -29,6 +29,10 @@ RUN apt-get -qq update \
        libssl-dev=1.* \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-4ubuntu1 \
+       zlib1g-dev=1:1.2.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates=20180409 \    
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \

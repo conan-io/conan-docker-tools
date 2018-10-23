@@ -72,6 +72,10 @@ RUN dpkg --add-architecture i386 \
        libssl-dev=1.0.2* \
        pkg-config=0.29.1-0ubuntu1 \
        subversion=1.9.3-2ubuntu1.1 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates \
     && ln -s /usr/bin/g++-5 /usr/bin/g++ \
     && rm -rf /var/lib/apt/lists/* \

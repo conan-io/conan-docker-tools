@@ -36,6 +36,10 @@ RUN dpkg --add-architecture i386 \
        libc++abi-dev:i386=6.0.1-1 \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.10.0-2ubuntu2 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates=20180409 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-7 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-7 100 \

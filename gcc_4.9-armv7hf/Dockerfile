@@ -34,6 +34,10 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     libssl-dev=1.0.2* \
     pkg-config=0.28-1ubuntu1 \
     subversion=1.8.13-1ubuntu3 \
+    zlib1g-dev=1:1.* \
+    libbz2-dev=1.* \
+    libsqlite3-dev=3.* \
+    libreadline-dev=7.* \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
