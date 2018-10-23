@@ -31,12 +31,13 @@ class ConanDockerTools(object):
         """Load environment variables to configure
         :return: Variables
         """
-        docker_upload = os.getenv("DOCKER_UPLOAD", "false").lower() in ["true", "1"]
-        build_server = os.getenv("BUILD_CONAN_SERVER_IMAGE", "false").lower() in ["true", "1"]
+        docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
+        build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
         docker_build_tag = os.getenv("DOCKER_BUILD_TAG", "latest")
+        sudo_command = self._get_boolean_var("DOCKER_SUDO")
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else ["x86_64"]
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
@@ -48,9 +49,21 @@ class ConanDockerTools(object):
                                                         "docker_username, docker_login_username, "
                                                         "gcc_versions, "
                                                         "clang_versions, build_server, docker_build_tag, "
-                                                        "docker_archs")
+                                                        "docker_archs, sudo_command")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, clang_versions, build_server, docker_build_tag, docker_archs)
+                         gcc_versions, clang_versions, build_server, docker_build_tag, docker_archs
+                         , sudo_command)
+
+    def _get_sudo_command(self):
+        """ Return sudo command name when required
+        """
+        return "sudo" if self.variables.sudo_command else ""
+
+    def _get_boolean_var(self, var):
+        """ Parse environment variable as boolean type
+        :param var: Environment variable name
+        """
+        return os.getenv(var, "false").lower() in ["1", "true", "yes"]
 
     def build(self, service):
         """Call docker build to create a image
@@ -68,12 +81,13 @@ class ConanDockerTools(object):
         subprocess.call('docker run --rm -i lukasmartinelli/hadolint < %s/Dockerfile' % build_dir,
                         shell=True)
 
-    def test(self, arch, compiler_name, compiler_version, service):
+    def test(self, arch, compiler_name, compiler_version, service, sudo_command):
         """Validate Docker image by Conan install
         :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         :param service: Docker compose service name
+        :param sudo_command: Linux sudo command
         """
         logging.info("Testing Docker by service %s." % service)
         try:
@@ -99,8 +113,10 @@ class ConanDockerTools(object):
                 assert "Python 3" in output.decode()
             logging.info("Python version: %s" % output.decode().rstrip())
 
-            subprocess.check_call("docker exec %s sudo pip install --no-cache-dir -U conan_package_tools" % service, shell=True)
-            subprocess.check_call("docker exec %s sudo pip install --no-cache-dir -U conan" % service, shell=True)
+            subprocess.check_call("docker exec %s %s pip install --no-cache-dir -U conan_package_tools" %
+                                  (service, sudo_command), shell=True)
+            subprocess.check_call("docker exec %s %s pip install --no-cache-dir -U conan" %
+                                 (service, sudo_command), shell=True)
             subprocess.check_call("docker exec %s conan user" % service, shell=True)
 
             if compiler_name == "clang" and compiler_version == "7":
@@ -153,10 +169,11 @@ class ConanDockerTools(object):
                     tag_arch = "" if arch == "x86_64" else "-%s" % arch
                     service = "%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
                     build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
+                    sudo_command =  self._get_sudo_command()
 
                     self.linter(build_dir)
                     self.build(service)
-                    self.test(arch, compiler.name, version, service)
+                    self.test(arch, compiler.name, version, service, sudo_command)
                     self.deploy(service)
 
         if self.variables.build_server:
