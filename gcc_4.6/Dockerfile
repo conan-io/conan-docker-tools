@@ -27,7 +27,7 @@ RUN apt-get -qq update \
        libsqlite3-dev=3.* \
        libreadline-dev=6.* \
        ca-certificates \
-       software-properties-common \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \

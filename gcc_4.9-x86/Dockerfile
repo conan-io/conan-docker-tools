@@ -31,6 +31,7 @@ RUN dpkg --add-architecture i386 \
        libsqlite3-dev=3.* \
        libreadline-dev=6.* \
        ca-certificates=20170717~14.04.1 \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
