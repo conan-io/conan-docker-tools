@@ -2,17 +2,7 @@ FROM ubuntu:wily
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CC=arm-linux-gnueabi-gcc-4.9 \
-    CXX=arm-linux-gnueabi-g++-4.9 \
-    CMAKE_C_COMPILER=arm-linux-gnueabi-gcc-4.9 \
-    CMAKE_CXX_COMPILER=arm-linux-gnueabi-g++-4.9 \
-    STRIP=arm-linux-gnueabi-strip \
-    RANLIB=arm-linux-gnueabi-gcc-ranlib-4.9\
-    AS=arm-linux-gnueabi-as \
-    AR=arm-linux-gnueabi-gcc-ar-4.9 \
-    LD=arm-linux-gnueabi-ld \
-    FC=arm-linux-gnueabi-gfortran-4.9 \
-    PYENV_ROOT=/opt/pyenv \
+ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
 RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list \
@@ -57,11 +47,22 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && pyenv install 3.7.0 \
-    && pyenv global 3.7.0 \
+    && pyenv install 3.6.7 \
+    && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan \
     && chown -R conan:1001 /opt/pyenv
+
+ENV CC=arm-linux-gnueabi-gcc-4.9 \
+    CXX=arm-linux-gnueabi-g++-4.9 \
+    CMAKE_C_COMPILER=arm-linux-gnueabi-gcc-4.9 \
+    CMAKE_CXX_COMPILER=arm-linux-gnueabi-g++-4.9 \
+    STRIP=arm-linux-gnueabi-strip \
+    RANLIB=arm-linux-gnueabi-gcc-ranlib-4.9\
+    AS=arm-linux-gnueabi-as \
+    AR=arm-linux-gnueabi-gcc-ar-4.9 \
+    LD=arm-linux-gnueabi-ld \
+    FC=arm-linux-gnueabi-gfortran-4.9
 
 USER conan
 WORKDIR /home/conan

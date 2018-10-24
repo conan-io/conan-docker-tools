@@ -8,8 +8,8 @@ ENV CONAN_ENV_ARCH=x86 \
     PATH=/opt/pyenv/shims:${PATH}
 
 RUN dpkg --add-architecture i386 \
-    && apt-get -qq update \
-    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
     && apt-get install -y --force-yes --no-install-recommends \
        sudo=1.8.9p5-1ubuntu1.4 \
@@ -58,8 +58,8 @@ RUN dpkg --add-architecture i386 \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && pyenv install 3.7.0 \
-    && pyenv global 3.7.0 \
+    && pyenv install 3.6.7 \
+    && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan \
     && chown -R conan:1001 /opt/pyenv
