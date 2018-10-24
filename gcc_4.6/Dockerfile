@@ -25,7 +25,7 @@ RUN apt-get -qq update \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
-       libreadline-dev=7.* \
+       libreadline-dev=6.* \
        ca-certificates \
        software-properties-common \
     && rm -rf /var/lib/apt/lists/* \

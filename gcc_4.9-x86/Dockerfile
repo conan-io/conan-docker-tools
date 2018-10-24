@@ -29,7 +29,7 @@ RUN dpkg --add-architecture i386 \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
-       libreadline-dev=7.* \
+       libreadline-dev=6.* \
        ca-certificates=20170717~14.04.1 \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \

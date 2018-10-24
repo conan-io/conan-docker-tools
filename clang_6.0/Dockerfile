@@ -60,7 +60,17 @@ RUN dpkg --add-architecture i386 \
     && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
-    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
+    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
+    && chmod +x /tmp/pyenv-installer \
+    && /tmp/pyenv-installer \
+    && rm /tmp/pyenv-installer \
+    && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
+    && pyenv install 3.7.0 \
+    && pyenv global 3.7.0 \
+    && pip install -q --upgrade --no-cache-dir pip \
+    && pip install -q --no-cache-dir conan \
+    && chown -R conan:1001 /opt/pyenv
 
 USER conan
 WORKDIR /home/conan
