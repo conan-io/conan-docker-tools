@@ -59,18 +59,18 @@ class ConanDockerTools(object):
         """
         return "sudo" if self.variables.sudo_command else ""
 
-    def _get_boolean_var(self, var):
+    def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
         :param var: Environment variable name
         """
-        return os.getenv(var, "false").lower() in ["1", "true", "yes"]
+        return os.getenv(var, default.lower()).lower() in ["1", "true", "yes"]
 
     def build(self, service):
         """Call docker build to create a image
         :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % service)
-        subprocess.check_call("docker-compose build %s" % service, shell=True)
+        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
@@ -108,10 +108,8 @@ class ConanDockerTools(object):
             logging.info("Found Conan (Python 3)")
 
             output = subprocess.check_output("docker exec %s python --version" % service, shell=True)
-            # Don't override when both python2 and python3 are present
-            if compiler_name != "gcc" or str(compiler_version) != "4.6":
-                assert "Python 3" in output.decode()
-            logging.info("Python version: %s" % output.decode().rstrip())
+            assert "Python 3" in output.decode()
+            logging.info("Default Python version: %s" % output.decode().rstrip())
 
             subprocess.check_call("docker exec %s %s pip install --no-cache-dir -U conan_package_tools" %
                                   (service, sudo_command), shell=True)
