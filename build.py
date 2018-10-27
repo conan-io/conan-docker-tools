@@ -65,12 +65,16 @@ class ConanDockerTools(object):
         """
         return "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
 
-    def build(self, service):
+    def build(self, service, context):
         """Call docker build to create a image
         :param service: service in compose e.g gcc54
+        :param context: image dir
         """
         logging.info("Starting build for service %s." % service)
-        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
+        # subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
+        target = "--target {}".format(service) if "msvc" in service else ""
+        context = "msvc" if "msvc" in context else context
+        subprocess.check_call("docker build -t {} {} {}".format(self._get_image_name(service), target, context))
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
@@ -177,7 +181,7 @@ class ConanDockerTools(object):
                     if platform.system() == "Linux":
                         self.linter(build_dir)
 
-                    self.build(service)
+                    self.build(service, build_dir)
                     self.info(service)
                     self.test(arch, compiler.pretty, version, service)
                     self.deploy(service)
