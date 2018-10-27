@@ -72,9 +72,7 @@ class ConanDockerTools(object):
         """
         logging.info("Starting build for service %s." % service)
         # subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
-        target = "--target {}".format(service) if "msvc" in service else ""
-        context = "msvc" if "msvc" in context else context
-        subprocess.check_call("docker build -t {} {} {}".format(self._get_image_name(service), target, context))
+        subprocess.check_call("docker build --no-cache -t {} {}".format(self._get_image_name(service), context))
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
