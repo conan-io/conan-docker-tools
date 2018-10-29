@@ -43,6 +43,7 @@ RUN dpkg --add-architecture i386 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
+    && sed -i '0,/python3/s//python2.7/' /usr/bin/lsb_release \
     && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
