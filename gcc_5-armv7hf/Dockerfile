@@ -19,7 +19,7 @@ RUN sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list
 USER root
 RUN PREFIX="deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/" \
   && SUFFIX="main restricted universe multiverse" \
-  && DEST="/etc/apt/sources.list.d/armel.list" \
+  && DEST="/etc/apt/sources.list.d/armhf.list" \
   && echo "${PREFIX} xenial ${SUFFIX}" >> ${DEST} \
   && echo "${PREFIX} xenial-updates ${SUFFIX}" >> ${DEST} \
   && echo "${PREFIX} xenial-security ${SUFFIX}" >> ${DEST} \
