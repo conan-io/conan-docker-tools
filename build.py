@@ -166,7 +166,7 @@ class ConanDockerTools(object):
                     service = "%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
                     build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
 
-                    #self.linter(build_dir)
+                    self.linter(build_dir)
                     self.build(service)
                     self.test(arch, compiler.name, version, service)
                     self.deploy(service)
