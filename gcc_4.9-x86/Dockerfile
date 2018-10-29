@@ -62,7 +62,9 @@ RUN dpkg --add-architecture i386 \
     && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan \
-    && chown -R conan:1001 /opt/pyenv
+    && chown -R conan:1001 /opt/pyenv \
+    && ln -s /opt/pyenv/shims/python /usr/bin/python \
+    && ln -s /opt/pyenv/shims/pip /usr/bin/pip
 
 USER conan
 WORKDIR /home/conan
