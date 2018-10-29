@@ -113,22 +113,22 @@ class ConanDockerTools(object):
                                     (service, sudo_command), shell=True)
                 subprocess.check_call("docker exec %s %s pip install --no-cache-dir -U conan" %
                                     (service, sudo_command), shell=True)
-                subprocess.check_call("docker exec %s %s conan user" % (service, sudo_command), shell=True)
+                subprocess.check_call("docker exec %s conan user" % service, shell=True)
 
-                if compiler_name == "clang" and compiler_version == "7":
-                        compiler_version = "7.0" # FIXME: Remove this when fixed in conan
+            if compiler_name == "clang" and compiler_version == "7":
+                    compiler_version = "7.0" # FIXME: Remove this when fixed in conan
 
-                subprocess.check_call("docker exec %s %s conan install lz4/1.8.3@bincrafters/stable -s "
-                                    "arch=%s -s compiler=%s -s compiler.version=%s --build" %
-                                    (service, sudo_command, arch, compiler_name,
-                                    compiler_version), shell=True)
+            subprocess.check_call("docker exec %s conan install lz4/1.8.3@bincrafters/stable -s "
+                                "arch=%s -s compiler=%s -s compiler.version=%s --build" %
+                                (service, arch, compiler_name,
+                                compiler_version), shell=True)
 
-                for libcxx in libcxx_list:
-                    subprocess.check_call("docker exec %s %s conan install gtest/1.8.1@bincrafters/stable -s "
-                                        "arch=%s -s compiler=%s -s compiler.version=%s "
-                                        "-s compiler.libcxx=%s --build" %
-                                        (service, sudo_command, arch, compiler_name,
-                                        compiler_version, libcxx), shell=True)
+            for libcxx in libcxx_list:
+                subprocess.check_call("docker exec %s conan install gtest/1.8.1@bincrafters/stable -s "
+                                    "arch=%s -s compiler=%s -s compiler.version=%s "
+                                    "-s compiler.libcxx=%s --build" %
+                                    (service, arch, compiler_name,
+                                    compiler_version, libcxx), shell=True)
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
             subprocess.call("docker rm %s" % service, shell=True)
