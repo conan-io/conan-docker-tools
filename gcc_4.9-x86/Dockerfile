@@ -3,16 +3,15 @@ ENTRYPOINT ["linux32", "--"]
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CONAN_ENV_ARCH=x86
+ENV CONAN_ENV_ARCH=x86 \
+    PYENV_ROOT=/opt/pyenv \
+    PATH=/opt/pyenv/shims:${PATH}
 
 RUN dpkg --add-architecture i386 \
-    && apt-get -qq update \
-    && apt-get -qq install -y software-properties-common \
-    && add-apt-repository ppa:fkrull/deadsnakes-python2.7 \
-    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
     && apt-get install -y --force-yes --no-install-recommends \
-       python-dev=2.7.5-5ubuntu3 \
        sudo=1.8.9p5-1ubuntu1.4 \
        g++-4.9=4.9.4-2ubuntu1~14.04.1 \
        g++-4.9-multilib=4.9.4-2ubuntu1~14.04.1 \
@@ -27,7 +26,12 @@ RUN dpkg --add-architecture i386 \
        libssl-dev=1.* \
        pkg-config=0.26-1ubuntu4 \
        subversion=1.8.8-1ubuntu3.3 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=6.* \
        ca-certificates=20170717~14.04.1 \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
@@ -41,12 +45,6 @@ RUN dpkg --add-architecture i386 \
     && make -s install > /dev/null \
     && cd - \
     && rm -rf cmake-* \
-    && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
-    && rm get-pip.py \
-    && pip install -q -U pip \
-    && pip install -q --no-cache-dir virtualenv --upgrade \
-    && pip install -q --no-cache-dir conan --upgrade \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -54,8 +52,21 @@ RUN dpkg --add-architecture i386 \
     && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
-    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
+    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
+    && chmod +x /tmp/pyenv-installer \
+    && /tmp/pyenv-installer \
+    && rm /tmp/pyenv-installer \
+    && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
+    && pyenv install 3.6.7 \
+    && pyenv global 3.6.7 \
+    && pip install -q --upgrade --no-cache-dir pip \
+    && pip install -q --no-cache-dir conan \
+    && chown -R conan:1001 /opt/pyenv
 
 USER conan
 WORKDIR /home/conan
-RUN mkdir -p /home/conan/.conan
+
+RUN mkdir -p /home/conan/.conan \
+    && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
+    && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc

@@ -17,7 +17,11 @@ RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*5.*arm-linux-gnueabihf.*" \
        binutils-arm-linux-gnueabi \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-5 100 \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-c++ arm-linux-gnueabihf-c++ /usr/bin/arm-linux-gnueabihf-g++-5 100 \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-5 100 \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-cc arm-linux-gnueabihf-cc /usr/bin/arm-linux-gnueabihf-gcc-5 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && sudo pip install -q --no-cache-dir conan --upgrade \
+    && pip install -q --no-cache-dir conan --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7hf default

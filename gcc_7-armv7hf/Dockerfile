@@ -16,7 +16,12 @@ ENV CC=arm-linux-gnueabihf-gcc-7 \
 RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*7.*arm-linux-gnueabihf.*" \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-7 100 \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-7 100 \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov arm-linux-gnueabihf-gcov /usr/bin/arm-linux-gnueabihf-gcov-7 100 \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-dump arm-linux-gnueabihf-gcov-dump /usr/bin/arm-linux-gnueabihf-gcov-dump-7 100 \
+    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-tool arm-linux-gnueabihf-gcov-tool /usr/bin/arm-linux-gnueabihf-gcov-tool-7 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && sudo pip install -q --no-cache-dir conan --upgrade \
+    && pip install -q --no-cache-dir conan --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7hf default

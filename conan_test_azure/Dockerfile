@@ -8,7 +8,7 @@ RUN dpkg --add-architecture i386 \
     && add-apt-repository ppa:deadsnakes/ppa -y \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.* \
+       python3-dev=3.5.1-3 \
        sudo=1.8.* \
        build-essential=12.* \
        wget=1.17.* \
@@ -49,7 +49,7 @@ RUN dpkg --add-architecture i386 \
        && rm -rf cmake-3.12.1-Linux-x86_64 \
        && rm cmake-3.12.1-Linux-x86_64.tar.gz \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-       && python get-pip.py \
+       && python3 get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
        && pip install -q --no-cache-dir conan --upgrade \

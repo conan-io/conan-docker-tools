@@ -8,11 +8,12 @@ ENV LLVM_VERSION=5.0 \
     CXX=clang++ \
     CMAKE_C_COMPILER=clang \
     CMAKE_CXX_COMPILER=clang++ \
-    CONAN_ENV_ARCH=x86
+    CONAN_ENV_ARCH=x86 \
+    PYENV_ROOT=/opt/pyenv \
+    PATH=/opt/pyenv/shims:${PATH}
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.14-2ubuntu1 \
        sudo=1.8.20p2-1ubuntu1 \
        wget=1.19.1-3ubuntu1 \
        git=1:2.14.1-1ubuntu4 \
@@ -34,6 +35,10 @@ RUN apt-get -qq update \
        libc++abi-dev=3.9.1-3 \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-2ubuntu1 \
+       zlib1g-dev=1:1.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100 \
@@ -50,12 +55,6 @@ RUN apt-get -qq update \
     && make -s install > /dev/null \
     && cd - \
     && rm -rf cmake-* \
-    && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
-    && rm get-pip.py \
-    && pip install -q -U pip \
-    && pip install -q --no-cache-dir virtualenv --upgrade \
-    && pip install -q --no-cache-dir conan --upgrade \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -63,8 +62,21 @@ RUN apt-get -qq update \
     && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
-    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
+    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
+    && chmod +x /tmp/pyenv-installer \
+    && /tmp/pyenv-installer \
+    && rm /tmp/pyenv-installer \
+    && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
+    && pyenv install 3.7.1 \
+    && pyenv global 3.7.1 \
+    && pip install -q --upgrade --no-cache-dir pip \
+    && pip install -q --no-cache-dir conan \
+    && chown -R conan:1001 /opt/pyenv
 
 USER conan
 WORKDIR /home/conan
-RUN mkdir -p /home/conan/.conan
+
+RUN mkdir -p /home/conan/.conan \
+    && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
+    && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc

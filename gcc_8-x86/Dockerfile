@@ -3,15 +3,16 @@ ENTRYPOINT ["linux32", "--"] # https://github.com/conan-io/conan-docker-tools/is
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CONAN_ENV_ARCH=x86
+ENV CONAN_ENV_ARCH=x86 \
+    PYENV_ROOT=/opt/pyenv \
+    PATH=/opt/pyenv/shims:${PATH}
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python-dev=2.7.15~rc1-1 \
        sudo=1.8.21p2-3ubuntu1 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
-       git \
+       git=1:2.17.1-1ubuntu0.3 \
        vim=2:8.0.1453-1ubuntu1 \
        libc6-dev=2.27-3ubuntu1 \
        linux-libc-dev=4.* \
@@ -28,7 +29,11 @@ RUN apt-get -qq update \
        libssl-dev=1.* \
        pkg-config=0.29.1-0ubuntu2 \
        subversion=1.9.7-4ubuntu1 \
-       ca-certificates=20180409 \
+       zlib1g-dev=1:1.2.* \
+       libbz2-dev=1.* \
+       libsqlite3-dev=3.* \
+       libreadline-dev=7.* \
+       ca-certificates=20180409 \    
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 \
@@ -43,12 +48,6 @@ RUN apt-get -qq update \
     && make -s install > /dev/null \
     && cd - \
     && rm -rf cmake-* \
-    && wget --no-check-certificate --quiet https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
-    && rm get-pip.py \
-    && pip install -q -U pip \
-    && pip install -q --no-cache-dir virtualenv --upgrade \
-    && pip install -q --no-cache-dir conan --upgrade \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -56,8 +55,22 @@ RUN apt-get -qq update \
     && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
-    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
+    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
+    && chmod +x /tmp/pyenv-installer \
+    && /tmp/pyenv-installer \
+    && rm /tmp/pyenv-installer \
+    && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
+    && pyenv install 3.7.1 \
+    && pyenv global 3.7.1 \
+    && pip install -q --upgrade --no-cache-dir pip \
+    && pip install -q --no-cache-dir conan \
+    && chown -R conan:1001 /opt/pyenv
 
 USER conan
 WORKDIR /home/conan
-RUN mkdir -p /home/conan/.conan
+
+RUN mkdir -p /home/conan/.conan \
+    && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
+    && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc
+
