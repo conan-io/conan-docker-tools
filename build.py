@@ -3,6 +3,7 @@ import collections
 import os
 import logging
 import subprocess
+import platform
 
 
 class ConanDockerTools(object):
@@ -16,16 +17,19 @@ class ConanDockerTools(object):
 
         filter_gcc_compiler_version = self.variables.gcc_versions
         filter_clang_compiler_version = self.variables.clang_versions
+        filter_visual_compiler_version = self.variables.visual_versions
 
-        Compiler = collections.namedtuple("Compiler", "name, versions")
-        self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version)
-        self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version)
+        Compiler = collections.namedtuple("Compiler", "name, versions, pretty")
+        self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version, pretty="gcc")
+        self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version, pretty="clang")
+        self.visual_compiler = Compiler(name="msvc", versions=filter_visual_compiler_version, pretty="Visual Studio")
 
         logging.info("""
     The follow compiler versions will be built:
         GCC: %s
         CLANG: %s
-        """ % (self.gcc_compiler.versions, self.clang_compiler.versions))
+        VISUAL STUDIO: %s
+        """ % (self.gcc_compiler.versions, self.clang_compiler.versions, self.visual_compiler.versions))
 
     def _get_variables(self):
         """Load environment variables to configure
@@ -41,16 +45,18 @@ class ConanDockerTools(object):
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
-        clang_versions = os.getenv("CLANG_VERSIONS").split(",") \
-            if os.getenv("CLANG_VERSIONS") else []
+        clang_versions = os.getenv("CLANG_VERSIONS").split(",") if os.getenv("CLANG_VERSIONS") else []
+        visual_versions = os.getenv("VISUAL_VERSIONS").split(",") if os.getenv("VISUAL_VERSIONS") else []
+        sudo_command = os.getenv("SUDO_COMMAND", "")
+        if platform.system() == "Linux" and not sudo_command:
+            sudo_command = "sudo" if os.geteuid() != 0 else sudo_command
 
         Variables = collections.namedtuple("Variables", "docker_upload, docker_password, "
                                                         "docker_username, docker_login_username, "
-                                                        "gcc_versions, "
-                                                        "clang_versions, build_server, docker_build_tag, "
-                                                        "docker_archs")
+                                                        "gcc_versions, clang_versions, visual_versions, "
+                                                        "build_server, docker_build_tag, docker_archs, sudo_command")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, clang_versions, build_server, docker_build_tag, docker_archs)
+                         gcc_versions, clang_versions, visual_versions, build_server, docker_build_tag, docker_archs, sudo_command)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -58,12 +64,21 @@ class ConanDockerTools(object):
         """
         return os.getenv(var, default.lower()).lower() in ["1", "true", "yes"]
 
-    def build(self, service):
+    def _get_image_name(self, service):
+        """Get Docker image name based on service name
+        :param service: service in compose
+        :return: Docker images name
+        """
+        return "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
+
+    def build(self, service, context):
         """Call docker build to create a image
         :param service: service in compose e.g gcc54
+        :param context: image dir
         """
         logging.info("Starting build for service %s." % service)
-        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
+        # subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
+        subprocess.check_call("docker build --no-cache -t {} {}".format(self._get_image_name(service), context))
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
@@ -83,7 +98,7 @@ class ConanDockerTools(object):
         """
         logging.info("Testing Docker by service %s." % service)
         try:
-            image = "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
+            image = self._get_image_name(service)
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
@@ -156,26 +171,41 @@ class ConanDockerTools(object):
         logging.info("Upload Docker image from service %s to Docker hub." % service)
         subprocess.check_call("docker-compose push %s" % service, shell=True)
 
+    def info(self, service):
+        """Show Docker image info
+        :param service: Docker compose service name
+        """
+        image = self._get_image_name(service)
+        logging.info("Show Docker image %s size:" % image)
+        subprocess.call('docker images %s' % image, shell=True)
+        logging.info("Show Docker image %s info:" % image)
+        subprocess.call('docker inspect %s' % image, shell=True)
+
     def run(self):
         """Execute all 3 stages for all versions in compilers list
         """
         for arch in self.variables.docker_archs:
-            for compiler in [self.gcc_compiler, self.clang_compiler]:
+            for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
                 for version in compiler.versions:
                     tag_arch = "" if arch == "x86_64" else "-%s" % arch
                     service = "%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
                     build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
 
-                    self.linter(build_dir)
-                    self.build(service)
-                    self.test(arch, compiler.name, version, service)
+                    if platform.system() == "Linux":
+                        self.linter(build_dir)
+
+                    self.build(service, build_dir)
+                    self.info(service)
+                    self.test(arch, compiler.pretty, version, service)
                     self.deploy(service)
 
         if self.variables.build_server:
-            logging.info("Bulding conan_server image...")
-            self.linter("conan_server")
-            self.build("conan_server")
-            self.deploy("conan_server")
+            service = "conan_server"
+            logging.info("Bulding %s image..." % service)
+            self.linter(service)
+            self.build(service)
+            self.info(service)
+            self.deploy(service)
         else:
             logging.info("Skipping conan_server image creation")
 

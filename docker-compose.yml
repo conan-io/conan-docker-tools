@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 services:
     gcc46:
         build:
@@ -279,3 +279,17 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
         container_name: conan_server
+    msvc14:
+        build:
+            context: msvc_14
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/msvc14:${DOCKER_BUILD_TAG}"
+        container_name: msvc14
+        tty: true
+    msvc15:
+        build:
+            context: msvc_15
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/msvc15:${DOCKER_BUILD_TAG}"
+        container_name: msvc15
+        tty: true

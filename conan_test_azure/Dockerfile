@@ -8,7 +8,6 @@ RUN dpkg --add-architecture i386 \
     && add-apt-repository ppa:deadsnakes/ppa -y \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       python3-dev=3.5.1-3 \
        sudo=1.8.* \
        build-essential=12.* \
        wget=1.17.* \
