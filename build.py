@@ -109,6 +109,9 @@ class ConanDockerTools(object):
                 assert "Python 3" in output.decode()
                 logging.info("Default Python version: %s" % output.decode().rstrip())
 
+                for module in ["lzma", "sqlite3", "bz2", "zlib", "readline"]:
+                    subprocess.check_call('docker exec %s %s python -c "import %s"' % (service, sudo_command, module), shell=True)
+
                 subprocess.check_call("docker exec %s %s pip install --no-cache-dir -U conan_package_tools" %
                                     (service, sudo_command), shell=True)
                 subprocess.check_call("docker exec %s %s pip install --no-cache-dir -U conan" %

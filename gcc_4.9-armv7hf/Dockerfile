@@ -28,6 +28,11 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     libbz2-dev=1.* \
     libsqlite3-dev=3.* \
     libreadline-dev=6.* \
+    xz-utils=5.* \
+    curl=7.* \
+    libncurses5-dev=6.* \
+    libncursesw5-dev=6.* \
+    liblzma-dev=5.* \
     ca-certificates \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
