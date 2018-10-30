@@ -13,14 +13,27 @@ ENV CC=arm-linux-gnueabihf-gcc \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-6
 
-RUN sudo apt-get -qq update \
-    && sudo apt-get -qq install -y --force-yes --no-install-recommends \
+RUN sudo dpkg --add-architecture armhf
+RUN sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list
+
+USER root
+RUN PREFIX="deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/" \
+  && SUFFIX="main restricted universe multiverse" \
+  && DEST="/etc/apt/sources.list.d/armhf.list" \
+  && echo "${PREFIX} artful ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} artful-updates ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} artful-security ${SUFFIX}" >> ${DEST} \
+  && echo "${PREFIX} artful-backports ${SUFFIX}" >> ${DEST}
+USER conan
+
+RUN sudo apt-get -q update \
+    && sudo apt-get -q install -y --no-install-recommends \
        ".*6.*arm-linux-gnueabihf.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-6 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-c++ arm-linux-gnueabihf-c++ /usr/bin/arm-linux-gnueabihf-g++-6 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-6 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-cc arm-linux-gnueabihf-cc /usr/bin/arm-linux-gnueabihf-gcc-6 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && sudo pip install -q --no-cache-dir conan --upgrade \
+    && pip install -q --no-cache-dir conan --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7hf default
