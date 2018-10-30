@@ -65,7 +65,11 @@ RUN apt-get -qq update \
     && pyenv global 3.7.1 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan \
-    && chown -R conan:1001 /opt/pyenv
+    && chown -R conan:1001 /opt/pyenv \
+    && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
+    && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
+    && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
+    && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
 
 USER conan
 WORKDIR /home/conan
