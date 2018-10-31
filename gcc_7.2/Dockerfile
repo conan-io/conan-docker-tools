@@ -32,6 +32,11 @@ RUN dpkg --add-architecture i386 \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
        libreadline-dev=7.* \
+       xz-utils=5.* \
+       curl=7.* \
+       libncurses5-dev=6.* \
+       libncursesw5-dev=6.* \
+       liblzma-dev=5.* \
        ca-certificates \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \

@@ -76,6 +76,11 @@ RUN dpkg --add-architecture i386 \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
        libreadline-dev=6.* \
+       xz-utils=5.* \
+       curl=7.* \
+       libncurses5-dev=6.* \
+       libncursesw5-dev=6.* \
+       liblzma-dev=5.* \
        ca-certificates \
     && ln -s /usr/bin/g++-5 /usr/bin/g++ \
     && rm -rf /var/lib/apt/lists/* \

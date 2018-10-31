@@ -39,6 +39,11 @@ RUN apt-get -qq update \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
        libreadline-dev=7.* \
+       xz-utils=5.* \
+       curl=7.* \
+       libncurses5-dev=6.* \
+       libncursesw5-dev=6.* \
+       liblzma-dev=5.* \
        ca-certificates=20170717 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100 \
