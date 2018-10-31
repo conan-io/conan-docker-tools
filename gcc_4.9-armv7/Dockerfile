@@ -28,8 +28,8 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     libreadline-dev=6.* \
     xz-utils=5.* \
     curl=7.* \
-    libncurses5-dev=6.* \
-    libncursesw5-dev=6.* \
+    libncurses5-dev=5.* \
+    libncursesw5-dev=5.* \
     liblzma-dev=5.* \
     ca-certificates \
     && update-ca-certificates \

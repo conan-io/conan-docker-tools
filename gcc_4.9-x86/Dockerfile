@@ -32,8 +32,8 @@ RUN dpkg --add-architecture i386 \
        libreadline-dev=6.* \
        xz-utils=5.* \
        curl=7.* \
-       libncurses5-dev=6.* \
-       libncursesw5-dev=6.* \
+       libncurses5-dev=5.* \
+       libncursesw5-dev=5.* \
        liblzma-dev=5.* \
        ca-certificates=20170717~14.04.1 \
     && update-ca-certificates \
