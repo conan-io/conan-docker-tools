@@ -8,6 +8,7 @@ import logging
 import subprocess
 import re
 import requests
+import time
 
 
 class ConanDockerTools(object):
@@ -15,7 +16,7 @@ class ConanDockerTools(object):
     """
 
     def __init__(self):
-        logging.basicConfig(format='%(message)s', level=logging.INFO)
+        logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s', level=logging.INFO)
 
         self.variables = self._get_variables()
 
@@ -157,7 +158,8 @@ class ConanDockerTools(object):
         logging.info("Testing Docker running service %s." % service)
         try:
             image = "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
-            subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
+            subprocess.check_call("docker run -t -d -p 9300:9300 --name %s %s" % (service, image), shell=True)
+            time.sleep(3)
             response = requests.get("http://0.0.0.0:9300/v1/ping")
             assert response.ok
         finally:
@@ -188,7 +190,7 @@ class ConanDockerTools(object):
         subprocess.check_call("docker-compose push %s" % service, shell=True)
         image_name = "%s/%s:%s" % (self.variables.docker_username, service, self._get_conan_version())
         logging.info("Upload Docker image %s" % image_name)
-        subprocess.check_call("docker push %s" % image_name)
+        subprocess.check_call("docker push %s" % image_name, shell=True)
 
     def tag(self, service):
             """Apply Docker tag name
