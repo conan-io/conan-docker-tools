@@ -14,6 +14,13 @@ services:
         image: "${DOCKER_USERNAME}/gcc48:${DOCKER_BUILD_TAG}"
         container_name: gcc48
         tty: true
+    gcc48-x86:
+        build:
+            context: gcc_4.8-x86
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc48-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc48-x86
+        tty: true
     gcc49:
         build:
             context: gcc_4.9

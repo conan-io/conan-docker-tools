@@ -37,6 +37,8 @@ env:
     - CLANG_VERSIONS="7"
 
     - GCC_VERSIONS="4.6"
+
+    - GCC_VERSIONS="4.8" DOCKER_ARCHS="x86"
     - GCC_VERSIONS="4.8"
 
     - GCC_VERSIONS="4.9" DOCKER_ARCHS="x86"
