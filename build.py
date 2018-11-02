@@ -69,9 +69,7 @@ class ConanDockerTools(object):
     def _get_conan_version(self):
         output = subprocess.check_output("conan --version", shell=True)
         match = re.match(r"Conan version (\d+\.\d+\.\d+)", output.decode())
-        if match:
-            return match.group(1)
-        return "latest"
+        return match.group(1)
 
     def build(self, service):
         """Call docker build to create a image
