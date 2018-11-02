@@ -7,6 +7,7 @@ import os
 import logging
 import subprocess
 import re
+import requests
 
 
 class ConanDockerTools(object):
@@ -149,6 +150,20 @@ class ConanDockerTools(object):
             subprocess.call("docker stop %s" % service, shell=True)
             subprocess.call("docker rm %s" % service, shell=True)
 
+    def test_server(self, service):
+        """Validate Conan Server image
+        :param service: Docker compose service name
+        """
+        logging.info("Testing Docker running service %s." % service)
+        try:
+            image = "%s/%s:%s" % (self.variables.docker_username, service, self.variables.docker_build_tag)
+            subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
+            response = requests.get("http://0.0.0.0:9300/v1/ping")
+            assert response.ok
+        finally:
+            subprocess.call("docker stop %s" % service, shell=True)
+            subprocess.call("docker rm %s" % service, shell=True)
+
     def deploy(self, service):
         """Upload Docker image to dockerhub
         :param service: Service that contains the docker image
@@ -170,8 +185,9 @@ class ConanDockerTools(object):
                                "to Docker hub." % self.variables.docker_login_username)
 
         logging.info("Upload Docker image from service %s to Docker hub." % service)
-        image_name = "%s/%s:%s" % (self.variables.docker_username, service, self._get_conan_version())
         subprocess.check_call("docker-compose push %s" % service, shell=True)
+        image_name = "%s/%s:%s" % (self.variables.docker_username, service, self._get_conan_version())
+        logging.info("Upload Docker image %s" % image_name)
         subprocess.check_call("docker push %s" % image_name)
 
     def tag(self, service):
@@ -181,6 +197,7 @@ class ConanDockerTools(object):
             image_name = "%s/%s" % (self.variables.docker_username, service)
             created_image = "%s:%s" % (image_name, self.variables.docker_build_tag)
             tagged_image = "%s:%s" % (image_name, self._get_conan_version())
+            logging.info("Creating Docker tag %s" % tagged_image)
             subprocess.check_call("docker tag %s %s" % (created_image, tagged_image), shell=True)
 
     def run(self):
@@ -203,6 +220,7 @@ class ConanDockerTools(object):
             logging.info("Bulding conan_server image...")
             self.linter("conan_server")
             self.build("conan_server")
+            self.test_server("conan_server")
             self.tag("conan_server")
             self.deploy("conan_server")
         else:
