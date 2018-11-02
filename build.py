@@ -1,8 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """Build, Test and Deploy Docker images for Conan project"""
 import collections
 import os
 import logging
 import subprocess
+import re
 
 
 class ConanDockerTools(object):
@@ -38,6 +42,8 @@ class ConanDockerTools(object):
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
         docker_build_tag = os.getenv("DOCKER_BUILD_TAG", "latest")
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else ["x86_64"]
+        conan_version = os.getenv("CONAN_VERSION", self._get_conan_version())
+        os.environ["CONAN_VERSION"] = conan_version
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
@@ -57,6 +63,13 @@ class ConanDockerTools(object):
         :param var: Environment variable name
         """
         return os.getenv(var, default.lower()).lower() in ["1", "true", "yes"]
+
+    def _get_conan_version(self):
+        output = subprocess.check_output("conan --version", shell=True)
+        match = re.match(r"Conan version (\d+\.\d+\.\d+)", output.decode())
+        if match:
+            return match.group(1)
+        return "latest"
 
     def build(self, service):
         """Call docker build to create a image
@@ -157,7 +170,18 @@ class ConanDockerTools(object):
                                "to Docker hub." % self.variables.docker_login_username)
 
         logging.info("Upload Docker image from service %s to Docker hub." % service)
+        image_name = "%s/%s:%s" % (self.variables.docker_username, service, self._get_conan_version())
         subprocess.check_call("docker-compose push %s" % service, shell=True)
+        subprocess.check_call("docker push %s" % image_name)
+
+    def tag(self, service):
+            """Apply Docker tag name
+            :param service: Docker tag
+            """
+            image_name = "%s/%s" % (self.variables.docker_username, service)
+            created_image = "%s:%s" % (image_name, self.variables.docker_build_tag)
+            tagged_image = "%s:%s" % (image_name, self._get_conan_version())
+            subprocess.check_call("docker tag %s %s" % (created_image, tagged_image), shell=True)
 
     def run(self):
         """Execute all 3 stages for all versions in compilers list
@@ -171,6 +195,7 @@ class ConanDockerTools(object):
 
                     self.linter(build_dir)
                     self.build(service)
+                    self.tag(service)
                     self.test(arch, compiler.name, version, service)
                     self.deploy(service)
 
@@ -178,6 +203,7 @@ class ConanDockerTools(object):
             logging.info("Bulding conan_server image...")
             self.linter("conan_server")
             self.build("conan_server")
+            self.tag("conan_server")
             self.deploy("conan_server")
         else:
             logging.info("Skipping conan_server image creation")
