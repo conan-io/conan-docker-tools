@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
+[![Travis Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/github/conan-io/conan-docker-tools.svg?svg=true)](https://ci.appveyor.com/project/conan-io/conan-docker-tools)
+[![Azure Build Status](https://dev.azure.com/conanio/conan-devops/_apis/build/status/conan-io.conan-docker-tools)](https://dev.azure.com/conanio/conan-devops/_build/latest)
 # conan-docker-tools
 
 ![logo](logo.png)
@@ -65,6 +67,13 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
 
 
+#### Visual Studio
+
+| Version                                                                                       | Arch       |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|------------|------------|
+| - [conanio/msvc14: Visual Studio 2015 14](https://hub.docker.com/r/conanio/msvc14/) | x86_64/x86 |  Supported |
+| - [conanio/msvc15: Visual Studio 2017 15](https://hub.docker.com/r/conanio/msvc15/) | x86_64/x86 |  Supported |
+
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -126,6 +135,53 @@ You need to modify:
 
 ```
 
+Use the images to test your c++ project in appveyor
+===================================================
+
+These Docker images can be used to build your project using the Appveyor CI service, even if you are not using Conan.
+
+- If you do not want to use Docker over Appveyor, there are Visual Studio [images](https://www.appveyor.com/docs/windows-images-software) provided by Appveyor.
+- Appveyor supports Windows docker images based on Windows Server 2016. If are interested to know more about container compability, check
+ [here](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/version-compatibility).
+- Use ``appveyor.yml`` file to enable or disable Visual Studio version
+
+- ``appveyor.yml`` file to enable or disable more ``Visual Studio`` versions add more entries to the matrix using DOCKER_IMAGE
+- ``.ci/run_project_build.bat`` With the lines that you need to build or test your project
+
+**appveyor.yml**
+
+```
+    image: Visual Studio 2017
+
+    matrix:
+      - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 14
+          DOCKER_IMAGE: conanio/msvc14
+      - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          DOCKER_IMAGE: conanio/msvc15
+
+    install:
+      - set PATH=%PATH%;%PYTHON%/Scripts/
+      - pip.exe install conan --upgrade
+      - pip.exe install conan_package_tools bincrafters_package_tools
+      - conan user # It creates the conan data directory
+
+    test_script:
+      - .ci/run_project_build.bat
+
+    build: false
+```
+
+**.ci/run_project_build.bat**. Change it according your project build needed commands:
+
+```
+    rmdir /s build && mkdir build && cd build
+    conan install ../ --build=missing
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
+    cmake --build .
+
+```
 
 Use the images locally
 ======================
@@ -150,7 +206,7 @@ Build, Test and Deploy
 ======================
 
 ## Introduce
-The images are already built and uploaded to **"conanio"** dockerhub account, If you want to build your own images you can do it by:
+The images are already built and uploaded to **"conanio(https://hub.docker.com/r/conanio/)"** dockerhub account, If you want to build your own images you can do it by:
 
 ```
 $ python build.py
@@ -170,10 +226,15 @@ E.g Build and test only the images with Conan and clang-4.0, clang-3.9
 $ CONAN_CLANG_VERSIONS="3.9,4.0" python build.py
 ```
 
+E.g Build and test only the images with Conan and Visual Studio 14.0 (It **ONLY** works on Windows).
+```
+$ CONAN_VISUAL_VERSIONS="14.0" python build.py
+```
+
 The stages that compose the script will be described below:
 
 ### Build
-The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc`` and in ``CONAN_CLANG_VERSIONS`` for ``Clang``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
+The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc``, in ``CONAN_CLANG_VERSIONS`` for ``Clang`` and ``CONAN_VISUAL_VERSIONS`` for ``Visual Studio``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
 
 You can configure only a compiler version or a list, by these variables. If you skipped a compiler list, the build will not be executed for that compiler.
 
@@ -184,13 +245,14 @@ Each image created on this stage will be tagged as  ``DOCKER_USERNAME/conan_comp
 The image will not be removed after build.
 
 ### Test
-The second stage runs the new image created and builds the Conan package ``gtest/1.8.0``.
-The same build variables, as ``CONAN_GCC_VERSIONS`` and ``CONAN_CLANG_VERSIONS`` are used to select the compiler and version.
+The second stage runs the new image created and builds the Conan package ``gtest/1.8.1``.
+The same build variables, as ``CONAN_GCC_VERSIONS``, ``CONAN_CLANG_VERSIONS`` and ``CONAN_VISUAL_VERSIONS`` are used to select the compiler and version.
 
-All tests build the package ``gtest/1.8.0``, for x86 and x86_64.
+All tests build the package ``gtest/1.8.1``, for x86 and x86_64.
 
 ``Gcc`` images use libstdc++.  
 ``Clang`` images use libc++ and libstdc++.
+``Visual Studio`` images use MD for runtime.
 
 The packages created on test, are not uploaded to Conan server, Are just to validate the image.
 
@@ -216,7 +278,9 @@ Build and Test variables:
 
 - **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
 - **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
+- **VISUAL_VERSIONS**: Visual Studio versions to build, test and deploy, comma separated, e.g. "14,15"
 - **DOCKER_BUILD_TAG**: Docker image tag, e.g "latest", "0.28.1"
+- **SUDO_COMMAND**: Sudo command used on Linux distros, e.g. "sudo"
 
 Upload related variables:
 
