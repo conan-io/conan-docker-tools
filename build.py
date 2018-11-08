@@ -78,8 +78,8 @@ class ConanDockerTools(object):
         """
         logging.info("Starting build for service %s." % service)
         # subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
-        isolation = "--isolation=hyperv" if platform.sysmtem() == "Windows" else ""
-        subprocess.check_call("docker build {} --no-cache -t {} {}".format(isolation, self._get_image_name(service), context))
+        isolation = "--isolation=hyperv" if platform.system() == "Windows" else ""
+        subprocess.check_call("docker build {} --no-cache -t {} {}".format(isolation, self._get_image_name(service), context), shell=True)
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
