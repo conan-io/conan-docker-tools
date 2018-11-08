@@ -5,6 +5,7 @@ language: python
 services:
   - docker
 
+env:
   matrix:
     - GCC_VERSIONS="5" DOCKER_ARCHS="x86"
     - GCC_VERSIONS="5"
