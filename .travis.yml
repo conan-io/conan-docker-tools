@@ -1,16 +1,10 @@
-sudo: required
-
+os: linux
+dist: xenial
 language: python
-
+python: "3.7"
 services:
   - docker
-
 env:
-  global:
-    - DOCKER_UPLOAD="TRUE"
-    - DOCKER_USERNAME="conanio"
-    - DOCKER_LOGIN_USERNAME="lasote"
-
   matrix:
     - GCC_VERSIONS="5" DOCKER_ARCHS="x86"
     - GCC_VERSIONS="5"
@@ -65,6 +59,11 @@ env:
 
     - GCC_VERSIONS="8" DOCKER_ARCHS="x86_64,armv7"
     - GCC_VERSIONS="8" DOCKER_ARCHS="x86_64,armv7hf"
+
+    - BUILD_CONAN_SERVER_IMAGE=1
+
+install:
+  - pip install conan
 
 script:
   - python build.py
