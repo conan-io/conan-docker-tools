@@ -54,7 +54,7 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && pyenv install 3.6.7 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
     && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan \

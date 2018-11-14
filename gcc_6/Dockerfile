@@ -62,7 +62,7 @@ RUN dpkg --add-architecture i386 \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && pyenv install 3.7.1 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.1 \
     && pyenv global 3.7.1 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan \
