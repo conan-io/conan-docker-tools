@@ -26,6 +26,7 @@ class ConanDockerTools(object):
         Compiler = collections.namedtuple("Compiler", "name, versions")
         self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version)
         self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version)
+        self.loggedin = False
 
         logging.info("""
     The follow compiler versions will be built:
@@ -68,6 +69,24 @@ class ConanDockerTools(object):
         :param var: Environment variable name
         """
         return os.getenv(var, default.lower()).lower() in ["1", "true", "yes"]
+
+    def login(self):
+        if not self.variables.docker_upload:
+            logging.info("Skipped upload, not DOCKER_UPLOAD")
+            return
+
+        if not self.variables.docker_password:
+            logging.warning("Skipped upload, DOCKER_PASSWORD is missing!")
+            return
+
+        logging.info("Login to Docker hub account")
+        result = subprocess.call("docker login -p '%s' -u %s" %
+                                 (self.variables.docker_password, self.variables.docker_login_username),
+                                  shell=True)
+        if result != os.EX_OK:
+            raise RuntimeError("Could not login username %s "
+                               "to Docker hub." % self.variables.docker_login_username)
+        self.loggedin = True
 
     def build(self, service):
         """Call docker build to create a image
@@ -182,22 +201,9 @@ class ConanDockerTools(object):
         """Upload Docker image to dockerhub
         :param service: Service that contains the docker image
         """
-        if not self.variables.docker_upload:
-            logging.info("Skipped upload, not DOCKER_UPLOAD")
+        if not self.loggedin:
+            logging.info("Skipping deployment. Docker account is not connected.")
             return
-
-        if not self.variables.docker_password:
-            logging.warning("Skipped upload, DOCKER_PASSWORD is missing!")
-            return
-
-        logging.info("Login to Docker hub account")
-        result = subprocess.call([
-            'docker', 'login', '-p', self.variables.docker_password, '-u',
-            self.variables.docker_login_username
-        ])
-        if result != os.EX_OK:
-            raise RuntimeError("Could not login username %s "
-                               "to Docker hub." % self.variables.docker_login_username)
 
         logging.info("Upload Docker image from service %s to Docker hub." % service)
         subprocess.check_call("docker-compose push %s" % service, shell=True)
@@ -225,6 +231,7 @@ class ConanDockerTools(object):
                     service = "%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
                     build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
 
+                    self.login()
                     self.linter(build_dir)
                     self.build(service)
                     self.tag(service)
@@ -233,6 +240,7 @@ class ConanDockerTools(object):
 
         if self.variables.build_server:
             logging.info("Bulding conan_server image...")
+            self.login()
             self.linter("conan_server")
             self.build("conan_server")
             self.test_server("conan_server")
