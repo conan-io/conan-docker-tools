@@ -26,6 +26,7 @@ class ConanDockerTools(object):
         Compiler = collections.namedtuple("Compiler", "name, versions")
         self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version)
         self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version)
+        self.loggedin = False
 
         logging.info("""
     The follow compiler versions will be built:
@@ -85,6 +86,7 @@ class ConanDockerTools(object):
         if result != os.EX_OK:
             raise RuntimeError("Could not login username %s "
                                "to Docker hub." % self.variables.docker_login_username)
+        self.loggedin = True
 
     def build(self, service):
         """Call docker build to create a image
@@ -198,7 +200,11 @@ class ConanDockerTools(object):
     def deploy(self, service):
         """Upload Docker image to dockerhub
         :param service: Service that contains the docker image
-        """       
+        """
+        if not self.loggedin:
+            logging.info("Skipping deployment. Docker account is not connected.")
+            return
+
         logging.info("Upload Docker image from service %s to Docker hub." % service)
         subprocess.check_call("docker-compose push %s" % service, shell=True)
         image_name = "%s/%s:%s" % (self.variables.docker_username, service, client_version)
