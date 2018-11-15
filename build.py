@@ -191,10 +191,9 @@ class ConanDockerTools(object):
             return
 
         logging.info("Login to Docker hub account")
-        result = subprocess.call([
-            'docker', 'login', '-p', self.variables.docker_password, '-u',
-            self.variables.docker_login_username
-        ], shell=True)
+        result = subprocess.call("docker login -p %s '' -u %s" %
+                                 (self.variables.docker_password, self.variables.docker_login_username),
+                                  shell=True)
         if result != os.EX_OK:
             raise RuntimeError("Could not login username %s "
                                "to Docker hub." % self.variables.docker_login_username)
