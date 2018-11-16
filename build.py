@@ -72,16 +72,20 @@ class ConanDockerTools(object):
 
     def login(self):
         if not self.variables.docker_upload:
-            logging.info("Skipped upload, not DOCKER_UPLOAD")
+            logging.info("Skipped login, DOCKER_UPLOAD is not activated")
             return
 
         if not self.variables.docker_password:
-            logging.warning("Skipped upload, DOCKER_PASSWORD is missing!")
+            logging.warning("Skipped login, DOCKER_PASSWORD is missing!")
+            return
+
+        if not self.variables.docker_login_username:
+            logging.warning("Skipped login, DOCKER_LOGIN_USERNAME is missing!")
             return
 
         logging.info("Login to Docker hub account")
-        result = subprocess.call("docker login -p '%s' -u %s" %
-                                 (self.variables.docker_password, self.variables.docker_login_username),
+        result = subprocess.call("docker login -u %s -p %s" %
+                                 (self.variables.docker_login_username, self.variables.docker_password),
                                   shell=True)
         if result != os.EX_OK:
             raise RuntimeError("Could not login username %s "
@@ -202,7 +206,7 @@ class ConanDockerTools(object):
         :param service: Service that contains the docker image
         """
         if not self.loggedin:
-            logging.info("Skipping deployment. Docker account is not connected.")
+            logging.info("Skipping upload. Docker account is not connected.")
             return
 
         logging.info("Upload Docker image from service %s to Docker hub." % service)
