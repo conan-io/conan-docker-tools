@@ -1,2 +1,4 @@
 Bumped for Conan 1.9.1
 
+Bumped for Conan 1.9.2
+
