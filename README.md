@@ -65,6 +65,22 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
 
 
+#### Conan Server
+
+Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host.
+
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)             | ANY |  Supported |
+
+#### Conan Installer
+
+This is a special image version based on CentOS 6, GCC 7 and **glibc 2.12** to build installers and make compatible to ancient glib version.
+
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [conanio/conan_installer: gcc7](https://hub.docker.com/r/conanio/conan_installer/)             | x86_64, x86 |  Supported |
+
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -189,7 +205,7 @@ The same build variables, as ``CONAN_GCC_VERSIONS`` and ``CONAN_CLANG_VERSIONS``
 
 All tests build the package ``gtest/1.8.0``, for x86 and x86_64.
 
-``Gcc`` images use libstdc++.  
+``Gcc`` images use libstdc++.
 ``Clang`` images use libc++ and libstdc++.
 
 The packages created on test, are not uploaded to Conan server, Are just to validate the image.
@@ -224,3 +240,4 @@ Upload related variables:
 - **DOCKER_PASSWORD**: Your Docker password to authenticate in Docker server
 - **DOCKER_UPLOAD**: If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
 - **BUILD_CONAN_SERVER_IMAGE**: If attributest to true, it will build and upload an image with the conan_server
+- **BUILD_CONAN_INSTALLER_IMAGE**: If attributest to true, it will build and upload an image based on CentOS6

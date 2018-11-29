@@ -288,3 +288,11 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
         image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
         container_name: conan_server
+    conan_installer:
+        build:
+            context: conan_installer
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/conan_installer:${DOCKER_BUILD_TAG}"
+        container_name: conan_installer

@@ -40,6 +40,7 @@ class ConanDockerTools(object):
         """
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
         build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
+        build_installer = self._get_boolean_var("BUILD_CONAN_INSTALLER_IMAGE")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
@@ -59,10 +60,11 @@ class ConanDockerTools(object):
             "Variables", "docker_upload, docker_password, "
             "docker_username, docker_login_username, "
             "gcc_versions, "
-            "clang_versions, build_server, docker_build_tag, "
-            "docker_archs")
+            "clang_versions, build_server, build_installer, "
+            "docker_build_tag, docker_archs")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, clang_versions, build_server, docker_build_tag, docker_archs)
+                         gcc_versions, clang_versions, build_server, build_installer,
+                         docker_build_tag, docker_archs)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -110,12 +112,14 @@ class ConanDockerTools(object):
         subprocess.call(
             'docker run --rm -i lukasmartinelli/hadolint < %s/Dockerfile' % build_dir, shell=True)
 
-    def test(self, arch, compiler_name, compiler_version, service):
+    def test(self, arch, compiler_name, compiler_version, service, installer=False, sudo_commands=["", "sudo", "sudo -E"]):
         """Validate Docker image by Conan install
         :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         :param service: Docker compose service name
+        :param installer: Run tests for installer
+        :param sudo_commands: Prefix commands to be executed
         """
         logging.info("Testing Docker by service %s." % service)
         try:
@@ -124,7 +128,8 @@ class ConanDockerTools(object):
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
-            for sudo_command in ["", "sudo", "sudo -E"]:
+            for sudo_command in sudo_commands:
+
                 logging.info("Testing command prefix: '{}'".format(sudo_command))
                 output = subprocess.check_output(
                     "docker exec %s %s python3 --version" % (service, sudo_command), shell=True)
@@ -182,6 +187,12 @@ class ConanDockerTools(object):
                     "-s compiler.libcxx=%s --build" % (service, arch, compiler_name,
                                                        compiler_version, libcxx),
                     shell=True)
+
+            if installer:
+                subprocess.check_call(
+                    "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
+                    "arch_build=%s -s os_build=Linux --build" % (service, arch), shell=True)
+
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
             subprocess.call("docker rm %s" % service, shell=True)
@@ -202,6 +213,13 @@ class ConanDockerTools(object):
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
             subprocess.call("docker rm %s" % service, shell=True)
+
+    def test_installer(self, service):
+        """Valide Conan Installer image
+        :param service: Docker compose service name
+        """
+        for arch in ["x86_64", "x86"]:
+            self.test(arch, "gcc", "7", service, installer=True, sudo_commands=["sudo"])
 
     def deploy(self, service):
         """Upload Docker image to dockerhub
@@ -244,17 +262,18 @@ class ConanDockerTools(object):
                     self.test(arch, compiler.name, version, service)
                     self.deploy(service)
 
-        if self.variables.build_server:
-            logging.info("Bulding conan_server image...")
-            self.login()
-            self.linter("conan_server")
-            self.build("conan_server")
-            self.test_server("conan_server")
-            self.tag("conan_server")
-            self.deploy("conan_server")
-        else:
-            logging.info("Skipping conan_server image creation")
-
+        for image in ["server", "installer"]:
+            image_name = "conan_%s" % image
+            if  self.variables.__getattribute__("build_%s" % image):
+                logging.info("Bulding %s image..." % image_name)
+                self.login()
+                self.linter(image_name)
+                self.build(image_name)
+                eval("self.test_%s(image_name)" % image)
+                self.tag(image_name)
+                self.deploy(image_name)
+            else:
+                logging.info("Skipping %s image creation" % image_name)
 
 if __name__ == "__main__":
     conan_docker_tools = ConanDockerTools()

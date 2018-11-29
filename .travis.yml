@@ -6,6 +6,8 @@ services:
   - docker
 env:
   matrix:
+    - BUILD_CONAN_INSTALLER_IMAGE=1
+
     - GCC_VERSIONS="5" DOCKER_ARCHS="x86"
     - GCC_VERSIONS="5"
 
