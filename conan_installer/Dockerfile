@@ -21,6 +21,7 @@ RUN yum update -y \
        valgrind \
        glibc-devel \
        glibc-devel.i686 \
+       libgcc.i686 \
        gmp-devel \
        mpfr-devel \
        libmpc-devel \

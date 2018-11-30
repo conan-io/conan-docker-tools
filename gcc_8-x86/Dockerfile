@@ -12,7 +12,7 @@ RUN apt-get -qq update \
        sudo=1.8.21p2-3ubuntu1 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
-       git=1:2.17.1-1ubuntu0.3 \
+       git=1:2.* \
        vim=2:8.0.1453-1ubuntu1 \
        libc6-dev=2.27-3ubuntu1 \
        linux-libc-dev=4.* \
@@ -38,7 +38,7 @@ RUN apt-get -qq update \
        libncurses5-dev=6.* \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
-       ca-certificates=20180409 \    
+       ca-certificates=20180409 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 \
