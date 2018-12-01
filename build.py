@@ -63,7 +63,8 @@ class ConanDockerTools(object):
             "clang_versions, build_server, "
             "docker_build_tag, docker_archs")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, docker_distro, clang_versions, build_server, docker_build_tag, docker_archs)
+                         gcc_versions, docker_distro, clang_versions, build_server,
+                         docker_build_tag, docker_archs)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -85,9 +86,10 @@ class ConanDockerTools(object):
             return
 
         logging.info("Login to Docker hub account")
-        result = subprocess.call(["docker", "login",
-                                  "-u", self.variables.docker_login_username,
-                                  "-p", self.variables.docker_password])
+        result = subprocess.call([
+            "docker", "login", "-u", self.variables.docker_login_username, "-p",
+            self.variables.docker_password
+        ])
         if result != os.EX_OK:
             raise RuntimeError("Could not login username %s "
                                "to Docker hub." % self.variables.docker_login_username)
@@ -189,7 +191,8 @@ class ConanDockerTools(object):
 
             subprocess.check_call(
                 "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
-                "arch_build=%s -s os_build=Linux --build" % (service, arch), shell=True)
+                "arch_build=%s -s os_build=Linux --build" % (service, arch),
+                shell=True)
 
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
@@ -259,7 +262,7 @@ class ConanDockerTools(object):
                     self.deploy(service)
 
         image_name = "conan_server"
-        if  self.variables.build_server:
+        if self.variables.build_server:
             logging.info("Bulding %s image..." % image_name)
             self.login()
             self.linter(image_name)
@@ -269,6 +272,7 @@ class ConanDockerTools(object):
             self.deploy(image_name)
         else:
             logging.info("Skipping %s image creation" % image_name)
+
 
 if __name__ == "__main__":
     conan_docker_tools = ConanDockerTools()
