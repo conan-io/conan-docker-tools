@@ -102,7 +102,7 @@ class ConanDockerTools(object):
         :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % service)
-        subprocess.check_call("docker-compose build %s" % service, shell=True)
+        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
