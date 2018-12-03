@@ -189,10 +189,13 @@ class ConanDockerTools(object):
                                                        compiler_version, libcxx),
                     shell=True)
 
-            subprocess.check_call(
-                "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
-                "arch_build=%s -s os_build=Linux --build" % (service, arch),
-                shell=True)
+            if "arm" in arch:
+                logging.warn("Skipping cmake_installer: cross-building results in Unverified HTTPS error")
+            else:
+                subprocess.check_call(
+                    "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
+                    "arch_build=%s -s os_build=Linux --build" % (service, arch),
+                    shell=True)
 
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
