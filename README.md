@@ -76,7 +76,7 @@ Conan Docker Tools provides an image version with only Conan Server installed, v
 
 #### Conan Installer
 
-**conanio/gcc7-centos6** is a special image version based on CentOS 6, GCC 7 and **glibc 2.12** to build installers and make compatible to ancient glib version.
+**conanio/gcc7-centos6** is a special image version based on CentOS 6, GCC 7 and **glibc 2.12** (very old glibc version). This is intended to build executables that run almost on any Linux because **glibc** guarantees backward compatibility. You can use this image to build your Conan build tools packages (`build_requires`).
 
 Use the images to test your c++ project in travis-ci
 ======================================================
