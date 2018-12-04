@@ -47,6 +47,7 @@ class ConanDockerTools(object):
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else [
             "x86_64"
         ]
+        docker_distro = os.getenv("DOCKER_DISTRO", False)
         conan_version = os.getenv("CONAN_VERSION", client_version)
         os.environ["CONAN_VERSION"] = conan_version
         os.environ["DOCKER_USERNAME"] = docker_username
@@ -58,11 +59,12 @@ class ConanDockerTools(object):
         Variables = collections.namedtuple(
             "Variables", "docker_upload, docker_password, "
             "docker_username, docker_login_username, "
-            "gcc_versions, "
-            "clang_versions, build_server, docker_build_tag, "
-            "docker_archs")
+            "gcc_versions, docker_distro, "
+            "clang_versions, build_server, "
+            "docker_build_tag, docker_archs")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, clang_versions, build_server, docker_build_tag, docker_archs)
+                         gcc_versions, docker_distro, clang_versions, build_server,
+                         docker_build_tag, docker_archs)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -84,9 +86,10 @@ class ConanDockerTools(object):
             return
 
         logging.info("Login to Docker hub account")
-        result = subprocess.call(["docker", "login",
-                                  "-u", self.variables.docker_login_username,
-                                  "-p", self.variables.docker_password])
+        result = subprocess.call([
+            "docker", "login", "-u", self.variables.docker_login_username, "-p",
+            self.variables.docker_password
+        ])
         if result != os.EX_OK:
             raise RuntimeError("Could not login username %s "
                                "to Docker hub." % self.variables.docker_login_username)
@@ -110,21 +113,24 @@ class ConanDockerTools(object):
         subprocess.call(
             'docker run --rm -i lukasmartinelli/hadolint < %s/Dockerfile' % build_dir, shell=True)
 
-    def test(self, arch, compiler_name, compiler_version, service):
+    def test(self, arch, compiler_name, compiler_version, service, distro):
         """Validate Docker image by Conan install
         :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         :param service: Docker compose service name
+        :param distro: Use other linux distro
         """
         logging.info("Testing Docker by service %s." % service)
         try:
             image = "%s/%s:%s" % (self.variables.docker_username, service,
                                   self.variables.docker_build_tag)
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
+            sudo_commands = ["sudo"] if distro else ["", "sudo", "sudo -E"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
-            for sudo_command in ["", "sudo", "sudo -E"]:
+            for sudo_command in sudo_commands:
+
                 logging.info("Testing command prefix: '{}'".format(sudo_command))
                 output = subprocess.check_output(
                     "docker exec %s %s python3 --version" % (service, sudo_command), shell=True)
@@ -182,6 +188,15 @@ class ConanDockerTools(object):
                     "-s compiler.libcxx=%s --build" % (service, arch, compiler_name,
                                                        compiler_version, libcxx),
                     shell=True)
+
+            if "arm" in arch:
+                logging.warn("Skipping cmake_installer: cross-building results in Unverified HTTPS error")
+            else:
+                subprocess.check_call(
+                    "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
+                    "arch_build=%s -s os_build=Linux --build" % (service, arch),
+                    shell=True)
+
         finally:
             subprocess.call("docker stop %s" % service, shell=True)
             subprocess.call("docker rm %s" % service, shell=True)
@@ -219,8 +234,8 @@ class ConanDockerTools(object):
 
     def tag(self, service):
         """Apply Docker tag name
-            :param service: Docker tag
-            """
+        :param service: Docker tag
+        """
         image_name = "%s/%s" % (self.variables.docker_username, service)
         created_image = "%s:%s" % (image_name, self.variables.docker_build_tag)
         tagged_image = "%s:%s" % (image_name, client_version)
@@ -233,7 +248,12 @@ class ConanDockerTools(object):
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
                 for version in compiler.versions:
-                    tag_arch = "" if arch == "x86_64" else "-%s" % arch
+                    if self.variables.docker_distro:
+                        tag_arch = "-" + self.variables.docker_distro
+                    elif arch == "x86_64":
+                        tag_arch = ""
+                    else:
+                        tag_arch = "-%s" % arch
                     service = "%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
                     build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
 
@@ -241,19 +261,20 @@ class ConanDockerTools(object):
                     self.linter(build_dir)
                     self.build(service)
                     self.tag(service)
-                    self.test(arch, compiler.name, version, service)
+                    self.test(arch, compiler.name, version, service, self.variables.docker_distro)
                     self.deploy(service)
 
+        image_name = "conan_server"
         if self.variables.build_server:
-            logging.info("Bulding conan_server image...")
+            logging.info("Bulding %s image..." % image_name)
             self.login()
-            self.linter("conan_server")
-            self.build("conan_server")
-            self.test_server("conan_server")
-            self.tag("conan_server")
-            self.deploy("conan_server")
+            self.linter(image_name)
+            self.build(image_name)
+            self.test_server(image_name)
+            self.tag(image_name)
+            self.deploy(image_name)
         else:
-            logging.info("Skipping conan_server image creation")
+            logging.info("Skipping %s image creation" % image_name)
 
 
 if __name__ == "__main__":

@@ -40,6 +40,7 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | [conanio/gcc6-armv7hf: gcc 6](https://hub.docker.com/r/conanio/gcc6-armv7hf/)      | armv7hf |  Supported           |
 | [conanio/gcc7-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-x86/)              | x86     |  Supported           |
 | [conanio/gcc7: gcc 7](https://hub.docker.com/r/conanio/gcc7/)                      | x86_64  |  Supported           |
+| [conanio/gcc7-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-centos6/)      | x86_64  |  Supported           |
 | [conanio/gcc7-armv7: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7/)          | armv7   |  Supported           |
 | [conanio/gcc7-armv7hf: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7hf/)      | armv7hf |  Supported           |
 | [conanio/gcc8-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-x86/)              | x86     |  Supported           |
@@ -65,6 +66,17 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
 
 
+#### Conan Server
+
+Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host.
+
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)             | ANY |  Supported |
+
+#### Conan Installer
+
+**conanio/gcc7-centos6** is a special image version based on CentOS 6, GCC 7 and **glibc 2.12** (very old glibc version). This is intended to build executables that run almost on any Linux because **glibc** guarantees backward compatibility. You can use this image to build your Conan build tools packages (`build_requires`).
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -189,7 +201,7 @@ The same build variables, as ``CONAN_GCC_VERSIONS`` and ``CONAN_CLANG_VERSIONS``
 
 All tests build the package ``gtest/1.8.0``, for x86 and x86_64.
 
-``Gcc`` images use libstdc++.  
+``Gcc`` images use libstdc++.
 ``Clang`` images use libc++ and libstdc++.
 
 The packages created on test, are not uploaded to Conan server, Are just to validate the image.

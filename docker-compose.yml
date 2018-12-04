@@ -288,3 +288,10 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
         image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
         container_name: conan_server
+    gcc7-centos6:
+        build:
+            context: gcc_7-centos6
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc7-centos6:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-centos6
+        tty: true
