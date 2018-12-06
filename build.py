@@ -126,7 +126,7 @@ class ConanDockerTools(object):
             image = "%s/%s:%s" % (self.variables.docker_username, service,
                                   self.variables.docker_build_tag)
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
-            sudo_commands = ["sudo"] if distro else ["", "sudo", "sudo -E"]
+            sudo_commands = ["", "sudo"] if distro else ["", "sudo", "sudo -E"]
             subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
 
             for sudo_command in sudo_commands:
