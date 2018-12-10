@@ -47,7 +47,9 @@ RUN yum update -y \
     && sed -i 's/# %wheel/%wheel/g' /etc/sudoers \
     && groupadd 1001 -g 1001 \
     && useradd -ms /bin/bash conan -g 1001 -G wheel \
-    && printf "conan:conan" | chpasswd
+    && printf "conan:conan" | chpasswd \
+    && chgrp -R wheel /opt/rh/rh-python36/root \
+    && chmod -R g+w -R /opt/rh/rh-python36/root
 
 USER conan
 WORKDIR /home/conan
