@@ -15,9 +15,9 @@ RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.or
     choco install --no-progress --yes python3 --version=3.7.0 --params '"/InstallDir:C:\tools\python3"'; \
     choco install --no-progress --yes visualstudio2017buildtools --version=15.8.2.0; \
     choco install --no-progress --yes visualstudio2017-workload-vctools --version=1.3.0; \
-    choco install --no-progress --yes visualstudio2017-workload-manageddesktop --version=1.2.0; \
-    RefreshEnv; \
-    python -m pip install --quiet --upgrade pip; \
+    choco install --no-progress --yes --execution-timeout=0 visualstudio2017-workload-manageddesktop --version=1.2.0
+
+RUN python -m pip install --quiet --upgrade pip; \
     python -m pip install win-unicode-console --quiet --upgrade --force-reinstall --no-cache; \
     python -m pip install conan --quiet --upgrade --force-reinstall --no-cache; \
     python -m pip install conan_package_tools --quiet --upgrade --force-reinstall --no-cache
