@@ -1,7 +1,7 @@
 jobs:
 - job: Windows
   pool:
-    vmImage: 'VS2017-Win2016'
+    vmImage: 'win1803'
   timeoutInMinutes: 120
   steps:
   - task: UsePythonVersion@0
