@@ -102,7 +102,8 @@ class ConanDockerTools(object):
         :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % service)
-        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
+        # subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
+        subprocess.check_call("docker-compose build %s" % service, shell=True)
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
@@ -245,17 +246,13 @@ class ConanDockerTools(object):
     def run(self):
         """Execute all 3 stages for all versions in compilers list
         """
+        distro = "" if not self.variables.docker_distro else "-%s" % self.variables.docker_distro
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
                 for version in compiler.versions:
-                    if self.variables.docker_distro:
-                        tag_arch = "-" + self.variables.docker_distro
-                    elif arch == "x86_64":
-                        tag_arch = ""
-                    else:
-                        tag_arch = "-%s" % arch
-                    service = "%s%s%s" % (compiler.name, version.replace(".", ""), tag_arch)
-                    build_dir = "%s_%s%s" % (compiler.name, version, tag_arch)
+                    tag_arch = "x86_64" if arch == "" else "-%s" % arch
+                    service = "%s%s%s%s" % (compiler.name, version.replace(".", ""), distro, tag_arch)
+                    build_dir = "%s_%s%s%s" % (compiler.name, version, distro, tag_arch)
 
                     self.login()
                     self.linter(build_dir)
