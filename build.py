@@ -250,7 +250,7 @@ class ConanDockerTools(object):
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
                 for version in compiler.versions:
-                    tag_arch = "x86_64" if arch == "" else "-%s" % arch
+                    tag_arch = "" if arch == "x86_64" else "-%s" % arch
                     service = "%s%s%s%s" % (compiler.name, version.replace(".", ""), distro, tag_arch)
                     build_dir = "%s_%s%s%s" % (compiler.name, version, distro, tag_arch)
 

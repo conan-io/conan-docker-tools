@@ -6,7 +6,8 @@ services:
   - docker
 env:
   matrix:
-    - GCC_VERSIONS="7" DOCKER_ARCHS="x86_64,x86" DOCKER_DISTRO="centos6"
+    - GCC_VERSIONS="7" DOCKER_ARCHS="x86_64" DOCKER_DISTRO="centos6"
+    - GCC_VERSIONS="7" DOCKER_ARCHS="x86" DOCKER_DISTRO="centos6"
 
     - GCC_VERSIONS="5" DOCKER_ARCHS="x86"
     - GCC_VERSIONS="5"
