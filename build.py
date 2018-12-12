@@ -102,8 +102,7 @@ class ConanDockerTools(object):
         :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % service)
-        # subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
-        subprocess.check_call("docker-compose build %s" % service, shell=True)
+        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
@@ -193,8 +192,9 @@ class ConanDockerTools(object):
             if "arm" in arch:
                 logging.warn("Skipping cmake_installer: cross-building results in Unverified HTTPS error")
             else:
+                subprocess.check_call("docker exec %s conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan" % service, shell=True)
                 subprocess.check_call(
-                    "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
+                    "docker exec %s conan install ninja_installer/1.8.2@bincrafters/stable -s "
                     "arch_build=%s -s os_build=Linux --build" % (service, arch),
                     shell=True)
 
