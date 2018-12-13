@@ -295,3 +295,10 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-centos6:${DOCKER_BUILD_TAG}"
         container_name: gcc7-centos6
         tty: true
+    gcc7-centos6-x86:
+        build:
+            context: gcc_7-centos6-x86
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc7-centos6-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-centos6-x86
+        tty: true
