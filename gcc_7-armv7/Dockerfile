@@ -22,6 +22,6 @@ RUN sudo apt-get -qq update \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcov-dump arm-linux-gnueabi-gcov-dump /usr/bin/arm-linux-gnueabi-gcov-dump-7 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcov-tool arm-linux-gnueabi-gcov-tool /usr/bin/arm-linux-gnueabi-gcov-tool-7 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && pip install -q --no-cache-dir conan --upgrade \
+    && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7 default
