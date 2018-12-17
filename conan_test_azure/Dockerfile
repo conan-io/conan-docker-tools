@@ -52,5 +52,5 @@ RUN dpkg --add-architecture i386 \
        && python3 get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
-       && pip install -q --no-cache-dir conan --upgrade \
+       && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
        && pip install virtualenv
