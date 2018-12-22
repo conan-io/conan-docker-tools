@@ -8,6 +8,7 @@ import subprocess
 import re
 import requests
 import time
+from humanfriendly import format_size
 from conans import __version__ as client_version
 
 
@@ -27,6 +28,7 @@ class ConanDockerTools(object):
         self.gcc_compiler = Compiler(name="gcc", versions=filter_gcc_compiler_version)
         self.clang_compiler = Compiler(name="clang", versions=filter_clang_compiler_version)
         self.loggedin = False
+        self.service = None
 
         logging.info("""
     The follow compiler versions will be built:
@@ -97,12 +99,30 @@ class ConanDockerTools(object):
         logging.info("Logged in Docker hub account with success")
         self.loggedin = True
 
-    def build(self, service):
+    @property
+    def created_image_name(self):
+        return "%s/%s:%s" % (self.variables.docker_username,
+                             self.service,
+                             self.variables.docker_build_tag)
+
+    @property
+    def tagged_image_name(self):
+        return "%s/%s:%s" % (self.variables.docker_username,
+                             self.service,
+                             client_version)
+
+    def build(self):
         """Call docker build to create a image
         :param service: service in compose e.g gcc54
         """
-        logging.info("Starting build for service %s." % service)
-        subprocess.check_call("docker-compose build --no-cache %s" % service, shell=True)
+        logging.info("Starting build for service %s." % self.service)
+        # --no-cache
+        subprocess.check_call("docker-compose build --no-cache %s" % self.service, shell=True)
+
+        output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
+            % self.created_image_name, shell=True)
+        size = int(output.decode().strip())
+        logging.info("%s image size: %s" % (self.created_image_name, format_size(size)))
 
     def linter(self, build_dir):
         """Execute hadolint to check possible prone errors
@@ -113,7 +133,7 @@ class ConanDockerTools(object):
         subprocess.call(
             'docker run --rm -i lukasmartinelli/hadolint < %s/Dockerfile' % build_dir, shell=True)
 
-    def test(self, arch, compiler_name, compiler_version, service, distro):
+    def test(self, arch, compiler_name, compiler_version, distro):
         """Validate Docker image by Conan install
         :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
@@ -121,56 +141,55 @@ class ConanDockerTools(object):
         :param service: Docker compose service name
         :param distro: Use other linux distro
         """
-        logging.info("Testing Docker by service %s." % service)
+        logging.info("Testing Docker by service %s." % self.service)
         try:
-            image = "%s/%s:%s" % (self.variables.docker_username, service,
-                                  self.variables.docker_build_tag)
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
             sudo_commands = ["", "sudo"] if distro else ["", "sudo", "sudo -E"]
-            subprocess.check_call("docker run -t -d --name %s %s" % (service, image), shell=True)
+            subprocess.check_call("docker run -t -d --name %s %s" % (self.service,
+                self.created_image_name), shell=True)
 
             for sudo_command in sudo_commands:
 
                 logging.info("Testing command prefix: '{}'".format(sudo_command))
                 output = subprocess.check_output(
-                    "docker exec %s %s python3 --version" % (service, sudo_command), shell=True)
+                    "docker exec %s %s python3 --version" % (self.service, sudo_command), shell=True)
                 assert "Python 3" in output.decode()
                 logging.info("Found %s" % output.decode().rstrip())
 
                 output = subprocess.check_output(
-                    "docker exec %s %s pip --version" % (service, sudo_command), shell=True)
+                    "docker exec %s %s pip --version" % (self.service, sudo_command), shell=True)
                 assert "python 3" in output.decode()
                 logging.info("Found pip (Python 3)")
 
                 output = subprocess.check_output(
-                    "docker exec %s %s pip3 --version" % (service, sudo_command), shell=True)
+                    "docker exec %s %s pip3 --version" % (self.service, sudo_command), shell=True)
                 assert "python 3" in output.decode()
                 logging.info("Found pip3 (Python 3)")
 
                 output = subprocess.check_output(
-                    "docker exec %s %s pip show conan" % (service, sudo_command), shell=True)
+                    "docker exec %s %s pip show conan" % (self.service, sudo_command), shell=True)
                 assert "python3" in output.decode()
                 logging.info("Found Conan (Python 3)")
 
                 output = subprocess.check_output(
-                    "docker exec %s %s python --version" % (service, sudo_command), shell=True)
+                    "docker exec %s %s python --version" % (self.service, sudo_command), shell=True)
                 assert "Python 3" in output.decode()
                 logging.info("Default Python version: %s" % output.decode().rstrip())
 
                 for module in ["lzma", "sqlite3", "bz2", "zlib", "readline"]:
                     subprocess.check_call(
-                        'docker exec %s %s python -c "import %s"' % (service, sudo_command, module),
+                        'docker exec %s %s python -c "import %s"' % (self.service, sudo_command, module),
                         shell=True)
 
                 subprocess.check_call(
                     "docker exec %s %s pip install --no-cache-dir -U conan_package_tools" %
-                    (service, sudo_command),
+                    (self.service, sudo_command),
                     shell=True)
                 subprocess.check_call(
-                    "docker exec %s %s pip install --no-cache-dir -U conan" % (service,
+                    "docker exec %s %s pip install --no-cache-dir -U conan" % (self.service,
                                                                                sudo_command),
                     shell=True)
-                subprocess.check_call("docker exec %s conan user" % service, shell=True)
+                subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
             if compiler_name == "clang" and compiler_version == "7":
                 compiler_version = "7.0"  # FIXME: Remove this when fixed in conan
@@ -178,14 +197,14 @@ class ConanDockerTools(object):
             subprocess.check_call(
                 "docker exec %s conan install lz4/1.8.3@bincrafters/stable -s "
                 "arch=%s -s compiler=%s -s compiler.version=%s --build" %
-                (service, arch, compiler_name, compiler_version),
+                (self.service, arch, compiler_name, compiler_version),
                 shell=True)
 
             for libcxx in libcxx_list:
                 subprocess.check_call(
                     "docker exec %s conan install gtest/1.8.1@bincrafters/stable -s "
                     "arch=%s -s compiler=%s -s compiler.version=%s "
-                    "-s compiler.libcxx=%s --build" % (service, arch, compiler_name,
+                    "-s compiler.libcxx=%s --build" % (self.service, arch, compiler_name,
                                                        compiler_version, libcxx),
                     shell=True)
 
@@ -194,31 +213,30 @@ class ConanDockerTools(object):
             else:
                 subprocess.check_call(
                     "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
-                    "arch_build=%s -s os_build=Linux --build" % (service, arch),
+                    "arch_build=%s -s os_build=Linux --build" % (self.service, arch),
                     shell=True)
 
         finally:
-            subprocess.call("docker stop %s" % service, shell=True)
-            subprocess.call("docker rm %s" % service, shell=True)
+            subprocess.call("docker stop %s" % self.service, shell=True)
+            subprocess.call("docker rm %s" % self.service, shell=True)
 
-    def test_server(self, service):
+    def test_server(self):
         """Validate Conan Server image
         :param service: Docker compose service name
         """
-        logging.info("Testing Docker running service %s." % service)
+        logging.info("Testing Docker running service %s." % self.service)
         try:
-            image = "%s/%s:%s" % (self.variables.docker_username, service,
-                                  self.variables.docker_build_tag)
             subprocess.check_call(
-                "docker run -t -d -p 9300:9300 --name %s %s" % (service, image), shell=True)
+                "docker run -t -d -p 9300:9300 --name %s %s" % (self.service,
+                    self.created_image_name), shell=True)
             time.sleep(3)
             response = requests.get("http://0.0.0.0:9300/v1/ping")
             assert response.ok
         finally:
-            subprocess.call("docker stop %s" % service, shell=True)
-            subprocess.call("docker rm %s" % service, shell=True)
+            subprocess.call("docker stop %s" % self.service, shell=True)
+            subprocess.call("docker rm %s" % self.service, shell=True)
 
-    def deploy(self, service):
+    def deploy(self):
         """Upload Docker image to dockerhub
         :param service: Service that contains the docker image
         """
@@ -226,21 +244,18 @@ class ConanDockerTools(object):
             logging.info("Skipping upload. Docker account is not connected.")
             return
 
-        logging.info("Upload Docker image from service %s to Docker hub." % service)
-        subprocess.check_call("docker-compose push %s" % service, shell=True)
-        image_name = "%s/%s:%s" % (self.variables.docker_username, service, client_version)
-        logging.info("Upload Docker image %s" % image_name)
-        subprocess.check_call("docker push %s" % image_name, shell=True)
+        logging.info("Upload Docker image from service %s to Docker hub." % self.service)
+        subprocess.check_call("docker-compose push %s" % self.service, shell=True)
+        logging.info("Upload Docker image %s" % self.tagged_image_name)
+        subprocess.check_call("docker push %s" % self.tagged_image_name, shell=True)
 
-    def tag(self, service):
+    def tag(self):
         """Apply Docker tag name
         :param service: Docker tag
         """
-        image_name = "%s/%s" % (self.variables.docker_username, service)
-        created_image = "%s:%s" % (image_name, self.variables.docker_build_tag)
-        tagged_image = "%s:%s" % (image_name, client_version)
-        logging.info("Creating Docker tag %s" % tagged_image)
-        subprocess.check_call("docker tag %s %s" % (created_image, tagged_image), shell=True)
+        logging.info("Creating Docker tag %s" % self.tagged_image_name)
+        subprocess.check_call("docker tag %s %s" % (self.created_image_name,
+            self.tagged_image_name), shell=True)
 
     def run(self):
         """Execute all 3 stages for all versions in compilers list
@@ -253,22 +268,23 @@ class ConanDockerTools(object):
                     service = "%s%s%s%s" % (compiler.name, version.replace(".", ""), distro, tag_arch)
                     build_dir = "%s_%s%s%s" % (compiler.name, version, distro, tag_arch)
 
+                    self.service = service
                     self.login()
                     self.linter(build_dir)
-                    self.build(service)
-                    self.tag(service)
-                    self.test(arch, compiler.name, version, service, self.variables.docker_distro)
-                    self.deploy(service)
+                    self.build()
+                    self.tag()
+                    self.test(arch, compiler.name, version, self.variables.docker_distro)
+                    self.deploy()
 
-        image_name = "conan_server"
+        self.service = image_name = "conan_server"
         if self.variables.build_server:
             logging.info("Bulding %s image..." % image_name)
             self.login()
-            self.linter(image_name)
-            self.build(image_name)
-            self.test_server(image_name)
-            self.tag(image_name)
-            self.deploy(image_name)
+            self.linter(self.service)
+            self.build()
+            self.test_server()
+            self.tag()
+            self.deploy()
         else:
             logging.info("Skipping %s image creation" % image_name)
 
