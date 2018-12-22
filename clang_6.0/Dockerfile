@@ -16,7 +16,6 @@ RUN dpkg --add-architecture i386 \
        sudo=1.8.21p2-3ubuntu1 \
        wget=1.19.4-1ubuntu2 \
        git \
-       vim=2:8.0.1453-1ubuntu1 \
        g++-multilib=4:7.3.0-3ubuntu2 \
        clang-6.0=1:6.0-1ubuntu2 \
        make=4.1-9.1ubuntu1 \

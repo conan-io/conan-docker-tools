@@ -13,7 +13,6 @@ RUN apt-get -qq update \
        binutils=2.29.* \
        wget=1.19.* \
        git=1:2.* \
-       vim=2:8.* \
        libc6-dev=2.26* \
        linux-libc-dev=4.13* \
        g++-6=6.4.* \

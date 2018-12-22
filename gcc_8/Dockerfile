@@ -12,7 +12,6 @@ RUN dpkg --add-architecture i386 \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
        git=1:2.* \
-       vim=2:8.0.1453-1ubuntu1 \
        libc6-dev-i386=2.27-3ubuntu1 \
        linux-libc-dev:i386=4.* \
        g++-8-multilib \

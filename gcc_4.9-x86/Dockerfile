@@ -17,7 +17,6 @@ RUN dpkg --add-architecture i386 \
        g++-4.9-multilib=4.9.4-2ubuntu1~14.04.1 \
        wget=1.15-1ubuntu1.14.04.4 \
        git \
-       vim=2:7.4.052-1ubuntu3.1 \
        nasm=2.10.09-1 \
        dh-autoreconf=9 \
        valgrind=1:3.10.1-1ubuntu3~14.5 \

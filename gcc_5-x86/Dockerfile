@@ -13,7 +13,6 @@ RUN apt-get -qq update \
        build-essential=12.1ubuntu2 \
        wget=1.17.* \
        git=1:2.7.* \
-       vim=2:7.* \
        g++=4:5.3.* \
        libgmp-dev=2:6.1.0+dfsg-2 \
        libmpfr-dev=3.1.4-1 \

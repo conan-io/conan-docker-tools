@@ -17,7 +17,6 @@ RUN apt-get -qq update \
        sudo=1.8.23-2ubuntu1 \
        wget=1.19.5-1ubuntu1 \
        git \
-       vim=2:8.0.1766-1ubuntu1 \
        g++-multilib=4:8.2.0-1ubuntu1 \
        clang-7 \
        make=4.2.1-1.2 \

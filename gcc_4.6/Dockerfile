@@ -11,7 +11,6 @@ RUN apt-get -qq update \
        build-essential=11.* \
        wget=1.13.* \
        git=1:1.7.* \
-       vim=2:7.3.* \
        libc6-dev-i386=2.15-* \
        g++-multilib=4:4.6.* \
        nasm=2.09.* \

@@ -13,7 +13,6 @@ RUN apt-get -qq update \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
        git=1:2.* \
-       vim=2:8.0.1453-1ubuntu1 \
        libc6-dev=2.27-3ubuntu1 \
        linux-libc-dev=4.* \
        g++-8 \

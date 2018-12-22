@@ -13,7 +13,6 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     build-essential=12.* \
     wget=1.16.* \
     git=1:2.5.* \
-    vim=2:7.4.* \
     libc6-dev-i386=2.21-* \
     g++-multilib=4:5.2.* \
     nasm=2.11.* \

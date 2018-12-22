@@ -12,7 +12,6 @@ RUN dpkg --add-architecture i386 \
        build-essential=12.* \
        wget=1.17.* \
        git=1:2.7.* \
-       vim=2:7.4.* \
        libc6-dev-i386=2.23-* \
        g++-multilib=4:5.3.* \
        libgmp-dev=2:6.1.* \
@@ -21,7 +20,6 @@ RUN dpkg --add-architecture i386 \
        libc6-dev=2.23-* \
        nasm=2.11.* \
        dh-autoreconf=11 \
-       valgrind=1:3.11.* \
     && apt-get -qq install -y --allow-downgrades --no-install-recommends \
        gcc-5=5.3.1-14ubuntu2 \
        gcc-5-base=5.3.1-14ubuntu2 \

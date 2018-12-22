@@ -18,7 +18,6 @@ RUN dpkg --add-architecture i386 \
        sudo=1.8.* \
        wget=1.18* \
        git=1:2.* \
-       vim=2:8.* \
        clang-${LLVM_VERSION}=1:3.8.1-* \
        llvm-${LLVM_VERSION}=1:3.8.1-* \
        llvm-${LLVM_VERSION}-dev=1:3.8.1-* \

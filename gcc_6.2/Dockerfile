@@ -14,7 +14,6 @@ RUN dpkg --add-architecture i386 \
        build-essential=12.* \
        wget=1.18-* \
        git=1:2.9.* \
-       vim=2:7.4.* \
        libc6-dev-i386=2.24-* \
        g++-multilib=4:6.1.* \
        libgmp-dev=2:6.1.* \

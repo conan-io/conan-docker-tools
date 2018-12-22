@@ -17,7 +17,6 @@ RUN apt-get -qq update \
        sudo=1.8.20p2-1ubuntu1 \
        wget=1.19.1-3ubuntu1 \
        git=1:2.14.1-1ubuntu4 \
-       vim=2:8.0.0197-4ubuntu5 \
        g++=4:7.2.0-1ubuntu1 \
        clang-${LLVM_VERSION}=1:4.0.1-6 \
        llvm-${LLVM_VERSION}=1:4.0.1-6 \

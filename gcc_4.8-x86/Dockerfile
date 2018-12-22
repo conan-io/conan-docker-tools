@@ -14,7 +14,6 @@ RUN dpkg --add-architecture i386 \
        build-essential=11.* \
        wget=1.15-* \
        git=1:1.9.* \
-       vim=2:7.4.* \
        nasm=2.10.* \
        dh-autoreconf=9 \
        valgrind=1:3.10.* \

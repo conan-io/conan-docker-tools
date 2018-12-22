@@ -14,7 +14,6 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     build-essential=12.* \
     wget=1.16.* \
     git=1:2.5.* \
-    vim=2:7.4.* \
     nasm=2.11.* \
     dh-autoreconf=10 \
     libc6:armhf \

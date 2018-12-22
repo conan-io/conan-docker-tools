@@ -12,7 +12,6 @@ RUN dpkg --add-architecture i386 \
        binutils=2.29.* \
        wget=1.19.* \
        git=1:2.14.* \
-       vim=2:8.0.* \
        libc6-dev-i386=2.26-* \
        linux-libc-dev:i386=4.13.* \
        g++-6-multilib=6.4.* \
