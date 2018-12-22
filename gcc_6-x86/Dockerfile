@@ -22,7 +22,6 @@ RUN apt-get -qq update \
        libc6-dev=2.26-0ubuntu2.1 \
        nasm=2.13.01-2 \
        dh-autoreconf=14 \
-       valgrind=1:3.13.0-1ubuntu3 \
        ninja-build=1.7.2-3 \
        libffi-dev=3.2.1-6 \
        libssl-dev=1.0.2* \

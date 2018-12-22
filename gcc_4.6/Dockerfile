@@ -15,7 +15,6 @@ RUN apt-get -qq update \
        g++-multilib=4:4.6.* \
        nasm=2.09.* \
        dh-autoreconf=5ubuntu1 \
-       valgrind=1:3.7.* \
        ninja-build=1.3.* \
        libffi-dev=3.0.* \
        libssl-dev=1.* \

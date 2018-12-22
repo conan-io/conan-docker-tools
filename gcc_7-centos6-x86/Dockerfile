@@ -21,7 +21,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
        wget \
        git \
        make \
-       valgrind \
        glibc-devel \
        gmp-devel \
        mpfr-devel \

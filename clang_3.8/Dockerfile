@@ -24,7 +24,6 @@ RUN dpkg --add-architecture i386 \
        llvm-${LLVM_VERSION}-runtime=1:3.8.1-* \
        llvm=1:4.0-* \
        make=4.1-* \
-       valgrind=1:3.* \
        libc6-dev-i386=2.24-* \
        g++-multilib=4:6.3.* \
        libgmp-dev=2:6.1.* \

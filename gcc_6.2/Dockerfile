@@ -22,7 +22,6 @@ RUN dpkg --add-architecture i386 \
        libc6-dev=2.24-* \
        nasm=2.12.* \
        dh-autoreconf=12 \
-       valgrind=1:3.12.* \
        ninja-build=1.7.* \
        libffi-dev=3.2.* \
        libssl-dev=1.0.2* \

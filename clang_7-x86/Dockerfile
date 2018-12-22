@@ -20,7 +20,6 @@ RUN apt-get -qq update \
        g++-multilib=4:8.2.0-1ubuntu1 \
        clang-7 \
        make=4.2.1-1.2 \
-       valgrind=1:3.13.0-2ubuntu6 \
        libc6-dev=2.28-0ubuntu1 \
        libgmp-dev=2:6.1.2+dfsg-3 \
        libmpfr-dev=4.0.1-1 \

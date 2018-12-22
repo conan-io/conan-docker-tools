@@ -16,7 +16,6 @@ RUN dpkg --add-architecture i386 \
        git=1:1.9.* \
        nasm=2.10.* \
        dh-autoreconf=9 \
-       valgrind=1:3.10.* \
        ninja-build=1.3.* \
        libffi-dev=3.1* \
        libssl-dev=1.0.* \
