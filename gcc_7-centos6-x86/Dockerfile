@@ -81,7 +81,8 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && groupadd 1001 -g 1001 \
     && useradd -ms /bin/bash conan -g 1001 -G wheel \
     && printf "conan:conan" | chpasswd \
-    && chown -R conan:1001 /opt/pyenv
+    && chown -R conan:1001 /opt/pyenv \
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf
 
 USER conan
 WORKDIR /home/conan
