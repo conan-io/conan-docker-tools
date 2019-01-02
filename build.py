@@ -205,10 +205,12 @@ class ConanDockerTools(object):
         """
         # TODO (uilian): Only for Azure DevOps
         if platform.system() == "Windows":
-            print("programdata: %s" % os.getenv("programdata"))
-            print("PROGRAMDATA: %s" % os.getenv("PROGRAMDATA"))
+            logging.info("VARS: %s" % os.environ.keys())
+            logging.info("programdata: %s" % os.getenv("programdata"))
+            logging.info("PROGRAMDATA: %s" % os.getenv("PROGRAMDATA"))
             with open(r"C:\ProgramData\Docker\config\daemon.json", "w+") as fd:
                 fd.write('{"storage-opts": ["size=20G"]}')
+
 
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
