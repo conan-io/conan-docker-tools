@@ -203,6 +203,13 @@ class ConanDockerTools(object):
     def run(self):
         """Execute all 3 stages for all versions in compilers list
         """
+        # TODO (uilian): Only for Azure DevOps
+        if platform.system() == "Windows":
+            print("programdata: %s" % os.getenv("programdata"))
+            print("PROGRAMDATA: %s" % os.getenv("PROGRAMDATA"))
+            with open(r"C:\ProgramData\Docker\config\daemon.json", "w+") as fd:
+                fd.write('{"storage-opts": ["size=20G"]}')
+
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
                 for version in compiler.versions:
