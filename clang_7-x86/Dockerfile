@@ -17,11 +17,9 @@ RUN apt-get -qq update \
        sudo=1.8.23-2ubuntu1 \
        wget=1.19.5-1ubuntu1 \
        git \
-       vim=2:8.0.1766-1ubuntu1 \
        g++-multilib=4:8.2.0-1ubuntu1 \
        clang-7 \
        make=4.2.1-1.2 \
-       valgrind=1:3.13.0-2ubuntu6 \
        libc6-dev=2.28-0ubuntu1 \
        libgmp-dev=2:6.1.2+dfsg-3 \
        libmpfr-dev=4.0.1-1 \
@@ -78,6 +76,8 @@ RUN apt-get -qq update \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

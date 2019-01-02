@@ -11,12 +11,10 @@ RUN apt-get -qq update \
        build-essential=11.* \
        wget=1.13.* \
        git=1:1.7.* \
-       vim=2:7.3.* \
        libc6-dev-i386=2.15-* \
        g++-multilib=4:4.6.* \
        nasm=2.09.* \
        dh-autoreconf=5ubuntu1 \
-       valgrind=1:3.7.* \
        ninja-build=1.3.* \
        libffi-dev=3.0.* \
        libssl-dev=1.* \
@@ -35,6 +33,9 @@ RUN apt-get -qq update \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate -O /tmp/cmake-3.12.1-Linux-x86_64.tar.gz http://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf /tmp/cmake-3.12.1-Linux-x86_64.tar.gz -C /tmp \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.12/Help \
     && cp -fR /tmp/cmake-3.12.1-Linux-x86_64/* /usr \
     && rm -rf /tmp/cmake-3.12.1-Linux-x86_64* \
     && groupadd 1001 -g 1001 \
@@ -55,6 +56,8 @@ RUN apt-get -qq update \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

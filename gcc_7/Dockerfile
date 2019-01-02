@@ -12,7 +12,6 @@ RUN dpkg --add-architecture i386 \
        binutils=2.29.* \
        wget=1.19.* \
        git=1:2.14.* \
-       vim=2:8.0.* \
        libc6-dev-i386=2.26-* \
        linux-libc-dev:i386=4.13.* \
        g++-7-multilib=7.2.* \
@@ -22,7 +21,6 @@ RUN dpkg --add-architecture i386 \
        libc6-dev=2.26* \
        nasm=2.13.* \
        dh-autoreconf=14 \
-       valgrind=1:3.13.* \
        ninja-build=1.7.* \
        libffi-dev=3.2.* \
        libssl-dev=1.0.2* \
@@ -44,6 +42,9 @@ RUN dpkg --add-architecture i386 \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.12/Help \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
     && rm -rf cmake-3.12.1-Linux-x86_64 \
     && rm cmake-3.12.1-Linux-x86_64.tar.gz \
@@ -65,6 +66,8 @@ RUN dpkg --add-architecture i386 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

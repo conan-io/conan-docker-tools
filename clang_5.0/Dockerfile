@@ -16,11 +16,9 @@ RUN dpkg --add-architecture i386 \
        sudo=1.8.20p2-1ubuntu1 \
        wget=1.19.1-3ubuntu1 \
        git=1:2.14.1-1ubuntu4 \
-       vim=2:8.0.0197-4ubuntu5 \
        g++-multilib=4:7.2.0-1ubuntu1 \
        clang-5.0=1:5.0-3 \
        make=4.1-9.1 \
-       valgrind=1:3.13.0-1ubuntu2 \
        libc6-dev-i386=2.26-0ubuntu2.1 \
        libgmp-dev=2:6.1.2+dfsg-1 \
        libmpfr-dev=3.1.6-1 \
@@ -55,6 +53,9 @@ RUN dpkg --add-architecture i386 \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.12/Help \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
     && rm -rf cmake-3.12.1-Linux-x86_64 \
     && rm cmake-3.12.1-Linux-x86_64.tar.gz \
@@ -76,6 +77,8 @@ RUN dpkg --add-architecture i386 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

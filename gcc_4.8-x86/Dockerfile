@@ -14,10 +14,8 @@ RUN dpkg --add-architecture i386 \
        build-essential=11.* \
        wget=1.15-* \
        git=1:1.9.* \
-       vim=2:7.4.* \
        nasm=2.10.* \
        dh-autoreconf=9 \
-       valgrind=1:3.10.* \
        ninja-build=1.3.* \
        libffi-dev=3.1* \
        libssl-dev=1.0.* \
@@ -62,6 +60,8 @@ RUN dpkg --add-architecture i386 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

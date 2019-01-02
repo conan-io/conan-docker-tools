@@ -18,14 +18,12 @@ RUN dpkg --add-architecture i386 \
        sudo=1.8.* \
        wget=1.18* \
        git=1:2.* \
-       vim=2:8.* \
        clang-${LLVM_VERSION}=1:3.8.1-* \
        llvm-${LLVM_VERSION}=1:3.8.1-* \
        llvm-${LLVM_VERSION}-dev=1:3.8.1-* \
        llvm-${LLVM_VERSION}-runtime=1:3.8.1-* \
        llvm=1:4.0-* \
        make=4.1-* \
-       valgrind=1:3.* \
        libc6-dev-i386=2.24-* \
        g++-multilib=4:6.3.* \
        libgmp-dev=2:6.1.* \
@@ -59,6 +57,9 @@ RUN dpkg --add-architecture i386 \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.12/Help \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
     && rm -rf cmake-3.12.1-Linux-x86_64 \
     && rm cmake-3.12.1-Linux-x86_64.tar.gz \
@@ -80,6 +81,8 @@ RUN dpkg --add-architecture i386 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

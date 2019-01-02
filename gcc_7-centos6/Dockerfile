@@ -18,7 +18,6 @@ RUN yum update -y \
        wget \
        git \
        make \
-       valgrind \
        glibc-devel \
        glibc-devel.i686 \
        libgcc.i686 \

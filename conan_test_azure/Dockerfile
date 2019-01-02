@@ -13,7 +13,6 @@ RUN dpkg --add-architecture i386 \
        build-essential=12.* \
        wget=1.17.* \
        git=1:2.7.* \
-       vim=2:7.4.* \
        libc6-dev-i386=2.23-* \
        g++-multilib=4:5.3.* \
        libgmp-dev=2:6.1.* \
@@ -22,7 +21,6 @@ RUN dpkg --add-architecture i386 \
        libc6-dev=2.23-* \
        nasm=2.11.* \
        dh-autoreconf=11 \
-       valgrind=1:3.11.* \
        ninja-build=1.5.*  \
        libffi-dev=3.2.* \
        libssl-dev=1.0.2* \
@@ -45,6 +43,9 @@ RUN dpkg --add-architecture i386 \
        && rm -rf /var/lib/apt/lists/* \
        && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
        && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.12/Help \
        && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
        && rm -rf cmake-3.12.1-Linux-x86_64 \
        && rm cmake-3.12.1-Linux-x86_64.tar.gz \

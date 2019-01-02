@@ -13,7 +13,6 @@ RUN apt-get -qq update \
        binutils=2.29.* \
        wget=1.19.* \
        git=1:2.* \
-       vim=2:8.* \
        libc6-dev=2.26* \
        linux-libc-dev=4.13* \
        g++-6=6.4.* \
@@ -23,7 +22,6 @@ RUN apt-get -qq update \
        libc6-dev=2.26-0ubuntu2.1 \
        nasm=2.13.01-2 \
        dh-autoreconf=14 \
-       valgrind=1:3.13.0-1ubuntu3 \
        ninja-build=1.7.2-3 \
        libffi-dev=3.2.1-6 \
        libssl-dev=1.0.2* \
@@ -71,6 +69,8 @@ RUN apt-get -qq update \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
