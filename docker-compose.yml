@@ -294,7 +294,7 @@ services:
         container_name: msvc14
         tty: true
         storage_opt:
-            size: '20G'
+            size: '50G'
     msvc15:
         build:
             context: msvc_15
@@ -303,4 +303,4 @@ services:
         container_name: msvc15
         tty: true
         storage_opt:
-            size: '20G'
+            size: '50G'
