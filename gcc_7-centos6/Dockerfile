@@ -37,6 +37,7 @@ RUN yum update -y \
        tar \
        devtoolset-7-toolchain \
        rh-python36 \
+       help2man \
     && yum clean all \
     && wget -O /tmp/cmake-3.12.1-Linux-x86_64.sh --no-check-certificate --quiet 'https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.sh' \
     && bash /tmp/cmake-3.12.1-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir \
