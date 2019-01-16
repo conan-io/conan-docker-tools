@@ -3,7 +3,9 @@ FROM ubuntu:wily
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH}
+    PATH=/opt/pyenv/shims:${PATH} \
+    CXX=/usr/bin/g++ \
+    CC=/usr/bin/gcc
 
 RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list \
     && dpkg --add-architecture i386 \

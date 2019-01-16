@@ -5,7 +5,9 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH}
+    PATH=/opt/pyenv/shims:${PATH} \
+    CXX=/usr/bin/g++ \
+    CC=/usr/bin/gcc
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \

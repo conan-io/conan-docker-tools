@@ -3,7 +3,9 @@ FROM ubuntu:yakkety
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH}
+    PATH=/opt/pyenv/shims:${PATH} \
+    CXX=/usr/bin/g++ \
+    CC=/usr/bin/gcc
 
 COPY sources.list /etc/apt/sources.list
 
