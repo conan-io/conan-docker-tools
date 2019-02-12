@@ -13,20 +13,16 @@ ENV CC=arm-linux-gnueabihf-gcc \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-6
 
-RUN sudo dpkg --add-architecture armhf
-RUN sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list
-
-USER root
-RUN PREFIX="deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/" \
-  && SUFFIX="main restricted universe multiverse" \
-  && DEST="/etc/apt/sources.list.d/armhf.list" \
-  && echo "${PREFIX} artful ${SUFFIX}" >> ${DEST} \
-  && echo "${PREFIX} artful-updates ${SUFFIX}" >> ${DEST} \
-  && echo "${PREFIX} artful-security ${SUFFIX}" >> ${DEST} \
-  && echo "${PREFIX} artful-backports ${SUFFIX}" >> ${DEST}
-USER conan
-
-RUN sudo apt-get -qq update \
+RUN sudo dpkg --add-architecture armhf \
+    && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
+    && PREFIX="deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/" \
+    && SUFFIX="main restricted universe multiverse" \
+    && DEST="/etc/apt/sources.list.d/armhf.list" \
+    && echo "${PREFIX} artful ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
+    && echo "${PREFIX} artful-updates ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
+    && echo "${PREFIX} artful-security ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
+    && echo "${PREFIX} artful-backports ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
+    && sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*6.*arm-linux-gnueabihf.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-6 100 \
