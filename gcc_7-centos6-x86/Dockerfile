@@ -85,6 +85,10 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && chown -R conan:1001 /opt/pyenv \
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf
 
+# Fix sudo with arguments: https://bugzilla.redhat.com/show_bug.cgi?id=1319936
+COPY sudo /opt/rh/devtoolset-7/root/usr/bin/sudo
+RUN chmod a+x /opt/rh/devtoolset-7/root/usr/bin/sudo
+
 USER conan
 WORKDIR /home/conan
 
