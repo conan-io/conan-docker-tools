@@ -168,6 +168,13 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-armv7hf:${DOCKER_BUILD_TAG}"
         container_name: gcc7-armv7hf
         tty: true
+    gcc7-mingw:
+        build:
+            context: gcc_7-mingw
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc7-mingw:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-mingw
+        tty: true
     gcc72:
         build:
             context: gcc_7.2
