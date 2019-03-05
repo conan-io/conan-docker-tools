@@ -3,7 +3,9 @@ FROM ubuntu:artful
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH}
+    PATH=/opt/pyenv/shims:${PATH} \
+    CC=/usr/bin/gcc \
+    CXX=/usr/bin/g++
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \

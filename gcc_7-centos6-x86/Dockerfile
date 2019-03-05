@@ -9,7 +9,9 @@ ENV PATH=/opt/pyenv/shims:/opt/rh/devtoolset-7/root/usr/bin:${PATH:+:${PATH}} \
     PCP_DIR=/opt/rh/devtoolset-7/root \
     PERL5LIB=/opt/rh/devtoolset-7/root//usr/lib64/perl5/vendor_perl:/opt/rh/devtoolset-7/root/usr/lib/perl5:/opt/rh/devtoolset-7/root//usr/share/perl5/vendor_perl${PERL5LIB:+:${PERL5LIB}} \
     LD_LIBRARY_PATH=/opt/rh/devtoolset-7/root/usr/lib64:/opt/rh/devtoolset-7/root/usr/lib:/opt/rh/devtoolset-7/root/usr/lib64/dyninst:/opt/rh/devtoolset-7/root/usr/lib/dyninst${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
-    PYENV_ROOT=/opt/pyenv
+    PYENV_ROOT=/opt/pyenv \
+    CXX=/opt/rh/devtoolset-7/root/usr/bin/g++ \
+    CC=/opt/rh/devtoolset-7/root/usr/bin/gcc
 
 COPY cloudlinux.repo /etc/yum.repos.d/cloudlinux.repo
 
