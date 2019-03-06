@@ -13,15 +13,10 @@ ENV CC=arm-linux-gnueabihf-gcc-8 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-8
 
+COPY armhf.list /etc/apt/sources.list.d/armhf.list
+
 RUN sudo dpkg --add-architecture armhf \
     && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
-    && PREFIX="deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/" \
-    && SUFFIX="main restricted universe multiverse" \
-    && DEST="/etc/apt/sources.list.d/armhf.list" \
-    && echo "${PREFIX} bionic ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
-    && echo "${PREFIX} bionic-updates ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
-    && echo "${PREFIX} bionic-security ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
-    && echo "${PREFIX} bionic-backports ${SUFFIX}" | sudo tee -a ${DEST} > /dev/null \
     && sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
        ".*8.*arm-linux-gnueabihf.*" \
