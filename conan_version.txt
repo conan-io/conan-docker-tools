@@ -22,3 +22,5 @@ Bumped for Conan 1.12.2
 
 Bumped for Conan 1.12.3
 
+Bumped for Conan 1.13.0
+
