@@ -1,5 +1,5 @@
 jobs:
-- job: Build Docker Images
+- job: conan-docker-tools
   pool:
     vmImage: 'ubuntu-16.04'
   timeoutInMinutes: 120
