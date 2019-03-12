@@ -168,6 +168,13 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-armv7hf:${DOCKER_BUILD_TAG}"
         container_name: gcc7-armv7hf
         tty: true
+    gcc7-mingw:
+        build:
+            context: gcc_7-mingw
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc7-mingw:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-mingw
+        tty: true
     gcc72:
         build:
             context: gcc_7.2
@@ -284,8 +291,24 @@ services:
         build:
             context: conan_server
             dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${CONAN_VERSION}
         image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
         container_name: conan_server
+    gcc7-centos6:
+        build:
+            context: gcc_7-centos6
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc7-centos6:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-centos6
+        tty: true
+    gcc7-centos6-x86:
+        build:
+            context: gcc_7-centos6-x86
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc7-centos6-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-centos6-x86
+        tty: true
     msvc14:
         build:
             context: msvc_14

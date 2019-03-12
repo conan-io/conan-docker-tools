@@ -5,7 +5,9 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH}
+    PATH=/opt/pyenv/shims:${PATH} \
+    CXX=/usr/bin/g++ \
+    CC=/usr/bin/gcc
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
@@ -13,7 +15,6 @@ RUN apt-get -qq update \
        binutils=2.* \
        wget=1.19.4-1ubuntu2.1 \
        git=1:2.* \
-       vim=2:8.0.1453-1ubuntu1 \
        libc6-dev=2.27-3ubuntu1 \
        linux-libc-dev=4.* \
        g++-8=8.2.0-1ubuntu2~18.04 \
@@ -23,7 +24,6 @@ RUN apt-get -qq update \
        libc6-dev=2.27-3ubuntu1 \
        nasm=2.13.02-0.1 \
        dh-autoreconf=17 \
-       valgrind=1:3.13.0-2ubuntu2 \
        ninja-build=1.8.2-1 \
        libffi-dev=3.2.1-8 \
        libssl-dev=1.* \
@@ -38,7 +38,7 @@ RUN apt-get -qq update \
        libncurses5-dev=6.* \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
-       ca-certificates=20180409 \    
+       ca-certificates=20180409 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 \
@@ -66,11 +66,13 @@ RUN apt-get -qq update \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && pyenv install 3.7.1 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.1 \
     && pyenv global 3.7.1 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan \
+    && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
@@ -82,4 +84,3 @@ WORKDIR /home/conan
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
     && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc
-

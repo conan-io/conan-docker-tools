@@ -13,7 +13,11 @@ ENV CC=arm-linux-gnueabihf-gcc-8 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-8
 
-RUN sudo apt-get -qq update \
+COPY armhf.list /etc/apt/sources.list.d/armhf.list
+
+RUN sudo dpkg --add-architecture armhf \
+    && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
+    && sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
        ".*8.*arm-linux-gnueabihf.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-8 100 \
@@ -22,6 +26,6 @@ RUN sudo apt-get -qq update \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-dump arm-linux-gnueabihf-gcov-dump /usr/bin/arm-linux-gnueabihf-gcov-dump-8 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-tool arm-linux-gnueabihf-gcov-tool /usr/bin/arm-linux-gnueabihf-gcov-tool-8 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && pip install -q --no-cache-dir conan --upgrade \
+    && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7hf default

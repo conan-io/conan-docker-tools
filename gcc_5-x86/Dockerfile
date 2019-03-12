@@ -5,7 +5,9 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH}
+    PATH=/opt/pyenv/shims:${PATH} \
+    CXX=/usr/bin/g++ \
+    CC=/usr/bin/gcc
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
@@ -13,7 +15,6 @@ RUN apt-get -qq update \
        build-essential=12.1ubuntu2 \
        wget=1.17.* \
        git=1:2.7.* \
-       vim=2:7.* \
        g++=4:5.3.* \
        libgmp-dev=2:6.1.0+dfsg-2 \
        libmpfr-dev=3.1.4-1 \
@@ -21,7 +22,6 @@ RUN apt-get -qq update \
        libc6-dev=2.23* \
        nasm=2.11.08-1 \
        dh-autoreconf=11 \
-       valgrind=1:3.11.0-1ubuntu4.2 \
        ninja-build=1.5.1-0.1ubuntu1  \
        libffi-dev=3.2.1-4 \
        libssl-dev=1.0.2* \
@@ -59,11 +59,13 @@ RUN apt-get -qq update \
        && /tmp/pyenv-installer \
        && rm /tmp/pyenv-installer \
        && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-       && pyenv install 3.7.1 \
+       && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.1 \
        && pyenv global 3.7.1 \
        && pip install -q --upgrade --no-cache-dir pip \
-       && pip install -q --no-cache-dir conan \
+       && pip install -q --no-cache-dir conan conan-package-tools \
        && chown -R conan:1001 /opt/pyenv \
+       # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
        && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
        && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
        && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

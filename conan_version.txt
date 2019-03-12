@@ -1,2 +1,26 @@
 Bumped for Conan 1.9.1
 
+Bumped for Conan 1.9.2
+
+Bumped for Conan 1.10.0
+
+Bumped for Conan 1.10.1
+
+Bumped for Conan 1.10.2
+
+Bumped for Conan 1.11.0
+
+Bumped for Conan 1.11.1
+
+Bumped for Conan 1.11.2
+
+Bumped for Conan 1.12.0
+
+Bumped for Conan 1.12.1
+
+Bumped for Conan 1.12.2
+
+Bumped for Conan 1.12.3
+
+Bumped for Conan 1.13.0
+

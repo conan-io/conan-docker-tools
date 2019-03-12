@@ -14,11 +14,9 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     build-essential=12.* \
     wget=1.16.* \
     git=1:2.5.* \
-    vim=2:7.4.* \
     nasm=2.11.* \
     dh-autoreconf=10 \
     libc6:armhf \
-    valgrind=1:3.11.* \
     ninja-build=1.3.* \
     libffi-dev=3.2.* \
     libssl-dev=1.0.2* \
@@ -38,6 +36,9 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.12/Help \
     && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
     && rm -rf cmake-3.12.1-Linux-x86_64 \
     && rm cmake-3.12.1-Linux-x86_64.tar.gz \
@@ -54,11 +55,13 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && pyenv install 3.6.7 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
     && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan \
+    && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
+    # remove all __pycache__ directories created by pyenv
+    && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \

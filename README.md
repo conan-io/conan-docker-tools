@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 [![Travis Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/github/conan-io/conan-docker-tools.svg?svg=true)](https://ci.appveyor.com/project/conan-io/conan-docker-tools)
 [![Azure Build Status](https://dev.azure.com/conanio/conan-devops/_apis/build/status/conan-io.conan-docker-tools)](https://dev.azure.com/conanio/conan-devops/_build/latest)
 # conan-docker-tools
+=======
+[![Build Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
+# Conan Docker Tools
+>>>>>>> 50076fcc6cafb5a77b4f262f4b2410387ce9f9ce
 
 ![logo](logo.png)
 
@@ -42,6 +47,8 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | [conanio/gcc6-armv7hf: gcc 6](https://hub.docker.com/r/conanio/gcc6-armv7hf/)      | armv7hf |  Supported           |
 | [conanio/gcc7-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-x86/)              | x86     |  Supported           |
 | [conanio/gcc7: gcc 7](https://hub.docker.com/r/conanio/gcc7/)                      | x86_64  |  Supported           |
+| [conanio/gcc7-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-centos6/)      | x86_64  |  Supported           |
+| [conanio/gcc7-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-centos6-x86/) | x86  |  Supported           |
 | [conanio/gcc7-armv7: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7/)          | armv7   |  Supported           |
 | [conanio/gcc7-armv7hf: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7hf/)      | armv7hf |  Supported           |
 | [conanio/gcc8-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-x86/)              | x86     |  Supported           |
@@ -69,11 +76,23 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 
 #### Visual Studio
 
-| Version                                                                                       | Arch       |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------|------------|------------|
-| - [conanio/msvc14: Visual Studio 2015 14](https://hub.docker.com/r/conanio/msvc14/) | x86_64/x86 |  Supported |
-| - [conanio/msvc15: Visual Studio 2017 15](https://hub.docker.com/r/conanio/msvc15/) | x86_64/x86 |  Supported |
+We can not re-distribute Windows docker images, since Visual Studio Build Tools is licensed as supplemental license for Visual Studio.
+To have more information about: https://github.com/Microsoft/vs-dockerfiles#samples
+However, you can download the Docker recipe and build.
 
+#### Conan Server
+
+Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host.
+
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)             | ANY |  Supported |
+
+#### Conan Installer
+
+**conanio/gcc7-centos6** is a special image version based on CentOS 6, GCC 7 and **glibc 2.12** (very old glibc version). This is intended to build executables that run almost on any Linux because **glibc** guarantees backward compatibility. You can use this image to build your Conan build tools packages (`build_requires`). This image is **ONLY** able to build **x86_64** binaries.
+
+**conanio/gcc7-centos6-x86** is a special image version based on CentOS 6 i386, GCC 7 and **glibc 2.12** (very old glibc version). This is intended to build executables that run almost on any Linux because **glibc** guarantees backward compatibility. You can use this image to build your Conan build tools packages (`build_requires`). This image is **ONLY** able to build **x86** binaries.
 
 Use the images to test your c++ project in travis-ci
 ======================================================
@@ -250,7 +269,7 @@ The same build variables, as ``CONAN_GCC_VERSIONS``, ``CONAN_CLANG_VERSIONS`` an
 
 All tests build the package ``gtest/1.8.1``, for x86 and x86_64.
 
-``Gcc`` images use libstdc++.  
+``Gcc`` images use libstdc++.
 ``Clang`` images use libc++ and libstdc++.
 ``Visual Studio`` images use MD for runtime.
 
@@ -288,3 +307,4 @@ Upload related variables:
 - **DOCKER_PASSWORD**: Your Docker password to authenticate in Docker server
 - **DOCKER_UPLOAD**: If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
 - **BUILD_CONAN_SERVER_IMAGE**: If attributest to true, it will build and upload an image with the conan_server
+- **DOCKER_UPLOAD_ONLY_WHEN_STABLE**: Only upload only when is master branch.
