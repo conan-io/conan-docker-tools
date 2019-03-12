@@ -13,7 +13,11 @@ ENV CC=arm-linux-gnueabihf-gcc-7 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-7
 
-RUN sudo apt-get -qq update \
+COPY armhf.list /etc/apt/sources.list.d/armhf.list
+
+RUN sudo dpkg --add-architecture armhf \
+    && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
+    && sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        ".*7.*arm-linux-gnueabihf.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-7 100 \

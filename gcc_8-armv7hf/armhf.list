@@ -1,0 +1,4 @@
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic main restricted universe multiverse
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic-updates main restricted universe multiverse
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic-security main restricted universe multiverse
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic-backports main restricted universe multiverse
