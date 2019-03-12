@@ -39,6 +39,7 @@ RUN apt-get -qq update \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
        ca-certificates=20170717 \
+       autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 100 \

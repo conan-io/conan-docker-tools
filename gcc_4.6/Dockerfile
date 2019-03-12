@@ -32,6 +32,7 @@ RUN apt-get -qq update \
        libncursesw5-dev=5.* \
        liblzma-dev=5.* \
        ca-certificates \
+       autoconf-archive \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate -O /tmp/cmake-3.12.1-Linux-x86_64.tar.gz http://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
     && tar -xzf /tmp/cmake-3.12.1-Linux-x86_64.tar.gz -C /tmp \
