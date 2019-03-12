@@ -27,6 +27,7 @@ RUN printf "i686" >  /etc/yum/vars/arch \
        mpfr-devel \
        libmpc-devel \
        nasm \
+       m4 \
        libffi-devel \
        pkgconfig \
        subversion \
