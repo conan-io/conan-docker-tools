@@ -1,4 +1,4 @@
-FROM ubuntu:cosmic
+FROM ubuntu:disco
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -14,28 +14,30 @@ RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get install -y --no-install-recommends \
        sudo=1.8.* \
-       wget=1.19.* \
-       git=1:2.19.* \
+       wget=1.20.* \
+       git=1:2.* \
+       g++-multilib=4:8.* \
+       clang-8=1:8* \
        make=4.2.* \
        libc6-dev-i386=2.* \
-       libgmp-dev=2:6.1.* \
-       libmpfr-dev=4.0.* \
-       libmpc-dev=1.1.* \
-       nasm=2.13* \
+       libgmp-dev=2:6.* \
+       libmpfr-dev=4.* \
+       libmpc-dev=1.* \
+       nasm=2.* \
        dh-autoreconf=19 \
-       libffi-dev=3.2.* \
+       libffi-dev=3.* \
        libssl-dev=1* \
-       ninja-build=1.8.* \
-       libc++-dev=6.0.* \
-       libc++-dev:i386=6.0.* \
-       libc++abi-dev=6.0.* \
-       libc++abi-dev:i386=6.0.* \
+       ninja-build=1.* \
+       libc++-dev=1:8.* \
+       libc++-dev:i386=1:8.* \
+       libc++abi-dev=1:8.* \
+       libc++abi-dev:i386=1:8.* \
        pkg-config=0.29.* \
-       subversion=1.10.* \
+       subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
-       libreadline-dev=7.* \
+       libreadline-dev=8.* \
        xz-utils=5.* \
        curl=7.* \
        libncurses5-dev=6.* \
@@ -43,11 +45,6 @@ RUN dpkg --add-architecture i386 \
        liblzma-dev=5.* \
        gnupg=2.* \
        ca-certificates \
-    && wget -q --no-check-certificate -O /tmp/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key \
-    && apt-key add /tmp/llvm-snapshot.gpg.key \
-    && printf "deb http://apt.llvm.org/unstable/ llvm-toolchain-8 main" >> /etc/apt/sources.list \
-    && apt-get -qq update \
-    && apt-get install -y --no-install-recommends clang-8=1:8* \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-8 100 \
