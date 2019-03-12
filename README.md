@@ -65,6 +65,8 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang60: clang 6.0](https://hub.docker.com/r/conanio/clang60/)             | x86_64 |  Supported |
 | - [conanio/clang7-x86: clang 7](https://hub.docker.com/r/conanio/clang7-x86/)         | x86    |  Supported |
 | - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
+| - [conanio/clang8-x86: clang 8](https://hub.docker.com/r/conanio/clang8-x86/)         | x86    |  Supported |
+| - [conanio/clang8: clang 8](https://hub.docker.com/r/conanio/clang8/)                 | x86_64 |  Supported |
 
 
 #### Conan Server

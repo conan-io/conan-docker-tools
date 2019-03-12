@@ -309,3 +309,17 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-centos6-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc7-centos6-x86
         tty: true
+    clang8:
+        build:
+            context: clang_8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/clang8:${DOCKER_BUILD_TAG}"
+        container_name: clang7
+        tty: true
+    clang8-x86:
+        build:
+            context: clang_8-x86
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/clang8-x86:${DOCKER_BUILD_TAG}"
+        container_name: clang8-x86
+        tty: true
