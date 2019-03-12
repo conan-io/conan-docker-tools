@@ -10,6 +10,7 @@ import requests
 import time
 from humanfriendly import format_size
 from conans import __version__ as client_version
+from cpt.packager import ConanMultiPackager
 
 
 class ConanDockerTools(object):
@@ -41,6 +42,7 @@ class ConanDockerTools(object):
         :return: Variables
         """
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
+        docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
         build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
@@ -63,10 +65,10 @@ class ConanDockerTools(object):
             "docker_username, docker_login_username, "
             "gcc_versions, docker_distro, "
             "clang_versions, build_server, "
-            "docker_build_tag, docker_archs")
+            "docker_build_tag, docker_archs, docker_upload_only_when_stable")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, docker_distro, clang_versions, build_server,
-                         docker_build_tag, docker_archs)
+                         docker_build_tag, docker_archs, docker_upload_only_when_stable)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -75,6 +77,13 @@ class ConanDockerTools(object):
         return os.getenv(var, default.lower()).lower() in ["1", "true", "yes"]
 
     def login(self):
+        if self.variables.docker_upload_only_when_stable:
+            packager = ConanMultiPackager()
+            ci_manager = packager.ci_manager
+            if ci_manager.get_branch() != "master" or ci_manager.is_pull_request():
+                logging.info("Skipped login, is not stable branch")
+                return
+
         if not self.variables.docker_upload:
             logging.info("Skipped login, DOCKER_UPLOAD is not activated")
             return
