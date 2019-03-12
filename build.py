@@ -10,7 +10,8 @@ import requests
 import time
 from humanfriendly import format_size
 from conans import __version__ as client_version
-from cpt.packager import ConanMultiPackager
+from cpt.ci_manager import CIManager
+from cpt.printer import Printer
 
 
 class ConanDockerTools(object):
@@ -78,8 +79,8 @@ class ConanDockerTools(object):
 
     def login(self):
         if self.variables.docker_upload_only_when_stable:
-            packager = ConanMultiPackager()
-            ci_manager = packager.ci_manager
+            printer = Printer()
+            ci_manager = CIManager(printer)
             if ci_manager.get_branch() != "master" or ci_manager.is_pull_request():
                 logging.info("Skipped login, is not stable branch")
                 return
