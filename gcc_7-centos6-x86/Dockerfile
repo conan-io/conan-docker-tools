@@ -19,7 +19,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && printf "i386" >  /etc/yum/vars/basearch \
     && yum update -y \
     && yum install -y \
-       sudo \
        wget \
        git \
        make \
@@ -28,7 +27,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
        mpfr-devel \
        libmpc-devel \
        nasm \
-       autoconf \
        libffi-devel \
        pkgconfig \
        subversion \
@@ -49,6 +47,32 @@ RUN printf "i686" >  /etc/yum/vars/arch \
        perl-core \
        help2man \
     && yum clean all \
+    && wget -O /tmp/autoconf-2.69.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
+    && tar -zxf /tmp/autoconf-2.69.tar.gz -C /tmp \
+    && pushd /tmp/autoconf-2.69 \
+    && ./configure --prefix=/usr \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/autoconf-2.69* \
+    && wget -O /tmp/automake-1.16.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/automake/automake-1.16.tar.gz \
+    && tar -zxf /tmp/automake-1.16.tar.gz -C /tmp \
+    && pushd /tmp/automake-1.16 \
+    && ./configure --prefix=/usr \
+    && sed -i "s/'none';/'reduce';/g" bin/automake.in \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/automake-1.16* \
+    && wget -O /tmp/sudo-1.8.27.tar.gz --no-check-certificate --quiet https://www.sudo.ws/dist/sudo-1.8.27.tar.gz \
+    && tar -zxf /tmp/sudo-1.8.27.tar.gz -C /tmp \
+    && pushd /tmp/sudo-1.8.27 \
+    && ./configure --prefix=/usr \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/sudo-1.8.27* \
+    && rm /opt/rh/devtoolset-7/root/usr/bin/sudo \
     && wget --no-check-certificate --quiet -O /tmp/cmake-3.12.1.tar.gz https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
     && tar -xzf /tmp/cmake-3.12.1.tar.gz -C /tmp \
     && pushd /tmp/cmake-3.12.1 \
