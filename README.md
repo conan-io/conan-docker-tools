@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
-# conan-docker-tools
+[![Build Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
+# Conan Docker Tools
 
 ![logo](logo.png)
 
@@ -239,3 +239,4 @@ Upload related variables:
 - **DOCKER_PASSWORD**: Your Docker password to authenticate in Docker server
 - **DOCKER_UPLOAD**: If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
 - **BUILD_CONAN_SERVER_IMAGE**: If attributest to true, it will build and upload an image with the conan_server
+- **DOCKER_UPLOAD_ONLY_WHEN_STABLE**: Only upload only when is master branch.
