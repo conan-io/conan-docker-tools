@@ -15,6 +15,7 @@ RUN apk add --no-cache gcc libc-dev \
     && pip3 install -r conans/requirements_server.txt \
     && pip3 install gunicorn \
     && apk del gcc libc-dev \
+    # Do not migrate anything. Only populate ~/.conan_server
     && PYTHONPATH=${PWD} python conans/conan_server.py --migrate
 
 EXPOSE 9300
