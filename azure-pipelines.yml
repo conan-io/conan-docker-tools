@@ -1,4 +1,5 @@
-- job: Linux
+jobs:
+- job: Docker
   pool:
     vmImage: 'ubuntu-16.04'
   timeoutInMinutes: 120
