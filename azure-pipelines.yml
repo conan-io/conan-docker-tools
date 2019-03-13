@@ -1,26 +1,4 @@
-jobs:
-- job: Windows
-  pool:
-    vmImage: 'VS2017-Win2016'
-  timeoutInMinutes: 120
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
-      architecture: 'x64'
-  - script: |
-      pip install docker-compose humanfriendly conan conan-package-tools
-      python build.py
-    env:
-      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
-  strategy:
-    matrix:
-      Visual Studio 2015 14.0:
-        VISUAL_VERSIONS: "14"
-      Visual Studio 2017 15.0:
-        VISUAL_VERSIONS: "15"
-
-- job: Unix
+- job: Linux
   pool:
     vmImage: 'ubuntu-16.04'
   timeoutInMinutes: 120
