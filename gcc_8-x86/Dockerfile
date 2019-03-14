@@ -17,7 +17,7 @@ RUN apt-get -qq update \
        git=1:2.* \
        libc6-dev=2.27-3ubuntu1 \
        linux-libc-dev=4.* \
-       g++-8=8.2.0-1ubuntu2~18.04 \
+       g++-8 \
        libgmp-dev=2:6.1.2+dfsg-2 \
        libmpfr-dev=4.0.1-1 \
        libmpc-dev=1.1.0-1 \
@@ -84,3 +84,4 @@ WORKDIR /home/conan
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
     && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc
+

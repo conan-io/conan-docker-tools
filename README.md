@@ -154,53 +154,6 @@ You need to modify:
 
 ```
 
-Use the images to test your c++ project in appveyor
-===================================================
-
-These Docker images can be used to build your project using the Appveyor CI service, even if you are not using Conan.
-
-- If you do not want to use Docker over Appveyor, there are Visual Studio [images](https://www.appveyor.com/docs/windows-images-software) provided by Appveyor.
-- Appveyor supports Windows docker images based on Windows Server 2016. If are interested to know more about container compability, check
- [here](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/version-compatibility).
-- Use ``appveyor.yml`` file to enable or disable Visual Studio version
-
-- ``appveyor.yml`` file to enable or disable more ``Visual Studio`` versions add more entries to the matrix using DOCKER_IMAGE
-- ``.ci/run_project_build.bat`` With the lines that you need to build or test your project
-
-**appveyor.yml**
-
-```
-    image: Visual Studio 2017
-
-    matrix:
-      - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 14
-          DOCKER_IMAGE: conanio/msvc14
-      - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          DOCKER_IMAGE: conanio/msvc15
-
-    install:
-      - set PATH=%PATH%;%PYTHON%/Scripts/
-      - pip.exe install conan --upgrade
-      - pip.exe install conan_package_tools bincrafters_package_tools
-      - conan user # It creates the conan data directory
-
-    test_script:
-      - .ci/run_project_build.bat
-
-    build: false
-```
-
-**.ci/run_project_build.bat**. Change it according your project build needed commands:
-
-```
-    rmdir /s build && mkdir build && cd build
-    conan install ../ --build=missing
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
-    cmake --build .
-
-```
 
 Use the images locally
 ======================

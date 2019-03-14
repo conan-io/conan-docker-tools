@@ -1,4 +1,4 @@
-version: '2.4'
+version: '3'
 services:
     gcc46:
         build:
@@ -316,8 +316,6 @@ services:
         image: "${DOCKER_USERNAME}/msvc14:${DOCKER_BUILD_TAG}"
         container_name: msvc14
         tty: true
-        storage_opt:
-            size: '50G'
     msvc15:
         build:
             context: msvc_15
@@ -325,5 +323,4 @@ services:
         image: "${DOCKER_USERNAME}/msvc15:${DOCKER_BUILD_TAG}"
         container_name: msvc15
         tty: true
-        storage_opt:
-            size: '50G'
+
