@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-[![Travis Build Status](https://travis-ci.org/conan-io/conan-docker-tools.svg?branch=master)](https://travis-ci.org/conan-io/conan-docker-tools)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/github/conan-io/conan-docker-tools.svg?svg=true)](https://ci.appveyor.com/project/conan-io/conan-docker-tools)
-[![Azure Build Status](https://dev.azure.com/conanio/conan-devops/_apis/build/status/conan-io.conan-docker-tools)](https://dev.azure.com/conanio/conan-devops/_build/latest)
-# conan-docker-tools
-=======
 [![Build Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
 # Conan Docker Tools
->>>>>>> 50076fcc6cafb5a77b4f262f4b2410387ce9f9ce
 
 ![logo](logo.png)
 
