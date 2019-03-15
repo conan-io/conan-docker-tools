@@ -16,6 +16,7 @@ ENV PATH=/opt/rh/rh-python36/root/usr/bin:/opt/rh/devtoolset-7/root/usr/bin:${PA
 RUN yum update -y \
     && yum install -y centos-release-scl \
     && yum install -y \
+       sudo \
        wget \
        git \
        make \

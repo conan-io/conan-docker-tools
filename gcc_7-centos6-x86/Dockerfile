@@ -19,6 +19,7 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && printf "i386" >  /etc/yum/vars/basearch \
     && yum update -y \
     && yum install -y \
+       sudo \
        wget \
        git \
        make \
