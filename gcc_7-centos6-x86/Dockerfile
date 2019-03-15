@@ -65,15 +65,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && make install \
     && popd \
     && rm -rf /tmp/automake-1.16* \
-    && wget -O /tmp/sudo-1.8.27.tar.gz --no-check-certificate --quiet https://www.sudo.ws/dist/sudo-1.8.27.tar.gz \
-    && tar -zxf /tmp/sudo-1.8.27.tar.gz -C /tmp \
-    && pushd /tmp/sudo-1.8.27 \
-    && ./configure --prefix=/usr \
-    && make -s \
-    && make install \
-    && popd \
-    && rm -rf /tmp/sudo-1.8.27* \
-    && rm /opt/rh/devtoolset-7/root/usr/bin/sudo \
     && wget --no-check-certificate --quiet -O /tmp/cmake-3.12.1.tar.gz https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
     && tar -xzf /tmp/cmake-3.12.1.tar.gz -C /tmp \
     && pushd /tmp/cmake-3.12.1 \

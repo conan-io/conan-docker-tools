@@ -57,15 +57,6 @@ RUN yum update -y \
     && make install \
     && popd \
     && rm -rf /tmp/automake-1.16* \
-    && wget -O /tmp/sudo-1.8.27.tar.gz --no-check-certificate --quiet https://www.sudo.ws/dist/sudo-1.8.27.tar.gz \
-    && tar -zxf /tmp/sudo-1.8.27.tar.gz -C /tmp \
-    && pushd /tmp/sudo-1.8.27 \
-    && ./configure --prefix=/usr \
-    && make -s \
-    && make install \
-    && popd \
-    && rm -rf /tmp/sudo-1.8.27* \
-    && rm /opt/rh/devtoolset-7/root/usr/bin/sudo \
     && wget -O /tmp/cmake-3.12.1-Linux-x86_64.sh --no-check-certificate --quiet 'https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.sh' \
     && bash /tmp/cmake-3.12.1-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir \
     && rm /tmp/cmake-3.12.1-Linux-x86_64.sh \
