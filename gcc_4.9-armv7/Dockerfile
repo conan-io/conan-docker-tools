@@ -30,6 +30,7 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     libncursesw5-dev=5.* \
     liblzma-dev=5.* \
     ca-certificates \
+    autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \

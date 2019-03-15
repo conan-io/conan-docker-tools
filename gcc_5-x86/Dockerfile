@@ -37,6 +37,7 @@ RUN apt-get -qq update \
        liblzma-dev=5.* \
        pkg-config=0.29.1-0ubuntu1 \
        ca-certificates=20170717~16.04.1 \
+       autoconf-archive \
        && rm -rf /var/lib/apt/lists/* \
        && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
        && tar -xzf cmake-3.12.1.tar.gz \

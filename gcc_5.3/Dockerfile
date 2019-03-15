@@ -82,6 +82,7 @@ RUN dpkg --add-architecture i386 \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
        ca-certificates \
+       autoconf-archive \
     && ln -s /usr/bin/g++-5 /usr/bin/g++ \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \

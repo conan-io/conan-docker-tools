@@ -48,6 +48,7 @@ RUN printf "i686" >  /etc/yum/vars/arch \
        libtool \
        perl-core \
        help2man \
+       autoconf-archive \
     && yum clean all \
     && wget --no-check-certificate --quiet -O /tmp/cmake-3.12.1.tar.gz https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
     && tar -xzf /tmp/cmake-3.12.1.tar.gz -C /tmp \
