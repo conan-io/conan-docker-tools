@@ -27,7 +27,7 @@ RUN yum update -y \
        mpfr-devel \
        libmpc-devel \
        nasm \
-       autoconf \
+       m4 \
        libffi-devel \
        openssl-devel \
        pkgconfig \
@@ -42,6 +42,23 @@ RUN yum update -y \
        help2man \
        autoconf-archive \
     && yum clean all \
+    && wget -O /tmp/autoconf-2.69.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
+    && tar -zxf /tmp/autoconf-2.69.tar.gz -C /tmp \
+    && pushd /tmp/autoconf-2.69 \
+    && ./configure --prefix=/usr \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/autoconf-2.69* \
+    && wget -O /tmp/automake-1.16.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/automake/automake-1.16.tar.gz \
+    && tar -zxf /tmp/automake-1.16.tar.gz -C /tmp \
+    && pushd /tmp/automake-1.16 \
+    && ./configure --prefix=/usr \
+    && sed -i "s/'none';/'reduce';/g" bin/automake.in \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/automake-1.16* \
     && wget -O /tmp/cmake-3.12.1-Linux-x86_64.sh --no-check-certificate --quiet 'https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.sh' \
     && bash /tmp/cmake-3.12.1-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir \
     && rm /tmp/cmake-3.12.1-Linux-x86_64.sh \
