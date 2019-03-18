@@ -152,12 +152,12 @@ You need to modify:
 
 #### Jenkins Slave
 
-If you use Jenkins to build your packages and also you use Jenkins Slave to run each docker container, you could use our Docker images prepared for Jenkins Slave. Those images run the script [jenkins-slave.sh](jenkins-jnlp-slave/jenkins-slave), which starts the slave during the container entrypoint.
+If you use Jenkins to build your packages and also you use Jenkins Slave to run each docker container, you could use our Docker images prepared for Jenkins Slave. Those images run the script [jenkins-slave.sh](jenkins-jenkins/jenkins-slave), which starts the slave during the container entrypoint.
 
 #### GCC
 | Version                                                                                       | Arch    |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|---------|------------|
-| [conanio/gcc5-jnlp-slave: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave/)           | x86_64  |  Supported |
+| [conanio/gcc5-jenkins: gcc 5](https://hub.docker.com/r/conanio/gcc5-jenkins/)           | x86_64  |  Supported |
 
 
 Use the images locally
