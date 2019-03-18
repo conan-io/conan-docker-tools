@@ -18,7 +18,7 @@ COPY arm64.list /etc/apt/sources.list.d/arm64.list
 RUN sudo dpkg --add-architecture arm64 \
     && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
     && sudo apt-get -qq update \
-    && sudo apt-get install -y --force-yes --no-install-recommends \
+    && sudo apt-get install -y --no-install-recommends \
        ".*6.*aarch64-linux-gnu.*" \
     && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-6 100 \
     && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-6 100 \
