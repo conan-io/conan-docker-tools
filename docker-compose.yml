@@ -77,6 +77,13 @@ services:
         image: "${DOCKER_USERNAME}/gcc5-armv7hf:${DOCKER_BUILD_TAG}"
         container_name: gcc5-armv7hf
         tty: true
+    gcc5-armv8:
+        build:
+            context: gcc_5-armv8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc5-armv8:${DOCKER_BUILD_TAG}"
+        container_name: gcc5-armv8
+        tty: true
     gcc52:
         build:
             context: gcc_5.2
@@ -126,6 +133,13 @@ services:
         image: "${DOCKER_USERNAME}/gcc6-armv7hf:${DOCKER_BUILD_TAG}"
         container_name: gcc6-armv7hf
         tty: true
+    gcc6-armv8:
+        build:
+            context: gcc_6-armv8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc6-armv8:${DOCKER_BUILD_TAG}"
+        container_name: gcc6-armv8
+        tty: true
     gcc63:
         build:
             context: gcc_6.3
@@ -168,6 +182,13 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-armv7hf:${DOCKER_BUILD_TAG}"
         container_name: gcc7-armv7hf
         tty: true
+    gcc7-armv8:
+        build:
+            context: gcc_7-armv8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc7-armv8:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-armv8
+        tty: true
     gcc7-mingw:
         build:
             context: gcc_7-mingw
@@ -209,6 +230,13 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/gcc8-armv7hf:${DOCKER_BUILD_TAG}"
         container_name: gcc8-armv7hf
+        tty: true
+    gcc8-armv8:
+        build:
+            context: gcc_8-armv8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc8-armv8:${DOCKER_BUILD_TAG}"
+        container_name: gcc8-armv8
         tty: true
     clang38:
         build:

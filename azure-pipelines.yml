@@ -83,24 +83,36 @@ jobs:
       Ubuntu GCC 5 armv7hf:
         GCC_VERSIONS: "5"
         DOCKER_ARCHS: "x86_64,armv7hf"
+      Ubuntu GCC 5 armv8:
+        GCC_VERSIONS: "5"
+        DOCKER_ARCHS: "x86_64,armv8"
       Ubuntu GCC 6 armv7:
         GCC_VERSIONS: "6"
         DOCKER_ARCHS: "x86_64,armv7"
       Ubuntu GCC 6 armv7hf:
         GCC_VERSIONS: "6"
         DOCKER_ARCHS: "x86_64,armv7hf"
+      Ubuntu GCC 6 armv8:
+        GCC_VERSIONS: "6"
+        DOCKER_ARCHS: "x86_64,armv8"
       Ubuntu GCC 7 armv7:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64,armv7"
       Ubuntu GCC 7 armv7hf:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64,armv7hf"
+      Ubuntu GCC 7 armv8:
+        GCC_VERSIONS: "7"
+        DOCKER_ARCHS: "x86_64,armv8"
       Ubuntu GCC 8 armv7:
         GCC_VERSIONS: "8"
         DOCKER_ARCHS: "x86_64,armv7"
       Ubuntu GCC 8 armv7hf:
         GCC_VERSIONS: "8"
         DOCKER_ARCHS: "x86_64,armv7hf"
+      Ubuntu GCC 8 armv8:
+        GCC_VERSIONS: "8"
+        DOCKER_ARCHS: "x86_64,armv8"
 
       Ubuntu Clang 3.8 x86_64:
         CLANG_VERSIONS: "3.8"
