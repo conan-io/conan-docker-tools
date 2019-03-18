@@ -155,6 +155,10 @@ class ConanDockerTools(object):
         :param service: Docker compose service name
         :param distro: Use other linux distro
         """
+        if distro == "jenkins":
+            logging.info("Skipping Docker Test. There is no test for %s." % self.service)
+            return
+
         logging.info("Testing Docker by service %s." % self.service)
         try:
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]

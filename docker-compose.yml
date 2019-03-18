@@ -336,4 +336,43 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/android-clang8-armv8:${DOCKER_BUILD_TAG}"
         container_name: android-clang8-armv8
+    gcc46-jenkins:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc5
+        image: "${DOCKER_USERNAME}/gcc46-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc5-jnlp-slave
+        tty: true
+    gcc48-jenkins:
+        build:
+            context: gcc_4.8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc48:${DOCKER_BUILD_TAG}"
+        container_name: gcc48
+        tty: true
+    gcc48-x86-jenkins:
+        build:
+            context: gcc_4.8-x86
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc48-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc48-x86
+        tty: true
+    gcc49-jenkins:
+        build:
+            context: gcc_4.9
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc49:${DOCKER_BUILD_TAG}"
+        container_name: gcc49
+        tty: true
+
+    gcc5-jenkins:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc5
+        image: "${DOCKER_USERNAME}/gcc5-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc5-jnlp-slave
         tty: true

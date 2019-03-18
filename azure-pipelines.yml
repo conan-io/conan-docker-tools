@@ -15,6 +15,11 @@ jobs:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:
     matrix:
+      Jenkins Slave GCC 5 x86_64:
+        GCC_VERSIONS: "5"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jenkins"
+
       CentOS 6 GCC 7 x86_64:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64"
