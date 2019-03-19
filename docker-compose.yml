@@ -369,7 +369,7 @@ services:
 
     gcc5-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc5
