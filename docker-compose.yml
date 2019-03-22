@@ -376,3 +376,12 @@ services:
         image: "${DOCKER_USERNAME}/gcc5-jenkins:${DOCKER_BUILD_TAG}"
         container_name: gcc5-jenkins
         tty: true
+    gcc49-jenkins:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc49
+        image: "${DOCKER_USERNAME}/gcc49-jenkins:${DOCKER_BUILD_TAG}"
+        container_name: gcc49-jenkins
+        tty: true
