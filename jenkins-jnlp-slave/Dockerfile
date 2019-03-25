@@ -19,7 +19,7 @@ RUN /tmp/install-openjdk-ppa.sh \
     && curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${AGENT_VERSION}/remoting-${AGENT_VERSION}.jar \
     && chmod 755 /usr/share/jenkins \
     && chmod 644 /usr/share/jenkins/slave.jar \
-    && chmod +x /entrypoint.sh /usr/local/bin/jenkins-slave
+    && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-slave
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/opt/entrypoint.sh"]
 USER conan

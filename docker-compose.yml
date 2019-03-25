@@ -343,7 +343,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc46
         image: "${DOCKER_USERNAME}/gcc46-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc5-jnlp-slave
+        container_name: gcc46-jnlp-slave
         tty: true
     gcc48-jnlp-slave:
         build:
