@@ -309,3 +309,31 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-centos6-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc7-centos6-x86
         tty: true
+    android-clang8:
+        build:
+            context: android-clang_8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/android-clang8:${DOCKER_BUILD_TAG}"
+        container_name: android-clang8
+        tty: true
+    android-clang8-x86:
+        build:
+            context: android-clang_8-x86
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/android-clang8-x86:${DOCKER_BUILD_TAG}"
+        container_name: android-clang8-x86
+        tty: true
+    android-clang8-armv7:
+        build:
+            context: android-clang_8-armv7
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/android-clang8-armv7:${DOCKER_BUILD_TAG}"
+        container_name: android-clang8-armv7
+        tty: true
+    android-clang8-armv8:
+        build:
+            context: android-clang_8-armv8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/android-clang8-armv8:${DOCKER_BUILD_TAG}"
+        container_name: android-clang8-armv8
+        tty: true

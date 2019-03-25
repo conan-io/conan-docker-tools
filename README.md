@@ -67,6 +67,15 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
 
 
+#### Android
+
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [conanio/android-clang8: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8/)             | x86_64 |  Supported |
+| - [conanio/android-clang8-x86: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8-x86/)     | x86    |  Supported |
+| - [conanio/android-clang8-armv7: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8-armv7/) | x86    |  Supported |
+| - [conanio/android-clang8-armv8: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8-armv8/) | x86    |  Supported |
+
 #### Conan Server
 
 Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host.
@@ -232,6 +241,8 @@ Build and Test variables:
 - **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
 - **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
 - **DOCKER_BUILD_TAG**: Docker image tag, e.g "latest", "0.28.1"
+- **DOCKER_CACHE**: Allow to cache docker layers during the build, to speed up local testing
+- **DOCKER_CROSS**: Cross-compiling image prefix, currently only "android" is supported
 
 Upload related variables:
 

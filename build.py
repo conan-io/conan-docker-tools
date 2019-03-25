@@ -52,6 +52,8 @@ class ConanDockerTools(object):
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else [
             "x86_64"
         ]
+        docker_cross = os.getenv("DOCKER_CROSS", False)
+        docker_cache = os.getenv("DOCKER_CACHE", False)
         docker_distro = os.getenv("DOCKER_DISTRO", False)
         conan_version = os.getenv("CONAN_VERSION", client_version)
         os.environ["CONAN_VERSION"] = conan_version
@@ -66,10 +68,12 @@ class ConanDockerTools(object):
             "docker_username, docker_login_username, "
             "gcc_versions, docker_distro, "
             "clang_versions, build_server, "
-            "docker_build_tag, docker_archs, docker_upload_only_when_stable")
+            "docker_build_tag, docker_archs, docker_upload_only_when_stable, "
+            "docker_cross, docker_cache")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, docker_distro, clang_versions, build_server,
-                         docker_build_tag, docker_archs, docker_upload_only_when_stable)
+                         docker_build_tag, docker_archs, docker_upload_only_when_stable,
+                         docker_cross, docker_cache)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -126,8 +130,8 @@ class ConanDockerTools(object):
         :param service: service in compose e.g gcc54
         """
         logging.info("Starting build for service %s." % self.service)
-        # --no-cache
-        subprocess.check_call("docker-compose build --no-cache %s" % self.service, shell=True)
+        no_cache = "" if self.variables.docker_cache else "--no-cache"
+        subprocess.check_call("docker-compose build %s %s" % (no_cache, self.service), shell=True)
 
         output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
             % self.created_image_name, shell=True)
@@ -154,6 +158,8 @@ class ConanDockerTools(object):
         logging.info("Testing Docker by service %s." % self.service)
         try:
             libcxx_list = ["libstdc++"] if compiler_name == "gcc" else ["libstdc++", "libc++"]
+            if self.variables.docker_cross == "android":
+                libcxx_list = ["libc++"]
             sudo_commands = ["", "sudo"] if distro else ["", "sudo", "sudo -E"]
             subprocess.check_call("docker run -t -d --name %s %s" % (self.service,
                 self.created_image_name), shell=True)
@@ -218,7 +224,7 @@ class ConanDockerTools(object):
                                                        compiler_version, libcxx),
                     shell=True)
 
-            if "arm" in arch:
+            if "arm" in arch or self.variables.docker_cross == "android":
                 logging.warn("Skipping cmake_installer: cross-building results in Unverified HTTPS error")
             else:
                 subprocess.check_call(
@@ -271,12 +277,13 @@ class ConanDockerTools(object):
         """Execute all 3 stages for all versions in compilers list
         """
         distro = "" if not self.variables.docker_distro else "-%s" % self.variables.docker_distro
+        cross = "" if not self.variables.docker_cross else "%s-" % self.variables.docker_cross
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
                 for version in compiler.versions:
                     tag_arch = "" if arch == "x86_64" else "-%s" % arch
-                    service = "%s%s%s%s" % (compiler.name, version.replace(".", ""), distro, tag_arch)
-                    build_dir = "%s_%s%s%s" % (compiler.name, version, distro, tag_arch)
+                    service = "%s%s%s%s%s" % (cross, compiler.name, version.replace(".", ""), distro, tag_arch)
+                    build_dir = "%s%s_%s%s%s" % (cross, compiler.name, version, distro, tag_arch)
 
                     self.service = service
                     self.login()
