@@ -57,7 +57,7 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang38: clang 3.8](https://hub.docker.com/r/conanio/clang38/)             | x86_64 |  Supported |
 | - [conanio/clang39-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-x86/)     | x86    |  Supported |
 | - [conanio/clang39: clang 3.9](https://hub.docker.com/r/conanio/clang39/)             | x86_64 |  Supported |
-| - [conanio/clang40-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40/-x86)     | x86    |  Supported |
+| - [conanio/clang40-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-x86)      | x86    |  Supported |
 | - [conanio/clang40: clang 4.0](https://hub.docker.com/r/conanio/clang40/)             | x86_64 |  Supported |
 | - [conanio/clang50-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-x86/)     | x86    |  Supported |
 | - [conanio/clang50: clang 5.0](https://hub.docker.com/r/conanio/clang50/)             | x86_64 |  Supported |
@@ -155,6 +155,7 @@ You need to modify:| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r
 If you use Jenkins to build your packages and also you use Jenkins Slave to run each docker container, you could use our Docker images prepared for Jenkins Slave. Those images run the script [jenkins-slave.sh](jenkins-jenkins/jenkins-slave), which starts the slave during the container entrypoint.
 
 #### GCC
+
 | Version                                                                                       | Arch    |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|---------|------------|
 | [conanio/gcc46-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Supported |
@@ -173,6 +174,24 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 | [conanio/gcc8-jnlp-slave-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave-x86/)  | x86  |  Supported |
 | [conanio/gcc7-jnlp-slave-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6/)        | x86_64  |  Supported |
 | [conanio/gcc7-jnlp-slave-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6-x86/)  | x86  |  Supported |
+
+
+#### Clang
+
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [conanio/clang38-jnlp-slave: clang 3.8](https://hub.docker.com/r/conanio/clang38-jnlp-slave/)             | x86_64 |  Supported |
+| - [conanio/clang39-jnlp-slave-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave-x86/)     | x86    |  Supported |
+| - [conanio/clang39-jnlp-slave: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave/)             | x86_64 |  Supported |
+| - [conanio/clang40-jnlp-slave-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave-x86)      | x86    |  Supported |
+| - [conanio/clang40-jnlp-slave: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave/)             | x86_64 |  Supported |
+| - [conanio/clang50-jnlp-slave-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave-x86/)     | x86    |  Supported |
+| - [conanio/clang50-jnlp-slave: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave/)             | x86_64 |  Supported |
+| - [conanio/clang60-jnlp-slave-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave-x86/)     | x86    |  Supported |
+| - [conanio/clang60-jnlp-slave: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave/)             | x86_64 |  Supported |
+| - [conanio/clang7-jnlp-slave-x86: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave-x86/)         | x86    |  Supported |
+| - [conanio/clang7-jnlp-slave: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave/)                 | x86_64 |  Supported |
+
 
 
 

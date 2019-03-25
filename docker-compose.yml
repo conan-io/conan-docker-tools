@@ -464,3 +464,93 @@ services:
                 SOURCE_CONANIO_IMAGE: conanio/gcc7-centos6-x86
         image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-centos6-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc7-jnlp-slave-centos6-x86
+    clang39-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang39
+        image: "${DOCKER_USERNAME}/clang39-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang39-jnlp-slave
+        tty: true
+    clang39-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang39-x86
+        image: "${DOCKER_USERNAME}/clang39-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang39-jnlp-slave-x86
+        tty: true
+    clang40-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang40
+        image: "${DOCKER_USERNAME}/clang40-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang40-jnlp-slave
+        tty: true
+    clang40-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang40-x86
+        image: "${DOCKER_USERNAME}/clang40-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang40-jnlp-slave-x86
+        tty: true
+    clang50-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang50
+        image: "${DOCKER_USERNAME}/clang50-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang50-jnlp-slave
+        tty: true
+    clang50-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang50-x86
+        image: "${DOCKER_USERNAME}/clang50-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang50-jnlp-slave-x86
+        tty: true
+    clang60-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang60
+        image: "${DOCKER_USERNAME}/clang60-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang60-jnlp-slave
+        tty: true
+    clang60-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang60-x86
+        image: "${DOCKER_USERNAME}/clang60-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang60-jnlp-slave-x86
+        tty: true
+    clang7-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang7
+        image: "${DOCKER_USERNAME}/clang7-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang7-jnlp-slave
+        tty: true
+    clang7-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang7-x86
+        image: "${DOCKER_USERNAME}/clang7-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang7-jnlp-slave-x86
+        tty: true
