@@ -296,7 +296,7 @@ class ConanDockerTools(object):
                     self.linter(build_dir)
                     self.build()
                     self.tag()
-                    if self.variables.docker_distro == "jenkins":
+                    if "jnlp-slave" in self.variables.docker_distro:
                         self.test_jenkins()
                     else:
                         self.test(arch, compiler.name, version, self.variables.docker_distro)

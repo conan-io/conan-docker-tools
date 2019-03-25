@@ -336,52 +336,131 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/android-clang8-armv8:${DOCKER_BUILD_TAG}"
         container_name: android-clang8-armv8
-    gcc46-jenkins:
+    gcc46-jnlp-slave:
         build:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc5
+                SOURCE_CONANIO_IMAGE: conanio/gcc46
         image: "${DOCKER_USERNAME}/gcc46-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc5-jnlp-slave
         tty: true
-    gcc48-jenkins:
-        build:
-            context: gcc_4.8
-            dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/gcc48:${DOCKER_BUILD_TAG}"
-        container_name: gcc48
-        tty: true
-    gcc48-x86-jenkins:
-        build:
-            context: gcc_4.8-x86
-            dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/gcc48-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc48-x86
-        tty: true
-    gcc49-jenkins:
-        build:
-            context: gcc_4.9
-            dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/gcc49:${DOCKER_BUILD_TAG}"
-        container_name: gcc49
-        tty: true
-
-    gcc5-jenkins:
+    gcc48-jnlp-slave:
         build:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc5
-        image: "${DOCKER_USERNAME}/gcc5-jenkins:${DOCKER_BUILD_TAG}"
-        container_name: gcc5-jenkins
+                SOURCE_CONANIO_IMAGE: conanio/gcc48
+        image: "${DOCKER_USERNAME}/gcc48-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc48-jnlp-slave
         tty: true
-    gcc49-jenkins:
+    gcc48-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc48-x86
+        image: "${DOCKER_USERNAME}/gcc48-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc48-jnlp-slave-x86
+        tty: true
+    gcc49-jnlp-slave:
         build:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc49
-        image: "${DOCKER_USERNAME}/gcc49-jenkins:${DOCKER_BUILD_TAG}"
-        container_name: gcc49-jenkins
+        image: "${DOCKER_USERNAME}/gcc49-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc49-jnlp-slave
+    gcc49-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc49-x86
+        image: "${DOCKER_USERNAME}/gcc49-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc49-jnlp-slave-x86
         tty: true
+    gcc5-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc5
+        image: "${DOCKER_USERNAME}/gcc5-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc5-jnlp-slave
+    gcc5-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc5-x86
+        image: "${DOCKER_USERNAME}/gcc5-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc5-jnlp-slave-x86
+        tty: true
+    gcc6-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc6
+        image: "${DOCKER_USERNAME}/gcc6-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc6-jnlp-slave
+    gcc6-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc6-x86
+        image: "${DOCKER_USERNAME}/gcc6-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc6-jnlp-slave-x86
+        tty: true
+    gcc7-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc7
+        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-jnlp-slave
+    gcc7-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc7-x86
+        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-jnlp-slave-x86
+        tty: true
+    gcc8-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc8
+        image: "${DOCKER_USERNAME}/gcc8-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc8-jnlp-slave
+    gcc8-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc8-x86
+        image: "${DOCKER_USERNAME}/gcc8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc8-jnlp-slave-x86
+        tty: true
+    gcc7-jnlp-slave-centos6:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: centos6/Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc7-centos6
+        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-centos6:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-jnlp-slave-centos6
+    gcc7-jnlp-slave-centos6-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: centos6/Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc7-centos6-x86
+        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-centos6-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-jnlp-slave-centos6-x86
