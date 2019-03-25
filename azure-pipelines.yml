@@ -15,10 +15,70 @@ jobs:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:
     matrix:
+      Jenkins Slave GCC 4.6 x86_64:
+        GCC_VERSIONS: "4.6"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 4.6 x86:
+        GCC_VERSIONS: "4.6"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 4.8 x86_64:
+        GCC_VERSIONS: "4.8"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 4.8 x86:
+        GCC_VERSIONS: "4.8"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 4.9 x86_64:
+        GCC_VERSIONS: "4.9"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 4.9 x86:
+        GCC_VERSIONS: "4.9"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
       Jenkins Slave GCC 5 x86_64:
         GCC_VERSIONS: "5"
         DOCKER_ARCHS: "x86_64"
-        DOCKER_DISTRO: "jenkins"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 5 x86:
+        GCC_VERSIONS: "5"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 6 x86_64:
+        GCC_VERSIONS: "6"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 6 x86:
+        GCC_VERSIONS: "6"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 7 x86_64:
+        GCC_VERSIONS: "7"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 7 x86:
+        GCC_VERSIONS: "7"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 8 x86_64:
+        GCC_VERSIONS: "8"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave GCC 8 x86:
+        GCC_VERSIONS: "8"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Slave CentOS 6 GCC 7 x86_64:
+        GCC_VERSIONS: "7"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "jnlp-slave-centos6"
+      Jenkins Slave CentOS 6 GCC 7 x86:
+        GCC_VERSIONS: "7"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave-centos6"
 
       CentOS 6 GCC 7 x86_64:
         GCC_VERSIONS: "7"
