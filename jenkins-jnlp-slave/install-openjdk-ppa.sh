@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -e
-set -x
 
 DISTRIB_CODENAME=`grep -oP 'DISTRIB_CODENAME=\K(.*)' /etc/lsb-release`
 case $DISTRIB_CODENAME in

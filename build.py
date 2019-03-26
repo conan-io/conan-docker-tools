@@ -236,6 +236,12 @@ class ConanDockerTools(object):
             subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm %s" % self.service, shell=True)
 
+    def test_jenkins(self):
+        logging.info("Testing Jenkins Docker: running service %s." % self.service)
+        output = subprocess.check_output("docker run --rm -t --name %s %s" % (self.service,
+                                         self.created_image_name), shell=True)
+        assert "java -jar agent.jar [options...]" in output.decode()
+
     def test_server(self):
         """Validate Conan Server image
         :param service: Docker compose service name
@@ -290,7 +296,10 @@ class ConanDockerTools(object):
                     self.linter(build_dir)
                     self.build()
                     self.tag()
-                    self.test(arch, compiler.name, version, self.variables.docker_distro)
+                    if "jnlp-slave" in str(self.variables.docker_distro):
+                        self.test_jenkins()
+                    else:
+                        self.test(arch, compiler.name, version, self.variables.docker_distro)
                     self.deploy()
 
         self.service = image_name = "conan_server"
