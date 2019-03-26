@@ -33,6 +33,7 @@ RUN dpkg --add-architecture i386 \
        libncursesw5-dev=5.* \
        liblzma-dev=5.* \
        ca-certificates \
+       autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
