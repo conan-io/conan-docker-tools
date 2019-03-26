@@ -19,10 +19,6 @@ jobs:
         GCC_VERSIONS: "4.6"
         DOCKER_ARCHS: "x86_64"
         DOCKER_DISTRO: "jnlp-slave"
-      Jenkins Slave GCC 4.6 x86:
-        GCC_VERSIONS: "4.6"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Jenkins Slave GCC 4.8 x86_64:
         GCC_VERSIONS: "4.8"
         DOCKER_ARCHS: "x86_64"
