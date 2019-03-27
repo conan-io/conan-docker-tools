@@ -337,6 +337,20 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-centos6-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc7-centos6-x86
         tty: true
+    msvc14:
+        build:
+            context: msvc_14
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/msvc14:${DOCKER_BUILD_TAG}"
+        container_name: msvc14
+        tty: true
+    msvc15:
+        build:
+            context: msvc_15
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/msvc15:${DOCKER_BUILD_TAG}"
+        container_name: msvc15
+        tty: true
     android-clang8:
         build:
             context: android-clang_8

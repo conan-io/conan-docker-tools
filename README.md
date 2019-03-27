@@ -67,6 +67,12 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
 
 
+#### Visual Studio
+
+We can not re-distribute Windows docker images, since Visual Studio Build Tools is licensed as supplemental license for Visual Studio.
+To have more information about: https://github.com/Microsoft/vs-dockerfiles#samples
+However, you can download the Docker recipe and build.
+
 #### Android
 
 | Version                                                                                       | Arch   |  Status, Life cycle  |
@@ -218,7 +224,7 @@ Build, Test and Deploy
 ======================
 
 ## Introduce
-The images are already built and uploaded to **"conanio"** dockerhub account, If you want to build your own images you can do it by:
+The images are already built and uploaded to **"conanio(https://hub.docker.com/r/conanio/)"** dockerhub account, If you want to build your own images you can do it by:
 
 ```
 $ python build.py
@@ -238,10 +244,15 @@ E.g Build and test only the images with Conan and clang-4.0, clang-3.9
 $ CONAN_CLANG_VERSIONS="3.9,4.0" python build.py
 ```
 
+E.g Build and test only the images with Conan and Visual Studio 14.0 (It **ONLY** works on Windows).
+```
+$ CONAN_VISUAL_VERSIONS="14.0" python build.py
+```
+
 The stages that compose the script will be described below:
 
 ### Build
-The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc`` and in ``CONAN_CLANG_VERSIONS`` for ``Clang``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
+The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc``, in ``CONAN_CLANG_VERSIONS`` for ``Clang`` and ``CONAN_VISUAL_VERSIONS`` for ``Visual Studio``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
 
 You can configure only a compiler version or a list, by these variables. If you skipped a compiler list, the build will not be executed for that compiler.
 
@@ -252,13 +263,14 @@ Each image created on this stage will be tagged as  ``DOCKER_USERNAME/conan_comp
 The image will not be removed after build.
 
 ### Test
-The second stage runs the new image created and builds the Conan package ``gtest/1.8.0``.
-The same build variables, as ``CONAN_GCC_VERSIONS`` and ``CONAN_CLANG_VERSIONS`` are used to select the compiler and version.
+The second stage runs the new image created and builds the Conan package ``gtest/1.8.1``.
+The same build variables, as ``CONAN_GCC_VERSIONS``, ``CONAN_CLANG_VERSIONS`` and ``CONAN_VISUAL_VERSIONS`` are used to select the compiler and version.
 
-All tests build the package ``gtest/1.8.0``, for x86 and x86_64.
+All tests build the package ``gtest/1.8.1``, for x86 and x86_64.
 
 ``Gcc`` images use libstdc++.
 ``Clang`` images use libc++ and libstdc++.
+``Visual Studio`` images use MD for runtime.
 
 The packages created on test, are not uploaded to Conan server, Are just to validate the image.
 
@@ -284,7 +296,9 @@ Build and Test variables:
 
 - **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
 - **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
+- **VISUAL_VERSIONS**: Visual Studio versions to build, test and deploy, comma separated, e.g. "14,15"
 - **DOCKER_BUILD_TAG**: Docker image tag, e.g "latest", "0.28.1"
+- **SUDO_COMMAND**: Sudo command used on Linux distros, e.g. "sudo"
 - **DOCKER_CACHE**: Allow to cache docker layers during the build, to speed up local testing
 - **DOCKER_CROSS**: Cross-compiling image prefix, currently only "android" is supported
 
