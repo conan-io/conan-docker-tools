@@ -1,0 +1,98 @@
+# https://github.com/apps/settings
+
+repository:
+  has_wiki: false
+  default_branch: master
+
+# Labels: define labels for Issues and Pull Requests
+# colors from: https://htmlcolorcodes.com/color-chart/
+labels:
+  - name: "type: question"
+    color: FADBD8
+    old_name: "question"
+  - name: "type: engineering"
+    color: F5B7B1
+  - name: "type: feature"
+    color: EC7063
+    old_name: "feature"
+  - name: "type: look into"
+    color: CB4335
+    old_name: "look into"
+  - name: "type: bug"
+    color: 943126
+    old_name: "bug"
+
+  - name: "complex: low"
+    color: A3E4D7
+  - name: "complex: medium"
+    color: 48C9B0
+  - name: "complex: high"
+    color: 17A589
+  - name: "complex: huge"
+    color: 117864
+
+  - name: "priority: low"
+    color: F9E79F
+  - name: "priority: medium"
+    color: F4D03F
+  - name: "priority: high"
+    color: D4AC0D
+  - name: "priority: critical"
+    color: 9A7D0A
+
+  - name: "component: artifactory"
+    color: F4ECF7
+  - name: "component: bintray"
+    color: E8DAEF
+  - name: "component: docker"
+    color: D2B4DE
+  - name: "component: CI"
+    description: Only affects CI
+    color: BB8FCE
+  - name: "component: server"
+    color: A569BD
+  - name: "component: hook"
+    color: 8E44AD
+  - name: "component: build"
+    color: 7D3C98
+    old_name: "component: Build"
+    description: Build helpers, build systems...
+  - name: "component: scm"
+    color: 6C3483
+  - name: "component: UX"
+    color: 5B2C6F
+    old_name: "UX"
+    description: No change in business logic
+
+  - name: "stage: triaging"
+    color: E5E7E9
+  - name: "stage: queue"
+    color: CACFD2
+  - name: "stage: in-progress"
+    color: A6ACAF
+    old_name: "in progress"
+  - name: "stage: review"
+    color: 797D7F
+    old_name: "in review"
+
+  - name: "good first issue"
+    color: ABEBC6
+  - name: "help wanted"
+    color: 58D68D
+  - name: "Feedback please!"
+    color: 28B463
+  - name: "feature approved"
+    color: 1D8348
+  - name: "whiteboard"
+    color: FDFEFE
+    description: Needs discussion
+
+  - name: "duplicate"
+    color: ABB2B9
+    description: This was already reported
+  - name: "inactive"
+    color: 566573
+    description: No comments for a long time
+  - name: "obsolete"
+    color: 273746
+    description: Implementation will follow another direction
