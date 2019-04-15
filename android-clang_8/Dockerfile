@@ -32,7 +32,8 @@ ENV ANDROID_NDK=$ANDROID_NDK \
     CMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
     CMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
     CMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \
-    PATH=$PATH:$STANDALONE_TOOLCHAIN/bin
+    PATH=$PATH:$STANDALONE_TOOLCHAIN/bin \
+    CONAN_BASE_PROFILE=android
 
 COPY cmake-wrapper /cmake-wrapper
 
@@ -43,7 +44,7 @@ RUN sudo apt-get update \
     && sudo unzip -qq android-ndk-r19c-linux-x86_64.zip -d / \
     && sudo rm -f android-ndk-r19c-linux-x86_64.zip \
     && sudo chmod +x /cmake-wrapper \
-    && conan profile new default --detect \
-    && conan profile update settings.os=Android default \
-    && conan profile update settings.os.api_level=21 default \
-    && conan profile update settings.compiler.libcxx=libc++ default
+    && conan profile new $CONAN_BASE_PROFILE --detect \
+    && conan profile update settings.os=Android $CONAN_BASE_PROFILE \
+    && conan profile update settings.os.api_level=21 $CONAN_BASE_PROFILE \
+    && conan profile update settings.compiler.libcxx=libc++ $CONAN_BASE_PROFILE

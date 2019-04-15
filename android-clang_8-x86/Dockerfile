@@ -17,7 +17,7 @@ ENV ANDROID_ABI=x86 \
     OBJDUMP=$STANDALONE_TOOLCHAIN/bin/i686-linux-android-objdump \
     READELF=$STANDALONE_TOOLCHAIN/bin/i686-linux-android-readelf
 
-RUN conan profile update settings.arch=x86 default \
-    && conan profile update settings.os=Android default \
-    && conan profile update settings.os.api_level=16 default \
-    && conan profile update settings.compiler.libcxx=libc++ default
+RUN conan profile update settings.arch=x86 $CONAN_BASE_PROFILE \
+    && conan profile update settings.os=Android $CONAN_BASE_PROFILE \
+    && conan profile update settings.os.api_level=16 $CONAN_BASE_PROFILE \
+    && conan profile update settings.compiler.libcxx=libc++ $CONAN_BASE_PROFILE
