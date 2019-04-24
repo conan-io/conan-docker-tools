@@ -29,9 +29,7 @@ RUN dpkg --add-architecture i386 \
        libssl-dev=1* \
        ninja-build=1.* \
        libc++-dev=1:8.* \
-       libc++-dev:i386=1:8.* \
        libc++abi-dev=1:8.* \
-       libc++abi-dev:i386=1:8.* \
        pkg-config=0.29.* \
        subversion=1.* \
        zlib1g-dev=1:1.* \
@@ -45,6 +43,11 @@ RUN dpkg --add-architecture i386 \
        liblzma-dev=5.* \
        gnupg=2.* \
        ca-certificates \
+
+       # FIXME (uilian): https://bugs.launchpad.net/ubuntu/+source/llvm-defaults/+bug/1819768
+       # libc++abi-dev:i386=1:8.* \
+       # libc++-dev:i386=1:8.* \
+
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-8 100 \
