@@ -24,3 +24,17 @@ Bumped for Conan 1.12.3
 
 Bumped for Conan 1.13.0
 
+Bumped for Conan 1.13.1
+
+Bumped for Conan 1.13.2
+
+Bumped for Conan 1.13.3
+
+Bumped for Conan 1.14.0
+
+Bumped for Conan 1.14.1
+
+Bumped for Conan 1.14.2
+
+Bumped for Conan 1.14.3
+

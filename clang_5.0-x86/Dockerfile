@@ -43,6 +43,7 @@ RUN apt-get -qq update \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
        ca-certificates=20170717 \
+       autoconf-archive \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-5.0 100 \

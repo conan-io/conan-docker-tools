@@ -38,6 +38,7 @@ RUN dpkg --add-architecture i386 \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
        ca-certificates \
+       autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
     && rm -rf /var/lib/apt/lists/* \

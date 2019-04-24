@@ -27,7 +27,7 @@ RUN yum update -y \
        mpfr-devel \
        libmpc-devel \
        nasm \
-       autoconf \
+       m4 \
        libffi-devel \
        openssl-devel \
        pkgconfig \
@@ -40,7 +40,25 @@ RUN yum update -y \
        devtoolset-7-toolchain \
        rh-python36 \
        help2man \
+       autoconf-archive \
     && yum clean all \
+    && wget -O /tmp/autoconf-2.69.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
+    && tar -zxf /tmp/autoconf-2.69.tar.gz -C /tmp \
+    && pushd /tmp/autoconf-2.69 \
+    && ./configure --prefix=/usr \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/autoconf-2.69* \
+    && wget -O /tmp/automake-1.16.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/automake/automake-1.16.tar.gz \
+    && tar -zxf /tmp/automake-1.16.tar.gz -C /tmp \
+    && pushd /tmp/automake-1.16 \
+    && ./configure --prefix=/usr \
+    && sed -i "s/'none';/'reduce';/g" bin/automake.in \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/automake-1.16* \
     && wget -O /tmp/cmake-3.12.1-Linux-x86_64.sh --no-check-certificate --quiet 'https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.sh' \
     && bash /tmp/cmake-3.12.1-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir \
     && rm /tmp/cmake-3.12.1-Linux-x86_64.sh \
@@ -53,7 +71,9 @@ RUN yum update -y \
     && chgrp -R wheel /opt/rh/rh-python36/root \
     && chmod -R g+w -R /opt/rh/rh-python36/root
 
+# Fix sudo with arguments: https://bugzilla.redhat.com/show_bug.cgi?id=1319936
+COPY sudo /opt/rh/devtoolset-7/root/usr/bin/sudo
+RUN chmod a+x /opt/rh/devtoolset-7/root/usr/bin/sudo
+
 USER conan
 WORKDIR /home/conan
-
-

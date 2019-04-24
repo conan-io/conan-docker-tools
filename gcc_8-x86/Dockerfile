@@ -39,6 +39,7 @@ RUN apt-get -qq update \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
        ca-certificates=20180409 \
+       autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 \
@@ -84,4 +85,3 @@ WORKDIR /home/conan
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
     && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc
-

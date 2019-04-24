@@ -36,6 +36,7 @@ RUN dpkg --add-architecture i386 \
        libncursesw5-dev=5.* \
        liblzma-dev=5.* \
        ca-certificates=20170717~14.04.1 \
+       autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100 \
