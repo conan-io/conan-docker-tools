@@ -610,3 +610,21 @@ services:
         image: "${DOCKER_USERNAME}/clang7-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang7-jnlp-slave-x86
         tty: true
+    clang8-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang8
+        image: "${DOCKER_USERNAME}/clang8-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang8-jnlp-slave
+        tty: true
+    clang8-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang8-x86
+        image: "${DOCKER_USERNAME}/clang8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: clang8-jnlp-slave-x86
+        tty: true
