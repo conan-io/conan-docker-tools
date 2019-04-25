@@ -11,25 +11,25 @@ ENV CONAN_ENV_ARCH=x86 \
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.8.21p2-3ubuntu1 \
+       sudo=1.* \
        binutils=2.* \
-       wget=1.19.4-1ubuntu2.1 \
+       wget=1.* \
        git=1:2.* \
-       libc6-dev=2.27-3ubuntu1 \
+       libc6-dev=2.* \
        linux-libc-dev=4.* \
        g++-8 \
-       libgmp-dev=2:6.1.2+dfsg-2 \
-       libmpfr-dev=4.0.1-1 \
-       libmpc-dev=1.1.0-1 \
-       libc6-dev=2.27-3ubuntu1 \
-       nasm=2.13.02-0.1 \
+       libgmp-dev=2:6.* \
+       libmpfr-dev=4.* \
+       libmpc-dev=1.* \
+       libc6-dev=2.* \
+       nasm=2.* \
        dh-autoreconf=17 \
-       ninja-build=1.8.2-1 \
-       libffi-dev=3.2.1-8 \
+       ninja-build=1.* \
+       libffi-dev=3.* \
        libssl-dev=1.* \
-       pkg-config=0.29.1-0ubuntu2 \
-       subversion=1.9.7-4ubuntu1 \
-       zlib1g-dev=1:1.2.* \
+       pkg-config=0.* \
+       subversion=1.* \
+       zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
        libreadline-dev=7.* \
@@ -38,7 +38,7 @@ RUN apt-get -qq update \
        libncurses5-dev=6.* \
        libncursesw5-dev=6.* \
        liblzma-dev=5.* \
-       ca-certificates=20180409 \
+       ca-certificates \
        autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 100 \
