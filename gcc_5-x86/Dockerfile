@@ -39,9 +39,9 @@ RUN apt-get -qq update \
        ca-certificates=20170717~16.04.1 \
        autoconf-archive \
        && rm -rf /var/lib/apt/lists/* \
-       && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
-       && tar -xzf cmake-3.12.1.tar.gz \
-       && cd cmake-3.12.1 \
+       && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.2.tar.gz \
+       && tar -xzf cmake-3.14.2.tar.gz \
+       && cd cmake-3.14.2 \
        && ./bootstrap > /dev/null \
        && make -s -j`nproc` \
        && make -s install > /dev/null \
