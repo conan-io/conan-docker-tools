@@ -1,8 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 
 if __name__ == "__main__":
 
-    for old, new in [("3.12.1", "3.14.2"), ("v3.12", "v3.14")]:
+    for old, new in [("3.14.2", "3.14.3"), ("v3.14ca", "v3.14")]:
 
         for root, _, filenames in os.walk("./"):
             for filename in filenames:

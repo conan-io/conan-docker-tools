@@ -67,9 +67,9 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && make install \
     && popd \
     && rm -rf /tmp/automake-1.16* \
-    && wget --no-check-certificate --quiet -O /tmp/cmake-3.14.2.tar.gz https://cmake.org/files/v3.14/cmake-3.14.2.tar.gz \
-    && tar -xzf /tmp/cmake-3.14.2.tar.gz -C /tmp \
-    && pushd /tmp/cmake-3.14.2 \
+    && wget --no-check-certificate --quiet -O /tmp/cmake-3.14.3.tar.gz https://cmake.org/files/v3.14/cmake-3.14.3.tar.gz \
+    && tar -xzf /tmp/cmake-3.14.3.tar.gz -C /tmp \
+    && pushd /tmp/cmake-3.14.3 \
     && ./bootstrap \
     && make -s -j`nproc` > /dev/null \
     && make -s install > /dev/null \
