@@ -13,12 +13,12 @@ ENV LLVM_VERSION=8.0 \
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get install -y --no-install-recommends \
-       sudo=1.8.* \
-       wget=1.20.* \
+       sudo=1.* \
+       wget=1.* \
        git=1:2.* \
        g++-multilib=4:8.* \
        clang-8=1:8* \
-       make=4.2.* \
+       make=4.* \
        libc6-dev-i386=2.* \
        libgmp-dev=2:6.* \
        libmpfr-dev=4.* \
@@ -30,7 +30,7 @@ RUN dpkg --add-architecture i386 \
        ninja-build=1.* \
        libc++-dev=1:8.* \
        libc++abi-dev=1:8.* \
-       pkg-config=0.29.* \
+       pkg-config=0.* \
        subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \

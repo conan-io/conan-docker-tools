@@ -14,8 +14,8 @@ ENV LLVM_VERSION=8.0 \
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.8.* \
-       wget=1.20.* \
+       sudo=1.* \
+       wget=1.* \
        git=1:2.* \
        g++-multilib=4:8.* \
        clang-8=1:8* \
@@ -31,7 +31,7 @@ RUN apt-get -qq update \
        ninja-build=1.* \
        libc++-dev=1:8.* \
        libc++abi-dev=1:8.* \
-       pkg-config=0.29.* \
+       pkg-config=0.* \
        subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
