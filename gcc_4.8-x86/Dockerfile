@@ -12,17 +12,17 @@ ENV CONAN_ENV_ARCH=x86 \
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.8.* \
+       sudo=1.* \
        build-essential=11.* \
-       wget=1.15-* \
-       git=1:1.9.* \
-       nasm=2.10.* \
+       wget=1.* \
+       git=1:1.* \
+       nasm=2.* \
        dh-autoreconf=9 \
-       ninja-build=1.3.* \
-       libffi-dev=3.1* \
-       libssl-dev=1.0.* \
-       pkg-config=0.26-1ubuntu4 \
-       subversion=1.8.8-1ubuntu3.3 \
+       ninja-build=1.* \
+       libffi-dev=3.* \
+       libssl-dev=1.* \
+       pkg-config=0.* \
+       subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
@@ -36,9 +36,9 @@ RUN dpkg --add-architecture i386 \
        autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1.tar.gz \
-    && tar -xzf cmake-3.12.1.tar.gz \
-    && cd cmake-3.12.1 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.3.tar.gz \
+    && tar -xzf cmake-3.14.3.tar.gz \
+    && cd cmake-3.14.3 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
