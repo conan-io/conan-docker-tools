@@ -10,25 +10,25 @@ ENV PYENV_ROOT=/opt/pyenv \
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.8.21p2-3ubuntu1 \
+       sudo=1.* \
        binutils=2.* \
-       wget=1.19.4-1ubuntu2.1 \
+       wget=1.* \
        git=1:2.* \
-       libc6-dev-i386=2.27-3ubuntu1 \
+       libc6-dev-i386=2.* \
        linux-libc-dev:i386=4.* \
        g++-8-multilib \
-       libgmp-dev=2:6.1.2+dfsg-2 \
-       libmpfr-dev=4.0.1-1 \
-       libmpc-dev=1.1.0-1 \
-       libc6-dev=2.27-3ubuntu1 \
-       nasm=2.13.02-0.1 \
+       libgmp-dev=2:6.* \
+       libmpfr-dev=4.* \
+       libmpc-dev=1.* \
+       libc6-dev=2.* \
+       nasm=2.* \
        dh-autoreconf=17 \
-       ninja-build=1.8.2-1 \
-       libffi-dev=3.2.1-8 \
+       ninja-build=1.* \
+       libffi-dev=3.* \
        libssl-dev=1.* \
-       pkg-config=0.29.1-0ubuntu2 \
-       subversion=1.9.7-4ubuntu1 \
-       zlib1g-dev=1:1.2.* \
+       pkg-config=0.* \
+       subversion=1.* \
+       zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
        libreadline-dev=7.* \
@@ -45,14 +45,14 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-8 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.3-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.14.3-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.12.1-Linux-x86_64 \
-    && rm cmake-3.12.1-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.14.3-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.14.3-Linux-x86_64 \
+    && rm cmake-3.14.3-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \

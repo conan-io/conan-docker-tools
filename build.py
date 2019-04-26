@@ -126,6 +126,8 @@ class ConanDockerTools(object):
 
     @property
     def created_image_name(self):
+        """ Retrieve Docker image name
+        """
         return "%s/%s:%s" % (self.variables.docker_username,
                              self.service,
                              self.variables.docker_build_tag)

@@ -11,17 +11,17 @@ RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
        sudo=1.8.* \
        build-essential=11.* \
-       wget=1.13.* \
-       git=1:1.7.* \
-       libc6-dev-i386=2.15-* \
-       g++-multilib=4:4.6.* \
-       nasm=2.09.* \
+       wget=1.* \
+       git=1:1.* \
+       libc6-dev-i386=2.* \
+       g++-multilib=4:4.* \
+       nasm=2.* \
        dh-autoreconf=5ubuntu1 \
-       ninja-build=1.3.* \
-       libffi-dev=3.0.* \
+       ninja-build=1.* \
+       libffi-dev=3.* \
        libssl-dev=1.* \
-       pkg-config=0.26-1ubuntu1 \
-       subversion=1.6.17dfsg-3ubuntu3.5 \
+       pkg-config=0.* \
+       subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
@@ -34,13 +34,13 @@ RUN apt-get -qq update \
        ca-certificates \
        autoconf-archive \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate -O /tmp/cmake-3.12.1-Linux-x86_64.tar.gz http://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
-    && tar -xzf /tmp/cmake-3.12.1-Linux-x86_64.tar.gz -C /tmp \
+    && wget -q --no-check-certificate -O /tmp/cmake-3.14.3-Linux-x86_64.tar.gz http://cmake.org/files/v3.14/cmake-3.14.3-Linux-x86_64.tar.gz \
+    && tar -xzf /tmp/cmake-3.14.3-Linux-x86_64.tar.gz -C /tmp \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.12/Help \
-    && cp -fR /tmp/cmake-3.12.1-Linux-x86_64/* /usr \
-    && rm -rf /tmp/cmake-3.12.1-Linux-x86_64* \
+    && cp -fR /tmp/cmake-3.14.3-Linux-x86_64/* /usr \
+    && rm -rf /tmp/cmake-3.14.3-Linux-x86_64* \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \

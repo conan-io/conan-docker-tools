@@ -59,9 +59,9 @@ RUN yum update -y \
     && make install \
     && popd \
     && rm -rf /tmp/automake-1.16* \
-    && wget -O /tmp/cmake-3.12.1-Linux-x86_64.sh --no-check-certificate --quiet 'https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.sh' \
-    && bash /tmp/cmake-3.12.1-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir \
-    && rm /tmp/cmake-3.12.1-Linux-x86_64.sh \
+    && wget -O /tmp/cmake-3.14.3-Linux-x86_64.sh --no-check-certificate --quiet 'https://cmake.org/files/v3.14/cmake-3.14.3-Linux-x86_64.sh' \
+    && bash /tmp/cmake-3.14.3-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir \
+    && rm /tmp/cmake-3.14.3-Linux-x86_64.sh \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && sed -i 's/# %wheel/%wheel/g' /etc/sudoers \

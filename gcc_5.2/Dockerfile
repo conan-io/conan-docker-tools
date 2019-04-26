@@ -11,19 +11,19 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     && dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-    sudo=1.8.* \
+    sudo=1.* \
     build-essential=12.* \
-    wget=1.16.* \
-    git=1:2.5.* \
-    libc6-dev-i386=2.21-* \
-    g++-multilib=4:5.2.* \
-    nasm=2.11.* \
+    wget=1.* \
+    git=1:2.* \
+    libc6-dev-i386=2.* \
+    g++-multilib=4:5.* \
+    nasm=2.* \
     dh-autoreconf=10 \
-    ninja-build=1.3.* \
-    libffi-dev=3.2.* \
-    libssl-dev=1.0.2* \
-    pkg-config=0.28-1ubuntu1 \
-    subversion=1.8.13-1ubuntu3 \
+    ninja-build=1.* \
+    libffi-dev=3.* \
+    libssl-dev=1.* \
+    pkg-config=0.* \
+    subversion=1.* \
     zlib1g-dev=1:1.* \
     libbz2-dev=1.* \
     libsqlite3-dev=3.* \
@@ -36,14 +36,14 @@ RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releas
     ca-certificates \
     autoconf-archive \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.12/cmake-3.12.1-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.12.1-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.14/cmake-3.14.3-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.14.3-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.12.1-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.12.1-Linux-x86_64 \
-    && rm cmake-3.12.1-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.14.3-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.14.3-Linux-x86_64 \
+    && rm cmake-3.14.3-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
