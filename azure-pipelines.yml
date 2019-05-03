@@ -110,6 +110,13 @@ jobs:
         CLANG_VERSIONS: "7"
         DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Clang 8 x86_64:
+        CLANG_VERSIONS: "8"
+        DOCKER_DISTRO: "jnlp-slave"
+      Jenkins Clang 8 x86:
+        CLANG_VERSIONS: "8"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
 
       CentOS 6 GCC 7 x86_64:
         GCC_VERSIONS: "7"
@@ -236,6 +243,11 @@ jobs:
         CLANG_VERSIONS: "7"
       Ubuntu Clang 7 x86:
         CLANG_VERSIONS: "7"
+        DOCKER_ARCHS: "x86"
+      Ubuntu Clang 8 x86_64:
+        CLANG_VERSIONS: "8"
+      Ubuntu Clang 8 x86:
+        CLANG_VERSIONS: "8"
         DOCKER_ARCHS: "x86"
 
       Android Clang 8 x86:
