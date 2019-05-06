@@ -42,3 +42,5 @@ Bumped for Conan 1.14.4
 
 Bumped for Conan 1.14.5
 
+Bumped for Conan 1.15.0
+
