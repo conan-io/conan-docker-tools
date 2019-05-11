@@ -143,8 +143,14 @@ class ConanDockerTools(object):
         :param service: service in compose e.g gcc54
         :param context: image dir
         """
-        logging.info("Starting build for service %s." % self.service)
         no_cache = "" if self.variables.docker_cache else "--no-cache"
+
+        if self.variables.docker_distro:
+            base_service = self.service.replace("-%s" % self.variables.docker_distro, "")
+            logging.info("Starting build for base service %s." % base_service)
+            subprocess.check_call("docker-compose build %s %s" % (no_cache, base_service), shell=True)
+
+        logging.info("Starting build for service %s." % self.service)
         subprocess.check_call("docker-compose build %s %s" % (no_cache, self.service), shell=True)
 
         output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
