@@ -48,6 +48,7 @@ class ConanDockerTools(object):
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
         build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
+        build_base_distro = self._get_boolean_var("BUILD_BASE_DISTRO", default="true")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
@@ -74,11 +75,12 @@ class ConanDockerTools(object):
             "gcc_versions, docker_distro, "
             "clang_versions, visual_versions, build_server, "
             "docker_build_tag, docker_archs, sudo_command, "
-            "docker_upload_only_when_stable, docker_cross, docker_cache")
+            "docker_upload_only_when_stable, docker_cross, docker_cache, "
+            "build_base_distro")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, docker_distro, clang_versions, visual_versions, build_server,
                          docker_build_tag, docker_archs, sudo_command, docker_upload_only_when_stable,
-                         docker_cross, docker_cache)
+                         docker_cross, docker_cache, build_base_distro)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -145,7 +147,7 @@ class ConanDockerTools(object):
         """
         no_cache = "" if self.variables.docker_cache else "--no-cache"
 
-        if self.variables.docker_distro:
+        if self.variables.docker_distro and self.variables.build_base_distro:
             base_service = self.service.replace("-%s" % self.variables.docker_distro, "")
             logging.info("Starting build for base service %s." % base_service)
             subprocess.check_call("docker-compose build %s %s" % (no_cache, base_service), shell=True)
