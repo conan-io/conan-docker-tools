@@ -58,7 +58,7 @@ class ConanDockerTools(object):
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
         docker_cache = os.getenv("DOCKER_CACHE", False)
-        docker_distro = os.getenv("DOCKER_DISTRO", False)
+        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
         conan_version = os.getenv("CONAN_VERSION", client_version)
         os.environ["CONAN_VERSION"] = conan_version
         os.environ["DOCKER_USERNAME"] = docker_username
@@ -358,27 +358,47 @@ class ConanDockerTools(object):
         else:
             logging.info("Skipping %s image creation" % image_name)
 
-    def run(self):
-        """Execute all 3 stages for all versions in compilers list
-        """
-        distro = "" if not self.variables.docker_distro else "-%s" % self.variables.docker_distro
+    def process_regular_images(self):
         cross = "" if not self.variables.docker_cross else "%s-" % self.variables.docker_cross
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
                 for version in compiler.versions:
                     tag_arch = "" if arch == "x86_64" else "-%s" % arch
-                    service = "%s%s%s%s%s" % (cross, compiler.name, version.replace(".", ""), distro, tag_arch)
-                    build_dir = "%s%s_%s%s%s" % (cross, compiler.name, version, distro, tag_arch)
+                    service = "%s%s%s" % (cross, compiler.name, version.replace(".", ""), tag_arch)
+                    build_dir = "%s_%s%s" % (cross, compiler.name, version, tag_arch)
 
                     self.service = service
                     self.login()
                     self.linter(build_dir)
                     self.build()
                     self.tag()
-                    self.test(arch, compiler.name, version, self.variables.docker_distro)
+                    self.test(arch, compiler.name, version)
                     self.info()
                     self.deploy()
 
+    def process_distro_images(self):
+        if self.variables.docker_distro:
+            for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
+                for version in compiler.versions:
+                    for distro in self.variables.docker_distro:
+                        distro = "-%s" % distro
+                        service = "%s%s%s%s%s" % (cross, compiler.name, version.replace(".", ""), distro)
+                        build_dir = "%s%s_%s%s" % (cross, compiler.name, version, distro)
+
+                        self.service = service
+                        self.login()
+                        self.linter(build_dir)
+                        self.build()
+                        self.tag()
+                        self.test(arch, compiler.name, version, distro)
+                        self.info()
+                        self.deploy()
+
+    def run(self):
+        """Execute all 3 stages for all versions in compilers list
+        """
+        self.process_regular_images()
+        self.process_distro_images()
         self.process_conan_server()
 
 
