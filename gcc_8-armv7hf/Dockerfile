@@ -13,10 +13,10 @@ ENV CC=arm-linux-gnueabihf-gcc-8 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-8
 
+COPY sources.list /etc/apt/sources.list
 COPY armhf.list /etc/apt/sources.list.d/armhf.list
 
 RUN sudo dpkg --add-architecture armhf \
-    && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
     && sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
        ".*8.*arm-linux-gnueabihf.*" \

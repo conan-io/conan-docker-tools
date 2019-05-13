@@ -5,8 +5,9 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
-RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list \
-    && apt-get -qq update \
+COPY sources.list /etc/apt/sources.list
+
+RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends \
     ".*4\.9.*arm-linux-gnueabi.*" \
     sudo=1.8.* \
