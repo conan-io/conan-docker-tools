@@ -382,7 +382,7 @@ class ConanDockerTools(object):
                 for version in compiler.versions:
                     for distro in self.variables.docker_distro:
                         distro = "-%s" % distro
-                        service = "%s%s%s%s" % (compiler.name, version.replace(".", ""), distro)
+                        service = "%s%s%s" % (compiler.name, version.replace(".", ""), distro)
                         build_dir = "%s_%s%s" % (compiler.name, version, distro)
 
                         self.service = service
