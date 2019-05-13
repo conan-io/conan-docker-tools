@@ -1,4 +1,4 @@
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ artful main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ artful-updates main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ artful-security main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ artful-backports main restricted universe multiverse
+deb [arch=arm64] http://old-releases.ubuntu.com/ubuntu/ artful main restricted universe multiverse
+deb [arch=arm64] http://old-releases.ubuntu.com/ubuntu/ artful-updates main restricted universe multiverse
+deb [arch=arm64] http://old-releases.ubuntu.com/ubuntu/ artful-security main restricted universe multiverse
+deb [arch=arm64] http://old-releases.ubuntu.com/ubuntu/ artful-backports main restricted universe multiverse

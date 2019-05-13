@@ -9,7 +9,8 @@ ENV CONAN_ENV_ARCH=x86 \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc
 
-RUN apt-get -qq update \
+RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
        sudo=1.* \
        binutils=2.* \

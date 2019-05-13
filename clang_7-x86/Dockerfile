@@ -17,7 +17,7 @@ RUN apt-get -qq update \
        sudo=1.8.* \
        wget=1.19.* \
        git=1:2.19.* \
-       g++-multilib=4:8.2.* \
+       g++-multilib=4:8.* \
        clang-7=1:7-* \
        make=4.2.* \
        libc6-dev=2.* \
