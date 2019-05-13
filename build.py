@@ -365,7 +365,7 @@ class ConanDockerTools(object):
                 for version in compiler.versions:
                     tag_arch = "" if arch == "x86_64" else "-%s" % arch
                     service = "%s%s%s%s" % (cross, compiler.name, version.replace(".", ""), tag_arch)
-                    build_dir = "%s_%s%s" % (cross, compiler.name, version, tag_arch)
+                    build_dir = "%s%s_%s%s" % (cross, compiler.name, version, tag_arch)
 
                     self.service = service
                     self.login()
