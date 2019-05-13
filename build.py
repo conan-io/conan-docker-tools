@@ -173,7 +173,7 @@ class ConanDockerTools(object):
         subprocess.call(
             'docker run --rm -i hadolint/hadolint < %s/Dockerfile' % build_dir, shell=True)
 
-    def test(self, arch, compiler_name, compiler_version, distro):
+    def test(self, arch, compiler_name, compiler_version, distro=""):
         """Validate Docker image by Conan install
         :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
