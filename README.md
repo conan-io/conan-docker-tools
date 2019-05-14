@@ -310,5 +310,4 @@ Upload related variables:
 - **DOCKER_PASSWORD**: Your Docker password to authenticate in Docker server
 - **DOCKER_UPLOAD**: If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
 - **BUILD_CONAN_SERVER_IMAGE**: If attributest to true, it will build and upload an image with the conan_server
-- **BUILD_BASE_DISTRO**: Build base Docker image before building distro image. By default is True.
 - **DOCKER_UPLOAD_ONLY_WHEN_STABLE**: Only upload only when is master branch.
