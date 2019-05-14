@@ -382,7 +382,7 @@ class ConanDockerTools(object):
                         self.linter(build_dir)
                         self.build()
                         self.tag()
-                        self.test("", compiler.name, version, distro)
+                        self.test("x86_64", compiler.name, version, distro)
                         self.info()
                         self.deploy()
 
