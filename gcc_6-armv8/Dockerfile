@@ -13,10 +13,10 @@ ENV CC=aarch64-linux-gnu-gcc-6 \
     LD=aarch64-linux-gnu-ld \
     FC=aarch64-linux-gnu-gfortran-6
 
+COPY sources.list /etc/apt/sources.list
 COPY arm64.list /etc/apt/sources.list.d/arm64.list
 
 RUN sudo dpkg --add-architecture arm64 \
-    && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
     && sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
        ".*6.*aarch64-linux-gnu.*" \
