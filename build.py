@@ -48,7 +48,6 @@ class ConanDockerTools(object):
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
         build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
-        build_base_distro = self._get_boolean_var("BUILD_BASE_DISTRO", default="true")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
@@ -58,7 +57,7 @@ class ConanDockerTools(object):
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
         docker_cache = os.getenv("DOCKER_CACHE", False)
-        docker_distro = os.getenv("DOCKER_DISTRO", False)
+        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
         conan_version = os.getenv("CONAN_VERSION", client_version)
         os.environ["CONAN_VERSION"] = conan_version
         os.environ["DOCKER_USERNAME"] = docker_username
@@ -75,12 +74,11 @@ class ConanDockerTools(object):
             "gcc_versions, docker_distro, "
             "clang_versions, visual_versions, build_server, "
             "docker_build_tag, docker_archs, sudo_command, "
-            "docker_upload_only_when_stable, docker_cross, docker_cache, "
-            "build_base_distro")
+            "docker_upload_only_when_stable, docker_cross, docker_cache")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, docker_distro, clang_versions, visual_versions, build_server,
                          docker_build_tag, docker_archs, sudo_command, docker_upload_only_when_stable,
-                         docker_cross, docker_cache, build_base_distro)
+                         docker_cross, docker_cache)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -145,14 +143,8 @@ class ConanDockerTools(object):
         :param service: service in compose e.g gcc54
         :param context: image dir
         """
-        no_cache = "" if self.variables.docker_cache else "--no-cache"
-
-        if self.variables.docker_distro and self.variables.build_base_distro:
-            base_service = self.service.replace("-%s" % self.variables.docker_distro, "")
-            logging.info("Starting build for base service %s." % base_service)
-            subprocess.check_call("docker-compose build %s %s" % (no_cache, base_service), shell=True)
-
         logging.info("Starting build for service %s." % self.service)
+        no_cache = "" if self.variables.docker_cache else "--no-cache"
         subprocess.check_call("docker-compose build %s %s" % (no_cache, self.service), shell=True)
 
         output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
@@ -173,7 +165,7 @@ class ConanDockerTools(object):
         subprocess.call(
             'docker run --rm -i hadolint/hadolint < %s/Dockerfile' % build_dir, shell=True)
 
-    def test(self, arch, compiler_name, compiler_version, distro):
+    def test(self, arch, compiler_name, compiler_version, distro=""):
         """Validate Docker image by Conan install
         :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
@@ -358,27 +350,47 @@ class ConanDockerTools(object):
         else:
             logging.info("Skipping %s image creation" % image_name)
 
-    def run(self):
-        """Execute all 3 stages for all versions in compilers list
-        """
-        distro = "" if not self.variables.docker_distro else "-%s" % self.variables.docker_distro
+    def process_regular_images(self):
         cross = "" if not self.variables.docker_cross else "%s-" % self.variables.docker_cross
         for arch in self.variables.docker_archs:
             for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
                 for version in compiler.versions:
                     tag_arch = "" if arch == "x86_64" else "-%s" % arch
-                    service = "%s%s%s%s%s" % (cross, compiler.name, version.replace(".", ""), distro, tag_arch)
-                    build_dir = "%s%s_%s%s%s" % (cross, compiler.name, version, distro, tag_arch)
+                    service = "%s%s%s%s" % (cross, compiler.name, version.replace(".", ""), tag_arch)
+                    build_dir = "%s%s_%s%s" % (cross, compiler.name, version, tag_arch)
 
                     self.service = service
                     self.login()
                     self.linter(build_dir)
                     self.build()
                     self.tag()
-                    self.test(arch, compiler.name, version, self.variables.docker_distro)
+                    self.test(arch, compiler.name, version)
                     self.info()
                     self.deploy()
 
+    def process_distro_images(self):
+        if self.variables.docker_distro:
+            for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
+                for version in compiler.versions:
+                    for distro in self.variables.docker_distro:
+                        distro = "-%s" % distro
+                        service = "%s%s%s" % (compiler.name, version.replace(".", ""), distro)
+                        build_dir = "%s_%s%s" % (compiler.name, version, distro)
+
+                        self.service = service
+                        self.login()
+                        self.linter(build_dir)
+                        self.build()
+                        self.tag()
+                        self.test("x86_64", compiler.name, version, distro)
+                        self.info()
+                        self.deploy()
+
+    def run(self):
+        """Execute all 3 stages for all versions in compilers list
+        """
+        self.process_regular_images()
+        self.process_distro_images()
         self.process_conan_server()
 
 
