@@ -1,4 +1,4 @@
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ dicso main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ dicso-updates main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ dicso-security main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ dicso-backports main restricted universe multiverse
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ disco main restricted universe multiverse
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ disco-updates main restricted universe multiverse
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ disco-security main restricted universe multiverse
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ disco-backports main restricted universe multiverse
