@@ -266,7 +266,7 @@ services:
         image: "${DOCKER_USERNAME}/gcc9-armv7hf:${DOCKER_BUILD_TAG}"
         container_name: gcc9-armv7hf
         tty: true
-    gcc9-armv9:
+    gcc9-armv8:
         build:
             context: gcc_9-armv8
             dockerfile: Dockerfile
@@ -538,6 +538,23 @@ services:
                 SOURCE_CONANIO_IMAGE: conanio/gcc8-x86
         image: "${DOCKER_USERNAME}/gcc8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc8-jnlp-slave-x86
+        tty: true
+    gcc9-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc9
+        image: "${DOCKER_USERNAME}/gcc9-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc9-jnlp-slave
+    gcc9-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc9-x86
+        image: "${DOCKER_USERNAME}/gcc9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc9-jnlp-slave-x86
         tty: true
     gcc7-jnlp-slave-centos6:
         build:
