@@ -15,7 +15,7 @@ ENV CC=arm-linux-gnueabi-gcc-9 \
 
 RUN sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
-       ".*8.*arm-linux-gnueabi.*" \
+       ".*9.*arm-linux-gnueabi.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcc arm-linux-gnueabi-gcc /usr/bin/arm-linux-gnueabi-gcc-9 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-g++ arm-linux-gnueabi-g++ /usr/bin/arm-linux-gnueabi-g++-9 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcov arm-linux-gnueabi-gcov /usr/bin/arm-linux-gnueabi-gcov-9 100 \
