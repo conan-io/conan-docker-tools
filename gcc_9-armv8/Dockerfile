@@ -19,7 +19,7 @@ RUN sudo dpkg --add-architecture arm64 \
     && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
     && sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends \
-       ".*8.*aarch64-linux-gnu.*" \
+       ".*9.*aarch64-linux-gnu.*" \
     && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-9 100 \
     && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-9 100 \
     && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcov aarch64-linux-gnu-gcov /usr/bin/aarch64-linux-gnu-gcov-9 100 \
