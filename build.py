@@ -370,21 +370,25 @@ class ConanDockerTools(object):
 
     def process_distro_images(self):
         if self.variables.docker_distro:
-            for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
-                for version in compiler.versions:
-                    for distro in self.variables.docker_distro:
-                        distro = "-%s" % distro
-                        service = "%s%s%s" % (compiler.name, version.replace(".", ""), distro)
-                        build_dir = "%s_%s%s" % (compiler.name, version, distro)
+            for arch in self.variables.docker_archs:
+                if arch != "x86" and arch != "x86_64":
+                    continue
+                for compiler in [self.gcc_compiler, self.clang_compiler, self.visual_compiler]:
+                    for version in compiler.versions:
+                        for distro in self.variables.docker_distro:
+                            tag_arch = "" if arch == "x86_64" else "-%s" % arch
+                            distro = "-%s" % distro
+                            service = "%s%s%s%s" % (compiler.name, version.replace(".", ""), distro, tag_arch)
+                            build_dir = "%s_%s%s" % (compiler.name, version, distro)
 
-                        self.service = service
-                        self.login()
-                        self.linter(build_dir)
-                        self.build()
-                        self.tag()
-                        self.test("x86_64", compiler.name, version, distro)
-                        self.info()
-                        self.deploy()
+                            self.service = service
+                            self.login()
+                            self.linter(build_dir)
+                            self.build()
+                            self.tag()
+                            self.test(tag_arch, compiler.name, version, distro)
+                            self.info()
+                            self.deploy()
 
     def run(self):
         """Execute all 3 stages for all versions in compilers list
