@@ -88,6 +88,15 @@ jobs:
         GCC_VERSIONS: "8"
         DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu GCC 9:
+        GCC_VERSIONS: "9"
+        DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"
+        DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu GCC 9 x86:
+        GCC_VERSIONS: "9"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+
 
       Ubuntu Clang 3.8 x86_64:
         CLANG_VERSIONS: "3.8"

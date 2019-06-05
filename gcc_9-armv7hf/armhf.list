@@ -1,0 +1,4 @@
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ disco main restricted universe multiverse
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ disco-updates main restricted universe multiverse
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ disco-security main restricted universe multiverse
+deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ disco-backports main restricted universe multiverse
