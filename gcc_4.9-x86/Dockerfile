@@ -51,14 +51,6 @@ RUN dpkg --add-architecture i386 \
     && make -s install > /dev/null \
     && cd - \
     && rm -rf cmake-* \
-    && groupadd 1001 -g 1001 \
-    && groupadd 1000 -g 1000 \
-    && groupadd 2000 -g 2000 \
-    && groupadd 999 -g 999 \
-    && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
-    && printf "conan:conan" | chpasswd \
-    && adduser conan sudo \
-    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
     && sed -i '0,/python3/s//python/' /usr/bin/lsb_release \
     && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
@@ -69,7 +61,6 @@ RUN dpkg --add-architecture i386 \
     && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
-    && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
@@ -77,9 +68,6 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/local/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/local/bin/pip pip /opt/pyenv/shims/pip 100
 
-USER conan
-WORKDIR /home/conan
-
-RUN mkdir -p /home/conan/.conan \
+RUN mkdir -p /rooot/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
     && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc

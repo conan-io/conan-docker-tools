@@ -15,17 +15,17 @@ ENV CC=aarch64-linux-gnu-gcc-9 \
 
 COPY arm64.list /etc/apt/sources.list.d/arm64.list
 
-RUN sudo dpkg --add-architecture arm64 \
-    && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
-    && sudo apt-get -qq update \
-    && sudo apt-get install -y --no-install-recommends \
+RUN dpkg --add-architecture arm64 \
+    && sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
+    && apt-get -qq update \
+    && apt-get install -y --no-install-recommends \
        ".*9.*aarch64-linux-gnu.*" \
-    && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-9 100 \
-    && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-9 100 \
-    && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcov aarch64-linux-gnu-gcov /usr/bin/aarch64-linux-gnu-gcov-9 100 \
-    && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcov-dump aarch64-linux-gnu-gcov-dump /usr/bin/aarch64-linux-gnu-gcov-dump-9 100 \
-    && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcov-tool aarch64-linux-gnu-gcov-tool /usr/bin/aarch64-linux-gnu-gcov-tool-9 100 \
-    && sudo rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-9 100 \
+    && update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-9 100 \
+    && update-alternatives --install /usr/bin/aarch64-linux-gnu-gcov aarch64-linux-gnu-gcov /usr/bin/aarch64-linux-gnu-gcov-9 100 \
+    && update-alternatives --install /usr/bin/aarch64-linux-gnu-gcov-dump aarch64-linux-gnu-gcov-dump /usr/bin/aarch64-linux-gnu-gcov-dump-9 100 \
+    && update-alternatives --install /usr/bin/aarch64-linux-gnu-gcov-tool aarch64-linux-gnu-gcov-tool /usr/bin/aarch64-linux-gnu-gcov-tool-9 100 \
+    && rm -rf /var/lib/apt/lists/* \
     && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv8 default

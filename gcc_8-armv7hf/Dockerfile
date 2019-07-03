@@ -16,16 +16,16 @@ ENV CC=arm-linux-gnueabihf-gcc-8 \
 COPY sources.list /etc/apt/sources.list
 COPY armhf.list /etc/apt/sources.list.d/armhf.list
 
-RUN sudo dpkg --add-architecture armhf \
-    && sudo apt-get -qq update \
-    && sudo apt-get install -y --no-install-recommends \
+RUN dpkg --add-architecture armhf \
+    && apt-get -qq update \
+    && apt-get install -y --no-install-recommends \
        ".*8.*arm-linux-gnueabihf.*" \
-    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-8 100 \
-    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-8 100 \
-    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov arm-linux-gnueabihf-gcov /usr/bin/arm-linux-gnueabihf-gcov-8 100 \
-    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-dump arm-linux-gnueabihf-gcov-dump /usr/bin/arm-linux-gnueabihf-gcov-dump-8 100 \
-    && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-tool arm-linux-gnueabihf-gcov-tool /usr/bin/arm-linux-gnueabihf-gcov-tool-8 100 \
-    && sudo rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-8 100 \
+    && update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-8 100 \
+    && update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov arm-linux-gnueabihf-gcov /usr/bin/arm-linux-gnueabihf-gcov-8 100 \
+    && update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-dump arm-linux-gnueabihf-gcov-dump /usr/bin/arm-linux-gnueabihf-gcov-dump-8 100 \
+    && update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-tool arm-linux-gnueabihf-gcov-tool /usr/bin/arm-linux-gnueabihf-gcov-tool-8 100 \
+    && rm -rf /var/lib/apt/lists/* \
     && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7hf default

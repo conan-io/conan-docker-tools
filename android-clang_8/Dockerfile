@@ -36,13 +36,13 @@ ENV ANDROID_NDK=$ANDROID_NDK \
 
 COPY cmake-wrapper /cmake-wrapper
 
-RUN sudo apt-get update \
-    && sudo apt-get -qq install -y --no-install-recommends unzip \
-    && sudo rm -rf /var/lib/apt/lists/* \
-    && sudo curl -s https://dl.google.com/android/repository/android-ndk-r19c-linux-x86_64.zip -O \
-    && sudo unzip -qq android-ndk-r19c-linux-x86_64.zip -d / \
-    && sudo rm -f android-ndk-r19c-linux-x86_64.zip \
-    && sudo chmod +x /cmake-wrapper \
+RUN apt-get update \
+    && apt-get -qq install -y --no-install-recommends unzip \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -s https://dl.google.com/android/repository/android-ndk-r19c-linux-x86_64.zip -O \
+    && unzip -qq android-ndk-r19c-linux-x86_64.zip -d / \
+    && rm -f android-ndk-r19c-linux-x86_64.zip \
+    && chmod +x /cmake-wrapper \
     && conan profile new default --detect \
     && conan profile update settings.os=Android default \
     && conan profile update settings.os.api_level=21 default \

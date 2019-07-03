@@ -15,10 +15,10 @@ ENV CC=x86_64-w64-mingw32-gcc \
     WINDRES=x86_64-w64-mingw32-windres \
     RC=x86_64-w64-mingw32-windres
 
-RUN sudo apt-get -qq update \
-    && sudo apt-get -qq install -y --force-yes --no-install-recommends \
+RUN apt-get -qq update \
+    && apt-get -qq install -y --force-yes --no-install-recommends \
        g++-mingw-w64-x86-64=7.* \
-    && sudo pip install -q --no-cache-dir conan --upgrade \
-    && sudo rm -rf /var/lib/apt/lists/* \
+    && pip install -q --no-cache-dir conan --upgrade \
+    && rm -rf /var/lib/apt/lists/* \
     && conan profile new default --detect \
     && conan profile update settings.os=Windows default

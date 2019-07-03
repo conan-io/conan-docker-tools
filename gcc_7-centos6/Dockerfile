@@ -65,15 +65,9 @@ RUN yum update -y \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && sed -i 's/# %wheel/%wheel/g' /etc/sudoers \
-    && groupadd 1001 -g 1001 \
-    && useradd -ms /bin/bash conan -g 1001 -G wheel \
-    && printf "conan:conan" | chpasswd \
     && chgrp -R wheel /opt/rh/rh-python36/root \
     && chmod -R g+w -R /opt/rh/rh-python36/root
 
 # Fix sudo with arguments: https://bugzilla.redhat.com/show_bug.cgi?id=1319936
 COPY sudo /opt/rh/devtoolset-7/root/usr/bin/sudo
 RUN chmod a+x /opt/rh/devtoolset-7/root/usr/bin/sudo
-
-USER conan
-WORKDIR /home/conan
