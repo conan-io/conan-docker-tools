@@ -14,25 +14,25 @@ ENV LLVM_VERSION=7.0 \
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.8.* \
-       wget=1.19.* \
-       git=1:2.19.* \
+       sudo=1.* \
+       wget=1.* \
+       git=1:2.* \
        g++-multilib=4:8.* \
-       clang-7=1:7-* \
-       make=4.2.* \
+       clang-7=1:* \
+       make=4.* \
        libc6-dev=2.* \
-       libgmp-dev=2:6.1.* \
-       libmpfr-dev=4.0.* \
-       libmpc-dev=1.1.* \
-       nasm=2.13.* \
+       libgmp-dev=2:6.* \
+       libmpfr-dev=4.* \
+       libmpc-dev=1.* \
+       nasm=2.* \
        dh-autoreconf=19 \
-       libffi-dev=3.2.* \
+       libffi-dev=3.* \
        libssl-dev=1.* \
-       ninja-build=1.8.* \
-       libc++-dev=6.0.* \
-       libc++abi-dev=6.0.* \
-       pkg-config=0.29.* \
-       subversion=1.10.* \
+       ninja-build=1.* \
+       libc++-dev=6.* \
+       libc++abi-dev=6.* \
+       pkg-config=0.* \
+       subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
@@ -51,9 +51,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.3.tar.gz \
-    && tar -xzf cmake-3.14.3.tar.gz \
-    && cd cmake-3.14.3 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.5.tar.gz \
+    && tar -xzf cmake-3.14.5.tar.gz \
+    && cd cmake-3.14.5 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \

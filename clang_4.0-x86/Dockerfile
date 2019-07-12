@@ -16,29 +16,29 @@ COPY sources.list /etc/apt/sources.list
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.8.20p2-1ubuntu1 \
-       wget=1.19.1-3ubuntu1 \
-       git=1:2.14.1-1ubuntu4 \
-       g++=4:7.2.0-1ubuntu1 \
-       clang-${LLVM_VERSION}=1:4.0.1-6 \
-       llvm-${LLVM_VERSION}=1:4.0.1-6 \
-       llvm-${LLVM_VERSION}-dev=1:4.0.1-6 \
-       llvm-${LLVM_VERSION}-runtime=1:4.0.1-6 \
-       llvm=1:4.0-37~exp3ubuntu1 \
-       make=4.1-9.1 \
-       libc6-dev=2.26-0ubuntu2.1 \
-       libgmp-dev=2:6.1.2+dfsg-1 \
-       libmpfr-dev=3.1.6-1 \
-       libmpc-dev=1.0.3-2 \
-       nasm=2.13.01-2 \
+       sudo=1.* \
+       wget=1.* \
+       git=1:2.* \
+       g++=4:7.* \
+       clang-${LLVM_VERSION}=1:4.* \
+       llvm-${LLVM_VERSION}=1:4.* \
+       llvm-${LLVM_VERSION}-dev=1:4.* \
+       llvm-${LLVM_VERSION}-runtime=1:4.* \
+       llvm=1:4.* \
+       make=4.* \
+       libc6-dev=2.* \
+       libgmp-dev=2:6.* \
+       libmpfr-dev=3.* \
+       libmpc-dev=1.* \
+       nasm=2.* \
        dh-autoreconf=14 \
-       libffi-dev=3.2.1-6 \
-       libssl-dev=1.0.2* \
-       ninja-build=1.7.2-3 \
-       libc++-dev=3.9.1-3 \
-       libc++abi-dev=3.9.1-3 \
-       pkg-config=0.29.1-0ubuntu2 \
-       subversion=1.9.7-2ubuntu1 \
+       libffi-dev=3.* \
+       libssl-dev=1.* \
+       ninja-build=1.* \
+       libc++-dev=3.* \
+       libc++abi-dev=3.* \
+       pkg-config=0.* \
+       subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
@@ -57,9 +57,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-${LLVM_VERSION} 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.3.tar.gz \
-    && tar -xzf cmake-3.14.3.tar.gz \
-    && cd cmake-3.14.3 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.5.tar.gz \
+    && tar -xzf cmake-3.14.5.tar.gz \
+    && cd cmake-3.14.5 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \

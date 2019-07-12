@@ -15,31 +15,31 @@ COPY sources.list /etc/apt/sources.list
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.8.* \
-       wget=1.18* \
+       sudo=1.* \
+       wget=1.* \
        git=1:2.* \
-       clang-${LLVM_VERSION}=1:3.8.1-* \
-       llvm-${LLVM_VERSION}=1:3.8.1-* \
-       llvm-${LLVM_VERSION}-dev=1:3.8.1-* \
-       llvm-${LLVM_VERSION}-runtime=1:3.8.1-* \
-       llvm=1:4.0-* \
-       make=4.1-* \
-       libc6-dev-i386=2.24-* \
-       g++-multilib=4:6.3.* \
-       libgmp-dev=2:6.1.* \
-       libmpfr-dev=3.1.* \
-       libmpc-dev=1.0.* \
-       nasm=2.12.* \
+       clang-${LLVM_VERSION}=1:3.* \
+       llvm-${LLVM_VERSION}=1:3.* \
+       llvm-${LLVM_VERSION}-dev=1:3.* \
+       llvm-${LLVM_VERSION}-runtime=1:3.* \
+       llvm=1:4.* \
+       make=4.* \
+       libc6-dev-i386=2.* \
+       g++-multilib=4:6.* \
+       libgmp-dev=2:6.* \
+       libmpfr-dev=3.* \
+       libmpc-dev=1.* \
+       nasm=2.* \
        dh-autoreconf=13 \
-       libffi-dev=3.2.* \
-       libssl-dev=1.0.* \
-       ninja-build=1.7.* \
-       libc++-dev=3.9.* \
-       libc++-dev:i386=3.9.* \
-       libc++abi-dev=3.9.* \
-       libc++abi-dev:i386=3.9.* \
-       pkg-config=0.29.1-0ubuntu1 \
-       subversion=1.9.5-1ubuntu1.1 \
+       libffi-dev=3.* \
+       libssl-dev=1.* \
+       ninja-build=1.* \
+       libc++-dev=3.* \
+       libc++-dev:i386=3.* \
+       libc++abi-dev=3.* \
+       libc++abi-dev:i386=3.* \
+       pkg-config=0.* \
+       subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
@@ -56,14 +56,14 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.14/cmake-3.14.3-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.14.3-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.14/cmake-3.14.5-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.14.5-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.14.3-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.14.3-Linux-x86_64 \
-    && rm cmake-3.14.3-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.14.5-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.14.5-Linux-x86_64 \
+    && rm cmake-3.14.5-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
