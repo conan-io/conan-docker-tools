@@ -34,13 +34,13 @@ RUN apt-get -qq update \
        ca-certificates \
        autoconf-archive \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate -O /tmp/cmake-3.14.3-Linux-x86_64.tar.gz http://cmake.org/files/v3.14/cmake-3.14.3-Linux-x86_64.tar.gz \
-    && tar -xzf /tmp/cmake-3.14.3-Linux-x86_64.tar.gz -C /tmp \
+    && wget -q --no-check-certificate -O /tmp/cmake-3.14.5-Linux-x86_64.tar.gz http://cmake.org/files/v3.14/cmake-3.14.5-Linux-x86_64.tar.gz \
+    && tar -xzf /tmp/cmake-3.14.5-Linux-x86_64.tar.gz -C /tmp \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.12/Help \
-    && cp -fR /tmp/cmake-3.14.3-Linux-x86_64/* /usr \
-    && rm -rf /tmp/cmake-3.14.3-Linux-x86_64* \
+    && cp -fR /tmp/cmake-3.14.5-Linux-x86_64/* /usr \
+    && rm -rf /tmp/cmake-3.14.5-Linux-x86_64* \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \

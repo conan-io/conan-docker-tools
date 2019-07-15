@@ -44,14 +44,14 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.3-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.14.3-Linux-x86_64.tar.gz \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.5-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.14.5-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.14.3-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.14.3-Linux-x86_64 \
-    && rm cmake-3.14.3-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.14.5-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.14.5-Linux-x86_64 \
+    && rm cmake-3.14.5-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
