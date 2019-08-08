@@ -55,7 +55,7 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && tar -zxf /tmp/git-2.22.0.tar.gz -C /tmp \
     && pushd /tmp/git-2.22.0 \
     && ./configure --prefix=/usr --without-tcltk --with-curl \
-    && make \
+    && make -s \
     && make install \
     && yum remove -y gettext libcurl-devel \
     && popd \
