@@ -1,4 +1,4 @@
-FROM ubuntu:disco
+FROM ubuntu:cosmic
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -17,7 +17,6 @@ RUN dpkg --add-architecture i386 \
        wget=1.* \
        git=1:2.* \
        g++-multilib=4:8.* \
-       clang-8=1:8* \
        make=4.* \
        libc6-dev-i386=2.* \
        libgmp-dev=2:6.* \
@@ -28,14 +27,12 @@ RUN dpkg --add-architecture i386 \
        libffi-dev=3.* \
        libssl-dev=1* \
        ninja-build=1.* \
-       libc++-dev=1:8.* \
-       libc++abi-dev=1:8.* \
        pkg-config=0.* \
        subversion=1.* \
        zlib1g-dev=1:1.* \
        libbz2-dev=1.* \
        libsqlite3-dev=3.* \
-       libreadline-dev=8.* \
+       libreadline-dev=7.* \
        xz-utils=5.* \
        curl=7.* \
        libncurses5-dev=6.* \
@@ -43,11 +40,18 @@ RUN dpkg --add-architecture i386 \
        liblzma-dev=5.* \
        gnupg=2.* \
        ca-certificates \
-
-       # FIXME (uilian): https://bugs.launchpad.net/ubuntu/+source/llvm-defaults/+bug/1819768
-       # libc++abi-dev:i386=1:8.* \
-       # libc++-dev:i386=1:8.* \
-
+       software-properties-common \
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && add-apt-repository "deb http://apt.llvm.org/cosmic/ llvm-toolchain-cosmic main" \
+    && add-apt-repository "deb http://apt.llvm.org/cosmic/ llvm-toolchain-cosmic-7 main" \
+    && add-apt-repository "deb http://apt.llvm.org/cosmic/ llvm-toolchain-cosmic-8 main" \
+    && apt-get -qq update \
+    && apt-get install -y --no-install-recommends \
+       clang-8 \
+       libc++-dev=6.* \
+       libc++-dev:i386=6.* \
+       libc++abi-dev=6.* \
+       libc++abi-dev:i386=6.* \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-8 100 \
