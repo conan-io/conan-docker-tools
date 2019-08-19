@@ -18,7 +18,6 @@ RUN yum update -y \
     && yum install -y \
        sudo \
        wget \
-       git \
        make \
        glibc-devel \
        glibc-devel.i686 \
@@ -41,7 +40,18 @@ RUN yum update -y \
        rh-python36 \
        help2man \
        autoconf-archive \
+       gettext \
+       libcurl-devel \
     && yum clean all \
+    && wget -O /tmp/git-2.22.0.tar.gz --no-check-certificate --quiet https://www.kernel.org/pub/software/scm/git/git-2.22.0.tar.gz \
+    && tar -zxf /tmp/git-2.22.0.tar.gz -C /tmp \
+    && pushd /tmp/git-2.22.0 \
+    && ./configure --prefix=/usr --without-tcltk --with-curl \
+    && make -s \
+    && make install \
+    && yum remove -y gettext libcurl-devel \
+    && popd \
+    && rm -rf /tmp/git-* \
     && wget -O /tmp/autoconf-2.69.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
     && tar -zxf /tmp/autoconf-2.69.tar.gz -C /tmp \
     && pushd /tmp/autoconf-2.69 \
