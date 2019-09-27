@@ -36,9 +36,9 @@ RUN dpkg --add-architecture i386 \
        autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.14/cmake-3.14.5.tar.gz \
-    && tar -xzf cmake-3.14.5.tar.gz \
-    && cd cmake-3.14.5 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.15/cmake-3.15.3.tar.gz \
+    && tar -xzf cmake-3.15.3.tar.gz \
+    && cd cmake-3.15.3 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
