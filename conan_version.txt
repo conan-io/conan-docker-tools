@@ -74,3 +74,5 @@ Bumped for Conan 1.19.0
 
 Bumped for Conan 1.19.1
 
+Bumped for Conan 1.19.2
+
