@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo docker build --no-cache -t conanio/clang8-x86 .
+sudo docker build --no-cache -t conanio/clang9-x86 .

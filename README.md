@@ -71,6 +71,8 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported |
 | - [conanio/clang8-x86: clang 8](https://hub.docker.com/r/conanio/clang8-x86/)         | x86    |  Supported |
 | - [conanio/clang8: clang 8](https://hub.docker.com/r/conanio/clang8/)                 | x86_64 |  Supported |
+| - [conanio/clang8-x86: clang 9](https://hub.docker.com/r/conanio/clang9-x86/)         | x86    |  Supported |
+| - [conanio/clang8: clang 9](https://hub.docker.com/r/conanio/clang9/)                 | x86_64 |  Supported |
 
 
 #### Visual Studio
@@ -207,6 +209,8 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 | - [conanio/clang7-jnlp-slave: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave/)                 | x86_64 |  Supported |
 | - [conanio/clang8-jnlp-slave-x86: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave-x86/)         | x86    |  Supported |
 | - [conanio/clang8-jnlp-slave: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave/)                 | x86_64 |  Supported |
+| - [conanio/clang8-jnlp-slave-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave-x86/)         | x86    |  Supported |
+| - [conanio/clang8-jnlp-slave: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave/)                 | x86_64 |  Supported |
 
 
 
