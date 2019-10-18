@@ -1,4 +1,4 @@
-FROM python:3.7-alpine3.7
+FROM python:3.8.0-alpine3.10
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
