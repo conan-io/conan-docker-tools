@@ -700,8 +700,8 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang9
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang8-jnlp-slave
+        image: "${DOCKER_USERNAME}/clang9-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang9-jnlp-slave
         tty: true
     clang9-jnlp-slave-x86:
         build:
@@ -709,6 +709,6 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang9-x86
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang8-jnlp-slave-x86
+        image: "${DOCKER_USERNAME}/clang9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: clang9-jnlp-slave-x86
         tty: true

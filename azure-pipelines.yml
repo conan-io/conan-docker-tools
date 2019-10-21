@@ -142,6 +142,13 @@ jobs:
         CLANG_VERSIONS: "8"
         DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu Clang 9 x86_64:
+        CLANG_VERSIONS: "9"
+        DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu Clang 9 x86:
+        CLANG_VERSIONS: "9"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
 
       Android Clang 8:
         DOCKER_CROSS: "android"
