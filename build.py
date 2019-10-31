@@ -323,6 +323,8 @@ class ConanDockerTools(object):
             logging.info("Clang 7 will upload the alias Clang 7.0")
             subprocess.check_call("docker push %s" %
                 self.tagged_image_name.replace("clang7", "clang70"), shell=True)
+            subprocess.check_call("docker push %s" %
+                self.created_image_name.replace("clang7", "clang70"), shell=True)
 
     def tag(self):
         """Apply Docker tag name
