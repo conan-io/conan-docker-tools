@@ -1,4 +1,4 @@
-FROM ubuntu:disco
+FROM ubuntu:eoan
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
