@@ -77,6 +77,14 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && make install \
     && popd \
     && rm -rf /tmp/automake-1.16* \
+    && wget --quiet -O /tmp/OpenSSL_1_0_2q.tar.gz https://github.com/openssl/openssl/archive/OpenSSL_1_0_2q.tar.gz \
+    && tar zxf /tmp/OpenSSL_1_0_2q.tar.gz -C /tmp \
+    && pushd /tmp/openssl-OpenSSL_1_0_2q \
+    && ./Configure --prefix=/usr shared zlib linux-generic32 \
+    && make -j`nproc` > /dev/null \
+    && make install > /dev/null \
+    && popd \
+    && rm -rf /tmp/openssl-* /tmp/OpenSSL* \
     && wget --no-check-certificate --quiet -O /tmp/cmake-3.16.1.tar.gz https://cmake.org/files/v3.16/cmake-3.16.1.tar.gz \
     && tar -xzf /tmp/cmake-3.16.1.tar.gz -C /tmp \
     && pushd /tmp/cmake-3.16.1 \
@@ -88,14 +96,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
-    && wget --quiet -O /tmp/OpenSSL_1_0_2q.tar.gz https://github.com/openssl/openssl/archive/OpenSSL_1_0_2q.tar.gz \
-    && tar zxf /tmp/OpenSSL_1_0_2q.tar.gz -C /tmp \
-    && pushd /tmp/openssl-OpenSSL_1_0_2q \
-    && ./Configure --prefix=/usr shared zlib linux-generic32 \
-    && make -j`nproc` > /dev/null \
-    && make install > /dev/null \
-    && popd \
-    && rm -rf /tmp/openssl-* /tmp/OpenSSL* \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
     && pyenv install 3.6.7 \
