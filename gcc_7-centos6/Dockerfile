@@ -52,6 +52,14 @@ RUN yum update -y \
     && yum remove -y gettext libcurl-devel \
     && popd \
     && rm -rf /tmp/git-* \
+    && wget -O /tmp/libtool-2.4.6.tar.gz --no-check-certificate --quiet  http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz \
+    && tar -zxf /tmp/libtool-2.4.6.tar.gz -C /tmp \
+    && pushd /tmp/libtool-2.4.6 \
+    && ./configure --prefix=/usr \
+    && make -s \
+    && make install \
+    && popd \
+    && rm -rf /tmp/libtool-2.4.6* \
     && wget -O /tmp/autoconf-2.69.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
     && tar -zxf /tmp/autoconf-2.69.tar.gz -C /tmp \
     && pushd /tmp/autoconf-2.69 \
