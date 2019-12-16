@@ -45,6 +45,9 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-6 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-6 100 \
+    && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-6 100 \
+    && update-alternatives --install /usr/bin/gcov-dump gcov-dump /usr/bin/gcov-dump-6 100 \
+    && update-alternatives --install /usr/bin/gcov-tool gcov-tool /usr/bin/gcov-tool-6 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.tar.gz \

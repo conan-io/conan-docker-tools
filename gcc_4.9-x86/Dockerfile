@@ -43,6 +43,7 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
+    && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 100 \
     && wget --no-check-certificate --quiet https://cmake.org/files/v3.15/cmake-3.15.3.tar.gz \
     && tar -xzf cmake-3.15.3.tar.gz \
     && cd cmake-3.15.3 \
