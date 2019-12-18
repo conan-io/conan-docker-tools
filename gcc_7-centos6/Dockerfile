@@ -16,30 +16,30 @@ ENV PATH=/opt/rh/rh-python36/root/usr/bin:/opt/rh/devtoolset-7/root/usr/bin:${PA
 RUN yum update -y \
     && yum install -y centos-release-scl \
     && yum install -y \
-       sudo \
-       wget \
-       make \
+       autoconf \
+       autoconf-archive \
+       automake \
+       curl \
+       devtoolset-7-toolchain \
+       gettext \
        glibc-devel \
        glibc-devel.i686 \
-       libgcc.i686 \
-       nasm \
+       help2man \
+       libcurl-devel \
        libffi-devel \
+       libgcc.i686 \
+       libtool \
+       make \
+       nasm \
        openssl-devel \
        pkgconfig \
-       subversion \
-       zlib-devel \
-       xz \
-       curl \
-       tar \
-       devtoolset-7-toolchain \
        rh-python36 \
-       help2man \
-       autoconf-archive \
-       gettext \
-       libcurl-devel \
-       autoconf \
-       automake \
-       libtools \
+       subversion \
+       sudo \
+       tar \
+       wget \
+       xz \
+       zlib-devel \
     && yum clean all \
     && wget -O /tmp/git-2.22.0.tar.gz --no-check-certificate --quiet https://www.kernel.org/pub/software/scm/git/git-2.22.0.tar.gz \
     && tar -zxf /tmp/git-2.22.0.tar.gz -C /tmp \
