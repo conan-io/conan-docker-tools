@@ -712,3 +712,17 @@ services:
         image: "${DOCKER_USERNAME}/clang9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang9-jnlp-slave-x86
         tty: true
+    conantests:
+        build:
+            context: conan_tests
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conantests:${DOCKER_BUILD_TAG}"
+        container_name: conantests
+        tty: true
+    conantestazure:
+        build:
+            context: conan_test_azure
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conantestazure:${DOCKER_BUILD_TAG}"
+        container_name: conan-test-azure
+        tty: true

@@ -18,6 +18,7 @@ RUN sudo apt-get update \
     python3.5-dev \
     python3.6-dev \
     python3.7-dev \
+    python3.8-dev \
     golang \
     pkg-config \
     && sudo rm -rf /var/lib/apt/lists/* \
