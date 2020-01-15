@@ -12,29 +12,29 @@ RUN dpkg --add-architecture i386 \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
     && apt-get install -y --force-yes --no-install-recommends \
-       sudo=1.* \
-       g++-4.9=4.9.* \
-       g++-4.9-multilib=4.9.* \
-       libc6-dev-i386=2.* \
-       gcc-multilib=4:4.* \
-       wget=1.* \
+       sudo \
+       g++-4.9 \
+       g++-4.9-multilib \
+       libc6-dev-i386 \
+       gcc-multilib \
+       wget \
        git \
-       nasm=2.* \
-       dh-autoreconf=9 \
-       ninja-build=1.* \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=6.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=5.* \
-       libncursesw5-dev=5.* \
-       liblzma-dev=5.* \
+       nasm \
+       dh-autoreconf \
+       ninja-build \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
     && update-ca-certificates \
