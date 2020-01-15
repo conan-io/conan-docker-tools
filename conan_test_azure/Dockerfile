@@ -32,6 +32,7 @@ RUN dpkg --add-architecture i386 \
        python3.5 \
        python3.6 \
        python3.7 \
+       python3.8 \
        python-setuptools \
        python-dev \
        python3.4-dev \
