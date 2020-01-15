@@ -48,6 +48,8 @@ class ConanDockerTools(object):
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
         build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
+        build_tests = self._get_boolean_var("BUILD_CONAN_TESTS")
+        build_test_azure = self._get_boolean_var("BUILD_CONAN_TEST_AZURE")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
@@ -74,11 +76,12 @@ class ConanDockerTools(object):
             "gcc_versions, docker_distro, "
             "clang_versions, visual_versions, build_server, "
             "docker_build_tag, docker_archs, sudo_command, "
-            "docker_upload_only_when_stable, docker_cross, docker_cache")
+            "docker_upload_only_when_stable, docker_cross, docker_cache, "
+            "build_tests, build_test_azure")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, docker_distro, clang_versions, visual_versions, build_server,
                          docker_build_tag, docker_archs, sudo_command, docker_upload_only_when_stable,
-                         docker_cross, docker_cache)
+                         docker_cross, docker_cache, build_tests, build_test_azure)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -307,6 +310,20 @@ class ConanDockerTools(object):
             subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm %s" % self.service, shell=True)
 
+    def test_tests(self):
+        """ Validate Test Docker images
+        """
+        logging.info("Testing Docker running service %s." % self.service)
+        try:
+            subprocess.check_call("docker run -t -d --name %s %s" % (self.service,
+                self.created_image_name), shell=True)
+            output = subprocess.check_output(
+                "docker exec %s conan install -r conan-center zlib/1.2.11@conan/stable" % (self.service), shell=True)
+            assert "zlib/1.2.11@conan/stable: Package installed" in output.decode()
+        finally:
+            subprocess.call("docker stop %s" % self.service, shell=True)
+            subprocess.call("docker rm %s" % self.service, shell=True)
+
     def deploy(self):
         """Upload Docker image to dockerhub
         """
@@ -365,6 +382,26 @@ class ConanDockerTools(object):
         else:
             logging.info("Skipping %s image creation" % image_name)
 
+    def process_conan_tests(self):
+        """ Execute all steps required to build Conan Tests and Azure images
+        """
+        for image_name, build_image, build_dir in [
+                ("conantests", self.variables.build_tests, "conan_tests"),
+                ("conantestazure", self.variables.build_test_azure, "conan_test_azure")
+            ]:
+            if build_image:
+                self.service = image_name
+                logging.info("Bulding %s image..." % image_name)
+                self.login()
+                self.linter(build_dir)
+                self.build()
+                self.test_tests()
+                self.tag()
+                self.info()
+                self.deploy()
+            else:
+                logging.info("Skipping %s image creation" % image_name)
+
     def process_regular_images(self):
         cross = "" if not self.variables.docker_cross else "%s-" % self.variables.docker_cross
         for arch in self.variables.docker_archs:
@@ -411,6 +448,7 @@ class ConanDockerTools(object):
         self.process_regular_images()
         self.process_distro_images()
         self.process_conan_server()
+        self.process_conan_tests()
 
 
 if __name__ == "__main__":
