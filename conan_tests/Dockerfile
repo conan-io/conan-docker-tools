@@ -28,7 +28,8 @@ RUN sudo apt-get update \
     && cd /tmp && wget https://bootstrap.pypa.io/get-pip.py \
     && sudo python3 get-pip.py \
     && sudo pip install virtualenv \
-    && pip3 install PyGithub
+    && pip3 install PyGithub \
+    && pip3 install meson
 
 USER conan
 WORKDIR /home/conan
