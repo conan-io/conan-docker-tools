@@ -1,4 +1,4 @@
-FROM i386/ubuntu:trusty
+FROM i386/ubuntu:xenial
 ENTRYPOINT ["linux32", "--"]
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
@@ -10,8 +10,6 @@ ENV CONAN_ENV_ARCH=x86 \
     CC=/usr/bin/gcc
 
 RUN dpkg --add-architecture i386 \
-    && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
     && apt-get install -y --force-yes --no-install-recommends \
        sudo \
@@ -32,6 +30,7 @@ RUN dpkg --add-architecture i386 \
        libreadline-dev \
        xz-utils \
        curl \
+       lsb-release \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \

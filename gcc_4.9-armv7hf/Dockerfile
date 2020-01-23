@@ -1,37 +1,35 @@
-FROM ubuntu:wily
+FROM ubuntu:xenial
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
-COPY sources.list /etc/apt/sources.list
-
 RUN dpkg --add-architecture armhf \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
     ".*4\.9.*arm-linux-gnueabihf.*" \
-    sudo=1.8.* \
-    build-essential=12.* \
-    wget=1.16.* \
-    git=1:2.5.* \
-    nasm=2.11.* \
-    dh-autoreconf=10 \
+    sudo \
+    build-essential \
+    wget \
+    git \
+    nasm \
+    dh-autoreconf \
     libc6:armhf \
-    ninja-build=1.3.* \
-    libffi-dev=3.2.* \
-    libssl-dev=1.0.2* \
-    pkg-config=0.28-1ubuntu1 \
-    subversion=1.8.13-1ubuntu3 \
-    zlib1g-dev=1:1.* \
-    libbz2-dev=1.* \
-    libsqlite3-dev=3.* \
-    libreadline-dev=6.* \
-    xz-utils=5.* \
-    curl=7.* \
-    libncurses5-dev=5.* \
-    libncursesw5-dev=5.* \
-    liblzma-dev=5.* \
+    ninja-build \
+    libffi-dev \
+    libssl-dev \
+    pkg-config \
+    subversion \
+    zlib1g-dev \
+    libbz2-dev \
+    libsqlite3-dev \
+    libreadline-dev \
+    xz-utils \
+    curl \
+    libncurses5-dev \
+    libncursesw5-dev \
+    liblzma-dev \
     ca-certificates \
     autoconf-archive \
     && update-ca-certificates \
