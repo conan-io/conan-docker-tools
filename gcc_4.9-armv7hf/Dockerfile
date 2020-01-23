@@ -5,6 +5,9 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
+COPY sources.list /etc/apt/sources.list
+COPY armhf.list /etc/apt/sources.list.d/armhf.list
+
 RUN dpkg --add-architecture armhf \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
