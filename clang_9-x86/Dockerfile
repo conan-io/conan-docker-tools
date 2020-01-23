@@ -51,9 +51,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-9 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.15/cmake-3.15.3.tar.gz \
-    && tar -xzf cmake-3.15.3.tar.gz \
-    && cd cmake-3.15.3 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.16/cmake-3.16.1.tar.gz \
+    && tar -xzf cmake-3.16.1.tar.gz \
+    && cd cmake-3.16.1 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
@@ -72,8 +72,8 @@ RUN apt-get -qq update \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.1 \
-    && pyenv global 3.7.1 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
+    && pyenv global 3.7.5 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \

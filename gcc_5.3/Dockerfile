@@ -85,14 +85,14 @@ RUN dpkg --add-architecture i386 \
        autoconf-archive \
     && ln -s /usr/bin/g++-5 /usr/bin/g++ \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.15.3-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.16/cmake-3.16.1-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.16.1-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.14/Help \
-    && cp -fR cmake-3.15.3-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.15.3-Linux-x86_64 \
-    && rm cmake-3.15.3-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.16.1-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.16.1-Linux-x86_64 \
+    && rm cmake-3.16.1-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -106,8 +106,8 @@ RUN dpkg --add-architecture i386 \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.1 \
-    && pyenv global 3.7.1 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
+    && pyenv global 3.7.5 \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && pip install -q --upgrade --no-cache-dir pip \
