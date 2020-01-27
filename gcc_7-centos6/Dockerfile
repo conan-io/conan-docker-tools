@@ -22,11 +22,7 @@ RUN yum update -y \
        glibc-devel \
        glibc-devel.i686 \
        libgcc.i686 \
-       gmp-devel \
-       mpfr-devel \
-       libmpc-devel \
        nasm \
-       m4 \
        libffi-devel \
        openssl-devel \
        pkgconfig \
@@ -34,7 +30,6 @@ RUN yum update -y \
        zlib-devel \
        xz \
        curl \
-       xz-devel \
        tar \
        devtoolset-7-toolchain \
        rh-python36 \
@@ -42,6 +37,9 @@ RUN yum update -y \
        autoconf-archive \
        gettext \
        libcurl-devel \
+       autoconf \
+       automake \
+       libtools \
     && yum clean all \
     && wget -O /tmp/git-2.22.0.tar.gz --no-check-certificate --quiet https://www.kernel.org/pub/software/scm/git/git-2.22.0.tar.gz \
     && tar -zxf /tmp/git-2.22.0.tar.gz -C /tmp \
@@ -49,26 +47,9 @@ RUN yum update -y \
     && ./configure --prefix=/usr --without-tcltk --with-curl \
     && make -s \
     && make install \
-    && yum remove -y gettext libcurl-devel \
+    && yum remove -y gettext zlib-devel openssl-devel libcurl-devel \
     && popd \
     && rm -rf /tmp/git-* \
-    && wget -O /tmp/autoconf-2.69.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
-    && tar -zxf /tmp/autoconf-2.69.tar.gz -C /tmp \
-    && pushd /tmp/autoconf-2.69 \
-    && ./configure --prefix=/usr \
-    && make -s \
-    && make install \
-    && popd \
-    && rm -rf /tmp/autoconf-2.69* \
-    && wget -O /tmp/automake-1.16.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/automake/automake-1.16.tar.gz \
-    && tar -zxf /tmp/automake-1.16.tar.gz -C /tmp \
-    && pushd /tmp/automake-1.16 \
-    && ./configure --prefix=/usr \
-    && sed -i "s/'none';/'reduce';/g" bin/automake.in \
-    && make -s \
-    && make install \
-    && popd \
-    && rm -rf /tmp/automake-1.16* \
     && wget -O /tmp/cmake-3.16.1-Linux-x86_64.sh --no-check-certificate --quiet 'https://cmake.org/files/v3.16/cmake-3.16.1-Linux-x86_64.sh' \
     && bash /tmp/cmake-3.16.1-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir \
     && rm /tmp/cmake-3.16.1-Linux-x86_64.sh \
