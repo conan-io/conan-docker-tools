@@ -60,10 +60,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && yum remove -y gettext libcurl-devel \
     && popd \
     && rm -rf /tmp/git-* \
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Revert "Port addition of libtool and replacement of external autoconf and automake already verified on 64-bit version to the -x86 Dockerfile version. Sort the yum packages to make it easier to diff between Dockerfile versions and remove duplicate packages"
     && wget -O /tmp/autoconf-2.69.tar.gz --no-check-certificate --quiet https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
     && tar -zxf /tmp/autoconf-2.69.tar.gz -C /tmp \
     && pushd /tmp/autoconf-2.69 \
@@ -81,22 +77,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && make install \
     && popd \
     && rm -rf /tmp/automake-1.16* \
-<<<<<<< HEAD
-=======
-=======
->>>>>>> Revert "Port addition of libtool and replacement of external autoconf and automake already verified on 64-bit version to the -x86 Dockerfile version. Sort the yum packages to make it easier to diff between Dockerfile versions and remove duplicate packages"
-    && wget --no-check-certificate --quiet -O /tmp/cmake-3.15.3.tar.gz https://cmake.org/files/v3.15/cmake-3.15.3.tar.gz \
-    && tar -xzf /tmp/cmake-3.15.3.tar.gz -C /tmp \
-    && pushd /tmp/cmake-3.15.3 \
-    && ./bootstrap \
-    && make -s -j`nproc` > /dev/null \
-    && make -s install > /dev/null \
-    && popd \
-    && rm -rf /tmp/cmake-* \
-    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
-    && chmod +x /tmp/pyenv-installer \
-    && /tmp/pyenv-installer \
->>>>>>> Port addition of libtool and replacement of external autoconf and automake already verified on 64-bit version to the -x86 Dockerfile version. Sort the yum packages to make it easier to diff between Dockerfile versions and remove duplicate packages
     && wget --quiet -O /tmp/OpenSSL_1_0_2q.tar.gz https://github.com/openssl/openssl/archive/OpenSSL_1_0_2q.tar.gz \
     && tar zxf /tmp/OpenSSL_1_0_2q.tar.gz -C /tmp \
     && pushd /tmp/openssl-OpenSSL_1_0_2q \
