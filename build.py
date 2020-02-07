@@ -46,7 +46,7 @@ class ConanDockerTools(object):
         :return: Variables
         """
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
-        docker_upload_retry = self.getenv("DOCKER_UPLOAD_RETRY", "5")
+        docker_upload_retry = os.getenv("DOCKER_UPLOAD_RETRY", "5")
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
         build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
         build_tests = self._get_boolean_var("BUILD_CONAN_TESTS")
