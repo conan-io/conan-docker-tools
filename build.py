@@ -332,8 +332,9 @@ class ConanDockerTools(object):
             logging.info("Skipping upload. Docker account is not connected.")
             return
 
-        try:
-            for retry in range(self.variables.docker_upload_retry):
+
+        for retry in range(self.variables.docker_upload_retry):
+            try:
                 logging.info("Upload Docker image from service %s to Docker hub." % self.service)
                 subprocess.check_call("docker-compose push %s" % self.service, shell=True)
                 logging.info("Upload Docker image %s" % self.tagged_image_name)
@@ -346,9 +347,9 @@ class ConanDockerTools(object):
                     subprocess.check_call("docker push %s" %
                         self.created_image_name.replace("clang7", "clang70"), shell=True)
                 break
-        except:
-            logging.warn("Could not upload Docker image. Retry({})".format(retry+1))
-            pass
+            except:
+                logging.warn("Could not upload Docker image. Retry({})".format(retry+1))
+                pass
 
     def tag(self):
         """Apply Docker tag name
