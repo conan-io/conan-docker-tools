@@ -46,6 +46,7 @@ class ConanDockerTools(object):
         :return: Variables
         """
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
+        docker_upload_retry = self.getenv("DOCKER_UPLOAD_RETRY", "5")
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
         build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
         build_tests = self._get_boolean_var("BUILD_CONAN_TESTS")
@@ -77,11 +78,11 @@ class ConanDockerTools(object):
             "clang_versions, visual_versions, build_server, "
             "docker_build_tag, docker_archs, sudo_command, "
             "docker_upload_only_when_stable, docker_cross, docker_cache, "
-            "build_tests, build_test_azure")
+            "build_tests, build_test_azure docker_upload_retry")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, docker_distro, clang_versions, visual_versions, build_server,
                          docker_build_tag, docker_archs, sudo_command, docker_upload_only_when_stable,
-                         docker_cross, docker_cache, build_tests, build_test_azure)
+                         docker_cross, docker_cache, build_tests, build_test_azure, docker_upload_retry)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -331,17 +332,22 @@ class ConanDockerTools(object):
             logging.info("Skipping upload. Docker account is not connected.")
             return
 
-        logging.info("Upload Docker image from service %s to Docker hub." % self.service)
-        subprocess.check_call("docker-compose push %s" % self.service, shell=True)
-        logging.info("Upload Docker image %s" % self.tagged_image_name)
-        subprocess.check_call("docker push %s" % self.tagged_image_name, shell=True)
+        try:
+            for _ in range(self.variables.docker_upload_retry):
+                logging.info("Upload Docker image from service %s to Docker hub." % self.service)
+                subprocess.check_call("docker-compose push %s" % self.service, shell=True)
+                logging.info("Upload Docker image %s" % self.tagged_image_name)
+                subprocess.check_call("docker push %s" % self.tagged_image_name, shell=True)
 
-        if self.service == "clang7":
-            logging.info("Clang 7 will upload the alias Clang 7.0")
-            subprocess.check_call("docker push %s" %
-                self.tagged_image_name.replace("clang7", "clang70"), shell=True)
-            subprocess.check_call("docker push %s" %
-                self.created_image_name.replace("clang7", "clang70"), shell=True)
+                if self.service == "clang7":
+                    logging.info("Clang 7 will upload the alias Clang 7.0")
+                    subprocess.check_call("docker push %s" %
+                        self.tagged_image_name.replace("clang7", "clang70"), shell=True)
+                    subprocess.check_call("docker push %s" %
+                        self.created_image_name.replace("clang7", "clang70"), shell=True)
+                break
+        except:
+            pass
 
     def tag(self):
         """Apply Docker tag name
