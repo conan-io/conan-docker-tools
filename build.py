@@ -333,7 +333,7 @@ class ConanDockerTools(object):
             return
 
 
-        for retry in range(self.variables.docker_upload_retry):
+        for retry in range(int(self.variables.docker_upload_retry)):
             try:
                 logging.info("Upload Docker image from service %s to Docker hub." % self.service)
                 subprocess.check_call("docker-compose push %s" % self.service, shell=True)
