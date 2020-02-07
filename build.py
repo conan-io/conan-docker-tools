@@ -351,6 +351,7 @@ class ConanDockerTools(object):
                 if retry == int(self.variables.docker_upload_retry):
                     raise RuntimeError("Could not upload Docker image {}".format(self.tagged_image_name))
                 logging.warn("Could not upload Docker image. Retry({})".format(retry+1))
+                time.sleep(3)
                 pass
 
     def tag(self):
