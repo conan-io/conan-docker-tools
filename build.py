@@ -333,7 +333,7 @@ class ConanDockerTools(object):
             return
 
         try:
-            for _ in range(self.variables.docker_upload_retry):
+            for retry in range(self.variables.docker_upload_retry):
                 logging.info("Upload Docker image from service %s to Docker hub." % self.service)
                 subprocess.check_call("docker-compose push %s" % self.service, shell=True)
                 logging.info("Upload Docker image %s" % self.tagged_image_name)
@@ -347,6 +347,7 @@ class ConanDockerTools(object):
                         self.created_image_name.replace("clang7", "clang70"), shell=True)
                 break
         except:
+            logging.warn("Could not upload Docker image. Retry({})".format(retry+1))
             pass
 
     def tag(self):
