@@ -27,7 +27,7 @@ RUN sudo apt-get update \
     && sudo pip install --upgrade pip \
     && cd /tmp && wget https://bootstrap.pypa.io/get-pip.py \
     && sudo python3 get-pip.py \
-    && sudo pip install virtualenv \
+    && sudo pip install "virtualenv<20.0.0" \
     && pip3 install PyGithub \
     && pip3 install meson
 
