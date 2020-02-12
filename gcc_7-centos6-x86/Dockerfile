@@ -85,9 +85,9 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && make install > /dev/null \
     && popd \
     && rm -rf /tmp/openssl-* /tmp/OpenSSL* \
-    && wget --no-check-certificate --quiet -O /tmp/cmake-3.16.1.tar.gz https://cmake.org/files/v3.16/cmake-3.16.1.tar.gz \
-    && tar -xzf /tmp/cmake-3.16.1.tar.gz -C /tmp \
-    && pushd /tmp/cmake-3.16.1 \
+    && wget --no-check-certificate --quiet -O /tmp/cmake-3.16.4.tar.gz https://cmake.org/files/v3.16/cmake-3.16.4.tar.gz \
+    && tar -xzf /tmp/cmake-3.16.4.tar.gz -C /tmp \
+    && pushd /tmp/cmake-3.16.4 \
     && ./bootstrap \
     && make -s -j`nproc` > /dev/null \
     && make -s install > /dev/null \
