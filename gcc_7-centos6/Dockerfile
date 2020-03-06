@@ -70,7 +70,7 @@ RUN yum update -y \
     && popd \
     && rm -rf /tmp/automake-1.16* \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* \
+    && pip install -q --no-cache-dir conan conan-package-tools scikit-build cmake==3.16.* \
     && sed -i 's/# %wheel/%wheel/g' /etc/sudoers \
     && groupadd 1001 -g 1001 \
     && useradd -ms /bin/bash conan -g 1001 -G wheel \

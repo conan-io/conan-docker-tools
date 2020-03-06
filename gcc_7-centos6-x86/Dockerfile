@@ -97,7 +97,7 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* \
+    && pip install -q --no-cache-dir conan conan-package-tools scikit-build cmake==3.16.* \
     && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir conan \
     && sed -i 's/# %wheel/%wheel/g' /etc/sudoers \
