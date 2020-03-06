@@ -400,6 +400,13 @@ services:
         image: "${DOCKER_USERNAME}/clang9-x86:${DOCKER_BUILD_TAG}"
         container_name: clang9-x86
         tty: true
+    clang10:
+        build:
+            context: clang_10
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/clang10:${DOCKER_BUILD_TAG}"
+        container_name: clang10
+        tty: true
     msvc14:
         build:
             context: msvc_14
