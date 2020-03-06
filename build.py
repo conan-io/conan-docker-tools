@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Build, Test and Deploy Docker images for Conan project"""
 import collections
 import os
@@ -199,13 +198,13 @@ class ConanDockerTools(object):
         subprocess.check_call("docker exec %s %s pip -q install -U conan_package_tools" % (self.service, self.variables.sudo_command), shell=True)
         subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
-        subprocess.check_call('docker exec %s conan install lz4/1.8.3@bincrafters/stable -s '
+        subprocess.check_call('docker exec %s conan install lz4/1.9.2@ -s '
                             'arch=%s -s compiler="%s" -s compiler.version=%s '
                             '-s compiler.runtime=MD --build' %
                             (self.service, arch, compiler_name,
                             compiler_version), shell=True)
 
-        subprocess.check_call('docker exec %s conan install gtest/1.8.1@bincrafters/stable -s '
+        subprocess.check_call('docker exec %s conan install gtest/1.10.0@ -s '
                             'arch=%s -s compiler="%s" -s compiler.version=%s '
                             '-s compiler.runtime=MD --build' %
                             (self.service, arch, compiler_name,
@@ -268,14 +267,14 @@ class ConanDockerTools(object):
                 compiler_version = "7.0"  # FIXME: Remove this when fixed in conan
 
         subprocess.check_call(
-            "docker exec %s conan install lz4/1.8.3@bincrafters/stable -s "
+            "docker exec %s conan install lz4/1.9.2@ -s "
             "arch=%s -s compiler=%s -s compiler.version=%s --build" %
             (self.service, arch, compiler_name, compiler_version),
             shell=True)
 
         for libcxx in libcxx_list:
             subprocess.check_call(
-                "docker exec %s conan install gtest/1.8.1@bincrafters/stable -s "
+                "docker exec %s conan install gtest/1.10.0@ -s "
                 "arch=%s -s compiler=%s -s compiler.version=%s "
                 "-s compiler.libcxx=%s --build" % (self.service, arch, compiler_name,
                                                 compiler_version, libcxx),
