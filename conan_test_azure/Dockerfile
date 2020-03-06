@@ -47,5 +47,5 @@ RUN dpkg --add-architecture i386 \
        && python3 get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
-       && pip install -q --no-cache-dir conan conan-package-tools scikit-build cmake==3.16.* --upgrade \
+       && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* --upgrade \
        && pip install virtualenv

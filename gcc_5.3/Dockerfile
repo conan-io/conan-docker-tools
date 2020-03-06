@@ -102,8 +102,8 @@ RUN dpkg --add-architecture i386 \
     && pyenv global 3.7.5 \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
-    && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools scikit-build cmake==3.16.* \
+    && pip install -q --upgrade --no-cache-dir pip scikit-build \
+    && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* \
     && chown -R conan:1001 /opt/pyenv \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \

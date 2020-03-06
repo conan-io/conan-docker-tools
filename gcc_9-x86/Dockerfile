@@ -61,8 +61,8 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
     && pyenv global 3.7.5 \
-    && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools scikit-build cmake==3.16.* \
+    && pip install -q --upgrade --no-cache-dir pip scikit-build \
+    && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
