@@ -43,17 +43,9 @@ RUN dpkg --add-architecture i386 \
        golang \
        pkg-config \
        && rm -rf /var/lib/apt/lists/* \
-       && wget -q --no-check-certificate https://cmake.org/files/v3.16/cmake-3.16.4-Linux-x86_64.tar.gz \
-       && tar -xzf cmake-3.16.4-Linux-x86_64.tar.gz \
-       --exclude=bin/cmake-gui \
-       --exclude=doc/cmake \
-       --exclude=share/cmake-3.12/Help \
-       && cp -fR cmake-3.16.4-Linux-x86_64/* /usr \
-       && rm -rf cmake-3.16.4-Linux-x86_64 \
-       && rm cmake-3.16.4-Linux-x86_64.tar.gz \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
        && python3 get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
-       && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
+       && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* --upgrade \
        && pip install virtualenv

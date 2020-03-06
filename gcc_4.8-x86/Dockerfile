@@ -36,14 +36,6 @@ RUN dpkg --add-architecture i386 \
        autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.16/cmake-3.16.4.tar.gz \
-    && tar -xzf cmake-3.16.4.tar.gz \
-    && cd cmake-3.16.4 \
-    && ./bootstrap > /dev/null \
-    && make -s -j`nproc` \
-    && make -s install > /dev/null \
-    && cd - \
-    && rm -rf cmake-* \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -61,7 +53,7 @@ RUN dpkg --add-architecture i386 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
     && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

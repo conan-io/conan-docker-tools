@@ -85,14 +85,6 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && make install > /dev/null \
     && popd \
     && rm -rf /tmp/openssl-* /tmp/OpenSSL* \
-    && wget --no-check-certificate --quiet -O /tmp/cmake-3.16.4.tar.gz https://cmake.org/files/v3.16/cmake-3.16.4.tar.gz \
-    && tar -xzf /tmp/cmake-3.16.4.tar.gz -C /tmp \
-    && pushd /tmp/cmake-3.16.4 \
-    && ./bootstrap \
-    && make -s -j`nproc` > /dev/null \
-    && make -s install > /dev/null \
-    && popd \
-    && rm -rf /tmp/cmake-* \
     && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
@@ -105,7 +97,7 @@ RUN printf "i686" >  /etc/yum/vars/arch \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* \
     && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir conan \
     && sed -i 's/# %wheel/%wheel/g' /etc/sudoers \

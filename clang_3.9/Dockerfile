@@ -59,14 +59,6 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-${LLVM_VERSION} 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.16/cmake-3.16.4-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.16.4-Linux-x86_64.tar.gz \
-       --exclude=bin/cmake-gui \
-       --exclude=doc/cmake \
-       --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.16.4-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.16.4-Linux-x86_64 \
-    && rm cmake-3.16.4-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -83,7 +75,7 @@ RUN dpkg --add-architecture i386 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
     && pyenv global 3.7.5 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan conan-package-tools cmake==3.16.* \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
