@@ -6,6 +6,9 @@
 Dockerfiles for different gcc compiler versions.
 You can use these images directly in your project or with the [conan-package-tools project](https://github.com/conan-io/conan-package-tools).
 
+> :warning: **Warning:**
+The images listed below are intended for **generating open-source library packages** and we cannot guarantee any kind of stability. We strongly recommend using your own generated images for production environments taking the dockerfiles in this repository as a reference.
+
 The images are uploaded to Dockerhub:
 
 #### GCC
