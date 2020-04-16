@@ -12,6 +12,8 @@ ENV LLVM_VERSION=8.0 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
+COPY sources.list /etc/apt/sources.list
+
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
        sudo=1.* \

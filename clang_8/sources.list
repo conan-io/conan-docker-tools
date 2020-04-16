@@ -1,0 +1,15 @@
+deb http://old-releases.ubuntu.com/ubuntu/ disco main restricted
+deb-src http://old-releases.ubuntu.com/ubuntu/ disco main restricted
+
+deb http://old-releases.ubuntu.com/ubuntu/ disco-updates main restricted
+deb-src http://old-releases.ubuntu.com/ubuntu/ disco-updates main restricted
+
+deb http://old-releases.ubuntu.com/ubuntu/ disco universe
+deb-src http://old-releases.ubuntu.com/ubuntu/ disco universe
+deb http://old-releases.ubuntu.com/ubuntu/ disco-updates universe
+deb-src http://old-releases.ubuntu.com/ubuntu/ disco-updates universe
+
+deb http://old-releases.ubuntu.com/ubuntu/ disco-security main restricted
+deb-src http://old-releases.ubuntu.com/ubuntu/ disco-security main restricted
+deb http://old-releases.ubuntu.com/ubuntu/ disco-security universe
+deb-src http://old-releases.ubuntu.com/ubuntu/ disco-security universe
