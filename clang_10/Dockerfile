@@ -10,8 +10,7 @@ ENV LLVM_VERSION=10 \
     PYENV_ROOT=/opt/pyenv \
     PYTHON_VERSION=3.8.2 \
     PATH=/opt/pyenv/shims:${PATH} \
-    CMAKE_VERSION_MAJOR_MINOR=3.17 \
-    CMAKE_VERSION_FULL=3.17.1
+    CMAKE_VERSION=3.16.6
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
@@ -77,7 +76,7 @@ RUN dpkg --add-architecture i386 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION_MAJOR_MINOR} \
+    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION} \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
