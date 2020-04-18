@@ -47,6 +47,7 @@ RUN dpkg --add-architecture i386 \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
+    && apt-get autoremove -y \
     && apt-get clean all \
     # Update default compiler
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
