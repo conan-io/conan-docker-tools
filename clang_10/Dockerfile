@@ -33,6 +33,10 @@ RUN dpkg --add-architecture i386 \
     && chmod +x llvm.sh \
     && sudo ./llvm.sh ${LLVM_VERSION} \
     && rm llvm.sh \
+    # Further LLVM packages not installed by the llvm.sh script
+    && apt-get install -y --no-install-recommends \
+       libc++-10-dev \
+       libc++abi-10-dev \
     && apt-get remove -y lsb-release software-properties-common \
     # Install dependencies of Python
     && apt-get install -y --no-install-recommends \
