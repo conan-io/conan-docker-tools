@@ -308,6 +308,23 @@ services:
         image: "${DOCKER_USERNAME}/gcc10-armv8:${DOCKER_BUILD_TAG}"
         container_name: gcc10-armv8
         tty: true
+    gcc10-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc10
+        image: "${DOCKER_USERNAME}/gcc10-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc10-jnlp-slave
+    gcc10-jnlp-slave-x86:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc10-x86
+        image: "${DOCKER_USERNAME}/gcc10-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: gcc10-jnlp-slave-x86
+        tty: true
     clang38:
         build:
             context: clang_3.8
