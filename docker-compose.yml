@@ -400,6 +400,13 @@ services:
         image: "${DOCKER_USERNAME}/clang9-x86:${DOCKER_BUILD_TAG}"
         container_name: clang9-x86
         tty: true
+    clang10:
+        build:
+            context: clang_10
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/clang10:${DOCKER_BUILD_TAG}"
+        container_name: clang10
+        tty: true
     msvc14:
         build:
             context: msvc_14
@@ -711,6 +718,15 @@ services:
                 SOURCE_CONANIO_IMAGE: conanio/clang9-x86
         image: "${DOCKER_USERNAME}/clang9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang9-jnlp-slave-x86
+        tty: true
+    clang10-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang10
+        image: "${DOCKER_USERNAME}/clang10-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang10-jnlp-slave
         tty: true
     conantests:
         build:
