@@ -58,7 +58,6 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | [conanio/gcc10: gcc 10](https://hub.docker.com/r/conanio/gcc10/)                   | x86_64  |  Supported           |
 | [conanio/gcc10-armv7: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7/)       | armv7   |  Supported           |
 | [conanio/gcc10-armv7hf: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7hf/)   | armv7hf |  Supported           |
-| [conanio/gcc10-armv8: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv8/)       | armv8   |  Supported           |
 
 
 #### Clang
