@@ -55,7 +55,6 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | [conanio/gcc9: gcc 9](https://hub.docker.com/r/conanio/gcc9/)                      | x86_64  |  Supported           |
 | [conanio/gcc9-armv7: gcc 9](https://hub.docker.com/r/conanio/gcc9-armv7/)          | armv7   |  Supported           |
 | [conanio/gcc9-armv7hf: gcc 9](https://hub.docker.com/r/conanio/gcc9-armv7hf/)      | armv7hf |  Supported           |
-| [conanio/gcc10-x86: gcc 10](https://hub.docker.com/r/conanio/gcc10-x86/)           | x86     |  Supported           |
 | [conanio/gcc10: gcc 10](https://hub.docker.com/r/conanio/gcc10/)                   | x86_64  |  Supported           |
 | [conanio/gcc10-armv7: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7/)       | armv7   |  Supported           |
 | [conanio/gcc10-armv7hf: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7hf/)   | armv7hf |  Supported           |
@@ -201,7 +200,6 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 | [conanio/gcc9-jnlp-slave: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave/)        | x86_64  |  Supported |
 | [conanio/gcc9-jnlp-slave-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave-x86/)  | x86  |  Supported |
 | [conanio/gcc10-jnlp-slave: gcc 10](https://hub.docker.com/r/conanio/gcc10-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc10-jnlp-slave-x86: gcc 10](https://hub.docker.com/r/conanio/gcc10-jnlp-slave-x86/)  | x86  |  Supported |
 | [conanio/gcc7-jnlp-slave-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6/)        | x86_64  |  Supported |
 | [conanio/gcc7-jnlp-slave-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6-x86/)  | x86  |  Supported |
 

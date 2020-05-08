@@ -280,13 +280,6 @@ services:
         image: "${DOCKER_USERNAME}/gcc10:${DOCKER_BUILD_TAG}"
         container_name: gcc10
         tty: true
-    gcc10-x86:
-        build:
-            context: gcc_10-x86
-            dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/gcc10-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc10-x86
-        tty: true
     gcc10-armv7:
         build:
             context: gcc_10-armv7
