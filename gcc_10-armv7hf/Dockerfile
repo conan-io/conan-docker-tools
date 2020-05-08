@@ -14,6 +14,7 @@ ENV CC=arm-linux-gnueabihf-gcc-10 \
     FC=arm-linux-gnueabihf-gfortran-10
 
 RUN sudo dpkg --add-architecture armhf \
+    && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
     && sudo apt-get -qq update \
     && sudo apt-get install -y --no-install-recommends ".*10.*arm-linux-gnueabihf.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-10 100 \
