@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Build, Test and Deploy Docker images for Conan project"""
 import collections
 import os
@@ -199,13 +198,13 @@ class ConanDockerTools(object):
         subprocess.check_call("docker exec %s %s pip -q install -U conan_package_tools" % (self.service, self.variables.sudo_command), shell=True)
         subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
-        subprocess.check_call('docker exec %s conan install lz4/1.8.3@bincrafters/stable -s '
+        subprocess.check_call('docker exec %s conan install lz4/1.9.2@ -s '
                             'arch=%s -s compiler="%s" -s compiler.version=%s '
                             '-s compiler.runtime=MD --build' %
                             (self.service, arch, compiler_name,
                             compiler_version), shell=True)
 
-        subprocess.check_call('docker exec %s conan install gtest/1.8.1@bincrafters/stable -s '
+        subprocess.check_call('docker exec %s conan install gtest/1.8.1@ -s '
                             'arch=%s -s compiler="%s" -s compiler.version=%s '
                             '-s compiler.runtime=MD --build' %
                             (self.service, arch, compiler_name,
@@ -268,14 +267,14 @@ class ConanDockerTools(object):
                 compiler_version = "7.0"  # FIXME: Remove this when fixed in conan
 
         subprocess.check_call(
-            "docker exec %s conan install lz4/1.8.3@bincrafters/stable -s "
+            "docker exec %s conan install lz4/1.9.2@ -s "
             "arch=%s -s compiler=%s -s compiler.version=%s --build" %
             (self.service, arch, compiler_name, compiler_version),
             shell=True)
 
         for libcxx in libcxx_list:
             subprocess.check_call(
-                "docker exec %s conan install gtest/1.8.1@bincrafters/stable -s "
+                "docker exec %s conan install gtest/1.8.1@ -s "
                 "arch=%s -s compiler=%s -s compiler.version=%s "
                 "-s compiler.libcxx=%s --build" % (self.service, arch, compiler_name,
                                                 compiler_version, libcxx),
@@ -319,8 +318,8 @@ class ConanDockerTools(object):
             subprocess.check_call("docker run -t -d --name %s %s" % (self.service,
                 self.created_image_name), shell=True)
             output = subprocess.check_output(
-                "docker exec %s conan install -r conan-center zlib/1.2.11@conan/stable" % (self.service), shell=True)
-            assert "zlib/1.2.11@conan/stable: Package installed" in output.decode()
+                "docker exec %s conan install -r conan-center zlib/1.2.11@" % (self.service), shell=True)
+            assert "zlib/1.2.11: Package installed" in output.decode()
         finally:
             subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm %s" % self.service, shell=True)
