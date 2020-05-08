@@ -8,17 +8,14 @@ ENV PYENV_ROOT=/opt/pyenv \
     CC=/usr/bin/gcc \
     DEBIAN_FRONTEND=noninteractive
 
-RUN dpkg --add-architecture i386 \
-    && apt-get -qq update \
+RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
        sudo \
        binutils \
        wget \
        git \
-       libc6-dev-i386 \
        libc6-dev \
-       linux-libc-dev:i386 \
-       g++-10-multilib \
+       g++-10 \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \
