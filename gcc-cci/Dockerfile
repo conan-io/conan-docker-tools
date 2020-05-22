@@ -9,7 +9,7 @@ ENV PYENV_ROOT=/opt/pyenv \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc \
     PYTHON_VERSION=3.8.2 \
-    CMAKE_VERSION=3.16.4 \
+    CMAKE_VERSION=3.17.2 \
     GCC_VERSION=$COMPILER_VERSION
 
 RUN apt-get -qq update \
@@ -92,8 +92,9 @@ RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.c
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
-    && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION} \
+    && pip install -q --upgrade --no-cache-dir pip
+
+RUN pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION} \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
