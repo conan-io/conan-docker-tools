@@ -36,9 +36,6 @@ jobs:
       Ubuntu Clang 8 CCI:
         CLANG_VERSIONS: "8"
         BUILD_CONAN_CCI: 1
-      Ubuntu Clang 8 CCI:
-        CLANG_VERSIONS: "8"
-        BUILD_CONAN_CCI: 1
       Ubuntu Clang 6 CCI:
         CLANG_VERSIONS: "6"
         BUILD_CONAN_CCI: 1
