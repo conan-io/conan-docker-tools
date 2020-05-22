@@ -862,7 +862,7 @@ services:
     clang6-cci:
         build:
             context: clang-cci
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.old
             args:
                 COMPILER_VERSION: 6.0
         image: "${DOCKER_USERNAME}/clang6-cci:${DOCKER_BUILD_TAG}"
@@ -871,7 +871,7 @@ services:
     clang5-cci:
         build:
             context: clang-cci
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.old
             args:
                 COMPILER_VERSION: 5.0
         image: "${DOCKER_USERNAME}/clang5-cci:${DOCKER_BUILD_TAG}"
@@ -880,7 +880,7 @@ services:
     clang4-cci:
         build:
             context: clang-cci
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.old
             args:
                 COMPILER_VERSION: 4.0
         image: "${DOCKER_USERNAME}/clang4-cci:${DOCKER_BUILD_TAG}"
@@ -889,7 +889,7 @@ services:
     clang39-cci:
         build:
             context: clang-cci
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.old
             args:
                 COMPILER_VERSION: 3.9
         image: "${DOCKER_USERNAME}/clang39-cci:${DOCKER_BUILD_TAG}"
