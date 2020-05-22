@@ -837,7 +837,7 @@ services:
             context: clang-cci
             dockerfile: Dockerfile
             args:
-                COMPILER_VERSION: 9.0.1
+                COMPILER_VERSION: 9
         image: "${DOCKER_USERNAME}/clang9-cci:${DOCKER_BUILD_TAG}"
         container_name: clang9-cci
         tty: true
