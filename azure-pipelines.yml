@@ -15,6 +15,43 @@ jobs:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:
     matrix:
+      Ubuntu GCC 10 CCI:
+        GCC_VERSIONS: "10"
+        BUILD_CONAN_CCI: 1
+      Ubuntu GCC 9 CCI:
+        GCC_VERSIONS: "9"
+        BUILD_CONAN_CCI: 1
+      Ubuntu GCC 8 CCI:
+        GCC_VERSIONS: "8"
+        BUILD_CONAN_CCI: 1
+      Ubuntu GCC 7 CCI:
+        GCC_VERSIONS: "7"
+        BUILD_CONAN_CCI: 1
+      Ubuntu GCC 6 CCI:
+        GCC_VERSIONS: "6"
+        BUILD_CONAN_CCI: 1
+      Ubuntu Clang 10 CCI:
+        CLANG_VERSIONS: "10"
+        BUILD_CONAN_CCI: 1
+      Ubuntu Clang 8 CCI:
+        CLANG_VERSIONS: "8"
+        BUILD_CONAN_CCI: 1
+      Ubuntu Clang 8 CCI:
+        CLANG_VERSIONS: "8"
+        BUILD_CONAN_CCI: 1
+      Ubuntu Clang 6 CCI:
+        CLANG_VERSIONS: "6"
+        BUILD_CONAN_CCI: 1
+      Ubuntu Clang 5 CCI:
+        CLANG_VERSIONS: "5"
+        BUILD_CONAN_CCI: 1
+      Ubuntu Clang 4 CCI:
+        CLANG_VERSIONS: "4"
+        BUILD_CONAN_CCI: 1
+      Ubuntu Clang 3.9 CCI:
+        CLANG_VERSIONS: "3.9"
+        BUILD_CONAN_CCI: 1
+
       CentOS 6 GCC 7 x86_64:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64"
