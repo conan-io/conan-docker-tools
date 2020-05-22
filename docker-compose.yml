@@ -859,7 +859,7 @@ services:
         image: "${DOCKER_USERNAME}/clang7-cci:${DOCKER_BUILD_TAG}"
         container_name: clang7-cci
         tty: true
-    clang6-cci:
+    clang60-cci:
         build:
             context: clang-cci
             dockerfile: Dockerfile.old
@@ -868,7 +868,7 @@ services:
         image: "${DOCKER_USERNAME}/clang6-cci:${DOCKER_BUILD_TAG}"
         container_name: clang6-cci
         tty: true
-    clang5-cci:
+    clang50-cci:
         build:
             context: clang-cci
             dockerfile: Dockerfile.old
@@ -877,7 +877,7 @@ services:
         image: "${DOCKER_USERNAME}/clang5-cci:${DOCKER_BUILD_TAG}"
         container_name: clang5-cci
         tty: true
-    clang4-cci:
+    clang40-cci:
         build:
             context: clang-cci
             dockerfile: Dockerfile.old
