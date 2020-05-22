@@ -832,15 +832,15 @@ services:
         image: "${DOCKER_USERNAME}/clang10-cci:${DOCKER_BUILD_TAG}"
         container_name: clang10-cci
         tty: true
-#    clang9-cci:
-#        build:
-#            context: clang-cci
-#            dockerfile: Dockerfile
-#            args:
-#                COMPILER_VERSION: 9.0.1
-#        image: "${DOCKER_USERNAME}/clang9-cci:${DOCKER_BUILD_TAG}"
-#        container_name: clang9-cci
-#        tty: true
+    clang9-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 9.0.1
+        image: "${DOCKER_USERNAME}/clang9-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang9-cci
+        tty: true
     clang8-cci:
         build:
             context: clang-cci
@@ -850,15 +850,15 @@ services:
         image: "${DOCKER_USERNAME}/clang8-cci:${DOCKER_BUILD_TAG}"
         container_name: clang8-cci
         tty: true
-#    clang7-cci:
-#        build:
-#            context: clang-cci
-#            dockerfile: Dockerfile
-#            args:
-#                COMPILER_VERSION: 7
-#        image: "${DOCKER_USERNAME}/clang7-cci:${DOCKER_BUILD_TAG}"
-#        container_name: clang7-cci
-#        tty: true
+    clang7-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 7
+        image: "${DOCKER_USERNAME}/clang7-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang7-cci
+        tty: true
     clang6-cci:
         build:
             context: clang-cci

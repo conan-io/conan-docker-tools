@@ -29,15 +29,16 @@ RUN dpkg --add-architecture i386 \
        apt-transport-https
     # Install compiler toolset
 RUN apt-get install -y --no-install-recommends \
-       lsb-release \
        software-properties-common \
-    && wget https://apt.llvm.org/llvm.sh \
-    && chmod +x llvm.sh \
-    && sudo ./llvm.sh ${LLVM_VERSION} \
-    && rm llvm.sh
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && add-apt-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-${LLVM_VERSION} main" \
+    && apt-get update
 
-    # Further LLVM packages not installed by the llvm.sh script
 RUN apt-get install -y --no-install-recommends \
+       clang-${LLVM_VERSION} \
+       lldb-${LLVM_VERSION} \
+       lld-${LLVM_VERSION} \
+       clangd-${LLVM_VERSION} \
        libc++-${LLVM_VERSION}-dev \
        libc++abi-${LLVM_VERSION}-dev \
     && apt-get remove -y lsb-release software-properties-common
