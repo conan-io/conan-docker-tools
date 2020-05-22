@@ -778,3 +778,120 @@ services:
         image: "${DOCKER_USERNAME}/conantestazure:${DOCKER_BUILD_TAG}"
         container_name: conan-test-azure
         tty: true
+    gcc10-cci:
+        build:
+            context: gcc-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 10.1.0
+        image: "${DOCKER_USERNAME}/gcc10-cci:${DOCKER_BUILD_TAG}"
+        container_name: gcc10-cci
+        tty: true
+    gcc9-cci:
+        build:
+            context: gcc-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 9.3.0
+        image: "${DOCKER_USERNAME}/gcc9-cci:${DOCKER_BUILD_TAG}"
+        container_name: gcc9-cci
+        tty: true
+    gcc8-cci:
+        build:
+            context: gcc-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 8.4.0
+        image: "${DOCKER_USERNAME}/gcc8-cci:${DOCKER_BUILD_TAG}"
+        container_name: gcc8-cci
+        tty: true
+    gcc7-cci:
+        build:
+            context: gcc-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 7.5.0
+        image: "${DOCKER_USERNAME}/gcc7-cci:${DOCKER_BUILD_TAG}"
+        container_name: gcc7-cci
+        tty: true
+    gcc6-cci:
+        build:
+            context: gcc-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 6.5.0
+        image: "${DOCKER_USERNAME}/gcc6-cci:${DOCKER_BUILD_TAG}"
+        container_name: gcc6-cci
+        tty: true
+    clang10-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 10
+        image: "${DOCKER_USERNAME}/clang10-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang10-cci
+        tty: true
+#    clang9-cci:
+#        build:
+#            context: clang-cci
+#            dockerfile: Dockerfile
+#            args:
+#                COMPILER_VERSION: 9.0.1
+#        image: "${DOCKER_USERNAME}/clang9-cci:${DOCKER_BUILD_TAG}"
+#        container_name: clang9-cci
+#        tty: true
+    clang8-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 8
+        image: "${DOCKER_USERNAME}/clang8-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang8-cci
+        tty: true
+#    clang7-cci:
+#        build:
+#            context: clang-cci
+#            dockerfile: Dockerfile
+#            args:
+#                COMPILER_VERSION: 7
+#        image: "${DOCKER_USERNAME}/clang7-cci:${DOCKER_BUILD_TAG}"
+#        container_name: clang7-cci
+#        tty: true
+    clang6-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 6.0
+        image: "${DOCKER_USERNAME}/clang6-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang6-cci
+        tty: true
+    clang5-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 5.0
+        image: "${DOCKER_USERNAME}/clang5-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang5-cci
+        tty: true
+    clang4-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 4.0
+        image: "${DOCKER_USERNAME}/clang4-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang4-cci
+        tty: true
+    clang39-cci:
+        build:
+            context: clang-cci
+            dockerfile: Dockerfile
+            args:
+                COMPILER_VERSION: 3.9
+        image: "${DOCKER_USERNAME}/clang39-cci:${DOCKER_BUILD_TAG}"
+        container_name: clang39-cci
+        tty: true
