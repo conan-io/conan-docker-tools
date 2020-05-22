@@ -865,7 +865,7 @@ services:
             dockerfile: Dockerfile.old
             args:
                 COMPILER_VERSION: 6.0
-        image: "${DOCKER_USERNAME}/clang6-cci:${DOCKER_BUILD_TAG}"
+        image: "${DOCKER_USERNAME}/clang60-cci:${DOCKER_BUILD_TAG}"
         container_name: clang6-cci
         tty: true
     clang50-cci:
@@ -874,7 +874,7 @@ services:
             dockerfile: Dockerfile.old
             args:
                 COMPILER_VERSION: 5.0
-        image: "${DOCKER_USERNAME}/clang5-cci:${DOCKER_BUILD_TAG}"
+        image: "${DOCKER_USERNAME}/clang50-cci:${DOCKER_BUILD_TAG}"
         container_name: clang5-cci
         tty: true
     clang40-cci:
@@ -883,7 +883,7 @@ services:
             dockerfile: Dockerfile.old
             args:
                 COMPILER_VERSION: 4.0
-        image: "${DOCKER_USERNAME}/clang4-cci:${DOCKER_BUILD_TAG}"
+        image: "${DOCKER_USERNAME}/clang40-cci:${DOCKER_BUILD_TAG}"
         container_name: clang4-cci
         tty: true
     clang39-cci:
