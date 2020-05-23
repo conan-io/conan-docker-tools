@@ -32,10 +32,10 @@ RUN dpkg --add-architecture i386 \
        xz-utils
     # Install compiler toolset
 
-RUN wget --no-check-certificate --quiet https://releases.llvm.org/${LIBCXX_VERSION}/clang+llvm-${LIBCXX_VERSION}-x86_64-linux-gnu-ubuntu-16.04.tar.xz \
-    && tar Jxf clang+llvm-${LIBCXX_VERSION}-x86_64-linux-gnu-ubuntu-16.04.tar.xz \
-    && find clang+llvm-${LIBCXX_VERSION}-x86_64-linux-gnu-ubuntu-16.04/ -type f -name "libc++*" | xargs -i cp {} /usr/lib/x86_64-linux-gnu \
-    && rm -rf clang*
+#RUN wget --no-check-certificate --quiet https://releases.llvm.org/${LIBCXX_VERSION}/clang+llvm-${LIBCXX_VERSION}-x86_64-linux-gnu-ubuntu-16.04.tar.xz \
+#    && tar Jxf clang+llvm-${LIBCXX_VERSION}-x86_64-linux-gnu-ubuntu-16.04.tar.xz \
+#    && find clang+llvm-${LIBCXX_VERSION}-x86_64-linux-gnu-ubuntu-16.04/ -type f -name "libc++*" | xargs -i cp {} /usr/lib/x86_64-linux-gnu \
+#    && rm -rf clang*
 
 RUN apt-get install -y --no-install-recommends \
        software-properties-common \
@@ -47,6 +47,8 @@ RUN apt-get install -y --no-install-recommends \
        clang-${LLVM_VERSION} \
        lldb-${LLVM_VERSION} \
        lld-${LLVM_VERSION} \
+       libc++-8-dev \
+       libc++abi-8-dev \
     && apt-get remove -y lsb-release software-properties-common
 
 
