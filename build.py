@@ -371,7 +371,7 @@ class ConanDockerTools(object):
             self.tagged_image_name.replace("clang7", "clang70")), shell=True)
             subprocess.check_call("docker tag %s/clang7 %s/clang70" %
             (self.variables.docker_username, self.variables.docker_username), shell=True)
-        elif if self.service == "clang7-cci":
+        elif self.service == "clang7-cci":
             logging.info("Clang 7 CCI will produce the alias Clang 7.1")
             subprocess.check_call("docker tag %s %s" % (self.created_image_name,
             self.tagged_image_name.replace("clang7-cci", "clang71-cci")), shell=True)
