@@ -266,7 +266,9 @@ class ConanDockerTools(object):
             subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
             if compiler_name == "clang" and compiler_version == "7":
-                compiler_version = "7.0"  # FIXME: Remove this when fixed in conan
+                compiler_version = "7.0"
+                if "cci" in self.service:
+                    compiler_version = "7.1"
 
         subprocess.check_call(
             "docker exec %s conan install lz4/1.9.2@ -s "
@@ -368,6 +370,12 @@ class ConanDockerTools(object):
             subprocess.check_call("docker tag %s %s" % (self.created_image_name,
             self.tagged_image_name.replace("clang7", "clang70")), shell=True)
             subprocess.check_call("docker tag %s/clang7 %s/clang70" %
+            (self.variables.docker_username, self.variables.docker_username), shell=True)
+        elif if self.service == "clang7-cci":
+            logging.info("Clang 7 CCI will produce the alias Clang 7.1")
+            subprocess.check_call("docker tag %s %s" % (self.created_image_name,
+            self.tagged_image_name.replace("clang7-cci", "clang71-cci")), shell=True)
+            subprocess.check_call("docker tag %s/clang7-cci %s/clang71-cci" %
             (self.variables.docker_username, self.variables.docker_username), shell=True)
 
     def info(self):
