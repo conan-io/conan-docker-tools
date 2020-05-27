@@ -37,10 +37,11 @@ RUN apt-get install -y --no-install-recommends \
 RUN apt-get install -y --no-install-recommends \
        clang-${LLVM_VERSION} \
        lldb-${LLVM_VERSION} \
-       lld-${LLVM_VERSION} \
        libc++-${LLVM_VERSION}-dev \
        libc++abi-${LLVM_VERSION}-dev \
     && apt-get remove -y lsb-release software-properties-common
+
+RUN apt-get install -y --no-install-recommends lld-${LLVM_VERSION} | true
 
     # Install dependencies of Python
 RUN apt-get install -y --no-install-recommends \
