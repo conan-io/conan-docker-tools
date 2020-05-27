@@ -47,8 +47,6 @@ RUN apt-get install -y --no-install-recommends \
        clang-${LLVM_VERSION} \
        lldb-${LLVM_VERSION} \
        lld-${LLVM_VERSION} \
-       libc++-8-dev \
-       libc++abi-8-dev \
     && apt-get remove -y lsb-release software-properties-common
 
 
@@ -99,7 +97,31 @@ RUN find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
-    && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
+    && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100 \
+    && update-alternatives --install /usr/bin/cmake cmake /opt/pyenv/shims/cmake 100
+
+RUN wget --no-check-certificate --quiet https://releases.llvm.org/${LIBCXX_VERSION}/libcxx-${LIBCXX_VERSION}.src.tar.xz \
+    && tar Jxf libcxx-${LIBCXX_VERSION}.src.tar.xz \
+    && cd libcxx-${LIBCXX_VERSION}.src \
+    && mkdir build \
+    && cd build \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_VERSION} \
+    && cmake --build . \
+    && cmake --build . --target install \
+    && cd \
+    && rm -rf libcxx-*
+
+RUN wget --no-check-certificate --quiet https://releases.llvm.org/${LIBCXX_VERSION}/libcxxabi-${LIBCXX_VERSION}.src.tar.xz \
+    && tar Jxf libcxxabi-${LIBCXX_VERSION}.src.tar.xz \
+    && cd libcxxabi-${LIBCXX_VERSION}.src \
+    && cp include/* /usr/include \
+    && mkdir build \
+    && cd build \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_VERSION} -DLIBCXXABI_LIBCXX_INCLUDES=/usr/include/c++/v1 \
+    && cmake --build . \
+    && cmake --build . --target install \
+    && cd \
+    && rm -rf libcxxabi-*
 
 USER conan
 WORKDIR /home/conan
