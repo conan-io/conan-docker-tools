@@ -46,9 +46,10 @@ RUN apt-get install -y --no-install-recommends \
 RUN apt-get install -y --no-install-recommends \
        clang-${LLVM_VERSION} \
        lldb-${LLVM_VERSION} \
-       lld-${LLVM_VERSION} \
+#       lld-${LLVM_VERSION} \
     && apt-get remove -y lsb-release software-properties-common
 
+RUN apt-get install -y --no-install-recommends lld-${LLVM_VERSION} | true
 
     # Install dependencies of Python
 RUN apt-get install -y --no-install-recommends \
@@ -71,6 +72,7 @@ RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LL
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-${LLVM_VERSION} 100 \
+    && update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-${LLVM_VERSION} 100 \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
@@ -105,7 +107,7 @@ RUN wget --no-check-certificate --quiet https://releases.llvm.org/${LIBCXX_VERSI
     && cd libcxx-${LIBCXX_VERSION}.src \
     && mkdir build \
     && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_VERSION} \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
     && cmake --build . \
     && cmake --build . --target install \
     && cd \
@@ -117,7 +119,7 @@ RUN wget --no-check-certificate --quiet https://releases.llvm.org/${LIBCXX_VERSI
     && cp include/* /usr/include \
     && mkdir build \
     && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_VERSION} -DLIBCXXABI_LIBCXX_INCLUDES=/usr/include/c++/v1 \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DLIBCXXABI_LIBCXX_INCLUDES=/usr/include/c++/v1 \
     && cmake --build . \
     && cmake --build . --target install \
     && cd \

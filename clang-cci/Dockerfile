@@ -41,8 +41,6 @@ RUN apt-get install -y --no-install-recommends \
        libc++abi-${LLVM_VERSION}-dev \
     && apt-get remove -y lsb-release software-properties-common
 
-RUN apt-get install -y --no-install-recommends lld-${LLVM_VERSION} | true
-
     # Install dependencies of Python
 RUN apt-get install -y --no-install-recommends \
        libreadline-dev \
