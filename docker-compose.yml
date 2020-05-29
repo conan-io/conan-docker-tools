@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 services:
     gcc46:
         build:
@@ -784,6 +784,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 10.1.0
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc10-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc10-cci:${DOCKER_BUILD_TAG}"
         container_name: gcc10-cci
         tty: true
@@ -793,6 +796,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 9.3.0
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc9-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc9-cci:${DOCKER_BUILD_TAG}"
         container_name: gcc9-cci
         tty: true
@@ -802,6 +808,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 8.4.0
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc8-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc8-cci:${DOCKER_BUILD_TAG}"
         container_name: gcc8-cci
         tty: true
@@ -811,6 +820,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 7.5.0
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc7-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc7-cci:${DOCKER_BUILD_TAG}"
         container_name: gcc7-cci
         tty: true
@@ -820,6 +832,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 6.5.0
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc6-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc6-cci:${DOCKER_BUILD_TAG}"
         container_name: gcc6-cci
         tty: true
@@ -829,6 +844,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 10
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang10-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang10-cci:${DOCKER_BUILD_TAG}"
         container_name: clang10-cci
         tty: true
@@ -838,6 +856,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 9
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang9-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang9-cci:${DOCKER_BUILD_TAG}"
         container_name: clang9-cci
         tty: true
@@ -847,6 +868,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 8
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang8-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang8-cci:${DOCKER_BUILD_TAG}"
         container_name: clang8-cci
         tty: true
@@ -856,6 +880,9 @@ services:
             dockerfile: Dockerfile
             args:
                 COMPILER_VERSION: 7
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang7-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang7-cci:${DOCKER_BUILD_TAG}"
         container_name: clang7-cci
         tty: true
@@ -866,6 +893,9 @@ services:
             args:
                 COMPILER_VERSION: 6.0
                 LIBRARY_VERSION: 6.0.1
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang60-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang60-cci:${DOCKER_BUILD_TAG}"
         container_name: clang6-cci
         tty: true
@@ -876,6 +906,9 @@ services:
             args:
                 COMPILER_VERSION: 5.0
                 LIBRARY_VERSION: 5.0.2
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang50-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang50-cci:${DOCKER_BUILD_TAG}"
         container_name: clang5-cci
         tty: true
@@ -886,6 +919,9 @@ services:
             args:
                 COMPILER_VERSION: 4.0
                 LIBRARY_VERSION: 4.0.1
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang40-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang40-cci:${DOCKER_BUILD_TAG}"
         container_name: clang4-cci
         tty: true
@@ -896,6 +932,9 @@ services:
             args:
                 COMPILER_VERSION: 3.9
                 LIBRARY_VERSION: 3.9.1
+            target: release
+            cache_from:
+              - ${DOCKER_USERNAME}/clang39-cci:${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang39-cci:${DOCKER_BUILD_TAG}"
         container_name: clang39-cci
         tty: true

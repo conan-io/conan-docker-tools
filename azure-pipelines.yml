@@ -13,6 +13,7 @@ jobs:
       python build.py
     env:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+      DOCKER_CACHE: True
   strategy:
     matrix:
       Ubuntu GCC 10 CCI:

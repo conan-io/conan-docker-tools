@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:xenial as base
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -109,3 +109,8 @@ WORKDIR /home/conan
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
     && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc
+
+
+FROM base as release
+
+RUN pip install -U conan conan-package-tools
