@@ -150,7 +150,8 @@ class ConanDockerTools(object):
         """
         logging.info("Starting build for service %s." % self.service)
         no_cache = "" if self.variables.docker_cache else "--no-cache"
-        subprocess.call("docker pull %s" % self.tagged_image_name, shell=True)
+        subprocess.call("docker pull %s" % self.tagged_image_name.replace(
+                                           self.variables.docker_build_tag, "latest"), shell=True)
         subprocess.check_call("docker-compose build %s %s" % (no_cache, self.service), shell=True)
 
         output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
