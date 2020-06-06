@@ -23,6 +23,10 @@ jobs:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "centos6,jnlp-slave-centos6"
+      CentOS 7 GCC 9 x86_64:
+        GCC_VERSIONS: "9"
+        DOCKER_ARCHS: "x86_64"
+        DOCKER_DISTRO: "centos7,jnlp-slave-centos7"
       Ubuntu MinGW GCC 7 x86_64:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64"

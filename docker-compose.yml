@@ -408,6 +408,13 @@ services:
         image: "${DOCKER_USERNAME}/gcc7-centos6-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc7-centos6-x86
         tty: true
+    gcc9-centos7:
+        build:
+            context: gcc_9-centos7
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc9-centos7:${DOCKER_BUILD_TAG}"
+        container_name: gcc9-centos7
+        tty: true
     clang8:
         build:
             context: clang_8
@@ -629,6 +636,14 @@ services:
                 SOURCE_CONANIO_IMAGE: conanio/gcc7-centos6-x86
         image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-centos6-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc7-jnlp-slave-centos6-x86
+    gcc9-jnlp-slave-centos7:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: centos7/Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc9-centos7
+        image: "${DOCKER_USERNAME}/gcc9-jnlp-slave-centos7:${DOCKER_BUILD_TAG}"
+        container_name: gcc9-jnlp-slave-centos7
     clang39-jnlp-slave:
         build:
             context: jenkins-jnlp-slave

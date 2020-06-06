@@ -11,7 +11,9 @@ docker build -t conanio/jnlp-slave-gcc46 --build-arg SOURCE_CONANIO_IMAGE=conani
 docker build -t conanio/jnlp-slave-gcc8 --build-arg SOURCE_CONANIO_IMAGE=conanio/gcc8 .
 docker build -t conanio/jnlp-slave-gcc7-centos6 --build-arg SOURCE_CONANIO_IMAGE=conanio/gcc7-centos6 --file centos6/Dockerfile .
 docker build -t conanio/jnlp-slave-gcc7-centos6-x86 --build-arg SOURCE_CONANIO_IMAGE=conanio/gcc7-centos6-x86 --file centos6/Dockerfile .
+docker build -t conanio/jnlp-slave-gcc9-centos7 --build-arg SOURCE_CONANIO_IMAGE=conanio/gcc9-centos7 --file centos7/Dockerfile .
 
 **Note**: This Dockerfile ie: 'jenkins-jnlp-slave/Dockerfile' can not process following dockerhub conanio images. Use the Dockerfile mentioned in corresponding brackets.
 - conanio/gcc7-centos6  (Use jenkins-jnlp-slave/centos6/Dockerfile)
 - conanio/gcc7-centos6-x86  (Use jenkins-jnlp-slave/centos6/Dockerfile)
+- conanio/gcc9-centos7  (Use jenkins-jnlp-slave/centos7/Dockerfile)
