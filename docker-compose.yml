@@ -273,6 +273,42 @@ services:
         image: "${DOCKER_USERNAME}/gcc9-armv8:${DOCKER_BUILD_TAG}"
         container_name: gcc9-armv8
         tty: true
+    gcc10:
+        build:
+            context: gcc_10
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc10:${DOCKER_BUILD_TAG}"
+        container_name: gcc10
+        tty: true
+    gcc10-armv7:
+        build:
+            context: gcc_10-armv7
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc10-armv7:${DOCKER_BUILD_TAG}"
+        container_name: gcc10-armv7
+        tty: true
+    gcc10-armv7hf:
+        build:
+            context: gcc_10-armv7hf
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc10-armv7hf:${DOCKER_BUILD_TAG}"
+        container_name: gcc10-armv7hf
+        tty: true
+    gcc10-armv8:
+        build:
+            context: gcc_10-armv8
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc10-armv8:${DOCKER_BUILD_TAG}"
+        container_name: gcc10-armv8
+        tty: true
+    gcc10-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc10
+        image: "${DOCKER_USERNAME}/gcc10-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc10-jnlp-slave
     clang38:
         build:
             context: clang_3.8
@@ -399,6 +435,13 @@ services:
             dockerfile: Dockerfile
         image: "${DOCKER_USERNAME}/clang9-x86:${DOCKER_BUILD_TAG}"
         container_name: clang9-x86
+        tty: true
+    clang10:
+        build:
+            context: clang_10
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/clang10:${DOCKER_BUILD_TAG}"
+        container_name: clang10
         tty: true
     msvc14:
         build:
@@ -700,8 +743,8 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang9
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang8-jnlp-slave
+        image: "${DOCKER_USERNAME}/clang9-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang9-jnlp-slave
         tty: true
     clang9-jnlp-slave-x86:
         build:
@@ -709,6 +752,29 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang9-x86
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang8-jnlp-slave-x86
+        image: "${DOCKER_USERNAME}/clang9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
+        container_name: clang9-jnlp-slave-x86
+        tty: true
+    clang10-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/clang10
+        image: "${DOCKER_USERNAME}/clang10-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: clang10-jnlp-slave
+        tty: true
+    conantests:
+        build:
+            context: conan_tests
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conantests:${DOCKER_BUILD_TAG}"
+        container_name: conantests
+        tty: true
+    conantestazure:
+        build:
+            context: conan_test_azure
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conantestazure:${DOCKER_BUILD_TAG}"
+        container_name: conan-test-azure
         tty: true

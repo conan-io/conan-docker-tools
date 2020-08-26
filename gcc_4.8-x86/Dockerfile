@@ -12,33 +12,33 @@ ENV CONAN_ENV_ARCH=x86 \
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.* \
-       build-essential=11.* \
-       wget=1.* \
-       git=1:1.* \
-       nasm=2.* \
-       dh-autoreconf=9 \
-       ninja-build=1.* \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=6.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=5.* \
-       libncursesw5-dev=5.* \
-       liblzma-dev=5.* \
+       sudo \
+       build-essential \
+       wget \
+       git \
+       nasm \
+       dh-autoreconf \
+       ninja-build \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.15/cmake-3.15.3.tar.gz \
-    && tar -xzf cmake-3.15.3.tar.gz \
-    && cd cmake-3.15.3 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v3.16/cmake-3.16.4.tar.gz \
+    && tar -xzf cmake-3.16.4.tar.gz \
+    && cd cmake-3.16.4 \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \

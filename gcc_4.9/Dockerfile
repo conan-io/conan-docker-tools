@@ -12,29 +12,29 @@ RUN dpkg --add-architecture i386 \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
     && apt-get install -y --force-yes --no-install-recommends \
-       sudo=1.* \
-       g++-4.9=4.9.* \
-       g++-4.9-multilib=4.9.* \
-       libc6-dev-i386=2.* \
-       gcc-multilib=4:4.* \
-       wget=1.* \
+       sudo \
+       g++-4.9 \
+       g++-4.9-multilib \
+       libc6-dev-i386 \
+       gcc-multilib \
+       wget \
        git \
-       nasm=2.* \
-       dh-autoreconf=9 \
-       ninja-build=1.* \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=6.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=5.* \
-       libncursesw5-dev=5.* \
-       liblzma-dev=5.* \
+       nasm \
+       dh-autoreconf \
+       ninja-build \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
     && update-ca-certificates \
@@ -43,14 +43,14 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.15.3-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.16/cmake-3.16.4-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.16.4-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.15.3-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.15.3-Linux-x86_64 \
-    && rm cmake-3.15.3-Linux-x86_64.tar.gz \
+    && cp -fR cmake-3.16.4-Linux-x86_64/* /usr \
+    && rm -rf cmake-3.16.4-Linux-x86_64 \
+    && rm cmake-3.16.4-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \

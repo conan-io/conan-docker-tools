@@ -1,4 +1,4 @@
-FROM conanio/gcc54
+FROM conanio/gcc5
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -12,20 +12,24 @@ RUN sudo apt-get update \
     python3.5 \
     python3.6 \
     python3.7 \
+    python3.8 \
     python-setuptools \
     python-dev \
     python3.4-dev \
     python3.5-dev \
     python3.6-dev \
     python3.7-dev \
+    python3.8-dev \
+    python3.8-distutils \
     golang \
     pkg-config \
     && sudo rm -rf /var/lib/apt/lists/* \
     && sudo pip install --upgrade pip \
     && cd /tmp && wget https://bootstrap.pypa.io/get-pip.py \
     && sudo python3 get-pip.py \
-    && sudo pip3 install "meson" \
-    && sudo pip install virtualenv
+    && sudo pip install "virtualenv<20.0.0" \
+    && pip3 install PyGithub \
+    && pip3 install meson
 
 USER conan
 WORKDIR /home/conan

@@ -96,7 +96,10 @@ jobs:
         GCC_VERSIONS: "9"
         DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
-
+      Ubuntu GCC 10:
+        GCC_VERSIONS: "10"
+        DOCKER_ARCHS: "x86_64,armv7,armv7hf"
+        DOCKER_DISTRO: "jnlp-slave"
 
       Ubuntu Clang 3.8 x86_64:
         CLANG_VERSIONS: "3.8"
@@ -142,6 +145,16 @@ jobs:
         CLANG_VERSIONS: "8"
         DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu Clang 9 x86_64:
+        CLANG_VERSIONS: "9"
+        DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu Clang 9 x86:
+        CLANG_VERSIONS: "9"
+        DOCKER_ARCHS: "x86"
+        DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu Clang 10 x86_64:
+        CLANG_VERSIONS: "10"
+        DOCKER_DISTRO: "jnlp-slave"
 
       Android Clang 8:
         DOCKER_CROSS: "android"
@@ -150,3 +163,7 @@ jobs:
 
       Conan Server:
         BUILD_CONAN_SERVER_IMAGE: 1
+
+      Conan Tests:
+        BUILD_CONAN_TESTS: 1
+        BUILD_CONAN_TEST_AZURE: 1
