@@ -8,7 +8,7 @@ ENV LLVM_VERSION=10 \
     CMAKE_C_COMPILER=clang \
     CMAKE_CXX_COMPILER=clang++ \
     PYENV_ROOT=/opt/pyenv \
-    PYTHON_VERSION=3.8.2 \
+    PYTHON_VERSION=3.8.5 \
     PATH=/opt/pyenv/shims:${PATH} \
     CMAKE_VERSION=3.16.6
 
@@ -26,9 +26,9 @@ RUN dpkg --add-architecture i386 \
        dh-autoreconf \
     # Install compiler toolset
     && apt-get install -y --no-install-recommends \
-       lsb-release \ 
+       lsb-release \
        software-properties-common \
-    && wget https://apt.llvm.org/llvm.sh \ 
+    && wget https://apt.llvm.org/llvm.sh \
     && chmod +x llvm.sh \
     && sudo ./llvm.sh ${LLVM_VERSION} \
     && rm llvm.sh \

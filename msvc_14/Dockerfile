@@ -12,7 +12,7 @@ RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.or
     choco install --no-progress --yes git --version=2.19.0 --params '"/InstallDir:C:\tools\git"'; \
     choco install --no-progress --yes svn --version=1.8.17 --params '"/InstallDir:C:\tools\svn"'; \
     choco install --no-progress --yes cmake --version=3.12.2 --params '"/InstallDir:C:\tools\cmake"' --installargs 'ADD_CMAKE_TO_PATH=""System""'; \
-    choco install --no-progress --yes python3 --version=3.8.0 --params '"/InstallDir:C:\tools\python3"'
+    choco install --no-progress --yes python3 --version=3.8.5 --params '"/InstallDir:C:\tools\python3"'
 
 RUN choco install --no-progress --yes --execution-timeout=0 vcbuildtools --version=2015.4 -ia "/Full"
 
