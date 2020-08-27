@@ -2,7 +2,9 @@ FROM ubuntu:zesty
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV PYENV_ROOT=/opt/pyenv \
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+    CMAKE_VERSION_FULL=3.18.2 \
+    PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc
@@ -41,14 +43,14 @@ RUN dpkg --add-architecture i386 \
        ca-certificates \
        autoconf-archive \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.18/cmake-3.18.2-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.18.2-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
-       --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.18.2-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.18.2-Linux-x86_64 \
-    && rm cmake-3.18.2-Linux-x86_64.tar.gz \
+       --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
+    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
+    && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
+    && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \

@@ -36,9 +36,9 @@ RUN dpkg --add-architecture i386 \
        autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.18/cmake-3.18.2.tar.gz \
-    && tar -xzf cmake-3.18.2.tar.gz \
-    && cd cmake-3.18.2 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
