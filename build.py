@@ -409,7 +409,10 @@ class ConanDockerTools(object):
                 self.login()
                 self.linter(build_dir)
                 self.build()
-                self.test_tests()
+                if image_name == "conantestagent":
+                    self.test_jenkins()
+                else:
+                    self.test_tests()
                 self.tag()
                 self.info()
                 self.deploy()
