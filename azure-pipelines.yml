@@ -167,3 +167,7 @@ jobs:
       Conan Tests:
         BUILD_CONAN_TESTS: 1
         BUILD_CONAN_TEST_AZURE: 1
+
+      Conan Tests Agent:
+        BUILD_CONAN_TESTS: 1
+        BUILD_CONAN_TEST_AGENT: 1
