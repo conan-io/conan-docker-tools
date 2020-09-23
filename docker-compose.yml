@@ -778,12 +778,19 @@ services:
         image: "${DOCKER_USERNAME}/conantestazure:${DOCKER_BUILD_TAG}"
         container_name: conan-test-azure
         tty: true
+    conantestdocker:
+        build:
+            context: conan_test_docker
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/conantestdocker:${DOCKER_BUILD_TAG}"
+        container_name: conan-test-docker
+        tty: true
     conantestagent:
         build:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/conantests
+                SOURCE_CONANIO_IMAGE: conanio/conantestdocker
         image: "${DOCKER_USERNAME}/conantestagent:${DOCKER_BUILD_TAG}"
         container_name: conan-test-agent
         tty: true

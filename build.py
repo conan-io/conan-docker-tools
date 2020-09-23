@@ -51,6 +51,7 @@ class ConanDockerTools(object):
         build_tests = self._get_boolean_var("BUILD_CONAN_TESTS")
         build_test_azure = self._get_boolean_var("BUILD_CONAN_TEST_AZURE")
         build_test_agent = self._get_boolean_var("BUILD_CONAN_TEST_AGENT")
+        build_test_docker = self._get_boolean_var("BUILD_CONAN_TEST_DOCKER")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
@@ -79,12 +80,12 @@ class ConanDockerTools(object):
             "docker_build_tag, docker_archs, sudo_command, "
             "docker_upload_only_when_stable, docker_cross, docker_cache, "
             "build_tests, build_test_azure docker_upload_retry, "
-            "build_test_agent")
+            "build_test_agent, build_test_docker")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, docker_distro, clang_versions, visual_versions, build_server,
                          docker_build_tag, docker_archs, sudo_command, docker_upload_only_when_stable,
                          docker_cross, docker_cache, build_tests, build_test_azure,
-                         docker_upload_retry, build_test_agent)
+                         docker_upload_retry, build_test_agent, build_test_docker)
 
     def _get_boolean_var(self, var, default="false"):
         """ Parse environment variable as boolean type
@@ -401,7 +402,8 @@ class ConanDockerTools(object):
         for image_name, build_image, build_dir in [
                 ("conantests", self.variables.build_tests, "conan_tests"),
                 ("conantestazure", self.variables.build_test_azure, "conan_test_azure"),
-                ("conantestagent", self.variables.build_test_agent, "conan_test_agent"),
+                ("conantestdocker", self.variables.build_test_docker, "conan_test_docker"),
+                ("conantestagent", self.variables.build_test_agent, "jenkins-jnlp-slave"),
             ]:
             if build_image:
                 self.service = image_name
