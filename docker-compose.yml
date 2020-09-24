@@ -781,9 +781,7 @@ services:
     conantestagent:
         build:
             context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/conantests
+            dockerfile: DockerfileAgent
         image: "${DOCKER_USERNAME}/conantestagent:${DOCKER_BUILD_TAG}"
         container_name: conan-test-agent
         tty: true

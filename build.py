@@ -401,7 +401,7 @@ class ConanDockerTools(object):
         for image_name, build_image, build_dir in [
                 ("conantests", self.variables.build_tests, "conan_tests"),
                 ("conantestazure", self.variables.build_test_azure, "conan_test_azure"),
-                ("conantestagent", self.variables.build_test_agent, "conan_test_agent"),
+                ("conantestagent", self.variables.build_test_agent, "jenkins-jnlp-slave"),
             ]:
             if build_image:
                 self.service = image_name
