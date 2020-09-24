@@ -16,7 +16,6 @@ jobs:
   strategy:
     matrix:
       Conan Tests Agent:
-        BUILD_CONAN_TEST_DOCKER: 1
         BUILD_CONAN_TEST_AGENT: 1
 
       CentOS 6 GCC 7 x86_64:
