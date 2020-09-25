@@ -4,16 +4,18 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ARG AGENT_VERSION=3.27
 
-RUN sudo apt-get update \
-    && sudo apt-get -qq install -y --no-install-recommends \
+USER root
+
+RUN apt-get update \
+    && apt-get -qq install -y --no-install-recommends \
     software-properties-common \
     apt-transport-https \
     ca-certificates \
     curl \
     gnupg-agent \
-    && sudo add-apt-repository ppa:deadsnakes/ppa -y \
-    && sudo apt-get update \
-    && sudo apt-get -qq install -y --no-install-recommends \
+    && add-apt-repository ppa:deadsnakes/ppa -y \
+    && apt-get update \
+    && apt-get -qq install -y --no-install-recommends \
     python-software-properties \
     python3.4 \
     python3.5 \
@@ -30,28 +32,20 @@ RUN sudo apt-get update \
     python3.8-distutils \
     golang \
     pkg-config \
-    && curl -kfsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - \
-    && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable" \
-    && sudo apt-get update \
-    && sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
-    && sudo rm -rf /var/lib/apt/lists/* \
-    && sudo usermod -aG docker conan \
-    && sudo pip install --upgrade pip \
+    && curl -kfsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
+    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable" \
+    && apt-get update \
+    && apt-get install -y docker-ce docker-ce-cli containerd.io \
+    && rm -rf /var/lib/apt/lists/* \
+    && usermod -aG docker conan \
+    && pip install --upgrade pip \
     && cd /tmp && wget --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-    && sudo python3 get-pip.py \
-    && sudo pip install "virtualenv<20.0.0" \
+    && python3 get-pip.py \
+    && pip install "virtualenv<20.0.0" \
     && pip3 install PyGithub \
     && pip3 install meson \
     && pip3 install docker-compose \
-    && sudo systemctl enable docker
-
-
-USER conan
-WORKDIR /home/conan
-RUN mkdir -p /home/conan/.conan
-
-
-USER root
+    && systemctl enable docker
 
 COPY jenkins-slave /usr/local/bin/jenkins-slave
 COPY entrypoint.sh /opt/entrypoint.sh
@@ -70,4 +64,3 @@ RUN /tmp/install-openjdk-ppa.sh \
     && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-slave
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
-USER conan
