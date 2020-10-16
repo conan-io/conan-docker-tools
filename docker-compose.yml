@@ -447,7 +447,7 @@ services:
         build:
             context: clang_11
             dockerfile: Dockerfile
-        image: "${DOCKER_USERNAME}/clang10:${DOCKER_BUILD_TAG}"
+        image: "${DOCKER_USERNAME}/clang11:${DOCKER_BUILD_TAG}"
         container_name: clang11
         tty: true
     msvc14:
