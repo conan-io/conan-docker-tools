@@ -83,13 +83,6 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang10: clang 10](https://hub.docker.com/r/conanio/clang10/)              | x86_64 |  Supported |
 
 
-#### Visual Studio
-
-We can not re-distribute Windows docker images, since Visual Studio Build Tools is licensed as supplemental license for Visual Studio.
-To have more information about: https://github.com/Microsoft/vs-dockerfiles#samples
-However, you can download the Docker recipe and build.
-
-
 #### Android
 
 | Version                                                                                       | Arch   |  Status, Life cycle  |
