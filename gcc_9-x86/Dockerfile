@@ -1,4 +1,4 @@
-FROM i386/ubuntu:eoan
+FROM i386/ubuntu:bionic
 ENTRYPOINT ["linux32", "--"] # https://github.com/conan-io/conan-docker-tools/issues/36
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
@@ -11,33 +11,33 @@ ENV CONAN_ENV_ARCH=x86 \
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-       sudo=1.* \
-       binutils=2.* \
-       wget=1.* \
-       git=1:2.* \
-       libc6-dev=2.* \
-       linux-libc-dev=5.* \
+       sudo \
+       binutils \
+       wget \
+       git \
+       libc6-dev \
+       linux-libc-dev \
        g++-9 \
-       libgmp-dev=2:6.* \
-       libmpfr-dev=4.* \
-       libmpc-dev=1.* \
-       libc6-dev=2.* \
-       nasm=2.* \
-       dh-autoreconf=19 \
-       ninja-build=1.* \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=8.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=6.* \
-       libncursesw5-dev=6.* \
-       liblzma-dev=5.* \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       libc6-dev \
+       nasm \
+       dh-autoreconf \
+       ninja-build \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100 \
