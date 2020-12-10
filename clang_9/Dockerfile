@@ -9,6 +9,8 @@ ENV LLVM_VERSION=9.0 \
     CMAKE_CXX_COMPILER=clang++ \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
+	
+COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \

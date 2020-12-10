@@ -11,6 +11,8 @@ ENV LLVM_VERSION=9.0 \
     CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
+	
+COPY sources.list /etc/apt/sources.list
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \

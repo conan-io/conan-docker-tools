@@ -8,6 +8,8 @@ ENV CONAN_ENV_ARCH=x86 \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc
+	
+COPY sources.list /etc/apt/sources.list
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
