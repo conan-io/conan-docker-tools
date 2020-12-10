@@ -9,6 +9,10 @@ ENV PYENV_ROOT=/opt/pyenv \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends gnupg \
+    && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
        sudo \
        binutils \
