@@ -1,5 +1,0 @@
-[cloudlinux]
-name=Cloud Linux
-baseurl=http://repo.cloudlinux.com/cloudlinux/6.10/sclo/devtoolset-7/i386/
-enabled=1
-gpgcheck=0

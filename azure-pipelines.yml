@@ -18,14 +18,6 @@ jobs:
       Conan Tests Agent:
         BUILD_CONAN_TEST_AGENT: 1
 
-      CentOS 6 GCC 7 x86_64:
-        GCC_VERSIONS: "7"
-        DOCKER_ARCHS: "x86_64"
-        DOCKER_DISTRO: "centos6,jnlp-slave-centos6"
-      CentOS 6 GCC 7 x86:
-        GCC_VERSIONS: "7"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "centos6,jnlp-slave-centos6"
       Ubuntu MinGW GCC 7 x86_64:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64"
