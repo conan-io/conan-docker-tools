@@ -6,6 +6,8 @@ ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc
+	
+COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
