@@ -3,7 +3,9 @@ ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/i
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CONAN_ENV_ARCH=x86 \
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+    CMAKE_VERSION_FULL=3.18.2 \
+    CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
