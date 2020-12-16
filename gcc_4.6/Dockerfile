@@ -41,6 +41,8 @@ RUN apt-get -qq update \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
+       --exclude=share/vim \
+       --exclude=share/vim \
     && cp -fR /tmp/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
     && rm -rf /tmp/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64* \
     && groupadd 1001 -g 1001 \

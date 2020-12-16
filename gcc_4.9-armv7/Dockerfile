@@ -41,6 +41,7 @@ RUN apt-get -qq update \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
+       --exclude=share/vim \
     && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
     && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
     && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
