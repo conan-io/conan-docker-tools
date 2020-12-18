@@ -52,8 +52,8 @@ RUN dpkg --add-architecture i386 \
        && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
        && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
        && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-       && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-       && python3 get-pip.py \
+       && wget --no-check-certificate --quiet -O /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py \
+       && python3 /tmp/get-pip.py \
        && rm get-pip.py \
        && pip install -q -U pip \
        && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
