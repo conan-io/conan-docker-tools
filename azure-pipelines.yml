@@ -17,3 +17,4 @@ jobs:
     matrix:
       Conan Tests:
         BUILD_CONAN_TESTS: 1
+        BUILD_CONAN_TEST_AZURE: 1
