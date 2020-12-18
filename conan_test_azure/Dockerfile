@@ -42,19 +42,22 @@ RUN dpkg --add-architecture i386 \
        python3.8-dev \
        golang \
        pkg-config \
-       && rm -rf /var/lib/apt/lists/* \
-       && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-       && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+       && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q --no-check-certificate -O /tmp/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+       && tar -zxf /tmp/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
        --exclude=share/vim \
-       && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
-       && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-       && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-       && wget --no-check-certificate --quiet -O /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py \
-       && python3 /tmp/get-pip.py \
-       && rm get-pip.py \
-       && pip install -q -U pip \
-       && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
-       && pip install virtualenv
+       -C /tmp \
+       && cp -fR /tmp/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
+       && rm -rf /tmp/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
+       && rm /tmp/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz
+
+RUN wget --no-check-certificate --quiet -O /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py \
+    && python3 /tmp/get-pip.py \
+    && rm get-pip.py \
+    && pip install -q -U pip \
+    && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
+    && pip install virtualenv
