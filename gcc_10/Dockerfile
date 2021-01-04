@@ -2,10 +2,13 @@ FROM ubuntu:focal
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH} \
-    CXX=/usr/bin/g++ \
+ENV GCC_VERSION=10 \
+    CMAKE_VERSION_FULL=3.18.2 \
     CC=/usr/bin/gcc \
+    CXX=/usr/bin/g++ \
+    PYENV_ROOT=/opt/pyenv \
+    PYTHON_VERSION=3.7.5 \
+    PATH=/opt/pyenv/shims:${PATH} \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -qq update \
@@ -15,7 +18,7 @@ RUN apt-get -qq update \
        wget \
        git \
        libc6-dev \
-       g++-10 \
+       g++-${GCC_VERSION} \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \
@@ -37,20 +40,12 @@ RUN apt-get -qq update \
        liblzma-dev \
        ca-certificates \
        autoconf-archive \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100 \
-    && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-10 100 \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 \
-    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-10 100 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 100 \
+    && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-${GCC_VERSION} 100 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 100 \
+    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-${GCC_VERSION} 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.16/cmake-3.16.4-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.16.4-Linux-x86_64.tar.gz \
-       --exclude=bin/cmake-gui \
-       --exclude=doc/cmake \
-       --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.16.4-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.16.4-Linux-x86_64 \
-    && rm cmake-3.16.4-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -64,10 +59,10 @@ RUN apt-get -qq update \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
-    && pyenv global 3.7.5 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
+    && pyenv global ${PYTHON_VERSION} \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION_FULL} \
     && chown -R conan:1001 /opt/pyenv \
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \

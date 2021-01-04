@@ -3,7 +3,9 @@ ENTRYPOINT ["linux32", "--"]
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CONAN_ENV_ARCH=x86 \
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+    CMAKE_VERSION_FULL=3.18.2 \
+    CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
@@ -43,9 +45,9 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.16/cmake-3.16.4.tar.gz \
-    && tar -xzf cmake-3.16.4.tar.gz \
-    && cd cmake-3.16.4 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \

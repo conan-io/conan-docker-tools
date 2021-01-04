@@ -4,6 +4,8 @@ ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/i
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV LLVM_VERSION=3.9 \
+    CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+    CMAKE_VERSION_FULL=3.18.2 \
     CC=clang \
     CXX=clang++ \
     CMAKE_C_COMPILER=clang \
@@ -57,9 +59,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-${LLVM_VERSION} 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.16/cmake-3.16.4.tar.gz \
-    && tar -xzf cmake-3.16.4.tar.gz \
-    && cd cmake-3.16.4 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
