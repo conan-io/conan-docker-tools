@@ -1,10 +1,9 @@
-FROM i386/ubuntu:eoan
+FROM i386/ubuntu:eoan AS basics
 ENTRYPOINT ["linux32", "--"] # https://github.com/conan-io/conan-docker-tools/issues/36
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
-    CMAKE_VERSION_FULL=3.18.2 \
+ENV CMAKE_VERSION_FULL=3.18.4 \
     CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
@@ -50,14 +49,6 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-9 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
-    && cd cmake-${CMAKE_VERSION_FULL} \
-    && ./bootstrap > /dev/null \
-    && make -s -j`nproc` \
-    && make -s install > /dev/null \
-    && cd - \
-    && rm -rf cmake-* \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -83,8 +74,23 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
 
+FROM basics AS building_layer 
+
+RUN mkdir conan_packages \
+    && cd conan_packages \
+    # Temporary dependencies for (potential) boostrapping purposes 
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends cmake \
+    # Install Packages which we want to deploy
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy 
+
+
+FROM basics AS final_image 
+
 USER conan
 WORKDIR /home/conan
+
+COPY --from=building_layer /conan_packages/cmake/ /usr/
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \

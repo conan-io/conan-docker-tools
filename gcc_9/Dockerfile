@@ -1,9 +1,8 @@
-FROM ubuntu:eoan
+FROM ubuntu:eoan AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
-    CMAKE_VERSION_FULL=3.18.2 \
+ENV CMAKE_VERSION_FULL=3.18.4 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
@@ -49,15 +48,6 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-9 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-       --exclude=bin/cmake-gui \
-       --exclude=doc/cmake \
-       --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
-       --exclude=share/vim \
-    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
-    && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-    && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate -O /usr/local/bin/jfrog https://api.bintray.com/content/jfrog/jfrog-cli-go/\$latest/jfrog-cli-linux-amd64/jfrog?bt_package=jfrog-cli-linux-amd64 \
     && chmod +x /usr/local/bin/jfrog \
     && groupadd 1001 -g 1001 \
@@ -85,8 +75,24 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
 
+
+FROM basics AS building_layer 
+
+RUN mkdir conan_packages \
+    && cd conan_packages \
+    # Install dependencies for (potential) boostrapping purposes 
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends cmake \
+    # Install Packages we want to deploy then
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy 
+
+
+FROM basics AS final_image 
+
 USER conan
 WORKDIR /home/conan
+
+COPY --from=building_layer /conan_packages/cmake/ /usr/
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
