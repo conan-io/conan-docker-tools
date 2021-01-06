@@ -82,7 +82,11 @@ RUN mkdir conan_packages \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends cmake \
     # Install Packages which we want to deploy
-    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy 
+    # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+    && cd cmake/licenses \
+    && mkdir cmake \ 
+    && ls | grep -v cmake | xargs mv -t cmake
 
 
 FROM basics AS final_image 
