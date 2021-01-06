@@ -10,7 +10,7 @@ ENV LLVM_VERSION=10 \
     PYENV_ROOT=/opt/pyenv \
     PYTHON_VERSION=3.8.2 \
     PATH=/opt/pyenv/shims:${PATH} \
-    CMAKE_VERSION_FULL=3.18.2
+    CMAKE_VERSION_FULL=3.18.4
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \

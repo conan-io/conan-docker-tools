@@ -2,8 +2,8 @@ FROM ubuntu:bionic AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
-    CMAKE_VERSION_FULL=3.18.2 \
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+    CMAKE_VERSION_FULL=3.18.4 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \

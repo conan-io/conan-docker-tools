@@ -3,7 +3,7 @@ FROM ubuntu:xenial
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
-    CMAKE_VERSION_FULL=3.18.2
+    CMAKE_VERSION_FULL=3.18.4
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \

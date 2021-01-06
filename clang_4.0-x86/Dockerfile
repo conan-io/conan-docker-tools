@@ -5,7 +5,7 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV LLVM_VERSION=4.0 \
     CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
-    CMAKE_VERSION_FULL=3.18.2 \
+    CMAKE_VERSION_FULL=3.18.4 \
     CC=clang \
     CXX=clang++ \
     CMAKE_C_COMPILER=clang \
