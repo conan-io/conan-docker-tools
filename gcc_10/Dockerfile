@@ -1,44 +1,54 @@
-FROM ubuntu:focal
+FROM ubuntu:focal AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV GCC_VERSION=10 \
-    CMAKE_VERSION_FULL=3.18.2 \
+    CMAKE_VERSION_FULL=3.18.4 \
     CC=/usr/bin/gcc \
     CXX=/usr/bin/g++ \
+    CMAKE_C_COMPILER=gcc \
+    CMAKE_CXX_COMPILER=g++ \
     PYENV_ROOT=/opt/pyenv \
     PYTHON_VERSION=3.7.5 \
     PATH=/opt/pyenv/shims:${PATH} \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -qq update \
+    # Install basics
     && apt-get -qq install -y --no-install-recommends \
        sudo \
-       binutils \
        wget \
        git \
+       subversion \
+       make \
+       ca-certificates \
+       dh-autoreconf \
+    # Install compiler toolset
+    && apt-get -qq install -y --no-install-recommends \
+       binutils \
        libc6-dev \
        g++-${GCC_VERSION} \
-       libgmp-dev \
-       libmpfr-dev \
-       libmpc-dev \
-       nasm \
-       dh-autoreconf \
-       ninja-build \
+    # Install dependencies of Python
+    && apt-get -qq install -y --no-install-recommends \
+       libreadline-dev \
+       libsqlite3-dev \
        libffi-dev \
        libssl-dev \
-       pkg-config \
-       subversion \
        zlib1g-dev \
        libbz2-dev \
-       libsqlite3-dev \
-       libreadline-dev \
        xz-utils \
        curl \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
-       ca-certificates \
+    # Install stuff for compatiblity, which we don't want to install in new images anymore
+    && apt-get -qq install -y --no-install-recommends \
+       nasm \
+       ninja-build \
+       pkg-config \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
        autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-${GCC_VERSION} 100 \
@@ -64,7 +74,7 @@ RUN apt-get -qq update \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION_FULL} \
+    && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
@@ -72,8 +82,28 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
 
+
+FROM basics AS building_layer 
+
+RUN mkdir conan_packages \
+    && cd conan_packages \
+    # Temporary dependencies for (potential) boostrapping purposes 
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends cmake \
+    # Install Packages which we want to deploy
+    # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+    && cd cmake/licenses \
+    && mkdir cmake \ 
+    && ls | grep -v cmake | xargs mv -t cmake
+
+
+FROM basics AS final_image 
+
 USER conan
 WORKDIR /home/conan
+
+COPY --from=building_layer /conan_packages/cmake/ /usr/
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
