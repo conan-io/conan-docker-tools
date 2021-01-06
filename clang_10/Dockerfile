@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:bionic AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -78,7 +78,7 @@ RUN dpkg --add-architecture i386 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION_FULL} \
+    && pip install -q --no-cache-dir conan conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
@@ -87,8 +87,28 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
 
+
+FROM basics AS building_layer 
+
+RUN mkdir conan_packages \
+   && cd conan_packages \
+   # Temporary dependencies for (potential) boostrapping purposes 
+   && apt-get -qq update \
+   && apt-get -qq install -y --no-install-recommends cmake \
+   # Install Packages which we want to deploy
+   # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
+   && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+   && cd cmake/licenses \
+   && mkdir cmake \ 
+   && ls | grep -v cmake | xargs mv -t cmake
+
+
+FROM basics AS final_image 
+
 USER conan
 WORKDIR /home/conan
+
+COPY --from=building_layer /conan_packages/cmake/ /usr/
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \

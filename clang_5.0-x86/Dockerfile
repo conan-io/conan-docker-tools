@@ -1,4 +1,4 @@
-FROM i386/ubuntu:artful
+FROM i386/ubuntu:artful AS basics
 ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/issues/36
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
@@ -55,14 +55,6 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-5.0 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
-    && cd cmake-${CMAKE_VERSION_FULL} \
-    && ./bootstrap > /dev/null \
-    && make -s -j`nproc` \
-    && make -s install > /dev/null \
-    && cd - \
-    && rm -rf cmake-* \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -88,8 +80,34 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
 
+
+FROM basics AS building_layer 
+
+RUN mkdir conan_packages \
+    && cd conan_packages \
+    # Temporary dependencies for (potential) boostrapping purposes 
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
+    && ./bootstrap > /dev/null \
+    && make -s -j`nproc` \
+    && make -s install > /dev/null \
+    && cd - \
+    && rm -rf cmake-* \
+    # Install Packages which we want to deploy
+    # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+    && cd cmake/licenses \
+    && mkdir cmake \ 
+    && ls | grep -v cmake | xargs mv -t cmake
+
+
+FROM basics AS final_image 
+
 USER conan
 WORKDIR /home/conan
+
+COPY --from=building_layer /conan_packages/cmake/ /usr/
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \

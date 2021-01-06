@@ -83,8 +83,34 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/local/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/local/bin/pip pip /opt/pyenv/shims/pip 100
 
+
+FROM basics AS building_layer 
+
+RUN mkdir conan_packages \
+    && cd conan_packages \
+    # Temporary dependencies for (potential) boostrapping purposes 
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
+    && ./bootstrap > /dev/null \
+    && make -s -j`nproc` \
+    && make -s install > /dev/null \
+    && cd - \
+    && rm -rf cmake-* \
+    # Install Packages which we want to deploy
+    # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+    && cd cmake/licenses \
+    && mkdir cmake \ 
+    && ls | grep -v cmake | xargs mv -t cmake
+
+
+FROM basics AS final_image 
+
 USER conan
 WORKDIR /home/conan
+
+COPY --from=building_layer /conan_packages/cmake/ /usr/
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
