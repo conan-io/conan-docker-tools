@@ -1,4 +1,4 @@
-FROM ubuntu:artful
+FROM ubuntu:artful AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 

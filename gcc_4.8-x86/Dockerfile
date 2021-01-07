@@ -69,7 +69,7 @@ FROM basics AS building_layer
 
 RUN mkdir conan_packages \
     && cd conan_packages \
-    # Temporary dependencies for (potential) boostrapping purposes 
+    # Temporary dependencies for boostrapping purposes
     && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
     && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
     && cd cmake-${CMAKE_VERSION_FULL} \
@@ -80,7 +80,8 @@ RUN mkdir conan_packages \
     && rm -rf cmake-* \
     # Install Packages which we want to deploy
     # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
-    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+    # To avoid GLIBC/CXX compatibility issues, we have to (re)build the package
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build -g deploy \
     && cd cmake/licenses \
     && mkdir cmake \ 
     && ls | grep -v cmake | xargs mv -t cmake

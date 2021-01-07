@@ -45,16 +45,6 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
-    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-       --exclude=bin/cmake-gui \
-       --exclude=doc/cmake \
-       --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
-       --exclude=share/vim \
-       --exclude=share/vim \
-    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
-    && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-    && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && wget -q --no-check-certificate -O /usr/local/bin/jfrog https://api.bintray.com/content/jfrog/jfrog-cli-go/\$latest/jfrog-cli-linux-amd64/jfrog?bt_package=jfrog-cli-linux-amd64 \
     && chmod +x /usr/local/bin/jfrog \
     && groupadd 1001 -g 1001 \

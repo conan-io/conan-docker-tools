@@ -1,4 +1,4 @@
-FROM ubuntu:wily
+FROM ubuntu:wily AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -38,15 +38,6 @@ RUN dpkg --add-architecture armhf \
     autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-       --exclude=bin/cmake-gui \
-       --exclude=doc/cmake \
-       --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
-       --exclude=share/vim \
-    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
-    && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-    && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -83,8 +74,34 @@ ENV CC=arm-linux-gnueabihf-gcc-4.9 \
     LD=arm-linux-gnueabihf-ld \
     FC=arm-linux-gnueabihf-gfortran-4.9
 
+
+FROM basics AS building_layer 
+
+RUN mkdir conan_packages \
+    && cd conan_packages \
+    # Temporary dependencies for (potential) boostrapping purposes 
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
+    && ./bootstrap > /dev/null \
+    && make -s -j`nproc` \
+    && make -s install > /dev/null \
+    && cd - \
+    && rm -rf cmake-* \
+    # Install Packages which we want to deploy
+    # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
+    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+    && cd cmake/licenses \
+    && mkdir cmake \ 
+    && ls | grep -v cmake | xargs mv -t cmake
+
+
+FROM basics AS final_image 
+
 USER conan
 WORKDIR /home/conan
+
+COPY --from=building_layer /conan_packages/cmake/ /usr/
 
 RUN mkdir -p /home/conan/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
