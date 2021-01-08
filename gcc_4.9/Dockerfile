@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:trusty AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
