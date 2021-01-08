@@ -64,8 +64,6 @@ RUN apt-get -qq update \
 
 FROM basics AS building_layer 
 
-COPY ./conanfile.py conanfile.py
-
 RUN mkdir -p conan_packages/cmake \
     && cd conan_packages \
     # CMake can't be built with GCC 4.6, so let's download official binaries
