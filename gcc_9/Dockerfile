@@ -2,7 +2,7 @@ FROM ubuntu:eoan AS basics
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_FULL=3.18.4 \
+ENV CMAKE_VERSION_FULL=3.18.5 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \

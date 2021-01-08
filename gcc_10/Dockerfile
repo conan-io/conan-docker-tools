@@ -3,7 +3,7 @@ FROM ubuntu:focal AS basics
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV GCC_VERSION=10 \
-    CMAKE_VERSION_FULL=3.18.4 \
+    CMAKE_VERSION_FULL=3.18.5 \
     CC=/usr/bin/gcc \
     CXX=/usr/bin/g++ \
     CMAKE_C_COMPILER=gcc \
