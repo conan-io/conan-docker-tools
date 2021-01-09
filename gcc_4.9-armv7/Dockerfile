@@ -75,6 +75,11 @@ ENV CC=arm-linux-gnueabi-gcc-4.9 \
 
 FROM basics AS building_layer 
 
+ENV CXX=/usr/bin/g++-4.9 \
+    CC=/usr/bin/gcc-4.9 \
+    CMAKE_C_COMPILER=gcc-4.9 \
+    CMAKE_CXX_COMPILER=g++-4.9
+
 RUN mkdir conan_packages \
     && cd conan_packages \
     # Temporary dependencies for (potential) boostrapping purposes 
