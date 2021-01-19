@@ -291,6 +291,14 @@ class ConanDockerTools(object):
                 "arch_build=%s -s os_build=Linux --build" % (self.service, arch),
                 shell=True)
 
+        try:
+            subprocess.check_call(
+                "docker exec %s ls /usr/local/bin/jfrog" % self.service, shell=True)
+        except:
+            pass
+        else:
+            subprocess.check_call("docker exec %s jfrog --version" % self.service, shell=True)
+
     def test_jenkins(self):
         logging.info("Testing Jenkins Docker: running service %s." % self.service)
         output = subprocess.check_output("docker run --rm -t --name %s %s" % (self.service,

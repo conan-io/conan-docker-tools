@@ -3,7 +3,7 @@ FROM ubuntu:artful
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV LLVM_VERSION=4.0 \
-    CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+    CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2 \
     CC=clang \
     CXX=clang++ \
@@ -69,6 +69,8 @@ RUN dpkg --add-architecture i386 \
     && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
     && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
     && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate -O /usr/local/bin/jfrog https://api.bintray.com/content/jfrog/jfrog-cli-go/\$latest/jfrog-cli-linux-amd64/jfrog?bt_package=jfrog-cli-linux-amd64 \
+    && chmod +x /usr/local/bin/jfrog \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
