@@ -6,6 +6,7 @@ if __name__ == "__main__":
     for old, new in [
         ("CMAKE_VERSION_MAJOR_MINOR=3.17", "CMAKE_VERSION_MAJOR_MINOR=3.18"),
         ("CMAKE_VERSION_FULL=3.18.4", "CMAKE_VERSION_FULL=3.18.5"),
+        ("CMAKE_RREV=fabfeac4dd61c45dc0a0451408769226", "CMAKE_RREV=fabfeac4dd61c45dc0a0451408769226"),
     ]:
 
         for root, _, filenames in os.walk("./"):

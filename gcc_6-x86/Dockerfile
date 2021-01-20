@@ -5,6 +5,7 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
     CMAKE_VERSION_FULL=3.18.5 \
+    CMAKE_RREV=fabfeac4dd61c45dc0a0451408769226 \
     CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
@@ -91,7 +92,7 @@ RUN mkdir conan_packages \
     && rm -rf cmake-* \
     # Install Packages which we want to deploy
     # Install CMake + move license files to specific licenses/cmake subdirectory for deploy
-    && conan install cmake/${CMAKE_VERSION_FULL}@ --build missing -g deploy \
+    && CONAN_REVISIONS_ENABLED=1 conan install cmake/${CMAKE_VERSION_FULL}@#${CMAKE_RREV} --build missing -g deploy \
     && cd cmake/licenses \
     && mkdir cmake \ 
     && ls | grep -v cmake | xargs mv -t cmake
