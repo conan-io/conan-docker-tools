@@ -9,8 +9,13 @@ RUN sudo apt-get update \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.5.7 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.9 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.8.1 \
-    && pyenv global 3.8.1 \
-    && python -m pip install --upgrade pip "virtualenv<20.0.0" PyGithub conan meson
+    && pyenv global 3.8.1
+
+RUN python -m pip install --upgrade pip
+RUN python -m pip install meson
+RUN python -m pip install "virtualenv<20.0.0"
+RUN python -m pip install PyGithub
+RUN python -m pip install conan
 
 USER conan
 WORKDIR /home/conan
