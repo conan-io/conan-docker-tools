@@ -43,6 +43,7 @@ RUN dpkg --add-architecture i386 \
        python3.6-dev \
        python3.7-dev \
        python3.8-dev \
+       python3.8-distutils \
        golang \
        pkg-config \
        && rm -rf /var/lib/apt/lists/* \
@@ -58,7 +59,7 @@ RUN dpkg --add-architecture i386 \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
        && sudo ln -sf /usr/bin/python3.8 /usr/bin/python \
        && sudo ln -sf /usr/bin/python3.8 /usr/bin/python3 \
-       && python3 get-pip.py \
+       && python3.8 get-pip.py \
        && rm get-pip.py \
        && python -m pip install -q -U pip \
        && python -m pip install -q --no-cache-dir conan conan-package-tools --upgrade \
