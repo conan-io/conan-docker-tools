@@ -2,7 +2,7 @@ FROM ubuntu:xenial
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2
 
 RUN dpkg --add-architecture i386 \
@@ -43,6 +43,7 @@ RUN dpkg --add-architecture i386 \
        python3.6-dev \
        python3.7-dev \
        python3.8-dev \
+       python3.8-distutils \
        golang \
        pkg-config \
        && rm -rf /var/lib/apt/lists/* \
@@ -56,8 +57,10 @@ RUN dpkg --add-architecture i386 \
        && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
        && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
        && wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py \
-       && python3 get-pip.py \
+       && sudo ln -sf /usr/bin/python3.8 /usr/bin/python \
+       && sudo ln -sf /usr/bin/python3.8 /usr/bin/python3 \
+       && python3.8 get-pip.py \
        && rm get-pip.py \
-       && pip install -q -U pip \
-       && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
-       && pip install virtualenv
+       && python -m pip install -q -U pip \
+       && python -m pip install -q --no-cache-dir conan conan-package-tools --upgrade \
+       && python -m pip install virtualenv
