@@ -321,20 +321,6 @@ class ConanDockerTools(object):
             subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm %s" % self.service, shell=True)
 
-    def test_tests(self):
-        """ Validate Test Docker images
-        """
-        logging.info("Testing Docker running service %s." % self.service)
-        try:
-            subprocess.check_call("docker run -t -d --name %s %s" % (self.service,
-                self.created_image_name), shell=True)
-            output = subprocess.check_output(
-                "docker exec %s conan install -r conan-center zlib/1.2.11@" % (self.service), shell=True)
-            assert "zlib/1.2.11: Package installed" in output.decode()
-        finally:
-            subprocess.call("docker stop %s" % self.service, shell=True)
-            subprocess.call("docker rm %s" % self.service, shell=True)
-
     def deploy(self):
         """Upload Docker image to dockerhub
         """
@@ -407,8 +393,6 @@ class ConanDockerTools(object):
         """ Execute all steps required to build Conan Tests images
         """
         for image_name, build_image, build_dir in [
-                ("conantests", self.variables.build_tests, "conan_tests"),
-                ("conantestazure", self.variables.build_test_azure, "conan_test_azure"),
                 ("conantestagent", self.variables.build_test_agent, "jenkins-jnlp-slave"),
             ]:
             if build_image:
@@ -419,8 +403,6 @@ class ConanDockerTools(object):
                 self.build()
                 if image_name == "conantestagent":
                     self.test_jenkins()
-                else:
-                    self.test_tests()
                 self.tag()
                 self.info()
                 self.deploy()

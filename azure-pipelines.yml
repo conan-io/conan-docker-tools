@@ -161,7 +161,3 @@ jobs:
 
       Conan Server:
         BUILD_CONAN_SERVER_IMAGE: 1
-
-      Conan Tests:
-        BUILD_CONAN_TESTS: 1
-        BUILD_CONAN_TEST_AZURE: 1
