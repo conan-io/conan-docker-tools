@@ -750,10 +750,3 @@ services:
         image: "${DOCKER_USERNAME}/clang11-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang11-jnlp-slave
         tty: true
-    conantestagent:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: DockerfileAgent
-        image: "${DOCKER_USERNAME}/conantestagent:${DOCKER_BUILD_TAG}"
-        container_name: conan-test-agent
-        tty: true

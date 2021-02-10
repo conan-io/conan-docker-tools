@@ -15,9 +15,6 @@ jobs:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:
     matrix:
-      Conan Tests Agent:
-        BUILD_CONAN_TEST_AGENT: 1
-
       Ubuntu MinGW GCC 7 x86_64:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64"
