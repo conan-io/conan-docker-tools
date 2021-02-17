@@ -25,6 +25,7 @@ RUN dpkg --add-architecture i386 \
        gnupg \
        ca-certificates \
        dh-autoreconf \
+       pkg-config \
     # Install compiler toolset
     && apt-get install -y --no-install-recommends \
        lsb-release \
