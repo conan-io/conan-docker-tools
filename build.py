@@ -319,7 +319,7 @@ class ConanDockerTools(object):
     def test_essential_packages(self):
         """ Validate essential system packages expected in any Docker image
         """
-        commands = ["pkg-config", "sudo", "wget", "svn", "git", "make", "autoreconf", "curl", "lzma", "jfrog"]
+        commands = ["pkg-config", "sudo", "wget", "svn", "git", "make", "autoreconf", "curl", "lzma", "jfrog", "cmake"]
         for command in commands:
             subprocess.check_call("docker exec %s %s --version" % (self.service, command), shell=True)
 
