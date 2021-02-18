@@ -182,6 +182,7 @@ class ConanDockerTools(object):
                 self.test_jenkins()
             else:
                 self.test_linux(arch, compiler_name, compiler_version, distro)
+                self.test_essential_packages()
         finally:
             subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm %s" % self.service, shell=True)
@@ -302,7 +303,6 @@ class ConanDockerTools(object):
 
     def test_server(self):
         """Validate Conan Server image
-        :param service: Docker compose service name
         """
         logging.info("Testing Docker running service %s." % self.service)
         try:
@@ -315,6 +315,13 @@ class ConanDockerTools(object):
         finally:
             subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm %s" % self.service, shell=True)
+
+    def test_essential_packages(self):
+        """ Validate essential system packages expected in any Docker image
+        """
+        commands = ["pkg-config", "sudo", "wget", "svn", "git", "make", "autoreconf", "curl", "lzma", "jfrog"]
+        for command in commands:
+            subprocess.check_call("docker exec %s %s --version" % (self.service, command), shell=True)
 
     def deploy(self):
         """Upload Docker image to dockerhub
