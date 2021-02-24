@@ -24,49 +24,24 @@ jobs:
         GCC_VERSIONS: "4.9"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf"
         DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu GCC 4.9 x86:
-        GCC_VERSIONS: "4.9"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 5:
         GCC_VERSIONS: "5"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"
         DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu GCC 5 x86:
-        GCC_VERSIONS: "5"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 6:
         GCC_VERSIONS: "6"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"
-        DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu GCC 6 x86:
-        GCC_VERSIONS: "6"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 7:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"
-        DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu GCC 7 x86:
-        GCC_VERSIONS: "7"
-        DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 8:
         GCC_VERSIONS: "8"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"
         DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu GCC 8 x86:
-        GCC_VERSIONS: "8"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 9:
         GCC_VERSIONS: "9"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"
-        DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu GCC 9 x86:
-        GCC_VERSIONS: "9"
-        DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 10:
         GCC_VERSIONS: "10"
@@ -76,51 +51,23 @@ jobs:
       Ubuntu Clang 3.9 x86_64:
         CLANG_VERSIONS: "3.9"
         DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu Clang 3.9 x86:
-        CLANG_VERSIONS: "3.9"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu Clang 4.0 x86_64:
         CLANG_VERSIONS: "4.0"
-        DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu Clang 4.0 x86:
-        CLANG_VERSIONS: "4.0"
-        DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
       Ubuntu Clang 5.0 x86_64:
         CLANG_VERSIONS: "5.0"
         DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu Clang 5.0 x86:
-        CLANG_VERSIONS: "5.0"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu Clang 6.0 x86_64:
         CLANG_VERSIONS: "6.0"
-        DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu Clang 6.0 x86:
-        CLANG_VERSIONS: "6.0"
-        DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
       Ubuntu Clang 7 x86_64:
         CLANG_VERSIONS: "7"
         DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu Clang 7 x86:
-        CLANG_VERSIONS: "7"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu Clang 8 x86_64:
         CLANG_VERSIONS: "8"
         DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu Clang 8 x86:
-        CLANG_VERSIONS: "8"
-        DOCKER_ARCHS: "x86"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu Clang 9 x86_64:
         CLANG_VERSIONS: "9"
-        DOCKER_DISTRO: "jnlp-slave"
-      Ubuntu Clang 9 x86:
-        CLANG_VERSIONS: "9"
-        DOCKER_ARCHS: "x86"
         DOCKER_DISTRO: "jnlp-slave"
       Ubuntu Clang 10 x86_64:
         CLANG_VERSIONS: "10"
@@ -132,7 +79,7 @@ jobs:
       Android Clang 8:
         DOCKER_CROSS: "android"
         CLANG_VERSIONS: "8"
-        DOCKER_ARCHS: "x86_64,x86,armv7,armv8"
+        DOCKER_ARCHS: "x86_64,armv7,armv8"
 
       Conan Server:
         BUILD_CONAN_SERVER_IMAGE: 1
