@@ -127,3 +127,5 @@ Bumped for Conan 1.31.2
 Bumped for Conan 1.33.1
 
 Bumped for Conan 1.35.1
+
+Bumped for Conan 1.35.2
