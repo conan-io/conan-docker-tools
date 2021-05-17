@@ -75,6 +75,9 @@ jobs:
       Ubuntu Clang 11 x86_64:
         CLANG_VERSIONS: "11"
         DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu Clang 12 x86_64:
+        CLANG_VERSIONS: "12"
+        DOCKER_DISTRO: "jnlp-slave"
 
       Android Clang 8:
         DOCKER_CROSS: "android"

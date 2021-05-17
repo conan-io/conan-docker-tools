@@ -81,6 +81,8 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | - [conanio/clang9-x86: clang 9](https://hub.docker.com/r/conanio/clang9-x86/)         | x86    |  Deprecated |
 | - [conanio/clang9: clang 9](https://hub.docker.com/r/conanio/clang9/)                 | x86_64 |  Supported  |
 | - [conanio/clang10: clang 10](https://hub.docker.com/r/conanio/clang10/)              | x86_64 |  Supported  |
+| - [conanio/clang11: clang 11](https://hub.docker.com/r/conanio/clang11/)              | x86_64 |  Supported  |
+| - [conanio/clang12: clang 12](https://hub.docker.com/r/conanio/clang12/)              | x86_64 |  Supported  |
 
 
 #### Visual Studio
