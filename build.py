@@ -200,7 +200,7 @@ class ConanDockerTools(object):
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         """
-        subprocess.check_call("docker exec %s %s pip -q install -U conan" % (self.service, self.variables.sudo_command), shell=True)
+        subprocess.check_call("docker exec %s %s pip -q install -U conan==%s" % (self.service, self.variables.sudo_command, self.variables.docker_build_tag), shell=True)
         subprocess.check_call("docker exec %s %s pip -q install -U conan_package_tools" % (self.service, self.variables.sudo_command), shell=True)
         subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
@@ -264,9 +264,10 @@ class ConanDockerTools(object):
                 (self.service, sudo_command),
                 shell=True)
             subprocess.check_call(
-                "docker exec %s %s pip install --no-cache-dir -U conan" % (self.service,
-                                                                        sudo_command),
-                shell=True)
+                "docker exec %s %s pip install --no-cache-dir -U conan==%s" % (self.service,
+                                                                        sudo_command,
+                                                                        self.variables.docker_build_tag),
+                                                                        shell=True)
             subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
             if compiler_name == "clang" and compiler_version == "7":
