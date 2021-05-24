@@ -2,6 +2,8 @@ FROM conanio/android-clang8
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV ANDROID_ABI=arm64-v8a \
     CC=$STANDALONE_TOOLCHAIN/bin/aarch64-linux-android21-clang \
     CXX=$STANDALONE_TOOLCHAIN/bin/aarch64-linux-android21-clang++ \
@@ -16,7 +18,8 @@ ENV ANDROID_ABI=arm64-v8a \
     OBJDUMP=$STANDALONE_TOOLCHAIN/bin/aarch64-linux-android-objdump \
     READELF=$STANDALONE_TOOLCHAIN/bin/aarch64-linux-android-readelf
 
-RUN conan profile update settings.arch=armv8 default \
+RUN pip install conan==${CONAN_VERSION} \
+    && conan profile update settings.arch=armv8 default \
     && conan profile update settings.os=Android default \
     && conan profile update settings.os.api_level=21 default \
     && conan profile update settings.compiler.libcxx=libc++ default

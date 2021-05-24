@@ -9,7 +9,7 @@ jobs:
       versionSpec: '3.6'
       architecture: 'x64'
   - script: |
-      pip install docker-compose humanfriendly conan conan-package-tools
+      pip install -U docker-compose humanfriendly conan conan-package-tools
       python build.py
     env:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)

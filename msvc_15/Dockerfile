@@ -4,6 +4,8 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
 SHELL ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command"]
 
+ARG CONAN_VERSION
+
 ENV chocolateyUseWindowsCompression=false \
     PYTHONIOENCODING=UTF-8
 
@@ -20,7 +22,7 @@ RUN choco install --no-progress --yes --execution-timeout=0 visualstudio2017-wor
 
 RUN python -m pip install --quiet --upgrade pip; \
     python -m pip install win-unicode-console --quiet --upgrade --force-reinstall --no-cache; \
-    python -m pip install conan --quiet --upgrade --force-reinstall --no-cache; \
+    python -m pip install conan==${CONAN_VERSION} --quiet --upgrade --force-reinstall --no-cache; \
     python -m pip install conan_package_tools --quiet --upgrade --force-reinstall --no-cache
 
 WORKDIR "C:/Users/ContainerAdministrator"

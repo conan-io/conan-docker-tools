@@ -2,7 +2,9 @@ FROM ubuntu:xenial
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+ARG CONAN_VERSION
+
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
@@ -11,7 +13,7 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        build-essential=12.* \
        wget=1.* \
@@ -24,7 +26,7 @@ RUN dpkg --add-architecture i386 \
        libc6-dev=2.* \
        nasm=2.* \
        dh-autoreconf=11 \
-    && apt-get -qq install -y --allow-downgrades --no-install-recommends \
+    && apt-get -qq install -y --allow-downgrades --no-install-recommends --no-install-suggests \
        gcc-5=5.3.* \
        gcc-5-base=5.3.* \
        cpp-5=5.3.* \
@@ -63,7 +65,7 @@ RUN dpkg --add-architecture i386 \
        libx32stdc++6=5.3.* \
        linux-libc-dev:i386 \
        libstdc++-5-dev=5.3.* \
-    && apt-get -qq install -y --allow-downgrades --no-install-recommends \
+    && apt-get -qq install -y --allow-downgrades --no-install-recommends --no-install-suggests \
        g++-5=5.3.* \
        libstdc++-5-dev=5.3.* \
        g++-5-multilib=5.3.* \
@@ -113,7 +115,7 @@ RUN dpkg --add-architecture i386 \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
