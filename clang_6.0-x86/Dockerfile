@@ -17,7 +17,7 @@ ENV LLVM_VERSION=6.0 \
     PATH=/opt/pyenv/shims:${PATH}
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        wget=1.* \
        git \

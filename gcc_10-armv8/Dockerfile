@@ -17,7 +17,7 @@ ENV CC=aarch64-linux-gnu-gcc-10 \
 
 RUN sudo dpkg --add-architecture arm64 \
     && sudo apt-get -qq update \
-    && sudo apt-get install -y --no-install-recommends \
+    && sudo apt-get install -y --no-install-recommends --no-install-suggests \
        ".*10.*aarch64-linux-gnu.*" \
     && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-10 100 \
     && sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-10 100 \

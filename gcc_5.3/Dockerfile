@@ -13,7 +13,7 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        build-essential=12.* \
        wget=1.* \
@@ -26,7 +26,7 @@ RUN dpkg --add-architecture i386 \
        libc6-dev=2.* \
        nasm=2.* \
        dh-autoreconf=11 \
-    && apt-get -qq install -y --allow-downgrades --no-install-recommends \
+    && apt-get -qq install -y --allow-downgrades --no-install-recommends --no-install-suggests \
        gcc-5=5.3.* \
        gcc-5-base=5.3.* \
        cpp-5=5.3.* \
@@ -65,7 +65,7 @@ RUN dpkg --add-architecture i386 \
        libx32stdc++6=5.3.* \
        linux-libc-dev:i386 \
        libstdc++-5-dev=5.3.* \
-    && apt-get -qq install -y --allow-downgrades --no-install-recommends \
+    && apt-get -qq install -y --allow-downgrades --no-install-recommends --no-install-suggests \
        g++-5=5.3.* \
        libstdc++-5-dev=5.3.* \
        g++-5-multilib=5.3.* \

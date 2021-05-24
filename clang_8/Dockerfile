@@ -18,7 +18,7 @@ COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        wget=1.* \
        git=1:2.* \
@@ -49,11 +49,6 @@ RUN dpkg --add-architecture i386 \
        liblzma-dev=5.* \
        gnupg=2.* \
        ca-certificates \
-
-       # FIXME (uilian): https://bugs.launchpad.net/ubuntu/+source/llvm-defaults/+bug/1819768
-       # libc++abi-dev:i386=1:8.* \
-       # libc++-dev:i386=1:8.* \
-
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-8 100 \

@@ -17,7 +17,7 @@ ENV LLVM_VERSION=10 \
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     # Install basics
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo \
        wget \
        git \
@@ -28,7 +28,7 @@ RUN dpkg --add-architecture i386 \
        dh-autoreconf \
        pkg-config \
     # Install compiler toolset
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        lsb-release \
        software-properties-common \
     && wget https://apt.llvm.org/llvm.sh \
@@ -36,12 +36,12 @@ RUN dpkg --add-architecture i386 \
     && sudo ./llvm.sh ${LLVM_VERSION} \
     && rm llvm.sh \
     # Further LLVM packages not installed by the llvm.sh script
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        libc++-10-dev \
        libc++abi-10-dev \
     && apt-get remove -y lsb-release software-properties-common \
     # Install dependencies of Python
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        libreadline-dev \
        libsqlite3-dev \
        libffi-dev \

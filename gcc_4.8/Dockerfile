@@ -13,7 +13,7 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo \
        build-essential \
        wget \

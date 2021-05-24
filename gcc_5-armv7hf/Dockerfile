@@ -20,7 +20,7 @@ COPY armhf.list /etc/apt/sources.list.d/armhf.list
 
 RUN sudo dpkg --add-architecture armhf \
     && sudo apt-get -qq update \
-    && sudo apt-get -qq install -y --force-yes --no-install-recommends \
+    && sudo apt-get -qq install -y --force-yes --no-install-recommends --no-install-suggests \
        ".*5.*arm-linux-gnueabihf.*" \
        binutils-arm-linux-gnueabi \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-5 100 \

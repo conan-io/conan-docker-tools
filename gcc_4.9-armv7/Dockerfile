@@ -12,7 +12,7 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
 COPY sources.list /etc/apt/sources.list
 
 RUN apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
     ".*4\.9.*arm-linux-gnueabi.*" \
     sudo=1.8.* \
     build-essential=12.* \

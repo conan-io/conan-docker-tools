@@ -14,7 +14,7 @@ ENV GCC_VERSION=10 \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo \
        binutils \
        wget \

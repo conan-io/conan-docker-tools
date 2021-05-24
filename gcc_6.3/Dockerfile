@@ -15,7 +15,7 @@ COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        build-essential=12.* \
        wget=1.* \

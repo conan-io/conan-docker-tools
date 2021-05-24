@@ -16,7 +16,7 @@ ENV CC=arm-linux-gnueabi-gcc-10 \
     FC=arm-linux-gnueabi-gfortran-10
 
 RUN sudo apt-get -qq update \
-    && sudo apt-get install -y --no-install-recommends \
+    && sudo apt-get install -y --no-install-recommends --no-install-suggests \
        ".*10.*arm-linux-gnueabi.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcc arm-linux-gnueabi-gcc /usr/bin/arm-linux-gnueabi-gcc-10 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-g++ arm-linux-gnueabi-g++ /usr/bin/arm-linux-gnueabi-g++-10 100 \

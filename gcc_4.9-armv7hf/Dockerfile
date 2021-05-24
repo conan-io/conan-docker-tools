@@ -13,7 +13,7 @@ COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture armhf \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
     ".*4\.9.*arm-linux-gnueabihf.*" \
     sudo=1.8.* \
     build-essential=12.* \

@@ -16,7 +16,7 @@ ENV CC=arm-linux-gnueabi-gcc-8 \
     FC=arm-linux-gnueabi-gfortran-8
 
 RUN sudo apt-get -qq update \
-    && sudo apt-get install -y --no-install-recommends \
+    && sudo apt-get install -y --no-install-recommends --no-install-suggests \
        ".*8.*arm-linux-gnueabi.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcc arm-linux-gnueabi-gcc /usr/bin/arm-linux-gnueabi-gcc-8 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-g++ arm-linux-gnueabi-g++ /usr/bin/arm-linux-gnueabi-g++-8 100 \

@@ -39,7 +39,7 @@ ENV ANDROID_NDK=$ANDROID_NDK \
 COPY cmake-wrapper /cmake-wrapper
 
 RUN sudo apt-get update \
-    && sudo apt-get -qq install -y --no-install-recommends unzip \
+    && sudo apt-get -qq install -y --no-install-recommends --no-install-suggests unzip \
     && sudo rm -rf /var/lib/apt/lists/* \
     && sudo curl -s https://dl.google.com/android/repository/android-ndk-r19c-linux-x86_64.zip -O \
     && sudo unzip -qq android-ndk-r19c-linux-x86_64.zip -d / \

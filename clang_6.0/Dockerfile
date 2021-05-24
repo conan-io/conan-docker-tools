@@ -16,7 +16,7 @@ ENV LLVM_VERSION=6.0 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        wget=1.* \
        git \

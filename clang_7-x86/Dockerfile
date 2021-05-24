@@ -19,7 +19,7 @@ ENV LLVM_VERSION=7.0 \
 COPY sources.list /etc/apt/sources.list
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        wget=1.* \
        git=1:2.* \

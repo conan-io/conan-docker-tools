@@ -16,7 +16,7 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
 COPY sources.list /etc/apt/sources.list
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        binutils=2.* \
        wget=1.* \

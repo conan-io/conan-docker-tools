@@ -17,7 +17,7 @@ RUN dpkg --add-architecture i386 \
     && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
-    && apt-get install -y --force-yes --no-install-recommends \
+    && apt-get install -y --force-yes --no-install-recommends --no-install-suggests \
        sudo \
        g++-4.9 \
        g++-4.9-multilib \
