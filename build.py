@@ -13,6 +13,9 @@ from cpt.ci_manager import CIManager
 from cpt.printer import Printer
 
 
+TARGET_CONAN_VERSION = "1.35.2"
+
+
 class ConanDockerTools(object):
     """Execute all build process for Docker image
     """
@@ -51,7 +54,7 @@ class ConanDockerTools(object):
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
-        docker_build_tag = os.getenv("DOCKER_BUILD_TAG", "latest")
+        docker_build_tag = os.getenv("DOCKER_BUILD_TAG", TARGET_CONAN_VERSION)
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else [
             "x86_64"
         ]
