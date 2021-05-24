@@ -392,7 +392,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc10
+                SOURCE_CONANIO_IMAGE: conanio/gcc10:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc10-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc10-jnlp-slave
@@ -615,7 +615,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc46
+                SOURCE_CONANIO_IMAGE: conanio/gcc46:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc46-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc46-jnlp-slave
@@ -625,7 +625,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc48
+                SOURCE_CONANIO_IMAGE: conanio/gcc48:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc48-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc48-jnlp-slave
@@ -635,7 +635,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc48-x86
+                SOURCE_CONANIO_IMAGE: conanio/gcc48-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc48-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc48-jnlp-slave-x86
@@ -645,7 +645,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc49
+                SOURCE_CONANIO_IMAGE: conanio/gcc49:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc49-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc49-jnlp-slave
@@ -654,7 +654,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc49-x86
+                SOURCE_CONANIO_IMAGE: conanio/gcc49-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc49-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc49-jnlp-slave-x86
@@ -664,7 +664,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc5
+                SOURCE_CONANIO_IMAGE: conanio/gcc5:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc5-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc5-jnlp-slave
@@ -673,7 +673,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc5-x86
+                SOURCE_CONANIO_IMAGE: conanio/gcc5-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc5-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc5-jnlp-slave-x86
@@ -683,7 +683,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc6
+                SOURCE_CONANIO_IMAGE: conanio/gcc6:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc6-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc6-jnlp-slave
@@ -692,7 +692,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc6-x86
+                SOURCE_CONANIO_IMAGE: conanio/gcc6-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc6-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc6-jnlp-slave-x86
@@ -702,7 +702,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc7
+                SOURCE_CONANIO_IMAGE: conanio/gcc7:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc7-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc7-jnlp-slave
@@ -711,7 +711,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc7-x86
+                SOURCE_CONANIO_IMAGE: conanio/gcc7-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc7-jnlp-slave-x86
@@ -721,7 +721,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc8
+                SOURCE_CONANIO_IMAGE: conanio/gcc8:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc8-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc8-jnlp-slave
@@ -730,7 +730,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc8-x86
+                SOURCE_CONANIO_IMAGE: conanio/gcc8-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc8-jnlp-slave-x86
@@ -740,7 +740,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc9
+                SOURCE_CONANIO_IMAGE: conanio/gcc9:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc9-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc9-jnlp-slave
@@ -749,7 +749,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc9-x86
+                SOURCE_CONANIO_IMAGE: conanio/gcc9-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: gcc9-jnlp-slave-x86
@@ -759,7 +759,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang39
+                SOURCE_CONANIO_IMAGE: conanio/clang39:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang39-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang39-jnlp-slave
@@ -769,7 +769,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang39-x86
+                SOURCE_CONANIO_IMAGE: conanio/clang39-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang39-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang39-jnlp-slave-x86
@@ -779,7 +779,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang40
+                SOURCE_CONANIO_IMAGE: conanio/clang40:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang40-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang40-jnlp-slave
@@ -789,7 +789,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang40-x86
+                SOURCE_CONANIO_IMAGE: conanio/clang40-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang40-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang40-jnlp-slave-x86
@@ -799,7 +799,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang50
+                SOURCE_CONANIO_IMAGE: conanio/clang50:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang50-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang50-jnlp-slave
@@ -809,7 +809,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang50-x86
+                SOURCE_CONANIO_IMAGE: conanio/clang50-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang50-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang50-jnlp-slave-x86
@@ -819,7 +819,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang60
+                SOURCE_CONANIO_IMAGE: conanio/clang60:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang60-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang60-jnlp-slave
@@ -829,7 +829,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang60-x86
+                SOURCE_CONANIO_IMAGE: conanio/clang60-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang60-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang60-jnlp-slave-x86
@@ -839,7 +839,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang7
+                SOURCE_CONANIO_IMAGE: conanio/clang7:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang7-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang7-jnlp-slave
@@ -849,7 +849,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang7-x86
+                SOURCE_CONANIO_IMAGE: conanio/clang7-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang7-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang7-jnlp-slave-x86
@@ -859,7 +859,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang8
+                SOURCE_CONANIO_IMAGE: conanio/clang8:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang8-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang8-jnlp-slave
@@ -869,7 +869,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang8-x86
+                SOURCE_CONANIO_IMAGE: conanio/clang8-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang8-jnlp-slave-x86
@@ -879,7 +879,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang9
+                SOURCE_CONANIO_IMAGE: conanio/clang9:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang9-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang9-jnlp-slave
@@ -889,7 +889,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang9-x86
+                SOURCE_CONANIO_IMAGE: conanio/clang9-x86:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
         container_name: clang9-jnlp-slave-x86
@@ -899,7 +899,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang10
+                SOURCE_CONANIO_IMAGE: conanio/clang10:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang10-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang10-jnlp-slave
@@ -909,7 +909,7 @@ services:
             context: jenkins-jnlp-slave
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: conanio/clang11
+                SOURCE_CONANIO_IMAGE: conanio/clang11:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/clang11-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: clang11-jnlp-slave
