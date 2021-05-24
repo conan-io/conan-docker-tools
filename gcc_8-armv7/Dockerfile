@@ -2,6 +2,8 @@ FROM conanio/gcc8
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV CC=arm-linux-gnueabi-gcc-8 \
     CXX=arm-linux-gnueabi-g++-8 \
     CMAKE_C_COMPILER=arm-linux-gnueabi-gcc-8 \
@@ -22,6 +24,6 @@ RUN sudo apt-get -qq update \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcov-dump arm-linux-gnueabi-gcov-dump /usr/bin/arm-linux-gnueabi-gcov-dump-8 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcov-tool arm-linux-gnueabi-gcov-tool /usr/bin/arm-linux-gnueabi-gcov-tool-8 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && pip install -q conan conan-package-tools --upgrade \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7 default

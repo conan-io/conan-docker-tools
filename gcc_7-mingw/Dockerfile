@@ -2,6 +2,8 @@ FROM conanio/gcc8
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV CC=x86_64-w64-mingw32-gcc \
     CXX=x86_64-w64-mingw32-g++ \
     CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
@@ -18,7 +20,7 @@ ENV CC=x86_64-w64-mingw32-gcc \
 RUN sudo apt-get -qq update \
     && sudo apt-get -qq install -y --force-yes --no-install-recommends \
        g++-mingw-w64-x86-64=7.* \
-    && sudo pip install -q --no-cache-dir conan-package-tools conan --upgrade \
+    && sudo pip install -q --no-cache-dir conan==${CONAN_VERSION}-package-tools conan --upgrade \
     && sudo rm -rf /var/lib/apt/lists/* \
     && conan profile new default --detect \
     && conan profile update settings.os=Windows default

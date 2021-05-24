@@ -2,6 +2,8 @@ FROM conanio/gcc7
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV CC=arm-linux-gnueabihf-gcc-7 \
     CXX=arm-linux-gnueabihf-g++-7 \
     CMAKE_C_COMPILER=arm-linux-gnueabihf-gcc-7 \
@@ -26,6 +28,6 @@ RUN sudo dpkg --add-architecture armhf \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-dump arm-linux-gnueabihf-gcov-dump /usr/bin/arm-linux-gnueabihf-gcov-dump-7 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcov-tool arm-linux-gnueabihf-gcov-tool /usr/bin/arm-linux-gnueabihf-gcov-tool-7 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7hf default

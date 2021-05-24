@@ -5,6 +5,8 @@ LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 ARG ANDROID_NDK=/android-ndk-r19c
 ARG STANDALONE_TOOLCHAIN=/android-ndk-r19c/toolchains/llvm/prebuilt/linux-x86_64
 
+ARG CONAN_VERSION
+
 ENV ANDROID_NDK=$ANDROID_NDK \
     ANDROID_NDK_HOME=$ANDROID_NDK \
     STANDALONE_TOOLCHAIN=$STANDALONE_TOOLCHAIN \
@@ -43,6 +45,7 @@ RUN sudo apt-get update \
     && sudo unzip -qq android-ndk-r19c-linux-x86_64.zip -d / \
     && sudo rm -f android-ndk-r19c-linux-x86_64.zip \
     && sudo chmod +x /cmake-wrapper \
+    && pip install conan==${CONAN_VERSION} \
     && conan profile new default --detect \
     && conan profile update settings.os=Android default \
     && conan profile update settings.os.api_level=21 default \

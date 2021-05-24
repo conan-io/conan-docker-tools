@@ -2,6 +2,8 @@ FROM ubuntu:focal
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV GCC_VERSION=10 \
     CMAKE_VERSION_FULL=3.18.2 \
     CC=/usr/bin/gcc \
@@ -64,7 +66,7 @@ RUN apt-get -qq update \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION_FULL} \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools cmake==${CMAKE_VERSION_FULL} \
     && chown -R conan:1001 /opt/pyenv \
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
