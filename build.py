@@ -2,7 +2,6 @@
 """Build, Test and Deploy Docker images for Conan project"""
 import collections
 import os
-import re
 import logging
 import subprocess
 import requests
@@ -12,6 +11,9 @@ from conans import __version__ as client_version
 from conans import tools
 from cpt.ci_manager import CIManager
 from cpt.printer import Printer
+
+
+TARGET_CONAN_VERSION = "1.35.2"
 
 
 class ConanDockerTools(object):
@@ -41,14 +43,6 @@ class ConanDockerTools(object):
         VISUAL STUDIO: %s
         """ % (self.gcc_compiler.versions, self.clang_compiler.versions, self.visual_compiler.versions))
 
-    def _get_conan_target_version(self):
-        conan_version_file = "conan_version.txt"
-        if os.path.isfile(conan_version_file):
-            for line in reversed(list(open(conan_version_file))):
-                match = re.search("Bumped for Conan (.*)", line.rstrip())
-                if match:
-                    return match.group(1)
-
     def _get_variables(self):
         """Load environment variables to configure
         :return: Variables
@@ -60,7 +54,7 @@ class ConanDockerTools(object):
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
-        docker_build_tag = _get_conan_target_version() or os.getenv("DOCKER_BUILD_TAG", "latest")
+        docker_build_tag = os.getenv("DOCKER_BUILD_TAG", TARGET_CONAN_VERSION)
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else [
             "x86_64"
         ]
