@@ -166,7 +166,8 @@ class ConanDockerTools(object):
 
         no_cache = "" if self.variables.docker_cache else "--no-cache"
         if self.variables.build_base:
-            base_image = "{}/base-ubuntu16.04:latest".format(self.variables.docker_username)
+            base_image = "{}/base-ubuntu16.04:{}".format(self.variables.docker_username,
+                                                         self.variables.docker_build_tag)
             logging.info("Starting build for service 'base'.")
             subprocess.check_call("docker-compose build %s base" % no_cache, shell=True)
             _show_image_size(base_image)
