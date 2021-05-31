@@ -1,5 +1,52 @@
 jobs:
-- job: Docker
+- job: Official
+  pool:
+    vmImage: 'ubuntu-16.04'
+  timeoutInMinutes: 120
+  dependsOn: Base
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
+  - script: |
+      pip install -U docker-compose humanfriendly conan conan-package-tools
+      python run.py
+    env:
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+  strategy:
+    matrix:
+      Ubuntu 16.04 GCC 5 x86_64:
+        GCC_VERSIONS: "5"
+
+      Ubuntu 16.04 GCC 6 x86_64:
+        GCC_VERSIONS: "6"
+
+      Ubuntu 16.04 GCC 7 x86_64:
+        GCC_VERSIONS: "7"
+
+      Ubuntu 16.04 GCC 8 x86_64:
+        GCC_VERSIONS: "8"
+
+      Ubuntu 16.04 GCC 9 x86_64:
+        GCC_VERSIONS: "9"
+
+      Ubuntu 16.04 GCC 10 x86_64:
+        GCC_VERSIONS: "10"
+
+      Ubuntu 16.04 Clang 9 x86_64:
+        CLANG_VERSIONS: "9"
+
+      Ubuntu 16.04 Clang 10 x86_64:
+        CLANG_VERSIONS: "10"
+
+      Ubuntu 16.04 Clang 11 x86_64:
+        CLANG_VERSIONS: "11"
+
+      Ubuntu 16.04 Clang 12 x86_64:
+        CLANG_VERSIONS: "12"
+
+- job: Legacy
   pool:
     vmImage: 'ubuntu-16.04'
   timeoutInMinutes: 120
@@ -10,7 +57,7 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -U docker-compose humanfriendly conan conan-package-tools
-      python build.py
+      cd legacy && python build.py
     env:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:

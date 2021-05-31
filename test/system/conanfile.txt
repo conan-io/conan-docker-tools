@@ -1,0 +1,5 @@
+[requires]
+libusb/1.0.24
+
+[generators]
+cmake

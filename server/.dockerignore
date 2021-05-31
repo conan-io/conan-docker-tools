@@ -1,0 +1,11 @@
+.git
+unused
+Dockerfile
+.gitignore
+README.md
+test/
+LICENSE
+/tmp/gcc/share
+/tmp/gcc/doc
+/tmp/install/share
+/tmp/install/doc
