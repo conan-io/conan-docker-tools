@@ -396,6 +396,13 @@ services:
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc10-jnlp-slave:${DOCKER_BUILD_TAG}"
         container_name: gcc10-jnlp-slave
+    gcc11:
+        build:
+            context: gcc_11
+            dockerfile: Dockerfile
+        image: "${DOCKER_USERNAME}/gcc11:${DOCKER_BUILD_TAG}"
+        container_name: gcc11
+        tty: true
     clang38:
         build:
             context: clang_3.8
