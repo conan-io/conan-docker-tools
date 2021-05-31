@@ -1,7 +1,7 @@
 jobs:
 - job: Official
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-18.04'
   timeoutInMinutes: 120
   steps:
   - task: UsePythonVersion@0
@@ -50,7 +50,7 @@ jobs:
 
 - job: Legacy
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-18.04'
   timeoutInMinutes: 120
   steps:
   - task: UsePythonVersion@0

@@ -159,6 +159,12 @@ class ConanDockerTools(object):
     def build(self):
         """Call docker-compose build to create a image based on service
         """
+        def _show_image_size(image_name):
+            output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
+            % image_name, shell=True)
+            size = int(output.decode().strip())
+            logging.info("'%s' image size: %s" % (image_name, format_size(size)))
+
         no_cache = "" if self.variables.docker_cache else "--no-cache"
         if self.variables.build_base:
             base_image = "{}/base-ubuntu16.04:latest".format(self.variables.docker_username)
@@ -169,12 +175,6 @@ class ConanDockerTools(object):
         logging.info("Starting build for service %s." % self.service)
         subprocess.check_call("docker-compose build %s %s" % (no_cache, self.service), shell=True)
         _show_image_size(self.variables.created_image_name)
-
-        def _show_image_size(image_name):
-            output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
-            % image_name, shell=True)
-            size = int(output.decode().strip())
-            logging.info("'%s' image size: %s" % (image_name, format_size(size)))
 
     def test(self, compiler_name, compiler_version):
         """Validate Docker image by Conan install
