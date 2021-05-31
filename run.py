@@ -46,8 +46,7 @@ class ConanDockerTools(object):
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
         docker_upload_retry = os.getenv("DOCKER_UPLOAD_RETRY", 10)
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", True)
-        build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
-        build_server = self._get_boolean_var("BUILD_JENKINS_IMAGE")
+        build_jenkins = self._get_boolean_var("BUILD_JENKINS_IMAGE", True)
 
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
@@ -73,12 +72,12 @@ class ConanDockerTools(object):
             "Variables", "docker_upload, docker_password, "
             "docker_username, docker_login_username, "
             "gcc_versions, docker_distro, "
-            "clang_versions, build_server, "
+            "clang_versions, build_jenkins, "
             "docker_build_tag, sudo_command, "
             "docker_upload_only_when_stable, docker_cache, "
             "docker_upload_retry, build_base")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, docker_distro, clang_versions, build_server,
+                         gcc_versions, docker_distro, clang_versions, build_jenkins,
                          docker_build_tag, sudo_command, docker_upload_only_when_stable,
                          docker_cache, docker_upload_retry, build_base, )
 
@@ -153,8 +152,8 @@ class ConanDockerTools(object):
     @property
     def latest_image_name(self):
         return "%s/%s-%s:latest" % (self.variables.docker_username,
-                                    self._ubuntu_version,
-                                    self.service)
+                                    self.service,
+                                    self._ubuntu_version)
 
     def build(self):
         """Call docker-compose build to create a image based on service

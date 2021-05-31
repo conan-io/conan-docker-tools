@@ -49,6 +49,7 @@ jobs:
         CLANG_VERSIONS: "12"
 
 - job: Legacy
+  condition: false
   pool:
     vmImage: 'ubuntu-18.04'
   timeoutInMinutes: 120
