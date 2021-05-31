@@ -588,3 +588,103 @@ services:
         image: ${DOCKER_USERNAME}/clang12-ubuntu16.04:${CONAN_VERSION}
         container_name: clang12
         tty: true
+    gcc5-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc5-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/gcc5-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: gcc5-jenkins
+    gcc6-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc6-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/gcc6-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: gcc6-jenkins
+    gcc7-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc7-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/gcc7-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: gcc7-jenkins
+    gcc8-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc8-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/gcc8-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: gcc8-jenkins
+    gcc9-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc9-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/gcc9-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: gcc9-jenkins
+    gcc10-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc10-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/gcc10-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: gcc10-jenkins
+    gcc11-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/gcc11-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: gcc11-jenkins
+    clang9-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang9-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/clang9-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: clang9-jenkins
+
+    clang10-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang10-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/clang10-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: clang10-jenkins
+    clang11-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang11-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/clang11-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: clang11-jenkins
+    clang12-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang12-ubuntu16.04:${CONAN_VERSION}
+                CONAN_VERSION: ${CONAN_VERSION}
+        image: "${DOCKER_USERNAME}/clang12-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        container_name: clang12-jenkins

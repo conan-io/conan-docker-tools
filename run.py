@@ -106,6 +106,10 @@ class ConanDockerTools(object):
     def _ubuntu_version(self):
         return "ubuntu16.04"
 
+    @property
+    def _jenkins_name(self):
+        return "jenkins"
+
     def login(self):
         """ Perform login on Docker server (hub.docker by default)
         """
@@ -158,23 +162,14 @@ class ConanDockerTools(object):
     def build(self):
         """Call docker-compose build to create a image based on service
         """
-        def _show_image_size(image_name):
-            output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
-            % image_name, shell=True)
-            size = int(output.decode().strip())
-            logging.info("'%s' image size: %s" % (image_name, format_size(size)))
-
         no_cache = "" if self.variables.docker_cache else "--no-cache"
-        if self.variables.build_base:
-            base_image = "{}/base-ubuntu16.04:{}".format(self.variables.docker_username,
-                                                         self.variables.docker_build_tag)
-            logging.info("Starting build for service 'base'.")
-            subprocess.check_call("docker-compose build %s base" % no_cache, shell=True)
-            _show_image_size(base_image)
-
         logging.info("Starting build for service %s." % self.service)
         subprocess.check_call("docker-compose build %s %s" % (no_cache, self.service), shell=True)
-        _show_image_size(self.variables.created_image_name)
+
+        output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
+        % self.created_image_name, shell=True)
+        size = int(output.decode().strip())
+        logging.info("'%s' image size: %s" % (self.created_image_name, format_size(size)))
 
     def test(self, compiler_name, compiler_version):
         """Validate Docker image by Conan install
@@ -333,20 +328,31 @@ class ConanDockerTools(object):
         if self.variables.build_jenkins:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
                 for version in compiler.versions:
-                    service = "%s%s%s%s" % (compiler.name, version.replace(".", ""))
+                    service = "%s%s-jenkins" % (compiler.name, version.replace(".", ""))
 
                     self.service = service
                     self.login()
                     self.build()
                     self.tag()
-                    self.test(arch, compiler.name, version)
+                    self.test(compiler.name, version)
                     self.info()
                     self.deploy()
+
+    def process_base_image(self):
+        if self.variables.build_base:
+            self.service = "base"
+            self.login()
+            self.build()
+            self.tag()
+            self.info()
+            self.deploy()
 
     def run(self):
         """Execute all 3 stages for all versions in compilers list
         """
+        self.process_base_image()
         self.process_regular_images()
+        self.process_jenkins_image()
 
 
 if __name__ == "__main__":
