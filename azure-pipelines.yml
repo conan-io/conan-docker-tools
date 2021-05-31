@@ -12,6 +12,7 @@ jobs:
       pip install -U docker-compose humanfriendly conan conan-package-tools
       python run.py
     env:
+      DOCKER_LOGIN_USERNAME: $(DOCKER_LOGIN_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:
     matrix:
