@@ -2,6 +2,8 @@ FROM ubuntu:disco
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV LLVM_VERSION=8.0 \
     CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2 \
@@ -16,7 +18,7 @@ COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        wget=1.* \
        git=1:2.* \
@@ -47,11 +49,6 @@ RUN dpkg --add-architecture i386 \
        liblzma-dev=5.* \
        gnupg=2.* \
        ca-certificates \
-
-       # FIXME (uilian): https://bugs.launchpad.net/ubuntu/+source/llvm-defaults/+bug/1819768
-       # libc++abi-dev:i386=1:8.* \
-       # libc++-dev:i386=1:8.* \
-
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-8 100 \
@@ -86,7 +83,7 @@ RUN dpkg --add-architecture i386 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
     && pyenv global 3.7.5 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

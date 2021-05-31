@@ -2,7 +2,9 @@ FROM ubuntu:precise
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+ARG CONAN_VERSION
+
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
@@ -10,7 +12,7 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CC=/usr/bin/gcc
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.8.* \
        build-essential=11.* \
        wget=1.* \
@@ -61,7 +63,7 @@ RUN apt-get -qq update \
     && pyenv install -v 3.6.7 \
     && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

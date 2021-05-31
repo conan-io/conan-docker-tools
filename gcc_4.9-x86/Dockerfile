@@ -3,7 +3,9 @@ ENTRYPOINT ["linux32", "--"]
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \ 
+ARG CONAN_VERSION
+
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2 \
     CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
@@ -15,7 +17,7 @@ RUN dpkg --add-architecture i386 \
     && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
-    && apt-get install -y --force-yes --no-install-recommends \
+    && apt-get install -y --force-yes --no-install-recommends --no-install-suggests \
        sudo \
        g++-4.9 \
        g++-4.9-multilib \
@@ -70,7 +72,7 @@ RUN dpkg --add-architecture i386 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
     && pyenv global 3.6.7 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

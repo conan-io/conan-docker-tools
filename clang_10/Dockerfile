@@ -2,6 +2,8 @@ FROM ubuntu:bionic
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV LLVM_VERSION=10 \
     CC=clang \
     CXX=clang++ \
@@ -15,7 +17,7 @@ ENV LLVM_VERSION=10 \
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     # Install basics
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo \
        wget \
        git \
@@ -26,7 +28,7 @@ RUN dpkg --add-architecture i386 \
        dh-autoreconf \
        pkg-config \
     # Install compiler toolset
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        lsb-release \
        software-properties-common \
     && wget https://apt.llvm.org/llvm.sh \
@@ -34,12 +36,12 @@ RUN dpkg --add-architecture i386 \
     && sudo ./llvm.sh ${LLVM_VERSION} \
     && rm llvm.sh \
     # Further LLVM packages not installed by the llvm.sh script
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        libc++-10-dev \
        libc++abi-10-dev \
     && apt-get remove -y lsb-release software-properties-common \
     # Install dependencies of Python
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
        libreadline-dev \
        libsqlite3-dev \
        libffi-dev \
@@ -79,7 +81,7 @@ RUN dpkg --add-architecture i386 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION_FULL} \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools cmake==${CMAKE_VERSION_FULL} \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
