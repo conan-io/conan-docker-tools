@@ -148,16 +148,21 @@ class ConanDockerTools(object):
     def created_image_name(self):
         """ Retrieve Docker image name created
         """
+        if self._jenkins_name in self.service:
+            compiler = self.service[:self.service.find("-%s" % self._jenkins_name)]
+            return "%s/%s-%s-%s:%s" % (self.variables.docker_username,
+                                       compiler,
+                                       self._ubuntu_version,
+                                       self._jenkins_name,
+                                       self.variables.docker_build_tag)
         return "%s/%s-%s:%s" % (self.variables.docker_username,
-                             self.service,
-                             self._ubuntu_version,
-                             self.variables.docker_build_tag)
+                                self.service,
+                                self._ubuntu_version,
+                                self.variables.docker_build_tag)
 
     @property
     def latest_image_name(self):
-        return "%s/%s-%s:latest" % (self.variables.docker_username,
-                                    self.service,
-                                    self._ubuntu_version)
+        return self.created_image_name[:self.created_image_name.rfind(":") + 1] + "latest"
 
     def build(self):
         """Call docker-compose build to create a image based on service
@@ -179,7 +184,10 @@ class ConanDockerTools(object):
         """
         logging.info("Testing Docker by service %s." % self.service)
         try:
-                self.test_linux(compiler_name, compiler_version)
+                if self._jenkins_name in self.service:
+                    self.test_jenkins()
+                else:
+                    self.test_linux(compiler_name, compiler_version)
         finally:
             subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm -f %s" % self.service, shell=True)
@@ -273,6 +281,12 @@ class ConanDockerTools(object):
         else:
             subprocess.check_call("docker exec %s jfrog --version" % self.service, shell=True)
 
+    def test_jenkins(self):
+        logging.info("Testing Jenkins Docker: running service %s." % self.service)
+        output = subprocess.check_output("docker run --rm -t --name %s %s" % (self.service,
+                                         self.created_image_name), shell=True)
+        assert "java -jar agent.jar [options...]" in output.decode()
+
     def deploy(self):
         """Upload Docker image to dockerhub
         """
@@ -328,7 +342,7 @@ class ConanDockerTools(object):
         if self.variables.build_jenkins:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
                 for version in compiler.versions:
-                    service = "%s%s-jenkins" % (compiler.name, version.replace(".", ""))
+                    service = "%s%s-%s" % (compiler.name, version.replace(".", ""), self._jenkins_name)
 
                     self.service = service
                     self.login()
