@@ -9,7 +9,7 @@ jobs:
       versionSpec: '3.6'
       architecture: 'x64'
   - script: |
-      pip install docker-compose humanfriendly conan conan-package-tools
+      pip install -U docker-compose humanfriendly conan conan-package-tools
       python build.py
     env:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
@@ -31,6 +31,7 @@ jobs:
       Ubuntu GCC 6:
         GCC_VERSIONS: "6"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"
+        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 7:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"

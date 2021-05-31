@@ -13,6 +13,9 @@ from cpt.ci_manager import CIManager
 from cpt.printer import Printer
 
 
+TARGET_CONAN_VERSION = "1.37.0"
+
+
 class ConanDockerTools(object):
     """Execute all build process for Docker image
     """
@@ -38,7 +41,12 @@ class ConanDockerTools(object):
         GCC: %s
         CLANG: %s
         VISUAL STUDIO: %s
-        """ % (self.gcc_compiler.versions, self.clang_compiler.versions, self.visual_compiler.versions))
+    The Conan client will be installed:
+        Conan: %s
+        Latest: %s
+        """ % (self.gcc_compiler.versions, self.clang_compiler.versions,
+               self.visual_compiler.versions, self.variables.docker_build_tag,
+               self._is_latest_version))
 
     def _get_variables(self):
         """Load environment variables to configure
@@ -51,15 +59,13 @@ class ConanDockerTools(object):
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
-        docker_build_tag = os.getenv("DOCKER_BUILD_TAG", "latest")
+        docker_build_tag = os.getenv("DOCKER_BUILD_TAG", TARGET_CONAN_VERSION)
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else [
             "x86_64"
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
         docker_cache = os.getenv("DOCKER_CACHE", False)
         docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
-        conan_version = os.getenv("CONAN_VERSION", client_version)
-        os.environ["CONAN_VERSION"] = conan_version
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
@@ -86,6 +92,10 @@ class ConanDockerTools(object):
         :param var: Environment variable name
         """
         return os.getenv(var, default.lower()).lower() in ["1", "true", "yes"]
+
+    @property
+    def _is_latest_version(self):
+        return tools.Version(self.variables.docker_build_tag) >= client_version
 
     def login(self):
         """ Perform login on Docker server (hub.docker)
@@ -134,10 +144,8 @@ class ConanDockerTools(object):
                              self.variables.docker_build_tag)
 
     @property
-    def tagged_image_name(self):
-        return "%s/%s:%s" % (self.variables.docker_username,
-                             self.service,
-                             client_version)
+    def latest_image_name(self):
+        return "%s/%s:latest" % (self.variables.docker_username, self.service)
 
     def build(self):
         """Call docker build to create a image
@@ -192,7 +200,7 @@ class ConanDockerTools(object):
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         """
-        subprocess.check_call("docker exec %s %s pip -q install -U conan" % (self.service, self.variables.sudo_command), shell=True)
+        subprocess.check_call("docker exec %s %s pip -q install -U conan==%s" % (self.service, self.variables.sudo_command, self.variables.docker_build_tag), shell=True)
         subprocess.check_call("docker exec %s %s pip -q install -U conan_package_tools" % (self.service, self.variables.sudo_command), shell=True)
         subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
@@ -256,9 +264,10 @@ class ConanDockerTools(object):
                 (self.service, sudo_command),
                 shell=True)
             subprocess.check_call(
-                "docker exec %s %s pip install --no-cache-dir -U conan" % (self.service,
-                                                                        sudo_command),
-                shell=True)
+                "docker exec %s %s pip install --no-cache-dir -U conan==%s" % (self.service,
+                                                                        sudo_command,
+                                                                        self.variables.docker_build_tag),
+                                                                        shell=True)
             subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
             if compiler_name == "clang" and compiler_version == "7":
@@ -328,19 +337,21 @@ class ConanDockerTools(object):
             try:
                 logging.info("Upload Docker image from service %s to Docker hub." % self.service)
                 subprocess.check_call("docker-compose push %s" % self.service, shell=True)
-                logging.info("Upload Docker image %s" % self.tagged_image_name)
-                subprocess.check_call("docker push %s" % self.tagged_image_name, shell=True)
+                if self._is_latest_version:
+                    logging.info("Upload Docker image %s" % self.latest_image_name)
+                    subprocess.check_call("docker push %s" % self.latest_image_name, shell=True)
 
                 if self.service == "clang7":
                     logging.info("Clang 7 will upload the alias Clang 7.0")
                     subprocess.check_call("docker push %s" %
-                        self.tagged_image_name.replace("clang7", "clang70"), shell=True)
-                    subprocess.check_call("docker push %s" %
                         self.created_image_name.replace("clang7", "clang70"), shell=True)
+                    if self._is_latest_version:
+                        subprocess.check_call("docker push %s" %
+                            self.latest_image_name.replace("clang7", "clang70"), shell=True)
                 break
             except:
                 if retry == int(self.variables.docker_upload_retry):
-                    raise RuntimeError("Could not upload Docker image {}".format(self.tagged_image_name))
+                    raise RuntimeError("Could not upload Docker image {}".format(self.created_image_name))
                 logging.warn("Could not upload Docker image. Retry({})".format(retry+1))
                 time.sleep(3)
                 pass
@@ -348,17 +359,19 @@ class ConanDockerTools(object):
     def tag(self):
         """Apply Docker tag name
         """
-        logging.info("Creating Docker tag %s" % self.tagged_image_name)
-        subprocess.check_call("docker tag %s %s" % (self.created_image_name,
-            self.tagged_image_name), shell=True)
+        if self._is_latest_version:
+            logging.info("Creating Docker tag %s" % self.latest_image_name)
+            subprocess.check_call("docker tag %s %s" % (self.created_image_name,
+                self.latest_image_name), shell=True)
 
         # clang7 is represented by clang7.0 in Conan settings
         if self.service == "clang7":
             logging.info("Clang 7 will produce the alias Clang 7.0")
             subprocess.check_call("docker tag %s %s" % (self.created_image_name,
-            self.tagged_image_name.replace("clang7", "clang70")), shell=True)
-            subprocess.check_call("docker tag %s/clang7 %s/clang70" %
-            (self.variables.docker_username, self.variables.docker_username), shell=True)
+            self.created_image_name.replace("clang7", "clang70")), shell=True)
+            if self._is_latest_version:
+                subprocess.check_call("docker tag %s %s" % (self.latest_image_name,
+                self.latest_image_name.replace("clang7", "clang70")), shell=True)
 
     def info(self):
         """Show Docker image info
