@@ -3,7 +3,6 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   timeoutInMinutes: 120
-  dependsOn: Base
   steps:
   - task: UsePythonVersion@0
     inputs:
