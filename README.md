@@ -119,7 +119,7 @@ Build, Test and Deploy
 ======================
 
 ## Introduce
-The images are already built and uploaded to **"conanio(https://hub.docker.com/r/conanio/)"** dockerhub account, If you want to build your own images you can do it by:
+The images are already built and uploaded to [conanio](https://hub.docker.com/r/conanio/) dockerhub account, If you want to build your own images you can do it by:
 
 ```
 $ GCC_VERSIONS=10 python build.py
