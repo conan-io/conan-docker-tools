@@ -184,9 +184,8 @@ class ConanDockerTools(object):
         finally:
             subprocess.call("docker rm -f %s" % self.service, shell=True)
 
-    def test_linux(self, arch, compiler_name, compiler_version):
+    def test_linux(self, compiler_name, compiler_version):
         """ Validate Linux Docker image by Conan install
-        :param arch: Name of he architecture
         :param compiler_name: Compiler to be specified as conan setting e.g. clang
         :param compiler_version: Compiler version to be specified as conan setting e.g. 3.8
         :param service: Docker compose service name
@@ -236,23 +235,22 @@ class ConanDockerTools(object):
             subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
 
         subprocess.check_call(
-            "docker exec %s conan install lz4/1.9.2@ -s "
-            "arch=%s -s compiler=%s -s compiler.version=%s --build" %
-            (self.service, arch, compiler_name, compiler_version),
+            "docker exec %s conan install lz4/1.9.2@ "
+            "-s compiler=%s -s compiler.version=%s --build" %
+            (self.service, compiler_name, compiler_version),
             shell=True)
 
         for libcxx in libcxx_list:
             subprocess.check_call(
-                "docker exec %s conan install gtest/1.8.1@ -s "
-                "arch=%s -s compiler=%s -s compiler.version=%s "
-                "-s compiler.libcxx=%s --build" % (self.service, arch, compiler_name,
+                "docker exec %s conan install gtest/1.10.0@ -s "
+                "compiler=%s -s compiler.version=%s "
+                "-s compiler.libcxx=%s --build" % (self.service, compiler_name,
                                                 compiler_version, libcxx),
                 shell=True)
 
         subprocess.check_call(
-            "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
-            "arch_build=%s -s os_build=Linux --build" % (self.service, arch),
-            shell=True)
+            "docker exec %s conan install cmake/3.18.6@ -s "
+            "--build" % self.service, shell=True)
 
         subprocess.check_call("test/simple/run.sh %s" % self.service, shell=True)
         subprocess.check_call("test/standard/run.sh %s" % self.service, shell=True)
@@ -352,6 +350,8 @@ class ConanDockerTools(object):
             self.tag()
             self.info()
             self.deploy()
+        else:
+            logging.info("Skipped base image build.")
 
     def run(self):
         """Execute all 3 stages for all versions in compilers list
