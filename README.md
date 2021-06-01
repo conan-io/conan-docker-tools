@@ -39,23 +39,23 @@ These are the images uploaded to Docker Hub and currently used by [Conan Center]
 
 | Version                                                                            | Arch    |  Status, Life cycle  |
 |------------------------------------------------------------------------------------|---------|----------------------|
-| [conanio/gcc5: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc6: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc7: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc8: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc9: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc10: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)       | x86_64  |  Supported           |
-| [conanio/gcc11: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)       | x86_64  |  Supported           |
+| [conanio/gcc5-ubuntu16.04: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04/)          | x86_64  |  Supported           |
+| [conanio/gcc6-ubuntu16.04: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04/)          | x86_64  |  Supported           |
+| [conanio/gcc7-ubuntu16.04: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04/)          | x86_64  |  Supported           |
+| [conanio/gcc8-ubuntu16.04: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04/)          | x86_64  |  Supported           |
+| [conanio/gcc9-ubuntu16.04: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04/)          | x86_64  |  Supported           |
+| [conanio/gcc10-ubuntu16.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)       | x86_64  |  Supported           |
+| [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)       | x86_64  |  Supported           |
 
 
 #### Clang
 
 | Version                                                                                  | Arch   |  Status, Life cycle  |
 |------------------------------------------------------------------------------------------|--------|----------------------|
-| - [conanio/clang9: clang 9](https://hub.docker.com/r/conanio/clang9-ubuntu16.04/)        | x86_64 |  Supported           |
-| - [conanio/clang10: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/)     | x86_64 |  Supported           |
-| - [conanio/clang11: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/)     | x86_64 |  Supported           |
-| - [conanio/clang12: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/)     | x86_64 |  Supported           |
+| - [conanio/clang9-ubuntu16.04: clang 9](https://hub.docker.com/r/conanio/clang9-ubuntu16.04/)        | x86_64 |  Supported           |
+| - [conanio/clang10-ubuntu16.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/)     | x86_64 |  Supported           |
+| - [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/)     | x86_64 |  Supported           |
+| - [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/)     | x86_64 |  Supported           |
 
 
 #### Conan Server
@@ -89,7 +89,6 @@ These images are mainly focused for Conan Center CI.
 
 | Version                                                                                                                  | Arch   |  Status, Life cycle  |
 |--------------------------------------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/clang8-ubuntu16.04-jenkins-x86: clang 9](https://hub.docker.com/r/conanio/clang9-ubuntu16.04-jenkins-x86/)    | x86    |  Supported |
 | - [conanio/clang8-ubuntu16.04-jenkins: clang 9](https://hub.docker.com/r/conanio/clang9-ubuntu16.04-jenkins/)            | x86_64 |  Supported |
 | - [conanio/clang8-ubuntu16.04-jenkins: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 | - [conanio/clang8-ubuntu16.04-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
