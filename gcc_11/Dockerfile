@@ -11,8 +11,13 @@ ENV GCC_VERSION=11 \
     PATH=/opt/pyenv/shims:${PATH} \
     DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+RUN dpkg --add-architecture i386 \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests gnupg \
+    && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu focal main\n" >> /etc/apt/sources.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo \
        binutils \
        wget \
