@@ -182,7 +182,6 @@ class ConanDockerTools(object):
                 else:
                     self.test_linux(compiler_name, compiler_version)
         finally:
-            subprocess.call("docker stop %s" % self.service, shell=True)
             subprocess.call("docker rm -f %s" % self.service, shell=True)
 
     def test_linux(self, arch, compiler_name, compiler_version):

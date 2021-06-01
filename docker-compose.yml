@@ -544,7 +544,7 @@ services:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc10
+        container_name: gcc11
         tty: true
     clang9:
         build:
