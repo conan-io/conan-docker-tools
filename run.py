@@ -53,7 +53,6 @@ class ConanDockerTools(object):
 
         docker_build_tag = self._get_conan_target_version()
         docker_cache = self._get_boolean_var("DOCKER_CACHE")
-        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
         build_base = self._get_boolean_var("BUILD_BASE", True)
 
         os.environ["DOCKER_USERNAME"] = docker_username
@@ -69,13 +68,13 @@ class ConanDockerTools(object):
         Variables = collections.namedtuple(
             "Variables", "docker_upload, docker_password, "
             "docker_username, docker_login_username, "
-            "gcc_versions, docker_distro, "
+            "gcc_versions, "
             "clang_versions, build_jenkins, "
             "docker_build_tag, sudo_command, "
             "docker_upload_only_when_stable, docker_cache, "
             "docker_upload_retry, build_base")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, docker_distro, clang_versions, build_jenkins,
+                         gcc_versions, clang_versions, build_jenkins,
                          docker_build_tag, sudo_command, docker_upload_only_when_stable,
                          docker_cache, docker_upload_retry, build_base, )
 
@@ -249,7 +248,7 @@ class ConanDockerTools(object):
                 shell=True)
 
         subprocess.check_call(
-            "docker exec %s conan install cmake/3.18.6@ -s "
+            "docker exec %s conan install cmake/3.18.6@ "
             "--build" % self.service, shell=True)
 
         subprocess.check_call("test/simple/run.sh %s" % self.service, shell=True)
