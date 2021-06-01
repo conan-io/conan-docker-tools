@@ -9,7 +9,6 @@ docker run -t -d -v ${PWD}:/tmp/project --name ${container} ${DOCKER_USERNAME}/$
 docker exec ${container} git clone https://github.com/conan-io/conan-center-index.git
 docker exec ${container} /tmp/project/test/package/build_poco.sh
 docker exec ${container} /tmp/project/test/package/build_protobuf.sh
-docker exec ${container} /tmp/project/test/package/build_gtest.sh
 
 docker stop ${container}
 docker rm -f ${container}
