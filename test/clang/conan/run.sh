@@ -5,7 +5,6 @@ set -ex
 compiler=$1
 container="$compiler-"$(openssl rand -hex 2)
 
-docker pull ${DOCKER_USERNAME}/${compiler}-ubuntu16.04
 docker run -t -d -v ${PWD}:/tmp/project --name ${container} ${DOCKER_USERNAME}/${compiler}-ubuntu16.04
 docker exec ${container} /tmp/project/test/clang/conan/test_conan.sh
 

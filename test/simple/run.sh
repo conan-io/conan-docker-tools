@@ -7,7 +7,7 @@ container="$compiler-"$(openssl rand -hex 2)
 
 docker rm -f ${compiler}
 
-docker run -t -d -v ${PWD}:/tmp/project --name ${container} ${DOCKER_USERNAME}/${compiler}
+docker run -t -d -v ${PWD}:/tmp/project --name ${container} ${DOCKER_USERNAME}/${compiler}-ubuntu16.04
 docker exec ${container} /tmp/project/test/simple/test_simple.sh
 
 docker stop ${container}
