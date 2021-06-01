@@ -191,7 +191,7 @@ class ConanDockerTools(object):
         :param service: Docker compose service name
         """
         libcxx_list = ["libstdc++", "libstdc++11"] if compiler_name == "gcc" else ["libstdc++", "libstdc++11", "libc++"]
-        sudo_commands = ["", "sudo"] if distro else ["", "sudo", "sudo -E"]
+        sudo_commands = ["", "sudo", "sudo -E"]
         subprocess.check_call("docker run -t -d --name %s %s" % (self.service,
             self.created_image_name), shell=True)
 
