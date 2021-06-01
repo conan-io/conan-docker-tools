@@ -400,9 +400,47 @@ services:
         build:
             context: gcc_11
             dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc11:${DOCKER_BUILD_TAG}"
         container_name: gcc11
         tty: true
+    gcc11-armv7:
+        build:
+            context: gcc_11-armv7
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/gcc11-armv7:${DOCKER_BUILD_TAG}"
+        container_name: gcc11-armv7
+        tty: true
+    gcc11-armv7hf:
+        build:
+            context: gcc_11-armv7hf
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/gcc11-armv7hf:${DOCKER_BUILD_TAG}"
+        container_name: gcc11-armv7hf
+        tty: true
+    gcc11-armv8:
+        build:
+            context: gcc_11-armv8
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/gcc11-armv8:${DOCKER_BUILD_TAG}"
+        container_name: gcc11-armv8
+        tty: true
+    gcc11-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc11:${DOCKER_BUILD_TAG}
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/gcc11-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc11-jnlp-slave
     clang38:
         build:
             context: clang_3.8

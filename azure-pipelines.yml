@@ -48,6 +48,10 @@ jobs:
         GCC_VERSIONS: "10"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf"
         DOCKER_DISTRO: "jnlp-slave"
+      Ubuntu GCC 11:
+        GCC_VERSIONS: "11"
+        DOCKER_ARCHS: "x86_64,armv7,armv7hf"
+        DOCKER_DISTRO: "jnlp-slave"
 
       Ubuntu Clang 3.9 x86_64:
         CLANG_VERSIONS: "3.9"
