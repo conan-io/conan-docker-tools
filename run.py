@@ -4,10 +4,8 @@ import collections
 import os
 import logging
 import subprocess
-import requests
 import time
 import re
-from humanfriendly import format_size
 from conans import __version__ as client_version
 from conans import tools
 from cpt.ci_manager import CIManager
@@ -170,11 +168,6 @@ class ConanDockerTools(object):
         no_cache = "" if self.variables.docker_cache else "--no-cache"
         logging.info("Starting build for service %s." % self.service)
         subprocess.check_call("docker-compose build %s %s" % (no_cache, self.service), shell=True)
-
-        output = subprocess.check_output("docker image inspect %s --format '{{.Size}}'"
-        % self.created_image_name, shell=True)
-        size = int(output.decode().strip())
-        logging.info("'%s' image size: %s" % (self.created_image_name, format_size(size)))
 
     def test(self, compiler_name, compiler_version):
         """Validate Docker image by Conan install

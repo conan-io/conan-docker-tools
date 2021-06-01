@@ -9,7 +9,7 @@ jobs:
       versionSpec: '3.6'
       architecture: 'x64'
   - script: |
-      pip install -U docker-compose humanfriendly conan conan-package-tools
+      pip install -U docker-compose conan conan-package-tools
       python run.py
     env:
       DOCKER_LOGIN_USERNAME: $(DOCKER_LOGIN_USERNAME)
