@@ -50,7 +50,7 @@ jobs:
         DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 11:
         GCC_VERSIONS: "11"
-        DOCKER_ARCHS: "x86_64,armv7,armv7hf"
+        DOCKER_ARCHS: "x86_64"
         DOCKER_DISTRO: "jnlp-slave"
 
       Ubuntu Clang 3.9 x86_64:
