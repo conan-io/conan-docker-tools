@@ -400,9 +400,20 @@ services:
         build:
             context: gcc_11
             dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/gcc11:${DOCKER_BUILD_TAG}"
         container_name: gcc11
         tty: true
+    gcc11-jnlp-slave:
+        build:
+            context: jenkins-jnlp-slave
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: conanio/gcc11:${DOCKER_BUILD_TAG}
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/gcc11-jnlp-slave:${DOCKER_BUILD_TAG}"
+        container_name: gcc11-jnlp-slave
     clang38:
         build:
             context: clang_3.8
