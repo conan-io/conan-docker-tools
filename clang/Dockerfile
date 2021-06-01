@@ -110,7 +110,7 @@ RUN sudo apt-get -qq update \
 # FIXME: Clang 9 and 10 fail to build libcxx because they try to link libc++abi from system.
 #        We could add a patch with target_link_directories, but I prefered copying libc++abi to /usr/lib
 
-FROM ${DOCKER_USERNAME}/base as deploy
+FROM ${DOCKER_USERNAME}/base-ubuntu16.04 as deploy
 
 ARG CONAN_VERSION LIBSTDCPP_VERSION
 
