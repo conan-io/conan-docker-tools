@@ -5,7 +5,7 @@ ARG AGENT_VERSION=3.27 CONAN_VERSION
 
 USER root
 
-COPY jenkins-slave /usr/local/bin/jenkins-slave
+COPY jenkins-client /usr/local/bin/jenkins-client
 COPY entrypoint.sh /opt/entrypoint.sh
 COPY install-openjdk-ppa.sh /tmp/install-openjdk-ppa.sh
 
@@ -19,7 +19,7 @@ RUN /tmp/install-openjdk-ppa.sh \
     && curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${AGENT_VERSION}/remoting-${AGENT_VERSION}.jar \
     && chmod 755 /usr/share/jenkins \
     && chmod 644 /usr/share/jenkins/slave.jar \
-    && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-slave
+    && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-client
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
 USER conan
