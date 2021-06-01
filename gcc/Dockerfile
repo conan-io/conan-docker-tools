@@ -26,7 +26,7 @@ RUN sudo apt-get -qq update \
     && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
     && tar zxf gcc-${LIBSTDCPP_VERSION}.tar.gz -C /tmp/gcc
 
-FROM ${DOCKER_USERNAME}/base as deploy
+FROM ${DOCKER_USERNAME}/base-ubuntu16.04 as deploy
 
 ARG GCC_VERSION
 
