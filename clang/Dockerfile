@@ -6,17 +6,23 @@ ARG LLVM_VERSION ARTIFACTORY_REPOSITORY LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
+# FIXME: Clang 9 and 10 fail to build libcxx because they try to link libc++abi from system.
+#        We could add a patch with target_link_directories, but I prefered copying libc++abi to /usr/lib
+#
+# NOTE:  Clang 12 requires newer versions of CMake and Ninja, Xenial does not support those required version, that's why pip.
+
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \
        apt-transport-https \
        binutils \
        wget \
-       cmake \
        curl \
-       ninja-build \
        ca-certificates \
+       git \
        python3 \
-    && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' | tee /etc/apt/sources.list.d/llvm.list \
+       python3-pip \
+    && pip3 install ninja cmake \
+    && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
     && apt-get -qq update \
@@ -113,9 +119,6 @@ RUN apt-get -qq update \
     && mkdir /tmp/gcc \
     && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
     && tar zxf gcc-${LIBSTDCPP_VERSION}.tar.gz -C /tmp/gcc
-
-# FIXME: Clang 9 and 10 fail to build libcxx because they try to link libc++abi from system.
-#        We could add a patch with target_link_directories, but I prefered copying libc++abi to /usr/lib
 
 FROM ${DOCKER_USERNAME}/base-ubuntu16.04 as deploy
 
