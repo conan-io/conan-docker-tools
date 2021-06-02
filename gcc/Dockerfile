@@ -15,8 +15,15 @@ RUN apt-get -qq update \
        zlib1g \
        ca-certificates \
        autoconf-archive \
-       dh-autoreconf \
        binutils \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       nasm \
+       dh-autoreconf \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
     && wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
     && tar Jxf gcc-${GCC_VERSION}.tar.xz \
     && cd gcc-${GCC_VERSION} \
