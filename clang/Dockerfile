@@ -22,6 +22,7 @@ RUN apt-get -qq update \
        python3 \
        python3-pip \
     && pip3 install ninja cmake \
+    && ln -s /usr/bin/python3 /usr/bin/python \
     && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
