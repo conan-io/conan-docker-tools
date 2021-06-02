@@ -1,19 +1,26 @@
 ARG DOCKER_USERNAME
 
-FROM ${DOCKER_USERNAME}/base-ubuntu16.04 as builder
+FROM ubuntu:xenial as builder
 
 ARG LLVM_VERSION ARTIFACTORY_REPOSITORY LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
-RUN sudo apt-get -qq update \
-    && sudo apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 apt-transport-https \
-    && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' | sudo tee /etc/apt/sources.list.d/llvm.list \
+RUN apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \
+       apt-transport-https \
+       binutils \
+       wget \
+       cmake \
+       curl \
+       ninja-build \
+       ca-certificates \
+       python3 \
+    && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' | tee /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
-    && sudo apt-key add llvm-snapshot.gpg.key \
-    && sudo apt-get -qq update \
-    && sudo apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev \
-    && pip install ninja \
+    && apt-key add llvm-snapshot.gpg.key \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev \
     && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_VERSION}.tar.gz \
     && tar zxf llvmorg-${LLVM_VERSION}.tar.gz \
     && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${LLVM_VERSION}/libunwind/src/CMakeLists.txt \
@@ -95,7 +102,7 @@ RUN sudo apt-get -qq update \
        -DCOMPILER_RT_USE_LIBCXX=ON \
     && ninja unwind \
     && ninja cxxabi \
-    && sudo cp lib/libc++abi* /usr/lib/ \
+    && cp lib/libc++abi* /usr/lib/ \
     && ninja cxx \
     && ninja clang \
     && ninja lld \
@@ -118,7 +125,7 @@ COPY --from=builder /tmp/install /tmp/clang
 COPY --from=builder /tmp/gcc /tmp/gcc
 
 RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
-    && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.28 /usr/local/lib64/libstdc++.so.6 \
+    && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.29 /usr/local/lib64/libstdc++.so.6 \
     && sudo ln -s -f /usr/local/lib64/libstdc++.so.6 /usr/local/lib64/libstdc++.so \
     && sudo cp -a /tmp/gcc/include/* /usr/local/include/ \
     && sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \

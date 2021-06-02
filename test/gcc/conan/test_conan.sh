@@ -27,6 +27,6 @@ conan install foo/0.1@user/testing -g deploy
 ldd bin/foobar | grep 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6'
 ldd bin/foobar | grep 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1'
 
-sudo cp /usr/local/lib64/libstdc++.so.6.0.28 /tmp/project/
+sudo cp /usr/local/lib64/libstdc++.so.6.0.29 /tmp/project/
 sudo cp bin/foobar /tmp/project/foobar
 sudo cp bin/foobar_c /tmp/project/foobar_c

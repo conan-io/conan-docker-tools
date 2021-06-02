@@ -4,7 +4,7 @@ import collections
 import os
 import logging
 import subprocess
-import time
+import sys
 import re
 from conans import __version__ as client_version
 from conans import tools
@@ -251,16 +251,16 @@ class ConanDockerTools(object):
             "docker exec %s conan install cmake/3.18.6@ "
             "--build" % self.service, shell=True)
 
-        subprocess.check_call("test/simple/run.sh %s" % self.service, shell=True)
-        subprocess.check_call("test/standard/run.sh %s" % self.service, shell=True)
-        subprocess.check_call("test/system/run.sh %s" % self.service, shell=True)
-        subprocess.check_call("test/package/run.sh %s" % self.service, shell=True)
+        subprocess.check_call([sys.executable, "test/simple/run.py", self.service], shell=True)
+        subprocess.check_call([sys.executable, "test/standard/run.py", self.service], shell=True)
+        subprocess.check_call([sys.executable, "test/system/run.py", self.service], shell=True)
+        subprocess.check_call([sys.executable, "test/package/run.py", self.service], shell=True)
 
         if "gcc" in self.service:
-            subprocess.check_call("test/gcc/fortran/run.sh %s" % self.service, shell=True)
-            subprocess.check_call("test/gcc/conan/run.sh %s" % self.service, shell=True)
+            subprocess.check_call([sys.executable, "test/gcc/fortran/run.py",self.service], shell=True)
+            subprocess.check_call([sys.executable, "test/gcc/conan/run.py", self.service], shell=True)
         else:
-            subprocess.check_call("test/clang/conan/run.sh %s" % self.service, shell=True)
+            subprocess.check_call([sys.executable, "test/clang/conan/run.py", self.service], shell=True)
 
         try:
             subprocess.check_call(

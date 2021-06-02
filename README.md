@@ -183,7 +183,6 @@ Build and Test variables:
 
 - **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
 - **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
-- **DOCKER_BUILD_TAG**: Docker image tag, e.g "latest", "0.28.1"
 - **SUDO_COMMAND**: Sudo command used on Linux distros, e.g. "sudo"
 - **DOCKER_CACHE**: Allow to cache docker layers during the build, to speed up local testing
 

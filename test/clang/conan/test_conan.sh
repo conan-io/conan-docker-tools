@@ -29,7 +29,7 @@ ldd bin/foobar | grep -v 'libgcc'
 sudo mv bin/foobar ../project/foobar_cpp_libcpp
 sudo mv bin/foobar_c ../project/foobar_c_libcpp
 
-sudo cp /usr/local/lib64/libstdc++.so.6.0.28 ../project/libstdc++.so.6.0.28
+sudo cp /usr/local/lib64/libstdc++.so.6.0.29 ../project/libstdc++.so.6.0.29
 sudo cp /usr/local/lib64/libatomic.so.1.2.0 ../project/libatomic.so.1.2.0
 sudo cp /usr/local/lib/libllvm-unwind.so.1.0 ../project/libllvm-unwind.so.1.0
 
