@@ -41,7 +41,7 @@ if __name__ == "__main__":
         subprocess.check_call(["docker", "exec", "-w", "/tmp/build", container, "cmake", "/tmp/project/test/system", "-DCMAKE_BUILD_TYPE=Release"])
         subprocess.check_call(["docker", "exec", "-w", "/tmp/build", container, "cmake", "--build", "."])
 
-        output = subprocess.check_output(["docker", "exec", "-w", "/tmp/build", container, "ldd", "bin/package_test"], shell=True).decode()
+        output = subprocess.check_output(["docker", "exec", "-w", "/tmp/build", container, "ldd", "bin/package_test"]).decode()
         if 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6' not in output:
             raise RuntimeError("Could not find libstdc++.so.6 in package_test dependencies tree.")
         if 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1' not in output:
