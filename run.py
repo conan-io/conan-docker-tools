@@ -251,24 +251,31 @@ class ConanDockerTools(object):
             "docker exec %s conan install cmake/3.18.6@ "
             "--build" % self.service, shell=True)
 
-        subprocess.check_call([sys.executable, "test/simple/run.py", self.service], shell=True)
-        subprocess.check_call([sys.executable, "test/standard/run.py", self.service], shell=True)
-        subprocess.check_call([sys.executable, "test/system/run.py", self.service], shell=True)
-        subprocess.check_call([sys.executable, "test/package/run.py", self.service], shell=True)
+        logging.info("Starting new Test: Simple")
+        subprocess.check_call([sys.executable, "test/simple/run.py", self.service])
+        logging.info("Starting new Test: Standard")
+        subprocess.check_call([sys.executable, "test/standard/run.py", self.service])
+        logging.info("Starting new Test: System")
+        subprocess.check_call([sys.executable, "test/system/run.py", self.service])
+        logging.info("Starting new Test: Package")
+        subprocess.check_call([sys.executable, "test/package/run.py", self.service])
 
         if "gcc" in self.service:
-            subprocess.check_call([sys.executable, "test/gcc/fortran/run.py",self.service], shell=True)
-            subprocess.check_call([sys.executable, "test/gcc/conan/run.py", self.service], shell=True)
+            logging.info("Starting new Test: Fortran")
+            subprocess.check_call([sys.executable, "test/gcc/fortran/run.py",self.service])
+            logging.info("Starting new Test: GCC")
+            subprocess.check_call([sys.executable, "test/gcc/conan/run.py", self.service])
         else:
-            subprocess.check_call([sys.executable, "test/clang/conan/run.py", self.service], shell=True)
+            logging.info("Starting new Test: Clang")
+            subprocess.check_call([sys.executable, "test/clang/conan/run.py", self.service])
 
         try:
             subprocess.check_call(
-                "docker exec %s ls /usr/local/bin/jfrog" % self.service, shell=True)
+                "docker exec %s ls /usr/local/bin/jfrog" % self.service)
         except:
             pass
         else:
-            subprocess.check_call("docker exec %s jfrog --version" % self.service, shell=True)
+            subprocess.check_call("docker exec %s jfrog --version" % self.service)
 
     def test_jenkins(self):
         logging.info("Testing Jenkins Docker: running service %s." % self.service)
