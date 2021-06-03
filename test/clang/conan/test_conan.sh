@@ -46,8 +46,8 @@ ldd bin/foobar | grep -v 'libc++abi'
 ldd bin/foobar | grep 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1'
 ldd bin/foobar | grep 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6'
 
-sudo mv bin/foobar ../project/foobar_cpp_libstdcpp
-sudo mv bin/foobar_c ../project/foobar_c_libstdcpp
+sudo cp -a bin/foobar ../project/foobar_cpp_libstdcpp
+sudo cp -a bin/foobar_c ../project/foobar_c_libstdcpp
 
 conan create ../project/test/clang/conan foo/0.1@user/testing --build -s compiler.libcxx=libstdc++11
 conan install foo/0.1@user/testing -g deploy -s compiler.libcxx=libstdc++11
@@ -58,5 +58,5 @@ ldd bin/foobar | grep -v 'libc++abi'
 ldd bin/foobar | grep 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1'
 ldd bin/foobar | grep 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6'
 
-sudo mv bin/foobar ../project/foobar_cpp_libstdcpp11
-sudo mv bin/foobar_c ../project/foobar_c_libstdcpp11
+sudo cp -a bin/foobar /tmp/project/foobar_cpp_libstdcpp11
+sudo cp -a bin/foobar_c /tmp/project/foobar_c_libstdcpp11

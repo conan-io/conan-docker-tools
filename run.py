@@ -223,22 +223,24 @@ class ConanDockerTools(object):
             logging.info("Default Python version: %s" % output.decode().rstrip())
 
             subprocess.check_call(
-                "docker exec %s %s pip install --no-cache-dir -U conan_package_tools" %
+                "docker exec %s %s pip install -q --no-cache-dir -U conan_package_tools" %
                 (self.service, sudo_command),
                 shell=True)
             subprocess.check_call(
-                "docker exec %s %s pip install --no-cache-dir -U conan==%s" % (self.service,
+                "docker exec %s %s pip install -q --no-cache-dir -U conan==%s" % (self.service,
                                                                         sudo_command,
                                                                         self.variables.docker_build_tag),
                                                                         shell=True)
-            subprocess.check_call("docker exec %s conan user" % self.service, shell=True)
+            subprocess.check_call("docker exec %s conan config init --force" % self.service, shell=True)
 
+        logging.info("Testing C project lz4/1.9.2")
         subprocess.check_call(
             "docker exec %s conan install lz4/1.9.2@ "
             "-s compiler=%s -s compiler.version=%s --build" %
             (self.service, compiler_name, compiler_version),
             shell=True)
 
+        logging.info("Testing C++ project gtest/1.10.0")
         for libcxx in libcxx_list:
             subprocess.check_call(
                 "docker exec %s conan install gtest/1.10.0@ -s "
@@ -247,6 +249,7 @@ class ConanDockerTools(object):
                                                 compiler_version, libcxx),
                 shell=True)
 
+        logging.info("Testing C++ installer project cmake/3.18.6")
         subprocess.check_call(
             "docker exec %s conan install cmake/3.18.6@ "
             "--build" % self.service, shell=True)
