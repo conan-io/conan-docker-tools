@@ -27,7 +27,7 @@ conan install foo/0.1@user/testing -g deploy
 ldd bin/foobar | grep 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6'
 ldd bin/foobar | grep 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1'
 
-cp /usr/local/lib64/libstdc++.so.6.0.29 /tmp/build/bin/
+cp /usr/local/lib64/libstdc++.so.6.0.28 /tmp/build/bin/
 
 compiler_name=$(conan profile show default | grep -m 1 'compiler' | cut -d "=" -f 2-)
 compiler_version=$(conan profile show default | grep 'compiler.version' | cut -d "=" -f 2-)
