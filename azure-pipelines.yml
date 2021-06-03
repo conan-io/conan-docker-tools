@@ -2,7 +2,7 @@ jobs:
 - job: Official
   pool:
     vmImage: 'ubuntu-18.04'
-  timeoutInMinutes: 120
+  timeoutInMinutes: 180
   steps:
   - task: UsePythonVersion@0
     inputs:

@@ -257,8 +257,6 @@ class ConanDockerTools(object):
         subprocess.check_call([sys.executable, "test/standard/run.py", self.service])
         logging.info("Starting new Test: System")
         subprocess.check_call([sys.executable, "test/system/run.py", self.service])
-        logging.info("Starting new Test: Package")
-        subprocess.check_call([sys.executable, "test/package/run.py", self.service])
 
         if "gcc" in self.service:
             logging.info("Starting new Test: Fortran")
