@@ -51,7 +51,7 @@ if __name__ == "__main__":
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libllvm-unwind.so.1.0", "/usr/lib/x86_64-linux-gnu/libunwind.so.1"])
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libc++.so.1.0", "/usr/lib/x86_64-linux-gnu/libc++.so.1"])
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libc++abi.so.1.0", "/usr/lib/x86_64-linux-gnu/libc++abi.so.1"])
-        subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libstdc++.so.6.0.28", "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21"])
+        subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libstdc++.so.6.0.29", "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21"])
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libatomic.so.1.2.0", "/usr/lib/x86_64-linux-gnu/libatomic.so.1"])
 
         subprocess.check_call(["docker", "exec", container, "/tmp/bin/foobar_cpp_libcpp"])

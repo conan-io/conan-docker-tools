@@ -57,8 +57,8 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/lib/* /usr/local/lib/ \
     && sudo cp -a /tmp/install/bin/* /usr/local/bin/ \
     && sudo rm -rf /tmp/install \
-    && sudo mv /tmp/gcc/lib64/libstdc++.so.6.0.28 /usr/local/lib64/libstdc++.so.6.0.28 \
-    && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.28 /usr/local/lib64/libstdc++.so.6 \
+    && sudo mv /tmp/gcc/lib64/libstdc++.so.6.0.29 /usr/local/lib64/libstdc++.so.6.0.29 \
+    && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.29 /usr/local/lib64/libstdc++.so.6 \
     && sudo ln -s -f /usr/local/lib64/libstdc++.so.6 /usr/local/lib64/libstdc++.so \
     && sudo rm -rf /tmp/gcc \
     && sudo update-alternatives --install /usr/local/bin/cc cc /usr/local/bin/gcc 100 \
