@@ -52,7 +52,6 @@ These are the images uploaded to Docker Hub and currently used by [Conan Center]
 
 | Version                                                                                  | Arch   |  Status, Life cycle  |
 |------------------------------------------------------------------------------------------|--------|----------------------|
-| - [conanio/clang9-ubuntu16.04: clang 9](https://hub.docker.com/r/conanio/clang9-ubuntu16.04/)        | x86_64 |  Supported           |
 | - [conanio/clang10-ubuntu16.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/)     | x86_64 |  Supported           |
 | - [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/)     | x86_64 |  Supported           |
 | - [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/)     | x86_64 |  Supported           |
@@ -89,7 +88,6 @@ These images are mainly focused for Conan Center CI.
 
 | Version                                                                                                                  | Arch   |  Status, Life cycle  |
 |--------------------------------------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/clang8-ubuntu16.04-jenkins: clang 9](https://hub.docker.com/r/conanio/clang9-ubuntu16.04-jenkins/)            | x86_64 |  Supported |
 | - [conanio/clang8-ubuntu16.04-jenkins: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 | - [conanio/clang8-ubuntu16.04-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 | - [conanio/clang8-ubuntu16.04-jenkins: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
