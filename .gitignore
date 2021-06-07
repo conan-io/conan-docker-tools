@@ -16,6 +16,6 @@ libatomic.so.1.2.0
 libc++.so.1.0
 libc++abi.so.1.0
 libllvm-unwind.so.1.0
-libstdc++.so.6.0.29
+libstdc++.so.6.0.28
 libunwind.so.1.0
 logs/

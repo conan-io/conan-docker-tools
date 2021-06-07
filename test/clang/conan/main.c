@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <pthread.h>
 
 #include <zlib.h>
 
@@ -14,9 +16,17 @@
 #    include <libunwind.h>
 #endif
 
+void * hello_async(void *vargp)
+{
+    sleep(1);
+    printf("Printing GeeksQuiz from Thread \n");
+    return NULL;
+}
+
 int main(void) {
     char buffer_in [32] = {"Conan Package Manager"};
     char buffer_out [32] = {0};
+    pthread_t thread_id;
 
 #ifdef WITH_UNWIND
     unw_context_t uc;
@@ -45,6 +55,12 @@ int main(void) {
     printf("Compressed string is: %s\n", buffer_out);
 
     printf("ZLIB VERSION: %s\n", zlibVersion());
+
+
+    printf("Before Thread\n");
+    pthread_create(&thread_id, NULL, hello_async, NULL);
+    pthread_join(thread_id, NULL);
+    printf("After Thread\n");
 
     return 0;
 }

@@ -4,9 +4,17 @@
 
 // spdlog usage example
 
+#include <unistd.h>
+#include <pthread.h>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+
+
+#include <thread>
+#include <string>
+#include <iostream>
 
 void stdout_logger_example();
 void basic_example();
@@ -26,6 +34,19 @@ void syslog_example();
 #ifdef WITH_UNWIND
 #    include <libunwind.h>
 #endif
+
+// The function we want to execute on the new thread.
+void task1(std::string msg)
+{
+    std::cout << "task1 says: " << msg << std::endl;
+}
+
+void * hello_async(void *vargp)
+{
+    sleep(1);
+    printf("Printing GeeksQuiz from Thread \n");
+    return NULL;
+}
 
 int main(void)
 {
@@ -47,6 +68,7 @@ int main(void)
     spdlog::info("This an info message with custom format");
     spdlog::set_pattern("%+"); // back to default format
     spdlog::set_level(spdlog::level::info);
+
 
     // Backtrace support
     // Loggers can store in a ring buffer all messages (including debug/trace) for later inspection.
@@ -71,6 +93,7 @@ int main(void)
         user_defined_example();
         err_handler_example();
         trace_example();
+
 
         // Flush all *registered* loggers using a worker thread every 3 seconds.
         // note: registered loggers *must* be thread safe for this to work correctly!
