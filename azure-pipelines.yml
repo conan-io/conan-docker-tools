@@ -37,9 +37,6 @@ jobs:
       Ubuntu 16.04 GCC 11 x86_64:
         GCC_VERSIONS: "11"
 
-      Ubuntu 16.04 Clang 9 x86_64:
-        CLANG_VERSIONS: "9"
-
       Ubuntu 16.04 Clang 10 x86_64:
         CLANG_VERSIONS: "10"
 
