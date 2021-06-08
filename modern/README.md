@@ -118,40 +118,137 @@ Build, Test and Deploy
 ======================
 
 ## Introduce
-The images are already built and uploaded to [conanio](https://hub.docker.com/r/conanio/) dockerhub account, If you want to build your own images you can do it by:
 
-```
-$ GCC_VERSIONS=10 python run.py
-```
+The images are already built and uploaded to [conanio](https://hub.docker.com/r/conanio/) dockerhub account, but if you want to build your own images, read this section.
 
-The script *run.py* will build, test and deploy your Docker image. You can configure all stages by environment variables listed below.
-
-Also, you can build only a version:
-
-E.g Build and test only a image with Conan and gcc-6
-```
-$ CONAN_GCC_VERSIONS="6" python run.py
-```
-
-E.g Build and test only the images with Conan and clang-9, clang-10
-```
-$ CONAN_CLANG_VERSIONS="9,10" python run.py
-```
-
-The stages that compose the script will be described below:
+The `docker-compose.yml` file list all possible combinations of images and it will be explained below:
 
 ### Build
+
+Each image created on this stage will be tagged as  ``${DOCKER_USERNAME}/<compiler><compiler.version>-<distro><distro.version>``.
+
+The `DOCKER_USERNAME` is an environment variable not filled by the `.env` file, thus, you must configure it before building.
+
+For instance, building Clang 12 complete image:
+
+    export DOCKER_USERNAME=conanio
+    docker-compose build clang12
+
+The produced image will be named as ``conanio/clang12-ubuntu16.04``. The tag will follow the `CONAN_VERSION` in `.env` file.
+
+Besides the final compiler image, there are other important images which can be built separately and are part of the final image.
+
+The Docker image `base` (same service name), installs all basic system APT packages, Python and Conan. So, if you are looking for an
+image without compiler, `base` is your candidate.
+
+All compilers are built in specific image called `builder`, which does not use `base`. The image is only used to build the compiler.
+
+As final build step, `deploy` will combine `base` image with the compiler produced by `builder`. This approach allow us keeping a smaller
+image, easier to be maintained and isolated from the environment used to build the compiler.
+
+### Test
+
+Testing is an important step to validate each produced image. To summarize each one:
+
+#### Simple
+
+Build a simple app using CMake, threads and show the date.
+
+To execute the entire test:
+
+    $ cd modern && python test/simple/run.py clang12
+
+It will run Docker container for Clang 12, mount a volume and run test/simple/test_simple.sh internally.
+
+#### Standard
+
+Build projects which require C++17 and C++20. It validates if a compiler supports a specific C++ standard.
+
+To execute the entire test:
+
+    $ cd modern && python test/standard/run.py gcc10
+
+It will run Docker container for GCC 10, mount a volume, run both test/simple/build_imagl.sh and test/simple/build_libsolace.sh
+
+#### System
+
+Some Conan packages can use `SystemPackageTool` to install system packages, which should not affect the compiler built and installed
+into the Docker image. To validate that case, this test installs GCC9 and libusb to try sabotage the image, but it must prefer the
+compiler already installed, including its libstdc++ version.
+
+To execute the entire test:
+
+    $ cd modern && python test/system/run.py gcc7
+
+It will run Docker container for GCC 7, mount a volume and run CMake to build test/system/CMakeLists.txt
+
+#### GCC
+
+It's a dedicated validation for GCC compiler. It builds a Conan project, using `libstdc++` and `libstdc++11`.
+Also, it builds a Fortran simple application, to validate if fortran is correctly built.
+
+To execute the entire GCC test:
+
+    $ cd modern && python test/gcc/conan/run.py gcc10
+
+It will build a Conan project, validate if both libstdc++ and libgcc_s are correctly used from /usr/local.
+Also, there is a second phase where the produced application is copied to a vanilla Ubuntu Xenial container,
+including the libstdc++ from the target container, and the application must work nicely.
+
+To execute the Fortran test:
+
+    $ cd modern && python test/gcc/fortran/run.py gcc10
+
+It will run Docker container for GCC 10, mount a volume and run CMake to build test/gcc/fortran/CMakeLists.txt
+
+#### Clang
+
+It's a dedicated validation for Clang compiler. It builds a Conan project using `libstdc++`, `libstdc++11` and `libc++`.
+
+To execute the entire Clang test:
+
+    $ cd modern && python test/clang/conan/run.py clang12
+
+It will build a Conan project, validate if the c++ library and runtime are correct. The Clang built for those images
+don't use GCC as dependency, instead, they use libunwind, compiler-rt, libc++ and libc++-abi.
+
+Also, there is a second phase where the produced application is copied to a vanilla Ubuntu Xenial container,
+including the libstdc++ and libc++ from the target container, and the application must work nicely.
+
+### Deploy
+
+If you want to distribute your image, you have to upload it to somewhere. There two ways to upload an image:
+
+    $ docker login -p <password> -u <username>
+    $ docker push ${DOCKER_USERNAME}/gcc10-ubuntu16.04
+
+Or, using Docker compose
+
+    $ docker login -p <password> -u <username>
+    $ docker-compose push gcc10
+
+If you don't want to use hub.docker as default Docker registry, you may use [Artifactory](https://jfrog.com/start-free/#saas), which
+is free and well supported for Docker, Conan and more.
+
+### The run.py Script
+
+Now that you learned how to build, test and deploy manually, there is the script `run.py`, which automates all these steps for you.
+That script is configured by environment variables due CI, so we can build different images without changing any file or doing a new commit.
+
+#### Build Step
+
 The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc`` and in ``CONAN_CLANG_VERSIONS`` for ``Clang``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
+
+For instance, to build GCC 10 image, you should execute:
+
+    $ GCC_VERSIONS=10 python run.py
 
 You can configure only a compiler version or a list, by these variables. If you skipped a compiler list, the build will not be executed for that compiler.
 
 The image tag can be configured by ``DOCKER_BUILD_TAG``. Build default will used **latest**. The Conan version installed, is the same listed as Docker image tag.
 
-Each image created on this stage will be tagged as  ``${DOCKER_USERNAME}/conan-<compiler><compiler.version>-<distro><distro.version>``.
+#### Test Step
 
-The image will not be removed after build.
-
-### Test
 The second stage runs the new image created, build some Conan packages, check for correct standard libraries installed and validate standard C++ supported.
 The same build variables, as ``CONAN_GCC_VERSIONS``, ``CONAN_CLANG_VERSIONS`` are used to select the compiler and version.
 
@@ -160,17 +257,18 @@ The same build variables, as ``CONAN_GCC_VERSIONS``, ``CONAN_CLANG_VERSIONS`` ar
 
 The packages created on test, are not uploaded to Conan server, Are just to validate the image.
 
-### Deploy
+#### Deploy Step
+
 The final stage pushes the image to docker server (hub.docker). ``DOCKER_UPLOAD`` should be true.
 
 The login uses ``DOCKER_LOGIN_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate.
 
 
 E.g Upload Docker images to Docker hub, after build and test:
-```
-$ DOCKER_USERNAME="conanio" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python run.py
-```
 
+    $ DOCKER_USERNAME="conanio" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python run.py
+
+To see all supported variables supported, read the section below.
 
 ## Environment configuration
 
@@ -190,5 +288,5 @@ Upload related variables:
 - **DOCKER_USERNAME**: Your Docker username to authenticate in Docker server.
 - **DOCKER_PASSWORD**: Your Docker password to authenticate in Docker server
 - **DOCKER_UPLOAD**: If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
-- **BUILD_CONAN_SERVER_IMAGE**: If attributest to true, it will build and upload an image with the conan_server
+- **BUILD_CONAN_SERVER_IMAGE**: If attributed to true, it will build and upload an image with the conan_server
 - **DOCKER_UPLOAD_ONLY_WHEN_STABLE**: Only upload only when is master branch.
