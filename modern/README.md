@@ -121,21 +121,21 @@ Build, Test and Deploy
 The images are already built and uploaded to [conanio](https://hub.docker.com/r/conanio/) dockerhub account, If you want to build your own images you can do it by:
 
 ```
-$ GCC_VERSIONS=10 python build.py
+$ GCC_VERSIONS=10 python run.py
 ```
 
-The script *build.py* will build, test and deploy your Docker image. You can configure all stages by environment variables listed below.
+The script *run.py* will build, test and deploy your Docker image. You can configure all stages by environment variables listed below.
 
 Also, you can build only a version:
 
 E.g Build and test only a image with Conan and gcc-6
 ```
-$ CONAN_GCC_VERSIONS="6" python build.py
+$ CONAN_GCC_VERSIONS="6" python run.py
 ```
 
 E.g Build and test only the images with Conan and clang-9, clang-10
 ```
-$ CONAN_CLANG_VERSIONS="9,10" python build.py
+$ CONAN_CLANG_VERSIONS="9,10" python run.py
 ```
 
 The stages that compose the script will be described below:
@@ -168,7 +168,7 @@ The login uses ``DOCKER_LOGIN_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate
 
 E.g Upload Docker images to Docker hub, after build and test:
 ```
-$ DOCKER_USERNAME="conanio" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python build.py
+$ DOCKER_USERNAME="conanio" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python run.py
 ```
 
 
