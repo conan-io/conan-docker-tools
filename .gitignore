@@ -2,20 +2,3 @@
 /.project
 /.idea
 
-.vscode/
-test/gcc/conan/build/
-test/clang/conan/build/
-test/simple/build/
-foobar_c_libcpp
-foobar_c_libstdcpp
-foobar_c_libstdcpp11
-foobar_cpp_libcpp
-foobar_cpp_libstdcpp
-foobar_cpp_libstdcpp11
-libatomic.so.1.2.0
-libc++.so.1.0
-libc++abi.so.1.0
-libllvm-unwind.so.1.0
-libstdc++.so.6.0.29
-libunwind.so.1.0
-logs/
