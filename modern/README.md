@@ -268,7 +268,7 @@ E.g Upload Docker images to Docker hub, after build and test:
 
     $ DOCKER_USERNAME="conanio" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python run.py
 
-To see all supported variables supported, read the section below.
+To see all supported variables, read the section below.
 
 ## Environment configuration
 
