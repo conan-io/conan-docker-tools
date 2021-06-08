@@ -10,7 +10,7 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -U docker-compose conan conan-package-tools
-      python run.py
+      cd modern && python build.py
     env:
       DOCKER_LOGIN_USERNAME: $(DOCKER_LOGIN_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
