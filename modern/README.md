@@ -17,7 +17,7 @@ After many updates, new compiler releases, instability and incompatibility probl
 - Ubuntu doesn’t package new compiler versions for each distro release, so we need to use a new Ubuntu version as base image. As a consequence, non LTS versions become a problem when EOL comes.
 - Each Ubuntu release uses different package versions, including very important projects, like glibc, which results in incompatibility from a package created by distro version to another version.
 
-To sanity our problems, we decided to keep focused on the purpose of this project: Docker files for Conan Center CI. So, first we removed older compiler versions which are no longer popular (based on Conan Center download counter).
+Given this priority (same base images, glibc and stdlibc++ versions for all) we will support only the compilers that we managed to build and run in the base image, the rest will be deprecated from ConanCenter because on this technical reasons.
 
 Second, we decided to use a single base image, not too old and not the latest, something in the middle, to keep a glibc still compatible for some old distro releases. Thus, we choose Ubuntu 16.04 LTS (Xenial) which its EOL is in 2024. When close to the EOL date, we can move to 18.04 and so on.
 
@@ -25,11 +25,11 @@ As the compiler version is always a problem to align according to the distro rel
 
 We totally understand that companies and users are still using our “legacy” docker images, so we won’t deprecate them soon. This kind of change requires rebuilding all packages again, and depending on the number, it could take weeks. Thus, don’t worry, we won’t remove them from Docker hub.
 
-**TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources.
+**TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same glibc and stdlibc++ versions.
 
 ### Legacy Docker Images
 
-If you are looking for legacy docker images (e.g. conanio/gcc10), visit [legacy](legacy) folder.
+Legacy docker images will be moved to "legacy" folder and eventually their dockerfiles will no longer be maintained in this repository (EOL to be decided).
 
 ### Official Docker Images
 
