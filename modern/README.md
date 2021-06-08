@@ -12,6 +12,9 @@ The images listed below are intended for **generating open-source library packag
 
 ### New Docker Strategy (June 2021)
 
+**TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same glibc and stdlibc++ versions.
+
+
 After many updates, new compiler releases, instability and incompatibility problems, we decided to clean the house, move a step forward with Conan Docker Tools. So far, we usually follow the same recipe, when a compiler version is released, we also release a new docker image, but we have two main problems:
 
 - Ubuntu doesn’t package new compiler versions for each distro release, so we need to use a new Ubuntu version as base image. As a consequence, non LTS versions become a problem when EOL comes.
@@ -24,8 +27,6 @@ Second, we decided to use a single base image, not too old and not the latest, s
 As the compiler version is always a problem to align according to the distro release, we decided to build all compilers from sources, which includes GCC and Clang. Although this increased the build time considerably, we still now have full control over the compiler used in our images.
 
 We totally understand that companies and users are still using our “legacy” docker images, so we won’t deprecate them soon. This kind of change requires rebuilding all packages again, and depending on the number, it could take weeks. Thus, don’t worry, we won’t remove them from Docker hub.
-
-**TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same glibc and stdlibc++ versions.
 
 ### Legacy Docker Images
 
