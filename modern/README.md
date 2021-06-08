@@ -10,7 +10,7 @@ You can use these images directly in your project or with the [conan-package-too
 > :warning: **Warning:**
 The images listed below are intended for **generating open-source library packages** and we CAN NOT guarantee any kind of stability. We strongly recommend using your own generated images for production environments taking the dockerfiles in this repository as a reference.
 
-### New Docker Strategy
+### New Docker Strategy (June 2021)
 
 After many updates, new compiler releases, instability and incompatibility problems, we decided to clean the house, move a step forward with Conan Docker Tools. So far, we usually follow the same recipe, when a compiler version is released, we also release a new docker image, but we have two main problems:
 
