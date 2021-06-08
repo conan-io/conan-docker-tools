@@ -1,5 +1,5 @@
 jobs:
-- job: Official
+- job: Modern
   pool:
     vmImage: 'ubuntu-18.04'
   timeoutInMinutes: 180
@@ -46,7 +46,7 @@ jobs:
       Ubuntu 16.04 Clang 12 x86_64:
         CLANG_VERSIONS: "12"
 
-- job: Legacy
+- job: Current
   pool:
     vmImage: 'ubuntu-18.04'
   timeoutInMinutes: 120
@@ -57,7 +57,7 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -U docker-compose humanfriendly conan conan-package-tools
-      cd legacy && python build.py
+      python build.py
     env:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
   strategy:
