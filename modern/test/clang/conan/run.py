@@ -15,12 +15,21 @@ def get_conan_target_version():
     return match.group(1)
 
 
+def get_libstdcpp_patch_version():
+    env_file = open(".env", "r")
+    match = re.search("LIBSTDCPP_PATCH_VERSION=(.*)", env_file.read())
+    if not match:
+        return "latest"
+    return match.group(1)
+
+
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s', level=logging.INFO)
     compiler = sys.argv[1]
     container = compiler + "-" + str(random.randint(1, 9999))
     pwd = os.getcwd()
     image = "{}/{}-ubuntu16.04:{}".format(os.getenv("DOCKER_USERNAME", "conanio"), compiler, get_conan_target_version())
+    libstdcpp_patch = get_libstdcpp_patch_version()
     exit_code = 0
 
     try:
@@ -51,7 +60,7 @@ if __name__ == "__main__":
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libllvm-unwind.so.1.0", "/usr/lib/x86_64-linux-gnu/libunwind.so.1"])
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libc++.so.1.0", "/usr/lib/x86_64-linux-gnu/libc++.so.1"])
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libc++abi.so.1.0", "/usr/lib/x86_64-linux-gnu/libc++abi.so.1"])
-        subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libstdc++.so.6.0.29", "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21"])
+        subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libstdc++.so.6.0.{}".format(libstdcpp_patch), "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21"])
         subprocess.check_call(["docker", "exec", container, "cp", "/tmp/bin/libatomic.so.1.2.0", "/usr/lib/x86_64-linux-gnu/libatomic.so.1"])
 
         subprocess.check_call(["docker", "exec", container, "/tmp/bin/foobar_cpp_libcpp"])

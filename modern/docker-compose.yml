@@ -177,6 +177,7 @@ services:
               - ${DOCKER_USERNAME}/gcc5-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/gcc5-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -191,6 +192,7 @@ services:
               - ${DOCKER_USERNAME}/gcc6-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/gcc6-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -205,6 +207,7 @@ services:
               - ${DOCKER_USERNAME}/gcc7-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/gcc7-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -219,6 +222,7 @@ services:
               - ${DOCKER_USERNAME}/gcc8-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/gcc8-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -233,6 +237,7 @@ services:
               - ${DOCKER_USERNAME}/gcc9-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/gcc9-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -247,6 +252,7 @@ services:
               - ${DOCKER_USERNAME}/gcc10-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/gcc10-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -261,6 +267,7 @@ services:
               - ${DOCKER_USERNAME}/gcc11-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/gcc11-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -275,6 +282,7 @@ services:
               - ${DOCKER_USERNAME}/clang9-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/clang9-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -289,6 +297,7 @@ services:
               - ${DOCKER_USERNAME}/clang10-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/clang10-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -303,6 +312,7 @@ services:
               - ${DOCKER_USERNAME}/clang11-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/clang11-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -317,6 +327,7 @@ services:
               - ${DOCKER_USERNAME}/clang12-builder-ubuntu16.04:${CONAN_VERSION}
             args:
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 CONAN_VERSION: ${CONAN_VERSION}
         image: ${DOCKER_USERNAME}/clang12-deploy-ubuntu16.04:${CONAN_VERSION}
@@ -464,6 +475,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc5-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc5
@@ -477,6 +489,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc6-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc6
@@ -490,6 +503,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc7-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc7
@@ -503,6 +517,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc8-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc8
@@ -516,6 +531,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc9-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc9
@@ -529,6 +545,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc10-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc10
@@ -542,6 +559,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11
@@ -555,6 +573,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/clang9-ubuntu16.04:${CONAN_VERSION}
         container_name: clang9
@@ -568,6 +587,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/clang10-ubuntu16.04:${CONAN_VERSION}
         container_name: clang10
@@ -581,6 +601,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/clang11-ubuntu16.04:${CONAN_VERSION}
         container_name: clang11
@@ -594,6 +615,7 @@ services:
                 CONAN_VERSION: ${CONAN_VERSION}
                 DOCKER_USERNAME: ${DOCKER_USERNAME}
                 LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+                LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
                 ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
         image: ${DOCKER_USERNAME}/clang12-ubuntu16.04:${CONAN_VERSION}
         container_name: clang12

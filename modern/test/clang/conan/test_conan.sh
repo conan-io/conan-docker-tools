@@ -15,6 +15,8 @@ export CONAN_PRINT_RUN_COMMANDS=1
 mkdir -p /tmp/build
 rm -rf /tmp/build/*
 
+LIBSTDCPP_VERSION=$(grep 'LIBSTDCPP_PATCH_VERSION' /tmp/project/modern/.env | cut -d "=" -f 2-)
+
 conan config init --force
 
 pushd /tmp/build
@@ -32,7 +34,7 @@ ldd bin/foobar | grep -v 'libgcc'
 mv bin/foobar bin/foobar_cpp_libcpp
 mv bin/foobar_c bin/foobar_c_libcpp
 
-cp /usr/local/lib64/libstdc++.so.6.0.29 bin/libstdc++.so.6.0.29
+cp /usr/local/lib64/libstdc++.so.6.0.${LIBSTDCPP_VERSION} bin/libstdc++.so.6.0.${LIBSTDCPP_VERSION}
 cp /usr/local/lib64/libatomic.so.1.2.0 bin/libatomic.so.1.2.0
 cp /usr/local/lib/libllvm-unwind.so.1.0 bin/libllvm-unwind.so.1.0
 
