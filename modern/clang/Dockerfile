@@ -1,4 +1,5 @@
 ARG DOCKER_USERNAME
+ARG CONAN_VERSION
 
 FROM ubuntu:xenial as builder
 
@@ -121,9 +122,9 @@ RUN apt-get -qq update \
     && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
     && tar zxf gcc-${LIBSTDCPP_VERSION}.tar.gz -C /tmp/gcc
 
-FROM ${DOCKER_USERNAME}/base-ubuntu16.04 as deploy
+FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
 
-ARG CONAN_VERSION LIBSTDCPP_VERSION
+ARG LIBSTDCPP_VERSION
 
 COPY --from=builder /tmp/install /tmp/clang
 COPY --from=builder /tmp/gcc /tmp/gcc
@@ -145,5 +146,4 @@ RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/clang++ 100 \
     && sudo update-alternatives --install /usr/local/bin/ld ld /usr/local/bin/ld.lld 100 \
     && sudo rm /etc/ld.so.cache \
-    && sudo ldconfig -C /etc/ld.so.cache \
-    && pip install conan==${CONAN_VERSION}
+    && sudo ldconfig -C /etc/ld.so.cache
