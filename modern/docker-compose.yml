@@ -53,7 +53,7 @@ services:
             dockerfile: Dockerfile
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/base-ubuntu16.04
+        image: ${DOCKER_USERNAME}/base-ubuntu16.04:${CMAKE_VERSION_FULL}
         container_name: base
         tty: true
 
