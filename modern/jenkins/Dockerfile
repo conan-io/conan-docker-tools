@@ -22,3 +22,4 @@ RUN /tmp/install-openjdk-ppa.sh \
     && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-client
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
+USER conan
