@@ -300,10 +300,10 @@ class ConanDockerTools(object):
             subprocess.check_call("docker exec %s jfrog --version" % self.service)
 
     def test_jenkins(self):
-        logging.info("Testing Jenkins Docker: running service %s." % self.service)
-        output = subprocess.check_output("docker run --rm -t --name %s %s" % (self.service,
-                                         self.created_image_name), shell=True)
-        assert "java -jar agent.jar [options...]" in output.decode()
+        logging.info(f"Testing Jenkins Docker: running service {self.service}.")
+        output = subprocess.check_output(f"docker run --rm -t {self.created_image_name}", shell=True).decode()
+        if "java -jar agent.jar [options...]" not in output:
+            raise AssertionError(f"Could not find java client in Jenkins image. Current output: {output}")
 
     def deploy(self):
         """Upload Docker image to dockerhub

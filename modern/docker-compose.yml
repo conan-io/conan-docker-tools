@@ -134,17 +134,6 @@ services:
         image: ${DOCKER_USERNAME}/gcc11-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11-builder
         tty: true
-    clang9-builder:
-        build:
-            context: clang
-            dockerfile: Dockerfile
-            target: builder
-            args:
-                <<: *common-args
-                <<: *llvm9
-        image: ${DOCKER_USERNAME}/clang9-builder-ubuntu16.04:${CONAN_VERSION}
-        container_name: clang9-builder
-        tty: true
     clang10-builder:
         build:
             context: clang
@@ -263,18 +252,6 @@ services:
                 <<: *common-args
         image: ${DOCKER_USERNAME}/gcc11-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11-deploy
-        tty: true
-    clang9-deploy:
-        build:
-            context: clang
-            dockerfile: Dockerfile
-            target: deploy
-            cache_from:
-              - ${DOCKER_USERNAME}/clang9-builder-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/clang9-deploy-ubuntu16.04:${CONAN_VERSION}
-        container_name: clang9-deploy
         tty: true
     clang10-deploy:
         build:
@@ -398,18 +375,6 @@ services:
         image: ${DOCKER_USERNAME}/gcc11-conan-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11-conan
         tty: true
-    clang9-conan:
-        build:
-            context: clang
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/clang9-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/clang9-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: clang9-conan
-        tty: true
     clang10-conan:
         build:
             context: clang
@@ -518,16 +483,6 @@ services:
         image: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11
         tty: true
-    clang9:
-        build:
-            context: clang
-            dockerfile: Dockerfile
-            args:
-                <<: *common-args
-                <<: *llvm9
-        image: ${DOCKER_USERNAME}/clang9-ubuntu16.04:${CONAN_VERSION}
-        container_name: clang9
-        tty: true
     clang10:
         build:
             context: clang
@@ -616,14 +571,6 @@ services:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
         image: "${DOCKER_USERNAME}/gcc11-ubuntu16.04-jenkins:${CONAN_VERSION}"
         container_name: gcc11-jenkins
-    clang9-jenkins:
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang9-ubuntu16.04:${CONAN_VERSION}
-        image: "${DOCKER_USERNAME}/clang9-ubuntu16.04-jenkins:${CONAN_VERSION}"
-        container_name: clang9-jenkins
     clang10-jenkins:
         build:
             context: jenkins
