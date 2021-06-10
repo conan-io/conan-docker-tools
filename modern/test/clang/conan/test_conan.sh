@@ -15,7 +15,7 @@ export CONAN_PRINT_RUN_COMMANDS=1
 mkdir -p /tmp/build
 rm -rf /tmp/build/*
 
-LIBSTDCPP_VERSION=$(grep 'LIBSTDCPP_PATCH_VERSION' /tmp/project/modern/.env | cut -d "=" -f 2-)
+LIBSTDCPP_VERSION=$(grep 'LIBSTDCPP_PATCH_VERSION' /tmp/project/.env | cut -d "=" -f 2-)
 
 conan config init --force
 
