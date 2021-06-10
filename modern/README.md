@@ -131,20 +131,58 @@ The `DOCKER_USERNAME` is an environment variable not filled by the `.env` file, 
 
 For instance, building Clang 12 complete image:
 
-    export DOCKER_USERNAME=conanio
-    docker-compose build clang12
+    $ export DOCKER_USERNAME=conanio
+    $ docker-compose build clang12
 
 The produced image will be named as ``conanio/clang12-ubuntu16.04``. The tag will follow the `CONAN_VERSION` in `.env` file.
 
+#### Pre-Build stage (Base)
+
 Besides the final compiler image, there are other important images which can be built separately and are part of the final image.
 
-The Docker image `base` (same service name), installs all basic system APT packages, Python and Conan. So, if you are looking for an
+The Docker image `base` (same service name), installs all basic system APT packages, CMake, Python and Conan. So, if you are looking for an
 image without compiler, `base` is your candidate.
 
+    $ export DOCKER_USERNAME=conanio
+    $ docker-compose build base
+
+The produced image can be configured by `.env`. Most important package versions installed in Base are listed there.
+
+#### Build stage (Builder)
+
 All compilers are built in specific image called `builder`, which does not use `base`. The image is only used to build the compiler.
+The decision made serves to avoid possible rebuilds when updating Base for some reason.
+
+The Builder image can be built directly, it's useful if you want to investigate compiler building steps and all artifacts produced.
+
+    $ export DOCKER_USERNAME=conanio
+    $ docker-compose build gcc10-builder
+
+It will the Builder image for GCC 10, which takes around 15 minutes. For Clang case, it can take 1 hour.
+
+
+#### Final stage (Deploy)
 
 As final build step, `deploy` will combine `base` image with the compiler produced by `builder`. This approach allow us keeping a smaller
 image, easier to be maintained and isolated from the environment used to build the compiler.
+
+This image avoids all Builder cache, using Docker multi-stage feature, we copy only the compiler installation folder.
+
+It's the default build command, for instance:
+
+    $ export DOCKER_USERNAME=conanio
+    $ docker-compose build gcc10
+
+#### Update stage (Conan)
+
+After having all images built and uploaded, probably you don't need to build all again. Eventually, Conan will release a new version and to
+avoid a massive build again, this top cherry layer only updates Conan client version in Deploy image. It's very useful to save your time
+when updating Conan.
+
+    $ export DOCKER_USERNAME=conanio
+    $ docker-compose build gcc10-conan
+
+The Conan version used for the update is the same listed in `.env` file.
 
 ### Test
 
