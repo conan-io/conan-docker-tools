@@ -1,28 +1,69 @@
+x-common-args: &common-args
+    CMAKE_VERSION_FULL: ${CMAKE_VERSION_FULL}
+    CMAKE_VERSION: ${CMAKE_VERSION}
+    PYTHON_VERSION: ${PYTHON_VERSION}
+    CONAN_VERSION: ${CONAN_VERSION}
+    DOCKER_USERNAME: ${DOCKER_USERNAME}
+    LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
+    ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+    JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+
+x-gcc5: &gcc5
+    GCC_VERSION: 5.5.0
+
+x-gcc6: &gcc6
+    GCC_VERSION: 6.5.0
+
+x-gcc7: &gcc7
+    GCC_VERSION: 7.5.0
+
+x-gcc8: &gcc8
+    GCC_VERSION: 8.4.0
+
+x-gcc9: &gcc9
+    GCC_VERSION: 9.3.0
+
+x-gcc10: &gcc10
+    GCC_VERSION: 10.3.0
+
+x-gcc11: &gcc11
+    GCC_VERSION: 11.1.0
+
+x-llvm9: &llvm9
+    LLVM_VERSION: 9.0.1
+
+x-llvm10: &llvm10
+    LLVM_VERSION: 10.0.1
+
+x-llvm11: &llvm11
+    LLVM_VERSION: 11.1.0
+
+x-llvm12: &llvm12
+    LLVM_VERSION: 12.0.0
+
+
 version: '3'
 services:
+    # Base image
     base:
         build:
             context: base
             dockerfile: Dockerfile
             args:
-                CMAKE_VERSION_FULL: ${CMAKE_VERSION_FULL}
-                CMAKE_VERSION: ${CMAKE_VERSION}
-                PYTHON_VERSION: ${PYTHON_VERSION}
-                CONAN_VERSION: ${CONAN_VERSION}
-        image: ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION}
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/base-ubuntu16.04
         container_name: base
         tty: true
 
+    # Builder images
     gcc5-builder:
         build:
             context: gcc
             dockerfile: Dockerfile
             target: builder
             args:
-                GCC_VERSION: 5.5.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc5
         image: ${DOCKER_USERNAME}/gcc5-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc5-builder
         tty: true
@@ -30,12 +71,9 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: builder
             args:
-                GCC_VERSION: 6.5.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc6
         image: ${DOCKER_USERNAME}/gcc6-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc6-builder
         tty: true
@@ -45,10 +83,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                GCC_VERSION: 7.5.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc7
         image: ${DOCKER_USERNAME}/gcc7-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc7-builder
         tty: true
@@ -58,10 +94,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                GCC_VERSION: 8.4.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc8
         image: ${DOCKER_USERNAME}/gcc8-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc8-builder
         tty: true
@@ -71,10 +105,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                GCC_VERSION: 9.3.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc9
         image: ${DOCKER_USERNAME}/gcc9-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc9-builder
         tty: true
@@ -84,10 +116,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                GCC_VERSION: 10.3.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc10
         image: ${DOCKER_USERNAME}/gcc10-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc10-builder
         tty: true
@@ -97,10 +127,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                GCC_VERSION: 11.1.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc11
         image: ${DOCKER_USERNAME}/gcc11-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11-builder
         tty: true
@@ -110,10 +138,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                LLVM_VERSION: 9.0.1
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm9
         image: ${DOCKER_USERNAME}/clang9-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: clang9-builder
         tty: true
@@ -123,10 +149,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                LLVM_VERSION: 10.0.1
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm10
         image: ${DOCKER_USERNAME}/clang10-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: clang10-builder
         tty: true
@@ -136,10 +160,8 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                LLVM_VERSION: 11.1.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm11
         image: ${DOCKER_USERNAME}/clang11-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: clang11-builder
         tty: true
@@ -149,14 +171,13 @@ services:
             dockerfile: Dockerfile
             target: builder
             args:
-                LLVM_VERSION: 12.0.0
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm12
         image: ${DOCKER_USERNAME}/clang12-builder-ubuntu16.04:${CONAN_VERSION}
         container_name: clang12-builder
         tty: true
 
+    # Deploy images
     gcc5-deploy:
         build:
             context: gcc
@@ -165,9 +186,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/gcc5-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/gcc5-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc5-deploy
         tty: true
@@ -179,9 +198,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/gcc6-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/gcc6-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc6-deploy
         tty: true
@@ -193,9 +210,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/gcc7-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/gcc7-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc7-deploy
         tty: true
@@ -207,9 +222,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/gcc8-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/gcc8-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc8-deploy
         tty: true
@@ -221,9 +234,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/gcc9-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/gcc9-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc9-deploy
         tty: true
@@ -235,9 +246,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/gcc10-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/gcc10-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc10-deploy
         tty: true
@@ -249,9 +258,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/gcc11-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/gcc11-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11-deploy
         tty: true
@@ -263,9 +270,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/clang9-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/clang9-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: clang9-deploy
         tty: true
@@ -277,9 +282,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/clang10-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/clang10-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: clang10-deploy
         tty: true
@@ -291,9 +294,7 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/clang11-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/clang11-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: clang11-deploy
         tty: true
@@ -305,23 +306,153 @@ services:
             cache_from:
               - ${DOCKER_USERNAME}/clang12-builder-ubuntu16.04:${CONAN_VERSION}
             args:
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                CONAN_VERSION: ${CONAN_VERSION}
+                <<: *common-args
         image: ${DOCKER_USERNAME}/clang12-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: clang12-deploy
         tty: true
 
+    # Conan images
+    gcc5-conan:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc5-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc5-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: gcc5-conan
+        tty: true
+    gcc6-conan:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc6-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc6-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: gcc6-conan
+        tty: true
+    gcc7-conan:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc7-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc7-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: gcc7-conan
+        tty: true
+    gcc8-conan:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc8-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc8-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: gcc8-conan
+        tty: true
+    gcc9-conan:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc9-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc9-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: gcc9-conan
+        tty: true
+    gcc10-conan:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc10-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc10-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: gcc10-conan
+        tty: true
+    gcc11-conan:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc11-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc11-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: gcc11-conan
+        tty: true
+    clang9-conan:
+        build:
+            context: clang
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/clang9-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/clang9-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: clang9-conan
+        tty: true
+    clang10-conan:
+        build:
+            context: clang
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/clang10-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/clang10-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: clang10-conan
+        tty: true
+    clang11-conan:
+        build:
+            context: clang
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/clang11-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/clang11-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: clang11-conan
+        tty: true
+    clang12-conan:
+        build:
+            context: clang
+            dockerfile: Dockerfile
+            target: conan
+            cache_from:
+              - ${DOCKER_USERNAME}/clang12-deploy-ubuntu16.04:${CONAN_VERSION}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/clang12-conan-ubuntu16.04:${CONAN_VERSION}
+        container_name: clang12-conan
+        tty: true
+
+    # Images
     gcc5:
         build:
             context: gcc
             dockerfile: Dockerfile
             args:
-                GCC_VERSION: 5.5.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc5
         image: ${DOCKER_USERNAME}/gcc5-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc5
         tty: true
@@ -330,11 +461,8 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                GCC_VERSION: 6.5.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc6
         image: ${DOCKER_USERNAME}/gcc6-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc6
         tty: true
@@ -343,11 +471,8 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                GCC_VERSION: 7.5.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc7
         image: ${DOCKER_USERNAME}/gcc7-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc7
         tty: true
@@ -356,11 +481,8 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                GCC_VERSION: 8.4.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc8
         image: ${DOCKER_USERNAME}/gcc8-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc8
         tty: true
@@ -369,11 +491,8 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                GCC_VERSION: 9.3.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc9
         image: ${DOCKER_USERNAME}/gcc9-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc9
         tty: true
@@ -382,11 +501,8 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                GCC_VERSION: 10.3.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc10
         image: ${DOCKER_USERNAME}/gcc10-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc10
         tty: true
@@ -395,11 +511,8 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                GCC_VERSION: 11.1.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *gcc11
         image: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
         container_name: gcc11
         tty: true
@@ -408,11 +521,8 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                LLVM_VERSION: 9.0.1
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm9
         image: ${DOCKER_USERNAME}/clang9-ubuntu16.04:${CONAN_VERSION}
         container_name: clang9
         tty: true
@@ -421,11 +531,8 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                LLVM_VERSION: 10.0.1
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm10
         image: ${DOCKER_USERNAME}/clang10-ubuntu16.04:${CONAN_VERSION}
         container_name: clang10
         tty: true
@@ -434,11 +541,8 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                LLVM_VERSION: 11.1.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm11
         image: ${DOCKER_USERNAME}/clang11-ubuntu16.04:${CONAN_VERSION}
         container_name: clang11
         tty: true
@@ -447,15 +551,13 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                LLVM_VERSION: 12.0.0
-                CONAN_VERSION: ${CONAN_VERSION}
-                DOCKER_USERNAME: ${DOCKER_USERNAME}
-                LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
-                ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+                <<: *common-args
+                <<: *llvm12
         image: ${DOCKER_USERNAME}/clang12-ubuntu16.04:${CONAN_VERSION}
         container_name: clang12
         tty: true
 
+    # Jenkins images
     gcc5-jenkins:
         build:
             context: jenkins

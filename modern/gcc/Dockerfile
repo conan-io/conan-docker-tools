@@ -1,5 +1,4 @@
 ARG DOCKER_USERNAME
-ARG CONAN_VERSION
 
 FROM ubuntu:xenial as builder
 
@@ -43,7 +42,7 @@ RUN apt-get -qq update \
     && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
     && tar zxf gcc-${LIBSTDCPP_VERSION}.tar.gz -C /tmp/gcc
 
-FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
+FROM ${DOCKER_USERNAME}/base-ubuntu16.04 as deploy
 
 ARG GCC_VERSION
 
@@ -67,3 +66,9 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/g++ 100 \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache
+
+FROM deploy as conan
+
+ARG CONAN_VERSION
+
+RUN pip install conan==${CONAN_VERSION}
