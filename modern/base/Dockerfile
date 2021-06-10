@@ -5,7 +5,7 @@ LABEL maintainer="Conan.io <info@conan.io>"
 ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
-ARG CONAN_VERSION CMAKE_VERSION CMAKE_VERSION_FULL PYTHON_VERSION
+ARG CMAKE_VERSION CMAKE_VERSION_FULL PYTHON_VERSION
 
 WORKDIR /root
 
@@ -71,7 +71,6 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/local/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/local/bin/pip pip /opt/pyenv/shims/pip 100 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && printf '/usr/local/lib\n' > /etc/ld.so.conf.d/20local-lib.conf \
     && printf '/usr/local/lib64\n' >> /etc/ld.so.conf.d/20local-lib.conf \
     && mv /etc/ld.so.conf.d/libc.conf /etc/ld.so.conf.d/10libc.conf \
