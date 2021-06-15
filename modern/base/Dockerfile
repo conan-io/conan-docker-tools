@@ -47,7 +47,7 @@ RUN apt-get -qq update \
     && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
     && rm -rf /root/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
     && rm /root/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && curl -fL https://getcli.jfrog.io | sh \
+    && curl -fL https://getcli.jfrog.io | sh -s 1.48.1 \
     && mv jfrog /usr/local/bin/jfrog \
     && chmod +x /usr/local/bin/jfrog \
     && groupadd 1001 -g 1001 \
@@ -58,7 +58,7 @@ RUN apt-get -qq update \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
-    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
+    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.githubusercontent.com/pyenv/pyenv-installer/56d708c8bda56370c4bc1e2fce68087cfcd007eb/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
