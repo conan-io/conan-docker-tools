@@ -74,9 +74,6 @@ RUN apt-get -qq update \
     && printf '/usr/local/lib\n' > /etc/ld.so.conf.d/20local-lib.conf \
     && printf '/usr/local/lib64\n' >> /etc/ld.so.conf.d/20local-lib.conf \
     && mv /etc/ld.so.conf.d/libc.conf /etc/ld.so.conf.d/10libc.conf \
-    && mv /etc/ld.so.conf.d/x86_64-linux-gnu.conf /etc/ld.so.conf.d/30x86_64-linux-gnu.conf \
-    && mv /etc/ld.so.conf.d/zz_i386-biarch-compat.conf /etc/ld.so.conf.d/40zz_i386-biarch-compat.conf \
-    && mv /etc/ld.so.conf.d/zz_x32-biarch-compat.conf /etc/ld.so.conf.d/50zz_x32-biarch-compat.conf \
     && rm /etc/ld.so.cache \
     && ldconfig -C /etc/ld.so.cache \
     && apt-get -qq purge -y g++-multilib gcc gcc-5 \
