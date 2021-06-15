@@ -62,7 +62,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: builder
+            target: gcc-builder
             args:
                 <<: *common-args
                 <<: *gcc5
@@ -73,6 +73,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
+            target: gcc-builder
             args:
                 <<: *common-args
                 <<: *gcc6
@@ -83,7 +84,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: builder
+            target: gcc-builder
             args:
                 <<: *common-args
                 <<: *gcc7
@@ -94,7 +95,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: builder
+            target: gcc-builder
             args:
                 <<: *common-args
                 <<: *gcc8
@@ -105,7 +106,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: builder
+            target: gcc-builder
             args:
                 <<: *common-args
                 <<: *gcc9
@@ -116,7 +117,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: builder
+            target: gcc-builder
             args:
                 <<: *common-args
                 <<: *gcc10
@@ -127,7 +128,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: builder
+            target: gcc-builder
             args:
                 <<: *common-args
                 <<: *gcc11
@@ -138,7 +139,7 @@ services:
         build:
             context: clang
             dockerfile: Dockerfile
-            target: builder
+            target: clang-builder
             args:
                 <<: *common-args
                 <<: *llvm10
@@ -149,7 +150,7 @@ services:
         build:
             context: clang
             dockerfile: Dockerfile
-            target: builder
+            target: clang-builder
             args:
                 <<: *common-args
                 <<: *llvm11
@@ -160,7 +161,7 @@ services:
         build:
             context: clang
             dockerfile: Dockerfile
-            target: builder
+            target: clang-builder
             args:
                 <<: *common-args
                 <<: *llvm12

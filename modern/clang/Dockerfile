@@ -1,6 +1,6 @@
 ARG DOCKER_USERNAME
 
-FROM ubuntu:xenial as builder
+FROM ubuntu:xenial as clang-builder
 
 ARG LLVM_VERSION ARTIFACTORY_REPOSITORY LIBSTDCPP_VERSION
 
@@ -125,8 +125,8 @@ FROM ${DOCKER_USERNAME}/base-ubuntu16.04:latest as deploy
 
 ARG LIBSTDCPP_VERSION LIBSTDCPP_PATCH_VERSION
 
-COPY --from=builder /tmp/install /tmp/clang
-COPY --from=builder /tmp/gcc /tmp/gcc
+COPY --from=clang-builder /tmp/install /tmp/clang
+COPY --from=clang-builder /tmp/gcc /tmp/gcc
 
 RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.${LIBSTDCPP_PATCH_VERSION} /usr/local/lib64/libstdc++.so.6 \

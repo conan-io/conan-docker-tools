@@ -1,6 +1,6 @@
 ARG DOCKER_USERNAME
 
-FROM ubuntu:xenial as builder
+FROM ubuntu:xenial as gcc-builder
 
 ARG GCC_VERSION ARTIFACTORY_REPOSITORY LIBSTDCPP_VERSION
 
@@ -46,8 +46,8 @@ FROM ${DOCKER_USERNAME}/base-ubuntu16.04:latest as deploy
 
 ARG GCC_VERSION LIBSTDCPP_PATCH_VERSION
 
-COPY --from=builder /tmp/install /tmp/install
-COPY --from=builder /tmp/gcc /tmp/gcc
+COPY --from=gcc-builder /tmp/install /tmp/install
+COPY --from=gcc-builder /tmp/gcc /tmp/gcc
 
 RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/lib/gcc/x86_64-linux-gnu/${GCC_VERSION} /usr/lib/gcc/x86_64-linux-gnu/ \
