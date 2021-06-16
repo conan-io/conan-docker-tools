@@ -125,13 +125,10 @@ The `docker-compose.yml` file list all possible combinations of images and it wi
 
 ### Build
 
-Each image created on this stage will be tagged as  ``${DOCKER_USERNAME}/<compiler><compiler.version>-<distro><distro.version>``.
-
-The `DOCKER_USERNAME` is an environment variable not filled by the `.env` file, thus, you must configure it before building.
+Each image created on this stage will be tagged as  ``conanio/<compiler><compiler.version>-<distro><distro.version>``.
 
 For instance, building Clang 12 complete image:
 
-    $ export DOCKER_USERNAME=conanio
     $ docker-compose build clang12
 
 The produced image will be named as ``conanio/clang12-ubuntu16.04``. The tag will follow the `CONAN_VERSION` in `.env` file.
@@ -143,7 +140,6 @@ Besides the final compiler image, there are other important images which can be 
 The Docker image `base` (same service name), installs all basic system APT packages, CMake, Python and Conan. So, if you are looking for an
 image without compiler, `base` is your candidate.
 
-    $ export DOCKER_USERNAME=conanio
     $ docker-compose build base
 
 The produced image can be configured by `.env`. Most important package versions installed in Base are listed there.
@@ -155,7 +151,6 @@ The decision made serves to avoid possible rebuilds when updating Base for some 
 
 The Builder image can be built directly, it's useful if you want to investigate compiler building steps and all artifacts produced.
 
-    $ export DOCKER_USERNAME=conanio
     $ docker-compose build gcc10-builder
 
 It will the Builder image for GCC 10, which takes around 15 minutes. For Clang case, it can take 1 hour.
@@ -170,17 +165,17 @@ This image avoids all Builder cache, using Docker multi-stage feature, we copy o
 
 It's the default build command, for instance:
 
-    $ export DOCKER_USERNAME=conanio
     $ docker-compose build gcc10
 
-#### Update stage (Conan)
+#### Update Conan version
 
 After having all images built and uploaded, probably you don't need to build all again. Eventually, Conan will release a new version and to
-avoid a massive build again, this top cherry layer only updates Conan client version in Deploy image. It's very useful to save your time
-when updating Conan.
+avoid a massive build again, the argument `CONAN_VERSION` is separated in Base, which means, if you have your Docker cache, it will update
+Conan client version and tag your new image only.
 
-    $ export DOCKER_USERNAME=conanio
-    $ docker-compose build gcc10-conan
+    $ cd modern/
+    $ sed -i 's/1.37.0/1.37.2/g' .env # Replace 1.37.0 Conan version in .env by 1.37.2
+    $ docker-compose build gcc10
 
 The Conan version used for the update is the same listed in `.env` file.
 
@@ -258,7 +253,7 @@ including the libstdc++ and libc++ from the target container, and the applicatio
 If you want to distribute your image, you have to upload it to somewhere. There two ways to upload an image:
 
     $ docker login -p <password> -u <username>
-    $ docker push ${DOCKER_USERNAME}/gcc10-ubuntu16.04
+    $ docker push conanio/gcc10-ubuntu16.04
 
 Or, using Docker compose
 
@@ -304,14 +299,14 @@ The login uses ``DOCKER_LOGIN_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate
 
 E.g Upload Docker images to Docker hub, after build and test:
 
-    $ DOCKER_USERNAME="conanio" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python run.py
+    $ DOCKER_USERNAME="<username>" DOCKER_PASSWORD="<password>" DOCKER_UPLOAD="TRUE" python run.py
 
 To see all supported variables, read the section below.
 
 ## Environment configuration
 
-You can also use environment variables to change the behavior of Conan Docker Tools.
-
+You can also use environment variables to change the behavior of Conan Docker Tools building.
+These variables are only consumed by `run.py` script and `docker` command, running `docker-compose` directly won't be affect by environment variables.
 This is especially useful for CI integration.
 
 Build and Test variables:

@@ -47,7 +47,7 @@ class ConanDockerTools(object):
         build_jenkins = self._get_boolean_var("BUILD_JENKINS_IMAGE", True)
 
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
-        docker_username = os.getenv("DOCKER_USERNAME", "conanio")
+        docker_username = os.getenv("DOCKER_USERNAME", self._get_docker_username())
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
         artifactory_repo = os.getenv("ARTIFACTORY_REPOSITORY", "https://c3istg.jfrog.io/artifactory/dad-generic")
 
@@ -88,6 +88,12 @@ class ConanDockerTools(object):
         """ Read Docker Compose env file and extract the target Conan version
         """
         return self._get_env_variable("CONAN_VERSION")
+
+    def _get_docker_username(self):
+        """ Read Docker Compose env file and extract the Docker user for image name
+        """
+        return self._get_env_variable("DOCKER_USERNAME")
+
 
     def _get_env_variable(self, key):
         """ Read Docker Compose env file and extract any value
