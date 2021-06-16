@@ -323,3 +323,4 @@ Upload related variables:
 - **DOCKER_UPLOAD**: If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
 - **BUILD_CONAN_SERVER_IMAGE**: If attributed to true, it will build and upload an image with the conan_server
 - **DOCKER_UPLOAD_ONLY_WHEN_STABLE**: Only upload only when is master branch.
+FOOBAR
