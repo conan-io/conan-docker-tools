@@ -2,7 +2,9 @@ ARG DOCKER_USERNAME CONAN_VERSION
 
 FROM ubuntu:xenial as gcc-builder
 
-ARG GCC_VERSION ARTIFACTORY_REPOSITORY LIBSTDCPP_VERSION
+ARG GCC_VERSION
+ARG ARTIFACTORY_REPOSITORY
+ARG LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -44,7 +46,8 @@ RUN apt-get -qq update \
 
 FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
 
-ARG GCC_VERSION LIBSTDCPP_PATCH_VERSION
+ARG GCC_VERSION
+ARG LIBSTDCPP_PATCH_VERSION
 
 COPY --from=gcc-builder /tmp/install /tmp/install
 COPY --from=gcc-builder /tmp/gcc /tmp/gcc

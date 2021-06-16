@@ -2,7 +2,9 @@ ARG DOCKER_USERNAME CONAN_VERSION
 
 FROM ubuntu:xenial as clang-builder
 
-ARG LLVM_VERSION ARTIFACTORY_REPOSITORY LIBSTDCPP_VERSION
+ARG LLVM_VERSION
+ARG ARTIFACTORY_REPOSITORY
+ARG LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -123,7 +125,8 @@ RUN apt-get -qq update \
 
 FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
 
-ARG LIBSTDCPP_VERSION LIBSTDCPP_PATCH_VERSION
+ARG LIBSTDCPP_VERSION
+ARG LIBSTDCPP_PATCH_VERSION
 
 COPY --from=clang-builder /tmp/install /tmp/clang
 COPY --from=clang-builder /tmp/gcc /tmp/gcc
