@@ -12,7 +12,8 @@ jobs:
       pip install -U docker-compose conan conan-package-tools
       cd modern && python run.py
       pip uninstall --yes conan conan-package-tools
-      ./modern/run_pytest.sh
+      ls -la
+      cd modern && ./run_pytest.sh
     env:
       DOCKER_LOGIN_USERNAME: $(DOCKER_LOGIN_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
