@@ -60,7 +60,6 @@ class ConanDockerTools(object):
 
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
         clang_versions = os.getenv("CLANG_VERSIONS").split(",") if os.getenv("CLANG_VERSIONS") else []
-        cmake_version = self._get_cmake_version()
 
         sudo_command = os.getenv("SUDO_COMMAND", "")
         if tools.os_info.is_linux and not sudo_command:
@@ -73,11 +72,11 @@ class ConanDockerTools(object):
             "clang_versions, build_jenkins, "
             "docker_build_tag, sudo_command, "
             "docker_upload_only_when_stable, docker_cache, "
-            "docker_upload_retry, build_base, cmake_version")
+            "docker_upload_retry, build_base")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
                          gcc_versions, clang_versions, build_jenkins,
                          docker_build_tag, sudo_command, docker_upload_only_when_stable,
-                         docker_cache, docker_upload_retry, build_base, cmake_version, )
+                         docker_cache, docker_upload_retry, build_base, )
 
     def _get_boolean_var(self, var, default=False):
         """ Parse environment variable as boolean type
@@ -89,11 +88,6 @@ class ConanDockerTools(object):
         """ Read Docker Compose env file and extract the target Conan version
         """
         return self._get_env_variable("CONAN_VERSION")
-
-    def _get_cmake_version(self):
-        """ Read Docker Compose env file and extract the CMake full version
-        """
-        return self._get_env_variable("CMAKE_VERSION_FULL")
 
     def _get_env_variable(self, key):
         """ Read Docker Compose env file and extract any value
@@ -167,12 +161,6 @@ class ConanDockerTools(object):
                                        self._ubuntu_version,
                                        self._jenkins_name,
                                        self.variables.docker_build_tag)
-        elif self._base_name in self.service:
-            return "%s/%s-%s:%s" % (self.variables.docker_username,
-                                self.service,
-                                self._ubuntu_version,
-                                self.variables.cmake_version)
-
         return "%s/%s-%s:%s" % (self.variables.docker_username,
                                 self.service,
                                 self._ubuntu_version,
@@ -317,7 +305,7 @@ class ConanDockerTools(object):
             try:
                 logging.info("Upload Docker image from service %s to Docker hub." % self.service)
                 subprocess.check_call("docker-compose push %s" % self.service, shell=True)
-                if self._is_latest_version and self._base_name not in self.service:
+                if self._is_latest_version:
                     logging.info("Upload Docker image %s" % self.latest_image_name)
                     subprocess.check_call("docker push %s" % self.latest_image_name, shell=True)
                 break
@@ -331,7 +319,7 @@ class ConanDockerTools(object):
     def tag(self):
         """Apply Docker tag name
         """
-        if self._is_latest_version or self.service == self._base_name:
+        if self._is_latest_version:
             logging.info("Creating Docker tag %s" % self.latest_image_name)
             subprocess.check_call("docker tag %s %s" % (self.created_image_name,
                 self.latest_image_name), shell=True)

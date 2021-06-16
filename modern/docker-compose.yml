@@ -53,7 +53,7 @@ services:
             dockerfile: Dockerfile
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/base-ubuntu16.04:${CMAKE_VERSION_FULL}
+        image: ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION}
         container_name: base
         tty: true
 
@@ -289,128 +289,6 @@ services:
                 <<: *common-args
         image: ${DOCKER_USERNAME}/clang12-deploy-ubuntu16.04:${CONAN_VERSION}
         container_name: clang12-deploy
-        tty: true
-
-    # Conan images
-    gcc5-conan:
-        build:
-            context: gcc
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/gcc5-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc5-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc5-conan
-        tty: true
-    gcc6-conan:
-        build:
-            context: gcc
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/gcc6-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc6-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc6-conan
-        tty: true
-    gcc7-conan:
-        build:
-            context: gcc
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/gcc7-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc7-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc7-conan
-        tty: true
-    gcc8-conan:
-        build:
-            context: gcc
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/gcc8-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc8-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc8-conan
-        tty: true
-    gcc9-conan:
-        build:
-            context: gcc
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/gcc9-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc9-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc9-conan
-        tty: true
-    gcc10-conan:
-        build:
-            context: gcc
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/gcc10-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc10-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc10-conan
-        tty: true
-    gcc11-conan:
-        build:
-            context: gcc
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/gcc11-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc11-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: gcc11-conan
-        tty: true
-    clang10-conan:
-        build:
-            context: clang
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/clang10-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/clang10-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: clang10-conan
-        tty: true
-    clang11-conan:
-        build:
-            context: clang
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/clang11-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/clang11-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: clang11-conan
-        tty: true
-    clang12-conan:
-        build:
-            context: clang
-            dockerfile: Dockerfile
-            target: conan
-            cache_from:
-              - ${DOCKER_USERNAME}/clang12-deploy-ubuntu16.04:${CONAN_VERSION}
-            args:
-                <<: *common-args
-        image: ${DOCKER_USERNAME}/clang12-conan-ubuntu16.04:${CONAN_VERSION}
-        container_name: clang12-conan
         tty: true
 
     # Images

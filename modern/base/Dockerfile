@@ -5,7 +5,7 @@ LABEL maintainer="Conan.io <info@conan.io>"
 ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
-ARG CMAKE_VERSION CMAKE_VERSION_FULL PYTHON_VERSION
+ARG CMAKE_VERSION CMAKE_VERSION_FULL PYTHON_VERSION CONAN_VERSION
 
 WORKDIR /root
 
@@ -88,3 +88,5 @@ RUN apt-get -qq update \
 
 USER conan
 WORKDIR /home/conan
+
+RUN pip install conan==${CONAN_VERSION}
