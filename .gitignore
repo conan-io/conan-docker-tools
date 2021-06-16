@@ -1,4 +1,6 @@
 /.pydevproject
 /.project
-/.idea
-/.vscode
+.vscode/
+__pycache__/
+_venv/
+.idea/
