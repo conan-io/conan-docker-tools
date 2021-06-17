@@ -342,19 +342,8 @@ class ConanDockerTools(object):
 
     def process_regular_images(self):
         for compiler in [self.gcc_compiler, self.clang_compiler]:
-            service = "%s%s" % (compiler.name, compiler.version.replace(".", ""))
-            self.service = service
-            self.login()
-            self.build()
-            self.tag()
-            self.test(compiler.name, compiler.version)
-            self.info()
-            self.deploy()
-
-    def process_jenkins_image(self):
-        if self.variables.build_jenkins:
-            for compiler in [self.gcc_compiler, self.clang_compiler]:
-                service = "%s%s-%s" % (compiler.name, compiler.version.replace(".", ""), self._jenkins_name)
+            if compiler.version:
+                service = "%s%s" % (compiler.name, compiler.version.replace(".", ""))
                 self.service = service
                 self.login()
                 self.build()
@@ -362,6 +351,19 @@ class ConanDockerTools(object):
                 self.test(compiler.name, compiler.version)
                 self.info()
                 self.deploy()
+
+    def process_jenkins_image(self):
+        if self.variables.build_jenkins:
+            for compiler in [self.gcc_compiler, self.clang_compiler]:
+                if compiler.version:
+                    service = "%s%s-%s" % (compiler.name, compiler.version.replace(".", ""), self._jenkins_name)
+                    self.service = service
+                    self.login()
+                    self.build()
+                    self.tag()
+                    self.test(compiler.name, compiler.version)
+                    self.info()
+                    self.deploy()
 
     def process_base_image(self):
         if self.variables.build_base:
