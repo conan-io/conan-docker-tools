@@ -10,10 +10,10 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -U docker-compose conan conan-package-tools
-      cd modern && python run.py
+      cd modern
+      python run.py
       pip uninstall --yes conan conan-package-tools
-      ls -la
-      cd modern && ./run_pytest.sh
+      ./run_pytest.sh
     env:
       DOCKER_LOGIN_USERNAME: $(DOCKER_LOGIN_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
