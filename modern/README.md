@@ -270,11 +270,11 @@ That script is configured by environment variables due CI, so we can build diffe
 
 #### Build Step
 
-The first stage collect all compiler versions listed in ``CONAN_GCC_VERSIONS`` for ``Gcc`` and in ``CONAN_CLANG_VERSIONS`` for ``Clang``. If you do not set any compiler version, the script will execute all supported versions for ``Gcc`` and ``Clang``.
+The first stage collect the compiler version listed in ``CONAN_GCC_VERSION`` for ``GCC`` and in ``CONAN_CLANG_VERSION`` for ``Clang``. If you do not set any compiler version, the script will raise an error.
 
 For instance, to build GCC 10 image, you should execute:
 
-    $ GCC_VERSIONS=10 python run.py
+    $ GCC_VERSION=10 python run.py
 
 You can configure only a compiler version or a list, by these variables. If you skipped a compiler list, the build will not be executed for that compiler.
 
@@ -283,7 +283,7 @@ The image tag can be configured by ``DOCKER_BUILD_TAG``. Build default will used
 #### Test Step
 
 The second stage runs the new image created, build some Conan packages, check for correct standard libraries installed and validate standard C++ supported.
-The same build variables, as ``CONAN_GCC_VERSIONS``, ``CONAN_CLANG_VERSIONS`` are used to select the compiler and version.
+The same build variables, as ``CONAN_GCC_VERSION``, ``CONAN_CLANG_VERSION`` are used to select the compiler and version.
 
 ``Gcc`` images use libstdc++.
 ``Clang`` images use libc++ and libstdc++.
@@ -311,8 +311,8 @@ This is especially useful for CI integration.
 
 Build and Test variables:
 
-- **GCC_VERSIONS**: GCC versions to build, test and deploy, comma separated, e.g. "4.6,4.8,4.9,5.2,5.3,5.4,6.2.6.3"
-- **CLANG_VERSIONS**: Clang versions to build, test and deploy, comma separated, e.g. "3.8,3.9,4.0"
+- **GCC_VERSION**: GCC version to build, test and deploy, e.g. "11"
+- **CLANG_VERSION**: Clang version to build, test and deploy, e.g. "12"
 - **SUDO_COMMAND**: Sudo command used on Linux distros, e.g. "sudo"
 - **DOCKER_CACHE**: Allow to cache docker layers during the build, to speed up local testing
 

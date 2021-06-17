@@ -21,9 +21,9 @@ class ConanDockerTools(object):
 
         self.variables = self._get_variables()
 
-        Compiler = collections.namedtuple("Compiler", "name, versions, pretty")
-        self.gcc_compiler = Compiler(name="gcc", versions=self.variables.gcc_versions, pretty="gcc")
-        self.clang_compiler = Compiler(name="clang", versions=self.variables.clang_versions, pretty="clang")
+        Compiler = collections.namedtuple("Compiler", "name, version, pretty")
+        self.gcc_compiler = Compiler(name="gcc", version=self.variables.gcc_version, pretty="gcc")
+        self.clang_compiler = Compiler(name="clang", version=self.variables.clang_version, pretty="clang")
         self.loggedin = False
         self.service = None
 
@@ -34,7 +34,7 @@ class ConanDockerTools(object):
     The Conan client will be installed:
         Conan: %s
         Is Latest: %s
-        """ % (self.gcc_compiler.versions, self.clang_compiler.versions,
+        """ % (self.gcc_compiler.version, self.clang_compiler.version,
                self.variables.docker_build_tag, self._is_latest_version))
 
     def _get_variables(self):
@@ -58,8 +58,10 @@ class ConanDockerTools(object):
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["ARTIFACTORY_REPOSITORY"] = artifactory_repo
 
-        gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
-        clang_versions = os.getenv("CLANG_VERSIONS").split(",") if os.getenv("CLANG_VERSIONS") else []
+        gcc_version = os.getenv("GCC_VERSION")
+        clang_version = os.getenv("CLANG_VERSION")
+        if not gcc_version and not clang_version:
+            raise ValueError("One of these environment variables must filled at least: 'GCC_VERSION', 'CLANG_VERSION'.")
 
         sudo_command = os.getenv("SUDO_COMMAND", "")
         if tools.os_info.is_linux and not sudo_command:
@@ -68,13 +70,13 @@ class ConanDockerTools(object):
         Variables = collections.namedtuple(
             "Variables", "docker_upload, docker_password, "
             "docker_username, docker_login_username, "
-            "gcc_versions, "
-            "clang_versions, build_jenkins, "
+            "gcc_version, "
+            "clang_version, build_jenkins, "
             "docker_build_tag, sudo_command, "
             "docker_upload_only_when_stable, docker_cache, "
             "docker_upload_retry, build_base")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, clang_versions, build_jenkins,
+                         gcc_version, clang_version, build_jenkins,
                          docker_build_tag, sudo_command, docker_upload_only_when_stable,
                          docker_cache, docker_upload_retry, build_base, )
 
@@ -340,29 +342,26 @@ class ConanDockerTools(object):
 
     def process_regular_images(self):
         for compiler in [self.gcc_compiler, self.clang_compiler]:
-            for version in compiler.versions:
-                service = "%s%s" % (compiler.name, version.replace(".", ""))
-                self.service = service
-                self.login()
-                self.build()
-                self.tag()
-                self.test(compiler.name, version)
-                self.info()
-                self.deploy()
+            service = "%s%s" % (compiler.name, compiler.version.replace(".", ""))
+            self.service = service
+            self.login()
+            self.build()
+            self.tag()
+            self.test(compiler.name, compiler.version)
+            self.info()
+            self.deploy()
 
     def process_jenkins_image(self):
         if self.variables.build_jenkins:
             for compiler in [self.gcc_compiler, self.clang_compiler]:
-                for version in compiler.versions:
-                    service = "%s%s-%s" % (compiler.name, version.replace(".", ""), self._jenkins_name)
-
-                    self.service = service
-                    self.login()
-                    self.build()
-                    self.tag()
-                    self.test(compiler.name, version)
-                    self.info()
-                    self.deploy()
+                service = "%s%s-%s" % (compiler.name, compiler.version.replace(".", ""), self._jenkins_name)
+                self.service = service
+                self.login()
+                self.build()
+                self.tag()
+                self.test(compiler.name, compiler.version)
+                self.info()
+                self.deploy()
 
     def process_base_image(self):
         if self.variables.build_base:
@@ -376,7 +375,7 @@ class ConanDockerTools(object):
             logging.info("Skipped base image build.")
 
     def run(self):
-        """Execute all 3 stages for all versions in compilers list
+        """Execute all 3 stages for compiler version in compilers list
         """
         self.process_base_image()
         self.process_regular_images()

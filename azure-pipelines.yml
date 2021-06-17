@@ -21,43 +21,33 @@ jobs:
   strategy:
     matrix:
       Ubuntu 16.04 GCC 5 x86_64:
-        GCC_VERSIONS: "5"
         GCC_VERSION: "5"
 
       Ubuntu 16.04 GCC 6 x86_64:
-        GCC_VERSIONS: "6"
         GCC_VERSION: "6"
 
       Ubuntu 16.04 GCC 7 x86_64:
-        GCC_VERSIONS: "7"
         GCC_VERSION: "7"
 
       Ubuntu 16.04 GCC 8 x86_64:
-        GCC_VERSIONS: "8"
         GCC_VERSION: "8"
 
       Ubuntu 16.04 GCC 9 x86_64:
-        GCC_VERSIONS: "9"
         GCC_VERSION: "9"
 
       Ubuntu 16.04 GCC 10 x86_64:
-        GCC_VERSIONS: "10"
         GCC_VERSION: "10"
 
       Ubuntu 16.04 GCC 11 x86_64:
-        GCC_VERSIONS: "11"
         GCC_VERSION: "11"
 
       Ubuntu 16.04 Clang 10 x86_64:
-        CLANG_VERSIONS: "10"
         CLANG_VERSION: "10"
 
       Ubuntu 16.04 Clang 11 x86_64:
-        CLANG_VERSIONS: "11"
         CLANG_VERSION: "11"
 
       Ubuntu 16.04 Clang 12 x86_64:
-        CLANG_VERSIONS: "12"
         CLANG_VERSION: "12"
 
 - job: Current
