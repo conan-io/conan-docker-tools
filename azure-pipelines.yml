@@ -13,6 +13,7 @@ jobs:
       cd modern
       python run.py
       pip uninstall --yes conan conan-package-tools
+      pip install pytest
       ./run_pytest.sh
     env:
       DOCKER_LOGIN_USERNAME: $(DOCKER_LOGIN_USERNAME)
