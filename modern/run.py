@@ -58,8 +58,8 @@ class ConanDockerTools(object):
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["ARTIFACTORY_REPOSITORY"] = artifactory_repo
 
-        gcc_version = os.getenv("GCC_VERSION")
-        clang_version = os.getenv("CLANG_VERSION")
+        gcc_version = os.getenv("GCC_VERSION", "")
+        clang_version = os.getenv("CLANG_VERSION", "")
         if not gcc_version and not clang_version:
             raise ValueError("One of these environment variables must filled at least: 'GCC_VERSION', 'CLANG_VERSION'.")
 
