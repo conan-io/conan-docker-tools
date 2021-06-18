@@ -7,5 +7,5 @@ class TestClangCompiler:
 
     def test_version(self, container, expected):
         out, err = container.exec(['clang', '--version'])
-        assert expected.compiler.name == 'clang'
-        assert err == expected.compiler
+        first_line = out.splitlines()[0]
+        assert first_line == f"clang version {expected.compiler.version}", f"out: '{out}' err: '{err}'"
