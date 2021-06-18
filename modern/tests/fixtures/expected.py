@@ -56,6 +56,7 @@ class Expected:
     distro: Distro
     python: Version
     cmake: Version
+    jenkins_agent: Version
     conan: Version = None
     compiler: Compiler = None
 
@@ -71,6 +72,16 @@ def get_compiler_version(compiler_name, compiler_major):
         return data.get(f'x-llvm{compiler_major}').get('LLVM_VERSION')
     else:
         raise NotImplemented
+
+
+def get_jenkins_agent_version():
+    docker_file = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', 'docker-compose.yml'))
+    with open(docker_file, 'r') as f:
+        data = yaml.safe_load(f)
+
+    ss = data.get('x-common-args').get('JENKINS_AGENT_VERSION')
+    m = re.match(r'\${JENKINS_AGENT_VERSION:-([\d.]+)}', ss)
+    return m[1]
 
 
 @pytest.fixture(scope="session")
@@ -99,7 +110,8 @@ def expected(request) -> Expected:
     distro = Distro(m.group('distro'), Version(m.group('distro_version')))
     python = Version(env_values.get('PYTHON_VERSION'))
     cmake = Version(env_values.get('CMAKE_VERSION_FULL'))
-    expected = Expected(distro, python, cmake)
+    jenkins_agent = Version(get_jenkins_agent_version())
+    expected = Expected(distro, python, cmake, jenkins_agent)
 
     if m.group('conan'):
         expected.conan = Version(m.group('conan'))
