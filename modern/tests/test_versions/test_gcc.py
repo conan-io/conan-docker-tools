@@ -10,3 +10,14 @@ class TestGccCompiler:
         assert expected.compiler.name == 'gcc'
         first_line = out.splitlines()[0]
         assert first_line == f'gcc (GCC) {expected.compiler.version}'
+
+
+@pytest.mark.compiler('gcc')
+@pytest.mark.service('builder', 'deploy', 'jenkins')
+class TestGccGFortranCompiler:
+
+    def test_version(self, container, expected):
+        out, _ = container.exec(['gfortran', '--version'])
+        assert expected.compiler.name == 'gcc'
+        first_line = out.splitlines()[0]
+        assert first_line == f'GNU Fortran (GCC) {expected.compiler.version}'
