@@ -32,6 +32,9 @@ class Version:
             ret += f".{self.patch}"
         return ret
 
+    def __lt__(self, other):
+        return self.lazy_lt_semver(other)
+
     def lazy_lt_semver(self, other):
         lv1 = [int(v) for v in self.full_version.split(".")]
         lv2 = [int(v) for v in other.full_version.split(".")]
@@ -58,6 +61,47 @@ class Expected:
     cmake: Version
     conan: Version = None
     compiler: Compiler = None
+
+    def vanilla_image(self):
+        """ Returns the vanilla docker container corresponding to the distribution """
+        return f"{self.distro.name}:{self.distro.version}"
+
+    def compatible_images(self, libstdcpp=False, libcpp=False):
+        """ Returns a list with the images that are compatible with the binaries generated in the expected distro """
+        # TODO: This function is first class citizen in this repository, move it closer to ROOT
+        compiler_versions = get_compiler_versions(self.compiler.name)
+        if self.compiler.name == 'gcc':
+            if libstdcpp:
+                # For GCC images, due to `libstdc++` version, they are only backward compatible.
+                compat_versions = [v for v in compiler_versions if self.compiler.version < v]
+            else:
+                compat_versions = compiler_versions
+            return [f'gcc{v.major}-{self.distro.name}{self.distro.version}:{self.conan.full_version}' for v in compat_versions]
+        elif self.compiler.name == 'clang':
+            if libcpp:
+                # For Clang images using libc++ we have the same issue, only backward compatible
+                compat_versions = [v for v in compiler_versions if self.compiler.version < v]
+            else:
+                # ... if using libstdc++, all our images use the same version
+                compat_versions = compiler_versions
+            return [f'clang{v.major}-{self.distro.name}{self.distro.version}:{self.conan.full_version}' for v in compat_versions]
+        else:
+            raise NotImplemented
+
+
+def get_compiler_versions(compiler_name):
+    docker_file = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', 'docker-compose.yml'))
+    with open(docker_file, 'r') as f:
+        data = yaml.safe_load(f)
+
+    if compiler_name == 'gcc':
+        keys = [k for k in data.keys() if 'x-gcc' in k]
+        return [Version(data.get(k).get('GCC_VERSION')) for k in keys]
+    elif compiler_name == 'clang':
+        keys = [k for k in data.keys() if 'x-llvm' in k]
+        return [Version(data.get(k).get('LLVM_VERSION')) for k in keys]
+    else:
+        raise NotImplemented
 
 
 def get_compiler_version(compiler_name, compiler_major):

@@ -41,6 +41,8 @@ class DockerContainer:
         print(f'>> {" ".join(args)}')
         process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
+        if stderr:
+            print(f'ERROR: {stderr.decode("utf-8")}')
         return stdout.decode('utf-8'), stderr.decode('utf-8')
 
     def stop(self):

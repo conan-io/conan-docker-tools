@@ -33,15 +33,23 @@ def test_gcc_simple(container, expected):
         print(out)
         print(err)
 
-    # Check we can run these executables in vanilla image
-    vanilla_img = f"{expected.distro.name}:{expected.distro.version}"
-    with run_container(vanilla_img, tmpdirname=container._tmpfolder) as vanilla:
+    # C executable should run in vanilla image
+    with run_container(expected.vanilla_image(), tmpdirname=container._tmpfolder) as vanilla:
         with vanilla.working_dir(build_directory):
             out, err = vanilla.exec(['./example-c'])
             assert 'Current local time and date' in out, f"out: '{out}' err: '{err}'"
 
-            out, err = vanilla.exec(['./example-cpp'])
-            assert 'Current date' in out, f"out: '{out}' err: '{err}'"
+    # CPP can only run in newer images with GCC installed
+    compat_images = expected.compatible_images(libstdcpp=True)
+    print(f"Run executable in compatible images {', '.join(compat_images)}")
+    for it in compat_images:
+        with run_container(it, tmpdirname=container._tmpfolder) as image:
+            with image.working_dir(build_directory):
+                out, err = image.exec(['./example-c'])
+                assert 'Current local time and date' in out, f"out: '{out}' err: '{err}'"
+
+                out, err = container.exec(['./example-cpp'])
+                assert 'Current date' in out, f"out: '{out}' err: '{err}'"
 
 
 @pytest.mark.compiler('clang')
@@ -70,12 +78,20 @@ def test_clang_simple(container, expected):
         print(out)
         print(err)
 
-    # Check we can run these executables in vanilla image
-    vanilla_img = f"{expected.distro.name}:{expected.distro.version}"
-    with run_container(vanilla_img, tmpdirname=container._tmpfolder) as vanilla:
+    # C executable should run in vanilla image
+    with run_container(expected.vanilla_image(), tmpdirname=container._tmpfolder) as vanilla:
         with vanilla.working_dir(build_directory):
             out, err = vanilla.exec(['./example-c'])
             assert 'Current local time and date' in out, f"out: '{out}' err: '{err}'"
 
-            out, err = vanilla.exec(['./example-cpp'])
-            assert 'Current date' in out, f"out: '{out}' err: '{err}'"
+    # Clang uses libstdc++ by default, so it runs in all images
+    compat_images = expected.compatible_images(libstdcpp=False, libcpp=False)
+    print(f"Run executable in compatible images {', '.join(compat_images)}")
+    for it in compat_images:
+        with run_container(it, tmpdirname=container._tmpfolder) as image:
+            with image.working_dir(build_directory):
+                out, err = image.exec(['./example-c'])
+                assert 'Current local time and date' in out, f"out: '{out}' err: '{err}'"
+
+                out, err = container.exec(['./example-cpp'])
+                assert 'Current date' in out, f"out: '{out}' err: '{err}'"
