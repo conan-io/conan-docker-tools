@@ -3,8 +3,6 @@ ARG DOCKER_USERNAME CONAN_VERSION
 FROM ubuntu:xenial as gcc-builder
 
 ARG GCC_VERSION
-ARG ARTIFACTORY_REPOSITORY
-ARG LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -39,10 +37,7 @@ RUN apt-get -qq update \
                    --with-system-zlib \
                    --prefix=/tmp/install \
     && make -s -j$(nproc) \
-    && make install-strip \
-    && mkdir /tmp/gcc \
-    && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
-    && tar zxf gcc-${LIBSTDCPP_VERSION}.tar.gz -C /tmp/gcc
+    && make install-strip
 
 FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
 
@@ -50,7 +45,6 @@ ARG GCC_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
 
 COPY --from=gcc-builder /tmp/install /tmp/install
-COPY --from=gcc-builder /tmp/gcc /tmp/gcc
 
 RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/lib/gcc/x86_64-linux-gnu/${GCC_VERSION} /usr/lib/gcc/x86_64-linux-gnu/ \
@@ -60,10 +54,6 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/lib/* /usr/local/lib/ \
     && sudo cp -a /tmp/install/bin/* /usr/local/bin/ \
     && sudo rm -rf /tmp/install \
-    && sudo mv /tmp/gcc/lib64/libstdc++.so.6.0.${LIBSTDCPP_PATCH_VERSION} /usr/local/lib64/libstdc++.so.6.0.${LIBSTDCPP_PATCH_VERSION} \
-    && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.${LIBSTDCPP_PATCH_VERSION} /usr/local/lib64/libstdc++.so.6 \
-    && sudo ln -s -f /usr/local/lib64/libstdc++.so.6 /usr/local/lib64/libstdc++.so \
-    && sudo rm -rf /tmp/gcc \
     && sudo update-alternatives --install /usr/local/bin/cc cc /usr/local/bin/gcc 100 \
     && sudo update-alternatives --install /usr/local/bin/cpp cpp /usr/local/bin/g++ 100 \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/g++ 100 \
