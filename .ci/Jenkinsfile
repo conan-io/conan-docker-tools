@@ -1,0 +1,223 @@
+pipeline {
+    agent none
+
+    stages {
+        stage("Linux") {
+            failFast true
+            parallel {
+                stage('Xenial') {
+                    agent {
+                        label 'Linux'
+                    }
+                    steps {
+                        sh '''
+                            pip install -U docker-compose conan conan-package-tools
+                            cd modern
+                            python run.py
+                            pip uninstall --yes conan conan-package-tools
+                            pip install pytest
+                            ./run_pytest.sh
+                        '''
+                    }
+                    stages {
+                        stage('Ubuntu 16.04 GCC 5 x86_64') {
+                            environment {
+                                GCC_VERSION = '5'
+                            }
+                        }
+                        stage('Ubuntu 16.04 GCC 6 x86_64') {
+                            environment {
+                                GCC_VERSION = '6'
+                            }
+                        }
+                        stage('Ubuntu 16.04 GCC 7 x86_64') {
+                            environment {
+                                GCC_VERSION = '7'
+                            }
+                        }
+                        stage('Ubuntu 16.04 GCC 8 x86_64') {
+                            environment {
+                                GCC_VERSION = '8'
+                            }
+                        }
+                        stage('Ubuntu 16.04 GCC 9 x86_64') {
+                            environment {
+                                GCC_VERSION = '9'
+                            }
+                        }
+                        stage('Ubuntu 16.04 GCC 10 x86_64') {
+                            environment {
+                                GCC_VERSION = '10'
+                            }
+                        }
+                        stage('Ubuntu 16.04 GCC 11 x86_64') {
+                            environment {
+                                GCC_VERSION = '9'
+                            }
+                        }
+                        stage('Ubuntu 16.04 Clang 10 x86_64') {
+                            environment {
+                                CLANG_VERSION = '10'
+                            }
+                        }
+                        stage('Ubuntu 16.04 Clang 11 x86_64') {
+                            environment {
+                                CLANG_VERSION = '11'
+                            }
+                        }
+                        stage('Ubuntu 16.04 Clang 12 x86_64') {
+                            environment {
+                                CLANG_VERSION = '12'
+                            }
+                        }
+                    }
+                }
+                stage('Current') {
+                    agent {
+                        label 'Linux'
+                    }
+                    steps {
+                        sh '''
+                            pip install -U docker-compose humanfriendly conan conan-package-tools
+                            python build.py
+                        '''
+                    }
+                    stages {
+                        stage('Ubuntu MinGW GCC 7 x86_64') {
+                            environment {
+                                GCC_VERSIONS = '7'
+                                DOCKER_ARCHS = 'x86_64'
+                                DOCKER_DISTRO = 'mingw'
+                            }
+                        }
+                        stage('Ubuntu GCC 4.9') {
+                            environment {
+                                GCC_VERSIONS = '4.9'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu GCC 5') {
+                            environment {
+                                GCC_VERSIONS = '5'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu GCC 6') {
+                            environment {
+                                GCC_VERSIONS = '6'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu GCC 7') {
+                            environment {
+                                GCC_VERSIONS = '7'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu GCC 8') {
+                            environment {
+                                GCC_VERSIONS = '8'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu GCC 9') {
+                            environment {
+                                GCC_VERSIONS = '9'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu GCC 10') {
+                            environment {
+                                GCC_VERSIONS = '10'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu GCC 11') {
+                            environment {
+                                GCC_VERSIONS = '11'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv7hf'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+
+                        stage('Ubuntu Clang 3.9 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '3.9'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 4.0 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '4.0'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 5.0 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '5.0'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 6.0 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '6.0'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 7 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '7'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 8 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '8'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 9 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '9'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 10 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '10'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+                        stage('Ubuntu Clang 11 x86_64') {
+                            environment {
+                                CLANG_VERSIONS = '11'
+                                DOCKER_DISTRO = 'jnlp-slave'
+                            }
+                        }
+
+                        stage('Android Clang 8') {
+                            environment {
+                                DOCKER_CROSS = 'android'
+                                CLANG_VERSIONS = '8'
+                                DOCKER_ARCHS = 'x86_64,armv7,armv8'
+                            }
+                        }
+
+                        stage('Conan Server') {
+                            environment {
+                                BUILD_CONAN_SERVER_IMAGE = '1'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
