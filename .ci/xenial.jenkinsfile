@@ -1,8 +1,8 @@
 
 // These are things to parameterize/read/write from/to .env file
-def conanVersion = '1.37.2'
-def gccVersions = ['5', '6', '7', '8', '9', '10', '11']
-def clangVersions = ['10', '11', '12']
+String conanVersion = '1.37.2'
+List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
+List clangVersions = ['10', '11', '12']
 
 
 node('Linux') {
@@ -23,9 +23,9 @@ node('Linux') {
     }
 
     // Build GCC in parallel
-    def gccBuilds = [:]
+    Map gccBuilds = [:]
     gccVersions.each { v -> 
-        def gccVersion = v
+        String gccVersion = v
         gccBuilds["GCC ${gccVersion}"] = {
             stage("GCC ${gccVersion} deploy") {
                 echo "docker-compose build gcc${gccVersion}"
@@ -45,9 +45,9 @@ node('Linux') {
     }
 
     // Build Clang in parallel
-    def clangBuilds = [:]
+    Map clangBuilds = [:]
     clangVersions.each { v -> 
-        def clangVersion = v
+        String clangVersion = v
         clangBuilds["Clang ${clangVersion}"] = {
             stage("Clang ${clangVersion} deploy") {
                 echo "docker-compose build clang${clangVersion}"
