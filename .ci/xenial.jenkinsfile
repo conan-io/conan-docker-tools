@@ -53,14 +53,18 @@ node('Linux') {
         String gccVersion = v
         gccBuilds["GCC ${gccVersion}"] = {
             stage("GCC ${gccVersion} deploy") {
-                String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${conanVersion}"
-                docker_compose_build("gcc${gccVersion}", expectedImage)
-                echo "pytest tests --image ${expectedImage} --service deploy"
+                dir('modern') {
+                    String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${conanVersion}"
+                    docker_compose_build("gcc${gccVersion}", expectedImage)
+                    echo "pytest tests --image ${expectedImage} --service deploy"
+                }
             }
             stage("GCC ${gccVersion} jenkins") {
-                String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${conanVersion}"
-                docker_compose_build("gcc${gccVersion}-jenkins", expectedImage)
-                echo "pytest tests --image ${expectedImage} --service jenkins"
+                dir('modern') {
+                    String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${conanVersion}"
+                    docker_compose_build("gcc${gccVersion}-jenkins", expectedImage)
+                    echo "pytest tests --image ${expectedImage} --service jenkins"
+                }
             }
         }
     }
@@ -77,14 +81,18 @@ node('Linux') {
         String clangVersion = v
         clangBuilds["Clang ${clangVersion}"] = {
             stage("Clang ${clangVersion} deploy") {
-                String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${conanVersion}"
-                docker_compose_build("clang${gccVersion}", expectedImage)
-                echo "pytest tests --image ${expectedImage} --service deploy"
+                dir('modern') {
+                    String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${conanVersion}"
+                    docker_compose_build("clang${gccVersion}", expectedImage)
+                    echo "pytest tests --image ${expectedImage} --service deploy"
+                }
             }
             stage("Clang ${clangVersion} jenkins") {
-                String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04-jenkins:${conanVersion}"
-                docker_compose_build("clang${clangVersion}-jenkins", expectedImage)
-                echo "pytest tests --image ${expectedImage} --service jenkins"
+                dir('modern') {
+                    String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04-jenkins:${conanVersion}"
+                    docker_compose_build("clang${clangVersion}-jenkins", expectedImage)
+                    echo "pytest tests --image ${expectedImage} --service jenkins"
+                }
             }
         }
     }
