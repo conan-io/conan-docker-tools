@@ -1,16 +1,15 @@
 
-def readConanVersion() {
-}
 
 // These are things to parameterize/read/write from/to .env file
-String conanVersion = null
+
 List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 List clangVersions = ['10', '11', '12']
 
-def docker_compose_build(String image, String conan_version) {
+def docker_compose_build(String image, List environment, String expectedImage) {
     // Just to be sure we use the expected Conan version
-    withEnv(["CONAN_VERSION=${conan_version}"]) {
-        sh "docker-compose build $image"
+    withEnv(environment) {
+        String output = sh(script: "docker-compose build $image", returnStdout: true).trim()
+        assert output.contains(expectedImage): "Expected image name '$expectedImage' not found in output:\n\n$output\n\n"
     }
 }
 
@@ -19,12 +18,23 @@ node('Linux') {
         checkout scm
     }
 
+    String conanVersion = null
+    String dockerUsername = null
+    List<String> environment = []
     stage('Input arguments') {
-        // Get Conan version from file
         String content = readFile('modern/.env')
+
+        // Get Conan version from file
         def matcher = content =~ /CONAN_VERSION=([\d.]+)/
         conanVersion = matcher[0][1]
         echo "Found Conan version: ${conanVersion}"
+        environment["CONAN_VERSION=${conanVersion}"]
+
+        // Get Docker username from file
+        matcher = content =~ /DOCKER_USERNAME=([\w.]+)/
+        dockerUsername = matcher[0][1]
+        echo "Found Docker username: ${dockerUsername}"
+        environment["DOCKER_USERNAME=${dockerUsername}"]
     }
 
     stage('Detect changes') {
@@ -37,9 +47,10 @@ node('Linux') {
     }
 
     stage('Xenial - Build base image') {
+        String expectedImage = "${dockerUsername}/base-ubuntu16.04:${conanVersion}"
         dir('modern') {
-            docker_compose_build('base', conanVersion)
-            echo "pytest tests --image docker.io/conanio/base-ubuntu16.04:${conanVersion} --service base"
+            docker_compose_build('base', environment, expectedImage)
+            echo "pytest tests --image ${expectedImage} --service base"
         }
     }
 
