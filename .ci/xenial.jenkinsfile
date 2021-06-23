@@ -37,6 +37,7 @@ node('Linux') {
             }
         }
     }
+    gccBuilds.failFast = true
     parallel(gccBuilds)
 
     stage('Run GCC xtests') {
@@ -58,6 +59,7 @@ node('Linux') {
             }
         }
     }
+    clangBuilds.failFast = true
     parallel(clangBuilds)
 
     stage('Run Clang xtests') {
