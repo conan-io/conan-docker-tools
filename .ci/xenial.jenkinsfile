@@ -28,13 +28,13 @@ node('Linux') {
         def matcher = content =~ /CONAN_VERSION=([\d.]+)/
         conanVersion = matcher[0][1]
         echo "Found Conan version: ${conanVersion}"
-        environment["CONAN_VERSION=${conanVersion}"]
+        environment.add("CONAN_VERSION=${conanVersion}")
 
         // Get Docker username from file
         matcher = content =~ /DOCKER_USERNAME=([\w.]+)/
         dockerUsername = matcher[0][1]
         echo "Found Docker username: ${dockerUsername}"
-        environment["DOCKER_USERNAME=${dockerUsername}"]
+        environment.add("DOCKER_USERNAME=${dockerUsername}")
     }
 
     stage('Detect changes') {
