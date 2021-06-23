@@ -1,0 +1,71 @@
+
+# These are things to parameterize/read/write from/to .env file
+def conanVersion = '1.37.2'
+def gccVersions = ['5', '6', '7', '8', '9', '10', '11']
+def clangVersions = ['10', '11', '12']
+
+
+node('Linux') {
+    stage('Checkout the sources') {
+        checkout scm
+    }
+
+    stage('Detect changes') {
+        // TODO: Dependending on the files affected by the PR we might want to run
+        //   some building or other
+    }
+
+    stage('Xenial - Build base image') {
+        dir('modern') {
+            echo 'docker-compose build base'
+            echo "pytest tests --image docker.io/conanio/base-ubuntu16.04:${conanVersion} --service base"
+        }
+    }
+
+    // Build GCC in parallel
+    def gccBuilds = [:]
+    gccVersions.each { v -> 
+        def gccVersion = v
+        gccBuilds["GCC ${gccVersion}"] = {
+            stage("GCC ${gccVersion} deploy") {
+                echo "docker-compose build gcc${gccVersion}"
+                echo "pytest tests --image docker.io/conanio/gcc${gccVersion}-ubuntu16.04:${conanVersion} --service deploy"
+            }
+            stage("GCC ${gccVersion} jenkins") {
+                echo "docker-compose build gcc${gccVersion}-jenkins"
+                echo "pytest tests --image docker.io/conanio/gcc${gccVersion}-ubuntu16.04-jenkins:${conanVersion} --service jenkins"
+            }
+        }
+    }
+    parallel(gccBuilds)
+
+    stage('Run GCC xtests') {
+        echo 'Run tests that check binaries work in compatible images'
+    }
+
+    // Build Clang in parallel
+    def clangBuilds = [:]
+    clangVersions.each { v -> 
+        def clangVersion = v
+        clangBuilds["Clang ${clangVersion}"] = {
+            stage("Clang ${clangVersion} deploy") {
+                echo "docker-compose build clang${clangVersion}"
+                echo "pytest tests --image docker.io/conanio/clang${clangVersion}-ubuntu16.04:${conanVersion} --service deploy"
+            }
+            stage("Clang ${clangVersion} jenkins") {
+                echo "docker-compose build clang${clangVersion}-jenkins"
+                echo "pytest tests --image docker.io/conanio/clang${clnagVersion}-ubuntu16.04-jenkins:${conanVersion} --service jenkins"
+            }
+        }
+    }
+    parallel(clangBuilds)
+
+    stage('Run Clang xtests') {
+        echo 'Run tests that check binaries work in compatible images'
+    }
+
+    // TODO: If master branch
+    stage('Upload images') {
+        echo 'Upload images'
+    }
+}
