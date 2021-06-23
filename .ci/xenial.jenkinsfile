@@ -54,7 +54,7 @@ node('Linux') {
             }
             stage("Clang ${clangVersion} jenkins") {
                 echo "docker-compose build clang${clangVersion}-jenkins"
-                echo "pytest tests --image docker.io/conanio/clang${clnagVersion}-ubuntu16.04-jenkins:${conanVersion} --service jenkins"
+                echo "pytest tests --image docker.io/conanio/clang${clangVersion}-ubuntu16.04-jenkins:${conanVersion} --service jenkins"
             }
         }
     }
