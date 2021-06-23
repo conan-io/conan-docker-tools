@@ -1,5 +1,5 @@
 
-# These are things to parameterize/read/write from/to .env file
+// These are things to parameterize/read/write from/to .env file
 def conanVersion = '1.37.2'
 def gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 def clangVersions = ['10', '11', '12']
