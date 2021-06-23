@@ -15,9 +15,13 @@ node('Linux') {
         //   some building or other
     }
 
+    stage('Install requirements') {
+        sh 'pip install docker-compose'
+    }
+
     stage('Xenial - Build base image') {
         dir('modern') {
-            echo 'docker-compose build base'
+            sh 'docker-compose build base'
             echo "pytest tests --image docker.io/conanio/base-ubuntu16.04:${conanVersion} --service base"
         }
     }
