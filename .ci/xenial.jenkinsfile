@@ -7,9 +7,9 @@ String conanVersion = null
 List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 List clangVersions = ['10', '11', '12']
 
-def docker_compose_build(String image) {
+def docker_compose_build(String image, String conan_version) {
     // Just to be sure we use the expected Conan version
-    withEnv(["CONAN_VERSION=${conanVersion}"]) {
+    withEnv(["CONAN_VERSION=${conan_version}"]) {
         sh "docker-compose build $image"
     }
 }
@@ -38,7 +38,7 @@ node('Linux') {
 
     stage('Xenial - Build base image') {
         dir('modern') {
-            docker_compose_build('base')
+            docker_compose_build('base', conanVersion)
             echo "pytest tests --image docker.io/conanio/base-ubuntu16.04:${conanVersion} --service base"
         }
     }
