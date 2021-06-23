@@ -54,6 +54,10 @@ node('Linux') {
         String gccVersion = v
         gccBuilds["GCC ${gccVersion}"] = {
             node('Linux') {
+                stage('Checkout the sources') {
+                    checkout scm
+                }
+
                 stage("GCC ${gccVersion} deploy") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${conanVersion}"
@@ -84,6 +88,10 @@ node('Linux') {
         String clangVersion = v
         clangBuilds["Clang ${clangVersion}"] = {
             node('Linux') {
+                stage('Checkout the sources') {
+                    checkout scm
+                }
+
                 stage("Clang ${clangVersion} deploy") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${conanVersion}"
