@@ -1,17 +1,12 @@
-
-
 // These are things to parameterize/read/write from/to .env file
-
 List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 List clangVersions = ['10', '11', '12']
 
-def docker_compose_build(String image, List environment, String expectedImage) {
+def docker_compose_build(String image, String expectedImage) {
     // Just to be sure we use the expected Conan version
-    withEnv(environment) {
-        String output = sh(script: "docker-compose build $image", returnStdout: true).trim()
-        assert output.contains(expectedImage): "Expected image name '$expectedImage' not found in output:\n\n$output\n\n"
-        echo ">> Generated $expectedImage"
-    }
+    String output = sh(script: "docker-compose build $image", returnStdout: true).trim()
+    assert output.contains(expectedImage): "Expected image name '$expectedImage' not found in output:\n\n$output\n\n"
+    echo ">> Generated $expectedImage"
 }
 
 node('Linux') {
@@ -21,7 +16,6 @@ node('Linux') {
 
     String conanVersion = null
     String dockerUsername = null
-    List<String> environment = []
     stage('Input arguments') {
         String content = readFile('modern/.env')
 
@@ -29,13 +23,11 @@ node('Linux') {
         def matcher = content =~ /CONAN_VERSION=([\d.]+)/
         conanVersion = matcher[0][1]
         echo "Found Conan version: ${conanVersion}"
-        environment.add("CONAN_VERSION=${conanVersion}")
 
         // Get Docker username from file
         matcher = content =~ /DOCKER_USERNAME=([\w.]+)/
         dockerUsername = matcher[0][1]
         echo "Found Docker username: ${dockerUsername}"
-        environment.add("DOCKER_USERNAME=${dockerUsername}")
     }
 
     stage('Detect changes') {
@@ -50,7 +42,7 @@ node('Linux') {
     stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-ubuntu16.04:${conanVersion}"
         dir('modern') {
-            docker_compose_build('base', environment, expectedImage)
+            docker_compose_build('base', expectedImage)
             echo "pytest tests --image ${expectedImage} --service base"
         }
     }
@@ -62,12 +54,12 @@ node('Linux') {
         gccBuilds["GCC ${gccVersion}"] = {
             stage("GCC ${gccVersion} deploy") {
                 String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${conanVersion}"
-                docker_compose_build("gcc${gccVersion}", environment, expectedImage)
+                docker_compose_build("gcc${gccVersion}", expectedImage)
                 echo "pytest tests --image ${expectedImage} --service deploy"
             }
             stage("GCC ${gccVersion} jenkins") {
                 String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${conanVersion}"
-                docker_compose_build("gcc${gccVersion}-jenkins", environment, expectedImage)
+                docker_compose_build("gcc${gccVersion}-jenkins", expectedImage)
                 echo "pytest tests --image ${expectedImage} --service jenkins"
             }
         }
@@ -86,12 +78,12 @@ node('Linux') {
         clangBuilds["Clang ${clangVersion}"] = {
             stage("Clang ${clangVersion} deploy") {
                 String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${conanVersion}"
-                docker_compose_build("clang${gccVersion}", environment, expectedImage)
+                docker_compose_build("clang${gccVersion}", expectedImage)
                 echo "pytest tests --image ${expectedImage} --service deploy"
             }
             stage("Clang ${clangVersion} jenkins") {
                 String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04-jenkins:${conanVersion}"
-                docker_compose_build("clang${clangVersion}-jenkins", environment, expectedImage)
+                docker_compose_build("clang${clangVersion}-jenkins", expectedImage)
                 echo "pytest tests --image ${expectedImage} --service jenkins"
             }
         }
