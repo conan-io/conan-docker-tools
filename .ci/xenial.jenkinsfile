@@ -1,6 +1,10 @@
 
+def readConanVersion() {
+
+}
+
 // These are things to parameterize/read/write from/to .env file
-String conanVersion = '1.37.2'
+String conanVersion = null
 List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 List clangVersions = ['10', '11', '12']
 
@@ -8,6 +12,12 @@ List clangVersions = ['10', '11', '12']
 node('Linux') {
     stage('Checkout the sources') {
         checkout scm
+        
+        // Get Conan version from file
+        String content = readFile('modern/.env')
+        def matcher = content =~ /CONAN_VERSION=([\d.]+)/ 
+        conanVersion = matcher[0][1]
+        echo "Found Conan version: ${conanVersion}"
     }
 
     stage('Detect changes') {
