@@ -1,5 +1,5 @@
 ARG DOCKER_USERNAME
-ARG CONAN_VERSION
+ARG DOCKER_TAG
 
 FROM ubuntu:xenial as gcc-builder
 
@@ -40,7 +40,7 @@ RUN apt-get -qq update \
     && make -s -j$(nproc) \
     && make install-strip
 
-FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
+FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${DOCKER_TAG} as deploy
 
 ARG GCC_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
