@@ -53,10 +53,10 @@ node('Linux') {
     gccVersions.each { v ->
         String gccVersion = v
         gccBuilds["GCC ${gccVersion}"] = {
-            node('Linux') {
-                stage('Checkout the sources') {
-                    checkout scm
-                }
+            //node('Linux') {
+                //stage('Checkout the sources') {
+                //    checkout scm
+                //}
 
                 stage("GCC ${gccVersion} deploy") {
                     dir('modern') {
@@ -72,7 +72,7 @@ node('Linux') {
                         echo "pytest tests --image ${expectedImage} --service jenkins"
                     }
                 }
-            }
+            //}
         }
     }
     gccBuilds.failFast = true
@@ -87,10 +87,10 @@ node('Linux') {
     clangVersions.each { v ->
         String clangVersion = v
         clangBuilds["Clang ${clangVersion}"] = {
-            node('Linux') {
-                stage('Checkout the sources') {
-                    checkout scm
-                }
+            //node('Linux') {
+                //stage('Checkout the sources') {
+                //    checkout scm
+                //}
 
                 stage("Clang ${clangVersion} deploy") {
                     dir('modern') {
@@ -106,7 +106,7 @@ node('Linux') {
                         echo "pytest tests --image ${expectedImage} --service jenkins"
                     }
                 }
-            }
+            //}
         }
     }
     clangBuilds.failFast = true
