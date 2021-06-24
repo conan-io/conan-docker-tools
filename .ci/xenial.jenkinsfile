@@ -21,10 +21,8 @@ def docker_compose_build(String image, String expectedImage, List<String> envvar
         echo ">> Generated $expectedImage"
     }
 
-    sh 'docker push $expectedImage'
+    sh "docker push $expectedImage"
 }
-
-
 
 node('Linux') {
     stage('Checkout the sources') {
@@ -63,7 +61,7 @@ node('Linux') {
     }
 
     stage('Configure the job') {
-        sh 'pip install docker-compose'
+        //sh 'pip install docker-compose'
     }
 
     stage('Xenial - Build base image') {
@@ -79,26 +77,26 @@ node('Linux') {
     gccVersions.each { v ->
         String gccVersion = v
         gccBuilds["GCC ${gccVersion}"] = {
-            //node('Linux') {
-                //stage('Checkout the sources') {
-                //    checkout scm
-                //}
+            node('Linux') {
+                stage('Checkout the sources') {
+                    checkout scm
+                }
 
-            stage("GCC ${gccVersion} deploy") {
+                stage("GCC ${gccVersion} deploy") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${dockerTag}"
                         docker_compose_build("gcc${gccVersion}", expectedImage, environment)
                         echo "pytest tests --image ${expectedImage} --service deploy"
                     }
-            }
-            stage("GCC ${gccVersion} jenkins") {
+                }
+                stage("GCC ${gccVersion} jenkins") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${dockerTag}"
                         docker_compose_build("gcc${gccVersion}-jenkins", expectedImage, environment)
                         echo "pytest tests --image ${expectedImage} --service jenkins"
                     }
+                }
             }
-        //}
         }
     }
     gccBuilds.failFast = true
@@ -113,26 +111,26 @@ node('Linux') {
     clangVersions.each { v ->
         String clangVersion = v
         clangBuilds["Clang ${clangVersion}"] = {
-            //node('Linux') {
-                //stage('Checkout the sources') {
-                //    checkout scm
-                //}
+            node('Linux') {
+                stage('Checkout the sources') {
+                    checkout scm
+                }
 
-            stage("Clang ${clangVersion} deploy") {
+                stage("Clang ${clangVersion} deploy") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${dockerTag}"
                         docker_compose_build("clang${gccVersion}", expectedImage, environment)
                         echo "pytest tests --image ${expectedImage} --service deploy"
                     }
-            }
-            stage("Clang ${clangVersion} jenkins") {
+                }
+                stage("Clang ${clangVersion} jenkins") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04-jenkins:${dockerTag}"
                         docker_compose_build("clang${clangVersion}-jenkins", expectedImage, environment)
                         echo "pytest tests --image ${expectedImage} --service jenkins"
                     }
+                }
             }
-        //}
         }
     }
     clangBuilds.failFast = true
