@@ -120,7 +120,7 @@ node('Linux') {
                 stage("Clang ${clangVersion} deploy") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${dockerTag}"
-                        docker_compose_build("clang${gccVersion}", expectedImage, environment)
+                        docker_compose_build("clang${clangVersion}", expectedImage, environment)
                         echo "pytest tests --image ${expectedImage} --service deploy"
                     }
                 }
