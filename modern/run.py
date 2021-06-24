@@ -111,7 +111,7 @@ class ConanDockerTools(object):
     def _is_latest_version(self):
         """ Compare the target Conan version against the host Conan version
         """
-        return tools.Version(self.variables.docker_build_tag) >= get_latest_conan_version()
+        return tools.Version(self.variables.docker_build_tag) >= self.get_latest_conan_version()
 
     def get_latest_conan_version(self):
         """ Read latest Conan version available on Pypi
