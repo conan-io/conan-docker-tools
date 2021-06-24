@@ -10,7 +10,7 @@ x-common-args: &common-args
     DOCKER_USERNAME: ${DOCKER_USERNAME}
     ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY:-https://c3istg.jfrog.io/artifactory/dad-generic}
     JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION:-3.27}
-    DOCKER_TAG: ${CONAN_VERSION}
+    DOCKER_TAG: ${DOCKER_TAG}
 
 x-gcc5: &gcc5
     GCC_VERSION: 5.5.0
