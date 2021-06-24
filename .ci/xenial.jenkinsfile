@@ -1,7 +1,7 @@
 // These are things to parameterize/read/write from/to .env file
 List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 List clangVersions = ['10', '11', '12']
-boolean isMaster = (scm.branches[0].name == 'master')
+boolean isMaster = false // (scm.branches[0].name == 'master')
 
 def docker_compose_build(String image, String expectedImage) {
     // Just to be sure we use the expected Conan version
@@ -33,7 +33,7 @@ node('Linux') {
         echo "Found Docker username: ${dockerUsername}"
 
         // Get the docker tag
-        dockerTag = isMaster ? conanVersion : sh(returnStdout: true, script: 'git rev-parse HEAD')
+        dockerTag = isMaster ? conanVersion : sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
         echo ">>> Docker tag: $dockerTag"
     }
 
