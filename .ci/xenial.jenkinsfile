@@ -2,20 +2,33 @@
 // Maybe parameterized somewhere
 List gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
 List clangVersions = ['10.0.1', '11.1.0', '12.0.0']
-
-
-
-def configure_docker() {
-    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
-    }
-}
+String distro = 'ubuntu16.04'
+String dockerUsername = 'center-c3i-docker.jfrog.io'
 
 String versionMajor(String version) {
     def matcher = (version =~ /(\d+).(\d+).(\d+)/)
     return matcher[0][1] as String
 }
 
+def buildImage(String latestMaster, String latestBranch, String expectedImage, String buildArgs, String target = null) {
+    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ${dockerUsername}'
+    }
+
+    String cacheFrom = ''
+    if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
+        cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
+    }
+    if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
+        cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
+    }
+
+    sh "docker build ${cacheFrom} -t ${expectedImage} ${buildArgs} ${target ? "--target $target": ''} ."
+
+    sh "docker push ${expectedImage}"
+    sh "docker tag ${expectedImage} ${latestBranch}"
+    sh "docker push ${latestBranch}"
+}
 
 node('Linux') {
     stage('Checkout the sources') {
@@ -27,25 +40,24 @@ node('Linux') {
     echo ">> scm.branches[0].name: ${branchName}"
     String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
-    String dockerUsername = 'center-c3i-docker.jfrog.io'
     Map originalEnvironment = [:]
     Map job_environment = [:]
     stage('Parse environment file') {
         String content = readFile('modern/.env')
-        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith("#") }).each {
-            def (name, value) = it.split("=")
+        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
+            def (name, value) = it.split('=')
             originalEnvironment.put(name, value)
             job_environment.put(name, value)
-        }
-        echo "originalEnvironment:\n\n${originalEnvironment.collect({k, v -> "${k}=${v}"}).join('\n')}"
+    }
+        echo "originalEnvironment:\n\n${ originalEnvironment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
 
         // Environment to use in this job:
         job_environment['DOCKER_USERNAME'] = dockerUsername
         job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
         //job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
-        echo "job_environment:\n\n${job_environment.collect({k, v -> "${k}=${v}"}).join('\n')}"
-    }
-    String buildArgs = job_environment.collect({k, v -> "--build-arg ${k}=${v}"}).join(' ') as String
+        echo "job_environment:\n\n${ job_environment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
+}
+    String buildArgs = job_environment.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
     stage('Detect changes') {
     // TODO: Dependending on the files affected by the PR we might want to run
@@ -56,28 +68,12 @@ node('Linux') {
         //sh 'pip install docker-compose'
     //}
 
-
     stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-ubuntu16.04:${branchName}-${commit}"
         String latestBranch = "${dockerUsername}/base-ubuntu16.04:${branchName}-latest"
         String latestMaster = "${dockerUsername}/base-ubuntu16.04:master-latest"
         dir('modern/base') {
-            //withEnv(["DOCKER_BUILDKIT=1"]) {
-                configure_docker()
-                String cacheFrom = ""
-                if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
-                    cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
-                }
-                if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
-                    cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
-                }
-
-                sh "docker build ${cacheFrom} -t ${expectedImage} ${buildArgs} ."
-
-                sh "docker push ${expectedImage}"
-                sh "docker tag ${expectedImage} ${latestBranch}"
-                sh "docker push ${latestBranch}"
-            //}
+            buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
         }
 
         dir('modern') {
@@ -105,22 +101,7 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-builder:master-latest"
 
                     dir('modern/gcc') {
-                        //withEnv(["DOCKER_BUILDKIT=1"]) {
-                            configure_docker()
-                            String cacheFrom = ""
-                            if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
-                                cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
-                            }
-                            if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
-                                cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
-                            }
-
-                            sh "docker build ${cacheFrom} -t ${expectedImage} ${gccBuildArgs} --target builder ."
-
-                            sh "docker push ${expectedImage}"
-                            sh "docker tag ${expectedImage} ${latestBranch}"
-                            sh "docker push ${latestBranch}"
-                        //}
+                        buildImage(latestMaster, latestBranch, expectedImage, gccBuildArgs, 'builder')
                     }
 
                     dir('modern') {
@@ -134,22 +115,7 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04:master-latest"
 
                     dir('modern/gcc') {
-                        //withEnv(["DOCKER_BUILDKIT=1"]) {
-                            configure_docker()
-                            String cacheFrom = ""
-                            if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
-                                cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
-                            }
-                            if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
-                                cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
-                            }
-
-                            sh "docker build ${cacheFrom} -t ${expectedImage} ${gccBuildArgs} --target deploy ."
-
-                            sh "docker push ${expectedImage}"
-                            sh "docker tag ${expectedImage} ${latestBranch}"
-                            sh "docker push ${latestBranch}"
-                        //}
+                        buildImage(latestMaster, latestBranch, expectedImage, gccBuildArgs, 'deploy')
                     }
 
                     dir('modern') {
@@ -158,28 +124,12 @@ node('Linux') {
                 }
 
                 stage("GCC ${gccVersion} jenkins") {
-
                     String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:${branchName}-${commit}"
                     String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:${branchName}-latest"
                     String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:master-latest"
 
                     dir('modern/jenkins') {
-                        //withEnv(["DOCKER_BUILDKIT=1"]) {
-                            configure_docker()
-                            String cacheFrom = ""
-                            if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
-                                cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
-                            }
-                            if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
-                                cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
-                            }
-
-                            sh "docker build ${cacheFrom} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
-
-                            sh "docker push ${expectedImage}"
-                            sh "docker tag ${expectedImage} ${latestBranch}"
-                            sh "docker push ${latestBranch}"
-                        //}
+                        buildImage(latestMaster, latestBranch, expectedImage, "--build-arg SOURCE_CONANIO_IMAGE=${mainImage}")
                     }
 
                     dir('modern') {
@@ -223,7 +173,7 @@ node('Linux') {
     }
 
     stage('Configure the job') {
-        //sh 'pip install docker-compose'
+    //sh 'pip install docker-compose'
     }
 
     stage('Xenial - Build base image') {
