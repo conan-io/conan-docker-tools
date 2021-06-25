@@ -73,8 +73,8 @@ node('Linux') {
         dir('modern/base') {
             //withEnv(["DOCKER_BUILDKIT=1"]) {
                 configure_docker()
-                sh "docker pull ${latestMaster}"
-                sh "docker pull ${latestBranch}"
+                sh(script: "docker pull ${latestMaster}", returnStatus: true)
+                sh(script: "docker pull ${latestBranch}", returnStatus: true)
 
                 sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${buildArgs} ."
 
@@ -110,8 +110,8 @@ node('Linux') {
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh "docker pull ${latestMaster}"
-                            sh "docker pull ${latestBranch}"
+                            sh(script: "docker pull ${latestMaster}", returnStatus: true)
+                            sh(script: "docker pull ${latestBranch}", returnStatus: true)
 
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target builder ."
 
@@ -134,8 +134,8 @@ node('Linux') {
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh "docker pull ${latestMaster}"
-                            sh "docker pull ${latestBranch}"
+                            sh(script: "docker pull ${latestMaster}", returnStatus: true)
+                            sh(script: "docker pull ${latestBranch}", returnStatus: true)
 
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target deploy ."
 
@@ -159,8 +159,8 @@ node('Linux') {
                     dir('modern/jenkins') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh "docker pull ${latestMaster}"
-                            sh "docker pull ${latestBranch}"
+                            sh(script: "docker pull ${latestMaster}", returnStatus: true)
+                            sh(script: "docker pull ${latestBranch}", returnStatus: true)
 
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
 
