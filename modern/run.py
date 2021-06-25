@@ -6,7 +6,7 @@ import logging
 import subprocess
 import sys
 import re
-from conans import __version__ as client_version
+import requests
 from conans import tools
 from cpt.ci_manager import CIManager
 from cpt.printer import Printer
@@ -26,6 +26,7 @@ class ConanDockerTools(object):
         self.clang_compiler = Compiler(name="clang", version=self.variables.clang_version, pretty="clang")
         self.loggedin = False
         self.service = None
+        self.latest_conan_version = None
 
         logging.info("""
     The follow compiler versions will be built:
@@ -110,7 +111,18 @@ class ConanDockerTools(object):
     def _is_latest_version(self):
         """ Compare the target Conan version against the host Conan version
         """
-        return tools.Version(self.variables.docker_build_tag) >= client_version
+        return tools.Version(self.variables.docker_build_tag) >= self.get_latest_conan_version()
+
+    def get_latest_conan_version(self):
+        """ Read latest Conan version available on Pypi
+        """
+        if not self.latest_version:
+            url = "https://pypi.org/pypi/conan/json"
+            response = requests.get(url)
+            response.raise_for_status()
+            json_data = response.json()
+            self.latest_conan_version = json_data["info"]["version"]
+        return self.latest_conan_version
 
     @property
     def _ubuntu_version(self):
