@@ -141,7 +141,7 @@ node('Linux') {
     Map gccBuilds = [:]
     gccVersions.each { v ->
         String gccVersion = v
-        gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
+        gccBuilds["GCC ${gccVersion}"] = compilerBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
     parallel(gccBuilds)
