@@ -88,7 +88,7 @@ node('Linux') {
     Map gccBuilds = [:]
     gccVersions.each { v ->
         String gccVersion = v
-        String gccVersionMajor = versionMajor(v)
+        String gccVersionMajor = versionMajor(gccVersion)
         gccBuilds["GCC ${gccVersion}"] = {
             String mainImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${branchName}-${commit}"
             String gccBuildArgs = "${buildArgs} --build-arg GCC_VERSION=${gccVersion}"
