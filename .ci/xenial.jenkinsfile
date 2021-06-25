@@ -86,7 +86,7 @@ node('Linux') {
         String versionMajor = getVersionMajor(version)
 
         String mainImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-${commit}"
-        String buildArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
+        String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
 
         node('Linux') {
             stage('Checkout the sources') {
@@ -99,7 +99,7 @@ node('Linux') {
                 String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:master-latest"
 
                 dir("modern/${compiler}") {
-                    buildImage(latestMaster, latestBranch, expectedImage, buildArgs, 'builder')
+                    buildImage(latestMaster, latestBranch, expectedImage, compilerArgs, 'builder')
                 }
 
                 dir('modern') {
@@ -113,7 +113,7 @@ node('Linux') {
                 String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:master-latest"
 
                 dir("modern/${compiler}") {
-                    buildImage(latestMaster, latestBranch, expectedImage, buildArgs, 'deploy')
+                    buildImage(latestMaster, latestBranch, expectedImage, compilerArgs, 'deploy')
                 }
 
                 dir('modern') {
