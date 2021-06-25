@@ -1,10 +1,8 @@
-// These are things to parameterize/read/write from/to .env file
+
+// Maybe parameterized somewhere
 List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 List clangVersions = ['10', '11', '12']
-String branchName = scm.branches[0].name
-boolean isMaster = (branchName == 'master')
-echo ">> scm.branches[0].name: ${branchName}"
-String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+
 
 
 def configure_docker() {
@@ -32,6 +30,11 @@ node('Linux') {
     stage('Checkout the sources') {
         checkout scm
     }
+
+    String branchName = scm.branches[0].name
+    boolean isMaster = (branchName == 'master')
+    echo ">> scm.branches[0].name: ${branchName}"
+    String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
     Map originalEnvironment = [:]
     Map job_environment = [:]
