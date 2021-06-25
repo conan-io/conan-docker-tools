@@ -4,6 +4,7 @@ List clangVersions = ['10', '11', '12']
 String branchName = scm.branches[0].name
 boolean isMaster = (branchName == 'master')
 echo ">> scm.branches[0].name: ${branchName}"
+String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
 
 def configure_docker() {
@@ -32,17 +33,53 @@ node('Linux') {
         checkout scm
     }
 
-    Map environment = [:]
+    Map originalEnvironment = [:]
+    Map job_environment = [:]
     stage('Parse environment file') {
         String content = readFile('modern/.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith("#") }).each {
             def (name, value) = it.split("=")
-            environment.put(name, value)
+            originalEnvironment.put(name, value)
+            job_environment.put(name, value)
         }
-        echo "${environment}"
-        echo "environment:\n\n${environment.collect({k, v -> "${k}=${v}"}).join('\n')}"
+        echo "originalEnvironment:\n\n${originalEnvironment.collect({k, v -> "${k}=${v}"}).join('\n')}"
+
+        // Environment to use in this job:
+        job_environment['DOCKER_USERNAME'] = 'center-c3i-docker.jfrog.io'
+        job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
+        job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
+        echo "job_environment:\n\n${job_environment.collect({k, v -> "${k}=${v}"}).join('\n')}"
     }
 
+    stage('Detect changes') {
+    // TODO: Dependending on the files affected by the PR we might want to run
+    //   some building or other
+    }
+
+    //stage('Configure the job') {
+        //sh 'pip install docker-compose'
+    //}
+
+    stage('Xenial - Build base image') {
+        String expectedImage = "${dockerUsername}/base-ubuntu16.04:${branchName}-${commit}"
+        String latestBranch = "${dockerUsername}/base-ubuntu16.04:${branchName}-latest"
+        String latestMaster = "${dockerUsername}/base-ubuntu16.04:master-latest"
+        dir('modern/base') {
+            withEnv(["DOCKER_BUILDKIT=1"]) {
+                sh "docker build --cache-from ${latestBranch} --cache-from ${latestMaster} -t ${expectedImage} ${buildArgs} ."
+
+                sh "docker push ${expectedImage}"
+                sh "docker tag ${expectedImage} ${latestBranch}"
+                sh "docker push ${latestBranch}"
+            }
+        }
+
+        dir('modern') {
+            echo "pytest tests --image ${expectedImage} --service base"
+        }
+    }
+
+    /*
     String conanVersion = null
     String dockerUsername = 'center-c3i-docker.jfrog.io'
     String dockerTag = "${branchName}-${sh(script: 'git rev-parse HEAD', returnStdout: true).trim()}"
@@ -161,4 +198,5 @@ node('Linux') {
     stage('Upload images') {
         echo 'Upload images'
     }
+    */
 }
