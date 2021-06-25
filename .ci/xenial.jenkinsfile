@@ -12,7 +12,7 @@ String getVersionMajor(String version) {
 
 def buildImage(String latestMaster, String latestBranch, String expectedImage, String buildArgs, String target = null) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh "docker login --username $USERNAME --password $PASSWORD ${dockerUsername}"
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
     }
 
     String cacheFrom = ''
