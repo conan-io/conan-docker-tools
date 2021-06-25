@@ -12,7 +12,8 @@ def configure_docker() {
 }
 
 String versionMajor(String version) {
-    return version.split('.')[0]
+    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
+    return matcher[0][1] as String
 }
 
 
@@ -88,7 +89,9 @@ node('Linux') {
     Map gccBuilds = [:]
     gccVersions.each { v ->
         String gccVersion = v
+        echo "gccVersion: ${gccVersion}"
         String gccVersionMajor = versionMajor(gccVersion)
+        echo "gccVersionMajor: ${gccVersionMajor}"
         gccBuilds["GCC ${gccVersion}"] = {
             String mainImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${branchName}-${commit}"
             String gccBuildArgs = "${buildArgs} --build-arg GCC_VERSION=${gccVersion}"
