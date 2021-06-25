@@ -5,7 +5,7 @@ List clangVersions = ['10.0.1', '11.1.0', '12.0.0']
 String distro = 'ubuntu16.04'
 String dockerUsername = 'center-c3i-docker.jfrog.io'
 
-String versionMajor(String version) {
+String getVersionMajor(String version) {
     def matcher = (version =~ /(\d+).(\d+).(\d+)/)
     return matcher[0][1] as String
 }
@@ -81,66 +81,71 @@ node('Linux') {
         }
     }
 
-    // Build GCC in parallel
-    Map gccBuilds = [:]
-    gccVersions.each { v ->
-        String gccVersion = v
-        String gccVersionMajor = versionMajor(gccVersion)
-        gccBuilds["GCC ${gccVersionMajor}"] = {
-            String mainImage = "${dockerUsername}/gcc${gccVersionMajor}-${distro}:${branchName}-${commit}"
-            String gccBuildArgs = "${buildArgs} --build-arg GCC_VERSION=${gccVersion}"
+    // Build compiler
+    Closure compilerBuild = { String compiler, String version ->
+        String versionMajor = getVersionMajor(version)
 
-            node('Linux') {
-                stage('Checkout the sources') {
-                    checkout scm
+        String mainImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-${commit}"
+        String buildArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
+
+        node('Linux') {
+            stage('Checkout the sources') {
+                checkout scm
+            }
+
+            stage("${compiler.toUpperCase()} ${version} builder") {
+                String expectedImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-${commit}"
+                String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
+                String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:master-latest"
+
+                dir("modern/${compiler}") {
+                    buildImage(latestMaster, latestBranch, expectedImage, buildArgs, 'builder')
                 }
 
-                stage("GCC ${gccVersion} builder") {
-                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-builder:${branchName}-${commit}"
-                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-builder:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-builder:master-latest"
+                dir('modern') {
+                    echo "pytest tests --image ${expectedImage} --service builder"
+                }
+            }
 
-                    dir('modern/gcc') {
-                        buildImage(latestMaster, latestBranch, expectedImage, gccBuildArgs, 'builder')
-                    }
+            stage("${compiler.toUpperCase()} ${version} deploy") {
+                String expectedImage = mainImage
+                String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-latest"
+                String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:master-latest"
 
-                    dir('modern') {
-                        echo "pytest tests --image ${expectedImage} --service builder"
-                    }
+                dir("modern/${compiler}") {
+                    buildImage(latestMaster, latestBranch, expectedImage, buildArgs, 'deploy')
                 }
 
-                stage("GCC ${gccVersion} deploy") {
-                    String expectedImage = mainImage
-                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-${distro}:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-${distro}:master-latest"
+                dir('modern') {
+                    echo "pytest tests --image ${expectedImage} --service deploy"
+                }
+            }
 
-                    dir('modern/gcc') {
-                        buildImage(latestMaster, latestBranch, expectedImage, gccBuildArgs, 'deploy')
-                    }
+            stage("${compiler.toUpperCase()} ${version} jenkins") {
+                String expectedImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-${commit}"
+                String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-latest"
+                String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:master-latest"
 
-                    dir('modern') {
-                        echo "pytest tests --image ${expectedImage} --service deploy"
-                    }
+                dir('modern/jenkins') {
+                    buildImage(latestMaster, latestBranch, expectedImage, "--build-arg SOURCE_CONANIO_IMAGE=${mainImage}")
                 }
 
-                stage("GCC ${gccVersion} jenkins") {
-                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-jenkins:${branchName}-${commit}"
-                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-jenkins:master-latest"
-
-                    dir('modern/jenkins') {
-                        buildImage(latestMaster, latestBranch, expectedImage, "--build-arg SOURCE_CONANIO_IMAGE=${mainImage}")
-                    }
-
-                    dir('modern') {
-                        echo "pytest tests --image ${expectedImage} --service jenkins"
-                    }
+                dir('modern') {
+                    echo "pytest tests --image ${expectedImage} --service jenkins"
                 }
             }
         }
     }
+
+    // Build GCC in parallel
+    Map gccBuilds = [:]
+    gccVersions.each { v ->
+        String gccVersion = v
+        gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
+    }
     gccBuilds.failFast = true
     parallel(gccBuilds)
+
 
     /*
     String conanVersion = null
