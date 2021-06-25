@@ -4,7 +4,7 @@ List clangVersions = ['10', '11', '12']
 String branchName = scm.branches[0].name
 boolean isMaster = (branchName == 'master')
 echo ">> scm.branches[0].name: ${branchName}"
-List<String> environment = []
+
 
 def configure_docker() {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -12,7 +12,7 @@ def configure_docker() {
     }
 }
 
-def docker_compose_build(String image, String expectedImage, List<String> envvars) {
+def docker_compose_build(String image, String expectedImage, String latestImage, List<String> envvars) {
     configure_docker()
 
     withEnv(envvars) {
@@ -23,11 +23,24 @@ def docker_compose_build(String image, String expectedImage, List<String> envvar
     }
 
     sh "docker push $expectedImage"
+    sh "docker tag $expectedImage $latestImage"
+    sh "docker push $latestImage"
 }
 
 node('Linux') {
     stage('Checkout the sources') {
         checkout scm
+    }
+
+    Map environment = [:]
+    stage('Parse environment file') {
+        String content = readFile('modern/.env')
+        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith("#") }).each {
+            def (name, value) = it.split("=")
+            environment.put(name, value)
+        }
+        echo "${environment}"
+        echo "environment:\n\n${environment.collect({k, v -> "${k}=${v}"}).join('\n')}"
     }
 
     String conanVersion = null
@@ -65,8 +78,9 @@ node('Linux') {
 
     stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-ubuntu16.04:${dockerTag}"
+        String latestImage = "${dockerUsername}/base-ubuntu16.04:${branchName}-latest"
         dir('modern') {
-            docker_compose_build('base', expectedImage, environment)
+            docker_compose_build('base', expectedImage, latestImage, environment)
             echo "pytest tests --image ${expectedImage} --service base"
         }
     }
@@ -84,14 +98,16 @@ node('Linux') {
                 stage("GCC ${gccVersion} deploy") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${dockerTag}"
-                        docker_compose_build("gcc${gccVersion}", expectedImage, environment)
+                        String latestImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${branchName}-latest"
+                        docker_compose_build("gcc${gccVersion}", expectedImage, latestImage, environment)
                         echo "pytest tests --image ${expectedImage} --service deploy"
                     }
                 }
                 stage("GCC ${gccVersion} jenkins") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${dockerTag}"
-                        docker_compose_build("gcc${gccVersion}-jenkins", expectedImage, environment)
+                        String latestImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${branchName}-latest"
+                        docker_compose_build("gcc${gccVersion}-jenkins", expectedImage, latestImage, environment)
                         echo "pytest tests --image ${expectedImage} --service jenkins"
                     }
                 }
@@ -118,14 +134,16 @@ node('Linux') {
                 stage("Clang ${clangVersion} deploy") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${dockerTag}"
-                        docker_compose_build("clang${clangVersion}", expectedImage, environment)
+                        String latestImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04:${branchName}-latest"
+                        docker_compose_build("clang${clangVersion}", expectedImage, latestImage, environment)
                         echo "pytest tests --image ${expectedImage} --service deploy"
                     }
                 }
                 stage("Clang ${clangVersion} jenkins") {
                     dir('modern') {
                         String expectedImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04-jenkins:${dockerTag}"
-                        docker_compose_build("clang${clangVersion}-jenkins", expectedImage, environment)
+                        String latestImage = "${dockerUsername}/clang${clangVersion}-ubuntu16.04-jenkins:${branchName}-latest"
+                        docker_compose_build("clang${clangVersion}-jenkins", expectedImage, latestImage, environment)
                         echo "pytest tests --image ${expectedImage} --service jenkins"
                     }
                 }
