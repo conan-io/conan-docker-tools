@@ -68,6 +68,7 @@ node('Linux') {
         String expectedImage = "${dockerUsername}/base-ubuntu16.04:${branchName}-${commit}"
         String latestBranch = "${dockerUsername}/base-ubuntu16.04:${branchName}-latest"
         String latestMaster = "${dockerUsername}/base-ubuntu16.04:master-latest"
+        String buildArgs = job_environment.collect({k, v -> "--build-arg ${k}=${v}"}).join(' ') as String
         dir('modern/base') {
             withEnv(["DOCKER_BUILDKIT=1"]) {
                 configure_docker()
