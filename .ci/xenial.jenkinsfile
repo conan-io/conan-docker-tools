@@ -137,11 +137,18 @@ node('Linux') {
         }
     }
 
+    Closure testingBuild = { String compiler, String version ->
+        String versionMajor = getVersionMajor(version)
+        stage("${compiler.toUpperCase()} ${version}") {
+            echo "versionMajor: $versionMajor"
+        }
+    }
+
     // Build GCC in parallel
     Map gccBuilds = [:]
     gccVersions.each { v ->
         String gccVersion = v
-        gccBuilds["GCC ${gccVersion}"] = compilerBuild('gcc', gccVersion)
+        gccBuilds["GCC ${gccVersion}"] = testingBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
     parallel(gccBuilds)
