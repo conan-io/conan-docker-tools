@@ -73,10 +73,15 @@ node('Linux') {
         dir('modern/base') {
             //withEnv(["DOCKER_BUILDKIT=1"]) {
                 configure_docker()
-                sh(script: "docker pull ${latestMaster}", returnStatus: true)
-                sh(script: "docker pull ${latestBranch}", returnStatus: true)
+                String cacheFrom = ""
+                if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
+                    cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
+                }
+                if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
+                    cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
+                }
 
-                sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${buildArgs} ."
+                sh "docker build ${cacheFrom} -t ${expectedImage} ${buildArgs} ."
 
                 sh "docker push ${expectedImage}"
                 sh "docker tag ${expectedImage} ${latestBranch}"
@@ -110,10 +115,15 @@ node('Linux') {
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh(script: "docker pull ${latestMaster}", returnStatus: true)
-                            sh(script: "docker pull ${latestBranch}", returnStatus: true)
+                            String cacheFrom = ""
+                            if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
+                                cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
+                            }
+                            if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
+                                cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
+                            }
 
-                            sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target builder ."
+                            sh "docker build ${cacheFrom} -t ${expectedImage} ${gccBuildArgs} --target builder ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
@@ -134,10 +144,15 @@ node('Linux') {
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh(script: "docker pull ${latestMaster}", returnStatus: true)
-                            sh(script: "docker pull ${latestBranch}", returnStatus: true)
+                            String cacheFrom = ""
+                            if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
+                                cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
+                            }
+                            if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
+                                cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
+                            }
 
-                            sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target deploy ."
+                            sh "docker build ${cacheFrom} -t ${expectedImage} ${gccBuildArgs} --target deploy ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
@@ -159,10 +174,15 @@ node('Linux') {
                     dir('modern/jenkins') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh(script: "docker pull ${latestMaster}", returnStatus: true)
-                            sh(script: "docker pull ${latestBranch}", returnStatus: true)
+                            String cacheFrom = ""
+                            if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
+                                cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
+                            }
+                            if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
+                                cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
+                            }
 
-                            sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
+                            sh "docker build ${cacheFrom} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
