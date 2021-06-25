@@ -69,9 +69,9 @@ node('Linux') {
     //}
 
     stage('Xenial - Build base image') {
-        String expectedImage = "${dockerUsername}/base-ubuntu16.04:${branchName}-${commit}"
-        String latestBranch = "${dockerUsername}/base-ubuntu16.04:${branchName}-latest"
-        String latestMaster = "${dockerUsername}/base-ubuntu16.04:master-latest"
+        String expectedImage = "${dockerUsername}/base-${distro}:${branchName}-${commit}"
+        String latestBranch = "${dockerUsername}/base-${distro}:${branchName}-latest"
+        String latestMaster = "${dockerUsername}/base-${distro}:master-latest"
         dir('modern/base') {
             buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
         }
@@ -87,7 +87,7 @@ node('Linux') {
         String gccVersion = v
         String gccVersionMajor = versionMajor(gccVersion)
         gccBuilds["GCC ${gccVersionMajor}"] = {
-            String mainImage = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04:${branchName}-${commit}"
+            String mainImage = "${dockerUsername}/gcc${gccVersionMajor}-${distro}:${branchName}-${commit}"
             String gccBuildArgs = "${buildArgs} --build-arg GCC_VERSION=${gccVersion}"
 
             node('Linux') {
@@ -96,9 +96,9 @@ node('Linux') {
                 }
 
                 stage("GCC ${gccVersion} builder") {
-                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-builder:${branchName}-${commit}"
-                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-builder:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-builder:master-latest"
+                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-builder:${branchName}-${commit}"
+                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-builder:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-builder:master-latest"
 
                     dir('modern/gcc') {
                         buildImage(latestMaster, latestBranch, expectedImage, gccBuildArgs, 'builder')
@@ -111,8 +111,8 @@ node('Linux') {
 
                 stage("GCC ${gccVersion} deploy") {
                     String expectedImage = mainImage
-                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04:master-latest"
+                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-${distro}:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-${distro}:master-latest"
 
                     dir('modern/gcc') {
                         buildImage(latestMaster, latestBranch, expectedImage, gccBuildArgs, 'deploy')
@@ -124,9 +124,9 @@ node('Linux') {
                 }
 
                 stage("GCC ${gccVersion} jenkins") {
-                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:${branchName}-${commit}"
-                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:master-latest"
+                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-jenkins:${branchName}-${commit}"
+                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-jenkins:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-${distro}-jenkins:master-latest"
 
                     dir('modern/jenkins') {
                         buildImage(latestMaster, latestBranch, expectedImage, "--build-arg SOURCE_CONANIO_IMAGE=${mainImage}")
