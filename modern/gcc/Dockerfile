@@ -24,8 +24,8 @@ RUN apt-get -qq update \
        dh-autoreconf \
        libffi-dev \
        libssl-dev \
-       pkg-config \
-    && wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
+       pkg-config
+RUN wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
     && tar Jxf gcc-${GCC_VERSION}.tar.xz \
     && cd gcc-${GCC_VERSION} \
     && ./configure --build=x86_64-linux-gnu \
