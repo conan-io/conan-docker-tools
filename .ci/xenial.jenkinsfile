@@ -1,13 +1,14 @@
 // These are things to parameterize/read/write from/to .env file
 List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
 List clangVersions = ['10', '11', '12']
-boolean isMaster = (scm.branches[0].name == 'master')
-echo ">> scm.branches[0].name: ${scm.branches[0].name}"
+String branchName = scm.branches[0].name
+boolean isMaster = (branchName == 'master')
+echo ">> scm.branches[0].name: ${branchName}"
 List<String> environment = []
 
 def configure_docker() {
-    withCredentials([usernamePassword(credentialsId: 'c3istg-dad-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD c3istg-dad-docker.jfrog.io'
+    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
     }
 }
 
@@ -30,8 +31,8 @@ node('Linux') {
     }
 
     String conanVersion = null
-    String dockerUsername = 'c3istg-dad-docker.jfrog.io'
-    String dockerTag = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    String dockerUsername = 'center-c3i-docker.jfrog.io'
+    String dockerTag = "${branchName}-${sh(script: 'git rev-parse HEAD', returnStdout: true).trim()}"
     stage('Configure the job') {
         String content = readFile('modern/.env')
 
@@ -49,9 +50,6 @@ node('Linux') {
         // Get the docker tag
         //String output = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
         //dockerTag = output //isMaster ? conanVersion : commit
-        if (isMaster) {
-            dockerTag = conanVersion
-        }
         echo ">>> Docker tag: $dockerTag"
         environment.add("DOCKER_TAG=${dockerTag}")
     }
