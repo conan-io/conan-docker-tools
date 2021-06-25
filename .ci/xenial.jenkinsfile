@@ -73,6 +73,9 @@ node('Linux') {
         dir('modern/base') {
             //withEnv(["DOCKER_BUILDKIT=1"]) {
                 configure_docker()
+                sh "docker pull ${latestMaster}"
+                sh "docker pull ${latestBranch}"
+
                 sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${buildArgs} ."
 
                 sh "docker push ${expectedImage}"
@@ -107,6 +110,9 @@ node('Linux') {
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
+                            sh "docker pull ${latestMaster}"
+                            sh "docker pull ${latestBranch}"
+
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target builder ."
 
                             sh "docker push ${expectedImage}"
@@ -128,6 +134,9 @@ node('Linux') {
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
+                            sh "docker pull ${latestMaster}"
+                            sh "docker pull ${latestBranch}"
+
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target deploy ."
 
                             sh "docker push ${expectedImage}"
@@ -150,6 +159,9 @@ node('Linux') {
                     dir('modern/jenkins') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
+                            sh "docker pull ${latestMaster}"
+                            sh "docker pull ${latestBranch}"
+
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
 
                             sh "docker push ${expectedImage}"
@@ -166,7 +178,10 @@ node('Linux') {
         }
     }
     gccBuilds.failFast = true
-    parallel(gccBuilds)
+    //parallel(gccBuilds)
+    gccBuilds.each { k, func ->
+        func()
+    }
 
     /*
     String conanVersion = null
