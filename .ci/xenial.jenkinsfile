@@ -138,9 +138,11 @@ node('Linux') {
     }
 
     Closure testingBuild = { String compiler, String version ->
-        String versionMajor = getVersionMajor(version)
-        stage("${compiler.toUpperCase()} ${version}") {
-            echo "versionMajor: $versionMajor"
+        return {
+            String versionMajor = getVersionMajor(version)
+            stage("${compiler.toUpperCase()} ${version}") {
+                echo "versionMajor: $versionMajor"
+            }
         }
     }
 
