@@ -1,7 +1,7 @@
 
 // Maybe parameterized somewhere
-List gccVersions = ['5', '6', '7', '8', '9', '10', '11']
-List clangVersions = ['10', '11', '12']
+List gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
+List clangVersions = ['10.0.1', '11.1.0', '12.0.0']
 
 
 
@@ -11,20 +11,10 @@ def configure_docker() {
     }
 }
 
-def docker_compose_build(String image, String expectedImage, String latestImage, List<String> envvars) {
-    configure_docker()
-
-    withEnv(envvars) {
-        sh "docker-compose build $image"
-        // String output = sh(script: "docker-compose build $image", returnStdout: true).trim()
-        // assert output.contains(expectedImage): "Expected image name '$expectedImage' not found in output:\n\n$output\n\n"
-        echo ">> Generated $expectedImage"
-    }
-
-    sh "docker push $expectedImage"
-    sh "docker tag $expectedImage $latestImage"
-    sh "docker push $latestImage"
+String versionMajor(String version) {
+    return version.split('.')[0]
 }
+
 
 node('Linux') {
     stage('Checkout the sources') {
@@ -98,6 +88,7 @@ node('Linux') {
     Map gccBuilds = [:]
     gccVersions.each { v ->
         String gccVersion = v
+        String gccVersionMajor = versionMajor(v)
         gccBuilds["GCC ${gccVersion}"] = {
             String mainImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${branchName}-${commit}"
             String gccBuildArgs = "${buildArgs} --build-arg GCC_VERSION=${gccVersion}"
@@ -108,9 +99,9 @@ node('Linux') {
                 }
 
                 stage("GCC ${gccVersion} builder") {
-                    String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-builder:${branchName}-${commit}"
-                    String latestBranch = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-builder:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-builder:master-latest"
+                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-builder:${branchName}-${commit}"
+                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-builder:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-builder:master-latest"
 
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
@@ -138,8 +129,8 @@ node('Linux') {
 
                 stage("GCC ${gccVersion} deploy") {
                     String expectedImage = mainImage
-                    String latestBranch = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:master-latest"
+                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04:master-latest"
 
                     dir('modern/gcc') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
@@ -167,9 +158,9 @@ node('Linux') {
 
                 stage("GCC ${gccVersion} jenkins") {
 
-                    String expectedImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${branchName}-${commit}"
-                    String latestBranch = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:master-latest"
+                    String expectedImage = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:${branchName}-${commit}"
+                    String latestBranch = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/gcc${gccVersionMajor}-ubuntu16.04-jenkins:master-latest"
 
                     dir('modern/jenkins') {
                         //withEnv(["DOCKER_BUILDKIT=1"]) {
@@ -198,10 +189,7 @@ node('Linux') {
         }
     }
     gccBuilds.failFast = true
-    //parallel(gccBuilds)
-    gccBuilds.each { k, func ->
-        func()
-    }
+    parallel(gccBuilds)
 
     /*
     String conanVersion = null
