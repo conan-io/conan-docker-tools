@@ -36,6 +36,7 @@ node('Linux') {
     echo ">> scm.branches[0].name: ${branchName}"
     String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
+    String dockerUsername = 'center-c3i-docker.jfrog.io'
     Map originalEnvironment = [:]
     Map job_environment = [:]
     stage('Parse environment file') {
@@ -48,7 +49,7 @@ node('Linux') {
         echo "originalEnvironment:\n\n${originalEnvironment.collect({k, v -> "${k}=${v}"}).join('\n')}"
 
         // Environment to use in this job:
-        job_environment['DOCKER_USERNAME'] = 'center-c3i-docker.jfrog.io'
+        job_environment['DOCKER_USERNAME'] = dockerUsername
         job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
         job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
         echo "job_environment:\n\n${job_environment.collect({k, v -> "${k}=${v}"}).join('\n')}"
@@ -69,6 +70,7 @@ node('Linux') {
         String latestMaster = "${dockerUsername}/base-ubuntu16.04:master-latest"
         dir('modern/base') {
             withEnv(["DOCKER_BUILDKIT=1"]) {
+                configure_docker()
                 sh "docker build --cache-from ${latestBranch} --cache-from ${latestMaster} -t ${expectedImage} ${buildArgs} ."
 
                 sh "docker push ${expectedImage}"
