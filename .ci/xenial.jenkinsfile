@@ -73,7 +73,7 @@ node('Linux') {
         dir('modern/base') {
             withEnv(["DOCKER_BUILDKIT=1"]) {
                 configure_docker()
-                sh "docker build --cache-from ${latestBranch} --cache-from ${latestMaster} -t ${expectedImage} ${buildArgs} ."
+                sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${buildArgs} ."
 
                 sh "docker push ${expectedImage}"
                 sh "docker tag ${expectedImage} ${latestBranch}"
@@ -92,6 +92,7 @@ node('Linux') {
         String gccVersion = v
         gccBuilds["GCC ${gccVersion}"] = {
             String mainImage = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:${branchName}-${commit}"
+            String gccBuildArgs = "${buildArgs} --build-arg GCC_VERSION=${gccVersion}"
 
             node('Linux') {
                 stage('Checkout the sources') {
@@ -106,7 +107,7 @@ node('Linux') {
                     dir('modern/gcc') {
                         withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh "docker build --cache-from ${latestBranch} --cache-from ${latestMaster} -t ${expectedImage} ${buildArgs} --target builder ."
+                            sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target builder ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
@@ -127,7 +128,7 @@ node('Linux') {
                     dir('modern/gcc') {
                         withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh "docker build --cache-from ${latestBranch} --cache-from ${latestMaster} -t ${expectedImage} ${buildArgs} --target deploy ."
+                            sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target deploy ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
@@ -149,7 +150,7 @@ node('Linux') {
                     dir('modern/jenkins') {
                         withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
-                            sh "docker build --cache-from ${latestBranch} --cache-from ${latestMaster} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
+                            sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
