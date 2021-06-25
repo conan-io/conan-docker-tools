@@ -1,9 +1,9 @@
 
 // Maybe parameterized somewhere
-List gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
-List clangVersions = ['10.0.1', '11.1.0', '12.0.0']
-String distro = 'ubuntu16.04'
-String dockerUsername = 'center-c3i-docker.jfrog.io'
+gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
+clangVersions = ['10.0.1', '11.1.0', '12.0.0']
+distro = 'ubuntu16.04'
+dockerUsername = 'center-c3i-docker.jfrog.io'
 
 String getVersionMajor(String version) {
     def matcher = (version =~ /(\d+).(\d+).(\d+)/)
