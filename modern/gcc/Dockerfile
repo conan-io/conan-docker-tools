@@ -1,7 +1,7 @@
 ARG DOCKER_USERNAME
 ARG DOCKER_TAG
 
-FROM ubuntu:xenial as gcc-builder
+FROM ubuntu:xenial as builder
 
 ARG GCC_VERSION
 
@@ -45,7 +45,7 @@ FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${DOCKER_TAG} as deploy
 ARG GCC_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
 
-COPY --from=gcc-builder /tmp/install /tmp/install
+COPY --from=builder /tmp/install /tmp/install
 
 RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/lib/gcc/x86_64-linux-gnu/${GCC_VERSION} /usr/lib/gcc/x86_64-linux-gnu/ \
