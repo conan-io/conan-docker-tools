@@ -51,7 +51,7 @@ node('Linux') {
         // Environment to use in this job:
         job_environment['DOCKER_USERNAME'] = dockerUsername
         job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
-        job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
+        //job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
         echo "job_environment:\n\n${job_environment.collect({k, v -> "${k}=${v}"}).join('\n')}"
     }
     String buildArgs = job_environment.collect({k, v -> "--build-arg ${k}=${v}"}).join(' ') as String
@@ -71,14 +71,14 @@ node('Linux') {
         String latestBranch = "${dockerUsername}/base-ubuntu16.04:${branchName}-latest"
         String latestMaster = "${dockerUsername}/base-ubuntu16.04:master-latest"
         dir('modern/base') {
-            withEnv(["DOCKER_BUILDKIT=1"]) {
+            //withEnv(["DOCKER_BUILDKIT=1"]) {
                 configure_docker()
                 sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${buildArgs} ."
 
                 sh "docker push ${expectedImage}"
                 sh "docker tag ${expectedImage} ${latestBranch}"
                 sh "docker push ${latestBranch}"
-            }
+            //}
         }
 
         dir('modern') {
@@ -105,14 +105,14 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-builder:master-latest"
 
                     dir('modern/gcc') {
-                        withEnv(["DOCKER_BUILDKIT=1"]) {
+                        //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target builder ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
                             sh "docker push ${latestBranch}"
-                        }
+                        //}
                     }
 
                     dir('modern') {
@@ -126,14 +126,14 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04:master-latest"
 
                     dir('modern/gcc') {
-                        withEnv(["DOCKER_BUILDKIT=1"]) {
+                        //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} ${gccBuildArgs} --target deploy ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
                             sh "docker push ${latestBranch}"
-                        }
+                        //}
                     }
 
                     dir('modern') {
@@ -148,14 +148,14 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/gcc${gccVersion}-ubuntu16.04-jenkins:master-latest"
 
                     dir('modern/jenkins') {
-                        withEnv(["DOCKER_BUILDKIT=1"]) {
+                        //withEnv(["DOCKER_BUILDKIT=1"]) {
                             configure_docker()
                             sh "docker build --cache-from ${latestMaster} --cache-from ${latestBranch} -t ${expectedImage} --build-arg SOURCE_CONANIO_IMAGE=${mainImage} ."
 
                             sh "docker push ${expectedImage}"
                             sh "docker tag ${expectedImage} ${latestBranch}"
                             sh "docker push ${latestBranch}"
-                        }
+                        //}
                     }
 
                     dir('modern') {
