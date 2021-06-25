@@ -83,55 +83,57 @@ node('Linux') {
 
     // Build compiler
     Closure compilerBuild = { String compiler, String version ->
-        String versionMajor = getVersionMajor(version)
+        return {
+            String versionMajor = getVersionMajor(version)
 
-        String mainImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-${commit}"
-        String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
+            String mainImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-${commit}"
+            String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
 
-        node('Linux') {
-            stage('Checkout the sources') {
-                checkout scm
-            }
-
-            stage("${compiler.toUpperCase()} ${version} builder") {
-                String expectedImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-${commit}"
-                String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
-                String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:master-latest"
-
-                dir("modern/${compiler}") {
-                    buildImage(latestMaster, latestBranch, expectedImage, compilerArgs, 'builder')
+            node('Linux') {
+                stage('Checkout the sources') {
+                    checkout scm
                 }
 
-                dir('modern') {
-                    echo "pytest tests --image ${expectedImage} --service builder"
-                }
-            }
+                stage("${compiler.toUpperCase()} ${version} builder") {
+                    String expectedImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-${commit}"
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:master-latest"
 
-            stage("${compiler.toUpperCase()} ${version} deploy") {
-                String expectedImage = mainImage
-                String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-latest"
-                String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:master-latest"
+                    dir("modern/${compiler}") {
+                        buildImage(latestMaster, latestBranch, expectedImage, compilerArgs, 'builder')
+                    }
 
-                dir("modern/${compiler}") {
-                    buildImage(latestMaster, latestBranch, expectedImage, compilerArgs, 'deploy')
-                }
-
-                dir('modern') {
-                    echo "pytest tests --image ${expectedImage} --service deploy"
-                }
-            }
-
-            stage("${compiler.toUpperCase()} ${version} jenkins") {
-                String expectedImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-${commit}"
-                String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-latest"
-                String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:master-latest"
-
-                dir('modern/jenkins') {
-                    buildImage(latestMaster, latestBranch, expectedImage, "--build-arg SOURCE_CONANIO_IMAGE=${mainImage}")
+                    dir('modern') {
+                        echo "pytest tests --image ${expectedImage} --service builder"
+                    }
                 }
 
-                dir('modern') {
-                    echo "pytest tests --image ${expectedImage} --service jenkins"
+                stage("${compiler.toUpperCase()} ${version} deploy") {
+                    String expectedImage = mainImage
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:master-latest"
+
+                    dir("modern/${compiler}") {
+                        buildImage(latestMaster, latestBranch, expectedImage, compilerArgs, 'deploy')
+                    }
+
+                    dir('modern') {
+                        echo "pytest tests --image ${expectedImage} --service deploy"
+                    }
+                }
+
+                stage("${compiler.toUpperCase()} ${version} jenkins") {
+                    String expectedImage = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-${commit}"
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:master-latest"
+
+                    dir('modern/jenkins') {
+                        buildImage(latestMaster, latestBranch, expectedImage, "--build-arg SOURCE_CONANIO_IMAGE=${mainImage}")
+                    }
+
+                    dir('modern') {
+                        echo "pytest tests --image ${expectedImage} --service jenkins"
+                    }
                 }
             }
         }
@@ -150,7 +152,7 @@ node('Linux') {
     Map gccBuilds = [:]
     gccVersions.each { v ->
         String gccVersion = v
-        gccBuilds["GCC ${gccVersion}"] = testingBuild('gcc', gccVersion)
+        gccBuilds["GCC ${gccVersion}"] = compilerBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
     parallel(gccBuilds)

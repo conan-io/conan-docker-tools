@@ -3,7 +3,7 @@ ARG DOCKER_TAG
 
 FROM ubuntu:xenial as builder
 
-ARG LLVM_VERSION
+ARG CLANG_VERSION
 ARG ARTIFACTORY_REPOSITORY
 ARG LIBSTDCPP_VERSION
 
@@ -31,11 +31,11 @@ RUN apt-get -qq update \
     && apt-key add llvm-snapshot.gpg.key \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev \
-    && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_VERSION}.tar.gz \
-    && tar zxf llvmorg-${LLVM_VERSION}.tar.gz \
-    && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${LLVM_VERSION}/libunwind/src/CMakeLists.txt \
-    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${LLVM_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp \
-    && cd llvm-project-llvmorg-${LLVM_VERSION} \
+    && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${CLANG_VERSION}.tar.gz \
+    && tar zxf llvmorg-${CLANG_VERSION}.tar.gz \
+    && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${CLANG_VERSION}/libunwind/src/CMakeLists.txt \
+    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${CLANG_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp \
+    && cd llvm-project-llvmorg-${CLANG_VERSION} \
     && mkdir build \
     && cd build/ \
     && cmake ../llvm \
@@ -118,7 +118,7 @@ RUN apt-get -qq update \
     && ninja lld \
     && ninja compiler-rt \
     && ninja install-unwind install-cxxabi install-cxx install-clang install-lld install-compiler-rt \
-    && cp -a lib/clang/${LLVM_VERSION}/include /tmp/install/lib/clang/${LLVM_VERSION}/include \
+    && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
     && cp $(find lib -name "*.so*") /tmp/install/lib \
     && mkdir /tmp/gcc \
     && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
