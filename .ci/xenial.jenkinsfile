@@ -1,9 +1,7 @@
 
 // Maybe parameterized somewhere
-gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
-clangVersions = ['10.0.1', '11.1.0', '12.0.0']
-distro = 'ubuntu16.04'
 dockerUsername = 'center-c3i-docker.jfrog.io'
+
 
 String getVersionMajor(String version) {
     def matcher = (version =~ /(\d+).(\d+).(\d+)/)
@@ -38,16 +36,28 @@ node('Linux') {
     String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
     echo ">> scm.branches[0].name: ${branchName}"
-    String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    String commit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
     Map originalEnvironment = [:]
     Map job_environment = [:]
+    String distro = null
+    List<String> gccVersions = []
+    List<String> clangVersions = []
+    String conanVersion = null
+    String originalUsername = null
     stage('Parse environment file') {
         String content = readFile('modern/.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
             def (name, value) = it.split('=')
             originalEnvironment.put(name, value)
             job_environment.put(name, value)
+
+            if (name =~ /GCC\d+_VERSION/) {
+                gccVersions.add(value)
+            }
+            if (name =~ /CLANG\d+_VERSION/) {
+                clangVersions.add(value)
+            }
         }
         echo "originalEnvironment:\n\n${ originalEnvironment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
 
@@ -56,6 +66,16 @@ node('Linux') {
         job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
         //job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
         echo "job_environment:\n\n${ job_environment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
+
+        // Parse more information
+        distro = job_environment['DISTRO']
+        conanVersion = job_environment['CONAN_VERSION']
+        originalUsername = originalEnvironment['DOCKER_USERNAME']
+
+        echo "gccVersions: ${gccVersions.join(', ')}"
+        echo "clangVersions: ${clangVersions.join(', ')}"
+        assert gccVersions.size() > 0: "Expecting to build some GCC versions at least"
+        assert clangVersions.size() > 0: "Expecting to build some Clang versions at least"
     }
     String buildArgs = job_environment.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
@@ -166,9 +186,30 @@ node('Linux') {
         echo 'Run tests that check binaries work in compatible images'
     }
 
-    // TODO: If master branch
-    stage('Upload images') {
-        echo 'Upload images'
-    }
+
+    //if (isMaster) {
+        // If it was master and everything is ok up to here
+        stage('Upload images') {
+            List images = ["base-${distro}"]
+            gccVersions.each { v ->
+                String versionMajor = getVersionMajor(v)
+                images.add("gcc${versionMajor}-${distro}")
+                images.add("gcc${versionMajor}-${distro}-jenkins")
+            }
+            clangVersions.each { v ->
+                String versionMajor = getVersionMajor(v)
+                images.add("clang${versionMajor}-${distro}")
+                images.add("clang${versionMajor}-${distro}-jenkins")
+            }
+
+            images.each { image ->
+                String builtImage = "${dockerUsername}/${image}:${branchName}-${commit}"
+                String uploadImage = "${originalUsername}/${image}:${conanVersion}"
+                sh "docker pull ${builtImage}"
+                sh "docker tag ${builtImage} ${uploadImage}"
+                // sh "docker push ${uploadImage}"
+            }
+        }
+    //}
 
 }
