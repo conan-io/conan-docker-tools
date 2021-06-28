@@ -191,11 +191,13 @@ node('Linux') {
         // If it was master and everything is ok up to here
         stage('Upload images') {
             List images = ["base-${distro}"]
-            gccVersions.each {
+            gccVersions.each { v ->
+                String versionMajor = getVersionMajor(v)
                 images.add("gcc${versionMajor}-${distro}")
                 images.add("gcc${versionMajor}-${distro}-jenkins")
             }
-            clangVersions.each {
+            clangVersions.each { v ->
+                String versionMajor = getVersionMajor(v)
                 images.add("clang${versionMajor}-${distro}")
                 images.add("clang${versionMajor}-${distro}-jenkins")
             }
