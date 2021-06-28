@@ -12,9 +12,6 @@ jobs:
       pip install -U docker-compose conan conan-package-tools
       cd modern
       python run.py
-      pip uninstall --yes conan conan-package-tools
-      pip install pytest
-      ./run_pytest.sh
     env:
       DOCKER_LOGIN_USERNAME: $(DOCKER_LOGIN_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)

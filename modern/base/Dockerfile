@@ -92,5 +92,4 @@ RUN apt-get -qq update \
 USER conan
 WORKDIR /home/conan
 
-RUN pip install conan==${CONAN_VERSION} \
-    && conan config init
+RUN pip install conan==${CONAN_VERSION}
