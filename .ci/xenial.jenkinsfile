@@ -77,7 +77,7 @@ node('Linux') {
         }
 
         dir('modern') {
-            echo "pytest tests --image ${expectedImage} --service base"
+            sh "pytest tests --image ${expectedImage} --service base"
         }
     }
 
