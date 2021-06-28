@@ -35,7 +35,7 @@ node('Linux') {
         checkout scm
     }
 
-    String branchName = scm.branches[0].name
+    String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
     echo ">> scm.branches[0].name: ${branchName}"
     String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
