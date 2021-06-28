@@ -2,6 +2,7 @@
 // Maybe parameterized somewhere
 dockerUsername = 'center-c3i-docker.jfrog.io'
 
+
 String getVersionMajor(String version) {
     def matcher = (version =~ /(\d+).(\d+).(\d+)/)
     return matcher[0][1] as String
@@ -42,6 +43,8 @@ node('Linux') {
     String distro = null
     List<String> gccVersions = []
     List<String> clangVersions = []
+    String conanVersion = null
+    String originalUsername = null
     stage('Parse environment file') {
         String content = readFile('modern/.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
@@ -64,8 +67,10 @@ node('Linux') {
         //job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
         echo "job_environment:\n\n${ job_environment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
 
-        // Parse distro
+        // Parse more information
         distro = job_environment['DISTRO']
+        conanVersion = job_environment['CONAN_VERSION']
+        originalUsername = originalEnvironment['DOCKER_USERNAME']
 
         echo "gccVersions: ${gccVersions.join(', ')}"
         echo "clangVersions: ${gccVersions.join(', ')}"
@@ -179,9 +184,26 @@ node('Linux') {
         echo 'Run tests that check binaries work in compatible images'
     }
 
-    // TODO: If master branch
-    stage('Upload images') {
-        echo 'Upload images'
-    }
+
+    //if (isMaster) {
+        // If it was master and everything is ok up to here
+        stage('Upload images') {
+            List images = ["base-${distro}"]
+            gccVersions.each {
+                images.add("gcc${versionMajor}-${distro}")
+                images.add("gcc${versionMajor}-${distro}-jenkins")
+            }
+            clangVersions.each {
+                images.add("clang${versionMajor}-${distro}")
+                images.add("clang${versionMajor}-${distro}-jenkins")
+            }
+
+            images.each { image ->
+                String uploadImage = "${originalUsername}/${image}:${conanVersion}"
+                sh "docker tag ${dockerUsername}/${image}:${branchName}-${commit} ${uploadImage}"
+                // sh "docker push ${uploadImage}"
+            }
+        }
+    //}
 
 }
