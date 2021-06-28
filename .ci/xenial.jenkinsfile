@@ -36,7 +36,7 @@ node('Linux') {
     String branchName = scm.branches[0].name
     boolean isMaster = (branchName == 'master')
     echo ">> scm.branches[0].name: ${branchName}"
-    String commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    String commit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
     Map originalEnvironment = [:]
     Map job_environment = [:]
