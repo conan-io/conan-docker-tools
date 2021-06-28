@@ -73,7 +73,9 @@ node('Linux') {
         originalUsername = originalEnvironment['DOCKER_USERNAME']
 
         echo "gccVersions: ${gccVersions.join(', ')}"
-        echo "clangVersions: ${gccVersions.join(', ')}"
+        echo "clangVersions: ${clangVersions.join(', ')}"
+        assert gccVersions.size() > 0: "Expecting to build some GCC versions at least"
+        assert clangVersions.size() > 0: "Expecting to build some Clang versions at least"
     }
     String buildArgs = job_environment.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
