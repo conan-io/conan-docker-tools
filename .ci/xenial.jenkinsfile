@@ -203,8 +203,10 @@ node('Linux') {
             }
 
             images.each { image ->
+                String builtImage = "${dockerUsername}/${image}:${branchName}-${commit}"
                 String uploadImage = "${originalUsername}/${image}:${conanVersion}"
-                sh "docker tag ${dockerUsername}/${image}:${branchName}-${commit} ${uploadImage}"
+                sh "docker pull ${builtImage}"
+                sh "docker tag ${builtImage} ${uploadImage}"
                 // sh "docker push ${uploadImage}"
             }
         }
