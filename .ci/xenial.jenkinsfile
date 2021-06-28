@@ -64,9 +64,9 @@ node('Linux') {
     //   some building or other
     }
 
-    //stage('Configure the job') {
-        //sh 'pip install docker-compose'
-    //}
+    stage('Configure the job') {
+        sh 'pip install pytest'
+    }
 
     stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-${distro}:${branchName}-${commit}"
