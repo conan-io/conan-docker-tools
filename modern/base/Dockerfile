@@ -1,4 +1,6 @@
-FROM ubuntu:xenial
+ARG DISTRO_VERSION
+
+FROM ubuntu:${DISTRO_VERSION}
 
 LABEL maintainer="Conan.io <info@conan.io>"
 

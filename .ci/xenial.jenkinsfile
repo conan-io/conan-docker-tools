@@ -1,8 +1,5 @@
 
 // Maybe parameterized somewhere
-gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
-clangVersions = ['10.0.1', '11.1.0', '12.0.0']
-distro = 'ubuntu16.04'
 dockerUsername = 'center-c3i-docker.jfrog.io'
 
 String getVersionMajor(String version) {
@@ -42,12 +39,22 @@ node('Linux') {
 
     Map originalEnvironment = [:]
     Map job_environment = [:]
+    String distro = null
+    List<String> gccVersions = []
+    List<String> clangVersions = []
     stage('Parse environment file') {
         String content = readFile('modern/.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
             def (name, value) = it.split('=')
             originalEnvironment.put(name, value)
             job_environment.put(name, value)
+
+            if (name =~ /GCC\d+_VERSION/) {
+                gccVersions.add(value)
+            }
+            if (name =~ /CLANG\d+_VERSION/) {
+                clangVersions.add(value)
+            }
         }
         echo "originalEnvironment:\n\n${ originalEnvironment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
 
@@ -56,6 +63,12 @@ node('Linux') {
         job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
         //job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
         echo "job_environment:\n\n${ job_environment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
+
+        // Parse distro
+        distro = job_environment['DISTRO']
+
+        echo "gccVersions: ${gccVersions.join(', ')}"
+        echo "clangVersions: ${gccVersions.join(', ')}"
     }
     String buildArgs = job_environment.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
