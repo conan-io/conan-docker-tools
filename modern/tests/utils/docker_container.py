@@ -9,12 +9,12 @@ class DockerContainer:
         self.image = image
         self.name = str(uuid.uuid4())
         self._tmpfolder = tmpfolder
-        self.tmp = '/tmp/build'
+        self.tmp = '/home/conan/build'
         self._working_dir = None
 
     def run(self):
         mount_volume = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'workingdir'))
-        args = ["docker", "run", "-t", "-d", "-v", f"{mount_volume}:/tmp/workingdir"]
+        args = ["docker", "run", "-t", "-d", "-v", f"{mount_volume}:/home/conan/workingdir"]
         if self._tmpfolder:
             args += ["-v", f"{self._tmpfolder}:{self.tmp}"]
         args += ["--name", self.name, self.image]
@@ -23,7 +23,7 @@ class DockerContainer:
 
     @contextmanager
     def working_dir(self, working_dir=None):
-        wdir = working_dir or os.path.join('/tmp', str(uuid.uuid4()))
+        wdir = working_dir or os.path.join('/home/conan', str(uuid.uuid4()))
         try:
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
