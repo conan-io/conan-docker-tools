@@ -5,21 +5,18 @@ from contextlib import contextmanager
 
 
 class DockerContainer:
-    def __init__(self, image, tmpfolder=None, user='root'):
+    def __init__(self, image, tmpfolder=None):
         self.image = image
         self.name = str(uuid.uuid4())
         self._tmpfolder = tmpfolder
         self.tmp = '/tmp/build'
         self._working_dir = None
-        self._user = user
 
     def run(self):
         mount_volume = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'workingdir'))
         args = ["docker", "run", "-t", "-d", "-v", f"{mount_volume}:/tmp/workingdir"]
         if self._tmpfolder:
             args += ["-v", f"{self._tmpfolder}:{self.tmp}"]
-        if self._user:
-            args += ["--user", f"{self._user}"]
         args += ["--name", self.name, self.image]
         print(f'>> {" ".join(args)}')
         subprocess.check_call(args)
@@ -41,8 +38,6 @@ class DockerContainer:
         args = ["docker", "exec"]
         if self._working_dir:
             args += ["-w", self._working_dir]
-        if self._user:
-            args += ["--user", self._user]
         args += [self.name, ] + commands
         print(f'>> {" ".join(args)}')
         process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
