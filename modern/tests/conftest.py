@@ -2,7 +2,10 @@ import os
 
 import pytest
 
-docker_compose_services = ['base', 'builder', 'deploy', 'jenkins']
+docker_compose_services = ['base',
+                           # 'builder',  This is just a helper image, do we need to test it?
+                           'deploy',
+                           'jenkins']
 
 pytest_plugins = [
     "fixtures.container",

@@ -48,7 +48,7 @@ def test_gcc_simple(container, expected):
                 out, err = image.exec(['./example-c'])
                 assert 'Current local time and date' in out, f"out: '{out}' err: '{err}'"
 
-                out, err = container.exec(['./example-cpp'])
+                out, err = image.exec(['./example-cpp'])
                 assert 'Current date' in out, f"out: '{out}' err: '{err}'"
 
 
@@ -93,5 +93,5 @@ def test_clang_simple(container, expected):
                 out, err = image.exec(['./example-c'])
                 assert 'Current local time and date' in out, f"out: '{out}' err: '{err}'"
 
-                out, err = container.exec(['./example-cpp'])
+                out, err = image.exec(['./example-cpp'])
                 assert 'Current date' in out, f"out: '{out}' err: '{err}'"

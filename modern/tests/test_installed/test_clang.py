@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.compiler('clang')
-@pytest.mark.service('builder', 'deploy', 'jenkins')
+@pytest.mark.service('deploy', 'jenkins')
 class TestClangCompiler:
 
     def test_version(self, container, expected):

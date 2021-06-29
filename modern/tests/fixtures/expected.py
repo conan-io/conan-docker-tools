@@ -1,6 +1,7 @@
 import os.path
 import re
 from dataclasses import dataclass
+from collections import defaultdict
 
 import pytest
 import yaml
@@ -57,10 +58,26 @@ class Compiler:
 @dataclass
 class Expected:
     distro: Distro
+    docker_username: str
+    docker_tag: str
     python: Version
     cmake: Version
     conan: Version = None
     compiler: Compiler = None
+    compiler_versions: defaultdict(list) = None
+
+    def __str__(self):
+        return f"""
+        Expected:
+            - distro: {self.distro}
+            - docker_username: {self.docker_username}
+            - docker_tag: {self.docker_tag}
+            - python: {self.python}
+            - cmake: {self.cmake}
+            - conan: {self.conan}
+            - compiler: {self.compiler}
+            - compiler_versions: {self.compiler_versions}
+        """
 
     def vanilla_image(self):
         """ Returns the vanilla docker container corresponding to the distribution """
@@ -69,14 +86,15 @@ class Expected:
     def compatible_images(self, libstdcpp=False, libcpp=False):
         """ Returns a list with the images that are compatible with the binaries generated in the expected distro """
         # TODO: This function is first class citizen in this repository, move it closer to ROOT
-        compiler_versions = get_compiler_versions(self.compiler.name)
+        # TODO: Some Clang can use GCC images and viceversa
+        compiler_versions = self.compiler_versions[self.compiler.name]
         if self.compiler.name == 'gcc':
             if libstdcpp:
                 # For GCC images, due to `libstdc++` version, they are only backward compatible.
                 compat_versions = [v for v in compiler_versions if self.compiler.version < v]
             else:
                 compat_versions = compiler_versions
-            return [f'gcc{v.major}-{self.distro.name}{self.distro.version}:{self.conan.full_version}' for v in compat_versions]
+            return [f'{self.docker_username}/gcc{v.major}-{self.distro.name}{self.distro.version}:{self.docker_tag}' for v in compat_versions]
         elif self.compiler.name == 'clang':
             if libcpp:
                 # For Clang images using libc++ we have the same issue, only backward compatible
@@ -84,37 +102,23 @@ class Expected:
             else:
                 # ... if using libstdc++, all our images use the same version
                 compat_versions = compiler_versions
-            return [f'clang{v.major}-{self.distro.name}{self.distro.version}:{self.conan.full_version}' for v in compat_versions]
+            return [f'{self.docker_username}/clang{v.major}-{self.distro.name}{self.distro.version}:{self.docker_tag}' for v in compat_versions]
         else:
             raise NotImplemented
 
 
-def get_compiler_versions(compiler_name):
-    docker_file = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', 'docker-compose.yml'))
-    with open(docker_file, 'r') as f:
-        data = yaml.safe_load(f)
-
-    if compiler_name == 'gcc':
-        keys = [k for k in data.keys() if 'x-gcc' in k]
-        return [Version(data.get(k).get('GCC_VERSION')) for k in keys]
-    elif compiler_name == 'clang':
-        keys = [k for k in data.keys() if 'x-llvm' in k]
-        return [Version(data.get(k).get('LLVM_VERSION')) for k in keys]
-    else:
-        raise NotImplemented
-
-
-def get_compiler_version(compiler_name, compiler_major):
-    docker_file = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', 'docker-compose.yml'))
-    with open(docker_file, 'r') as f:
-        data = yaml.safe_load(f)
-
-    if compiler_name == 'gcc':
-        return data.get(f'x-gcc{compiler_major}').get('GCC_VERSION')
-    elif compiler_name == 'clang':
-        return data.get(f'x-llvm{compiler_major}').get('LLVM_VERSION')
-    else:
-        raise NotImplemented
+def get_compiler_versions(env_values):
+    compiler_versions = defaultdict(list)
+    for key, value in env_values.items():
+        m_gcc = re.match(r'GCC\d+_VERSION', key)
+        m_clang = re.match('CLANG\d+_VERSION', key)
+        if m_gcc:
+            compiler_versions['gcc'].append(Version(value))
+        elif m_clang:
+            compiler_versions['clang'].append(Version(value))
+        else:
+            pass
+    return compiler_versions
 
 
 @pytest.fixture(scope="session")
@@ -143,15 +147,17 @@ def expected(request) -> Expected:
     distro = Distro(m.group('distro'), Version(m.group('distro_version')))
     python = Version(env_values.get('PYTHON_VERSION'))
     cmake = Version(env_values.get('CMAKE_VERSION_FULL'))
-    expected = Expected(distro, python, cmake)
+    expected = Expected(distro, m.group('username'), m.group('tag'), python, cmake)
     expected.conan = Version(env_values.get('CONAN_VERSION'))
+    expected.compiler_versions = get_compiler_versions(env_values)
 
     if m.group('compiler'):
         compiler = m.group('compiler')
         major = m.group('version')
-        full_version = get_compiler_version(compiler, major)
+        full_version = env_values.get(f"{compiler.upper()}{major}_VERSION")
         expected.compiler = Compiler(compiler, Version(full_version))
 
+    print(expected)
     return expected
 
 
