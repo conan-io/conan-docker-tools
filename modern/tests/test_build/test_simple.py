@@ -45,7 +45,7 @@ class TestBuildSimple:
     def test_vanilla_image(self, container, expected):
         # C executable should run in vanilla image
         with run_container(expected.vanilla_image(), tmpdirname=container._tmpfolder) as vanilla:
-            with vanilla.working_dir(self._build_directory):
+            with vanilla.working_dir(self._build_directory, user=None):
                 out, err = vanilla.exec(['./example-c'])
                 assert 'Current local time and date' in out, f"out: '{out}' err: '{err}'"
 
@@ -74,7 +74,6 @@ class TestBuildSimple:
             with image.working_dir(self._build_directory):
                 out, err = image.exec(['./example-cpp'])
                 assert 'Current date' in out, f"out: '{out}' err: '{err}'"
-
 
 
 """

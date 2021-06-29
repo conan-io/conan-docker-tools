@@ -11,6 +11,7 @@ class DockerContainer:
         self._tmpfolder = tmpfolder
         self.tmp = '/tmp/build'
         self._working_dir = None
+        self._user = None
 
     def run(self):
         mount_volume = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'workingdir'))
@@ -21,14 +22,16 @@ class DockerContainer:
         subprocess.check_call(args)
 
     @contextmanager
-    def working_dir(self, working_dir=None):
+    def working_dir(self, working_dir=None, user='conan'):
         wdir = working_dir or os.path.join('/tmp', str(uuid.uuid4()))
         try:
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
+            self._user = user
             yield
         finally:
             self._working_dir = None
+            self._user = None
 
     def bash(self, bash_commands: list):
         return self.exec(['/bin/bash', ] + bash_commands)
@@ -37,6 +40,8 @@ class DockerContainer:
         args = ["docker", "exec"]
         if self._working_dir:
             args += ["-w", self._working_dir]
+        if self._user:
+            args += ["--user", self._user]
         args += [self.name, ] + commands
         print(f'>> {" ".join(args)}')
         process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
