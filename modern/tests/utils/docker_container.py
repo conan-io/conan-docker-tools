@@ -14,9 +14,9 @@ class DockerContainer:
 
     def run(self):
         mount_volume = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'workingdir'))
-        args = ["docker", "run", "-t", "-d", "-v", f"{mount_volume}:/home/conan/workingdir:z"]
+        args = ["docker", "run", "-t", "-d", "-v", f"{mount_volume}:/home/conan/workingdir:ro"]
         if self._tmpfolder:
-            args += ["-v", f"{self._tmpfolder}:{self.tmp}:z"]
+            args += ["-v", f"{self._tmpfolder}:{self.tmp}:rw"]
         args += ["--name", self.name, self.image]
         print(f'>> {" ".join(args)}')
         subprocess.check_call(args)
