@@ -25,6 +25,16 @@ class DockerContainer:
     def working_dir(self, working_dir=None):
         wdir = working_dir or os.path.join('/home/conan', str(uuid.uuid4()))
         try:
+            out, err = self.exec(['id'])
+            print(out)
+            print(err)
+            out, err = self.exec(['id', '-u'])
+            print(out)
+            print(err)
+            out, err = self.exec(['id', '-G'])
+            print(out)
+            print(err)
+
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
             yield
