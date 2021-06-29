@@ -121,13 +121,13 @@ def get_compiler_version(compiler_name, compiler_major):
 def expected(request) -> Expected:
     # Parse the image filename
     image = request.config.option.image
-    m = re.match(r'((?P<domain>[\w.]+)\/)?'
-                 r'(?P<username>[\w.]+)\/'
+    m = re.match(r'((?P<domain>[\w\-.]+)\/)?'
+                 r'(?P<username>[\w\-.]+)\/'
                  r'((?P<compiler>gcc|clang)(?P<version>\d+)-)?'
                  r'((?P<service>base|builder|deploy|conan)-)?'
                  r'(?P<distro>[a-z]+)(?P<distro_version>[\d.]+)'
                  r'(-(?P<jenkins>jenkins))?'
-                 r'(:(?P<conan>[\d.]+))?', image)
+                 r'(:(?P<tag>[\w\-.]+))?', image)
 
     # Parse the envfile used to generate the docker images
     envfile = request.config.option.env_file
@@ -144,10 +144,7 @@ def expected(request) -> Expected:
     python = Version(env_values.get('PYTHON_VERSION'))
     cmake = Version(env_values.get('CMAKE_VERSION_FULL'))
     expected = Expected(distro, python, cmake)
-
-    if m.group('conan'):
-        expected.conan = Version(m.group('conan'))
-        assert str(expected.conan) == env_values.get('CONAN_VERSION')
+    expected.conan = Version(env_values.get('CONAN_VERSION'))
 
     if m.group('compiler'):
         compiler = m.group('compiler')

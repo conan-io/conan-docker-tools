@@ -46,7 +46,7 @@ class DockerContainer:
         return stdout.decode('utf-8'), stderr.decode('utf-8')
 
     def stop(self):
-        subprocess.check_call(["docker", "stop", self.name])
+        subprocess.call(["docker", "stop", self.name])
         subprocess.check_call(["docker", "rm", "-f", self.name])
 
 

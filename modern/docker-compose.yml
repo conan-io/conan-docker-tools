@@ -8,38 +8,41 @@ x-common-args: &common-args
     LIBSTDCPP_VERSION: ${LIBSTDCPP_VERSION}
     LIBSTDCPP_PATCH_VERSION: ${LIBSTDCPP_PATCH_VERSION}
     DOCKER_USERNAME: ${DOCKER_USERNAME}
-    ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY:-https://c3istg.jfrog.io/artifactory/dad-generic}
-    JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION:-3.27}
+    ARTIFACTORY_REPOSITORY: ${ARTIFACTORY_REPOSITORY}
+    JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+    DOCKER_TAG: ${DOCKER_TAG}
+    DISTRO: ${DISTRO}
+    DISTRO_VERSION: ${DISTRO_VERSION}
 
 x-gcc5: &gcc5
-    GCC_VERSION: 5.5.0
+    GCC_VERSION: ${GCC5_VERSION}
 
 x-gcc6: &gcc6
-    GCC_VERSION: 6.5.0
+    GCC_VERSION: ${GCC6_VERSION}
 
 x-gcc7: &gcc7
-    GCC_VERSION: 7.5.0
+    GCC_VERSION: ${GCC7_VERSION}
 
 x-gcc8: &gcc8
-    GCC_VERSION: 8.4.0
+    GCC_VERSION: ${GCC8_VERSION}
 
 x-gcc9: &gcc9
-    GCC_VERSION: 9.3.0
+    GCC_VERSION: ${GCC9_VERSION}
 
 x-gcc10: &gcc10
-    GCC_VERSION: 10.3.0
+    GCC_VERSION: ${GCC10_VERSION}
 
 x-gcc11: &gcc11
-    GCC_VERSION: 11.1.0
+    GCC_VERSION: ${GCC11_VERSION}
 
 x-llvm10: &llvm10
-    LLVM_VERSION: 10.0.1
+    LLVM_VERSION: ${CLANG10_VERSION}
 
 x-llvm11: &llvm11
-    LLVM_VERSION: 11.1.0
+    LLVM_VERSION: ${CLANG11_VERSION}
 
 x-llvm12: &llvm12
-    LLVM_VERSION: 12.0.0
+    LLVM_VERSION: ${CLANG12_VERSION}
 
 
 services:
@@ -50,7 +53,7 @@ services:
             dockerfile: Dockerfile
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/base-${DISTRO}:${DOCKER_TAG}
         container_name: base
         tty: true
 
@@ -63,7 +66,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc5
-        image: ${DOCKER_USERNAME}/gcc5-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc5-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc5-builder
         tty: true
     gcc6-builder:
@@ -74,7 +77,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc6
-        image: ${DOCKER_USERNAME}/gcc6-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc6-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc6-builder
         tty: true
     gcc7-builder:
@@ -85,7 +88,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc7
-        image: ${DOCKER_USERNAME}/gcc7-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc7-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc7-builder
         tty: true
     gcc8-builder:
@@ -96,7 +99,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc8
-        image: ${DOCKER_USERNAME}/gcc8-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc8-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc8-builder
         tty: true
     gcc9-builder:
@@ -107,7 +110,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc9
-        image: ${DOCKER_USERNAME}/gcc9-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc9-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc9-builder
         tty: true
     gcc10-builder:
@@ -118,7 +121,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc10
-        image: ${DOCKER_USERNAME}/gcc10-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc10-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc10-builder
         tty: true
     gcc11-builder:
@@ -129,7 +132,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc11
-        image: ${DOCKER_USERNAME}/gcc11-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc11-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc11-builder
         tty: true
     clang10-builder:
@@ -140,7 +143,7 @@ services:
             args:
                 <<: *common-args
                 <<: *llvm10
-        image: ${DOCKER_USERNAME}/clang10-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang10-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang10-builder
         tty: true
     clang11-builder:
@@ -151,7 +154,7 @@ services:
             args:
                 <<: *common-args
                 <<: *llvm11
-        image: ${DOCKER_USERNAME}/clang11-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang11-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang11-builder
         tty: true
     clang12-builder:
@@ -162,7 +165,7 @@ services:
             args:
                 <<: *common-args
                 <<: *llvm12
-        image: ${DOCKER_USERNAME}/clang12-builder-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang12-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang12-builder
         tty: true
 
@@ -173,10 +176,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/gcc5-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/gcc5-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc5-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc5-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc5-deploy
         tty: true
     gcc6-deploy:
@@ -185,10 +188,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/gcc6-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/gcc6-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc6-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc6-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc6-deploy
         tty: true
     gcc7-deploy:
@@ -197,10 +200,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/gcc7-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/gcc7-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc7-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc7-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc7-deploy
         tty: true
     gcc8-deploy:
@@ -209,10 +212,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/gcc8-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/gcc8-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc8-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc8-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc8-deploy
         tty: true
     gcc9-deploy:
@@ -221,10 +224,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/gcc9-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/gcc9-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc9-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc9-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc9-deploy
         tty: true
     gcc10-deploy:
@@ -233,10 +236,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/gcc10-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/gcc10-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc10-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc10-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc10-deploy
         tty: true
     gcc11-deploy:
@@ -245,10 +248,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/gcc11-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/gcc11-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/gcc11-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc11-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc11-deploy
         tty: true
     clang10-deploy:
@@ -257,10 +260,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/clang10-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/clang10-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/clang10-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang10-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: clang10-deploy
         tty: true
     clang11-deploy:
@@ -269,10 +272,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/clang11-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/clang11-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/clang11-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang11-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: clang11-deploy
         tty: true
     clang12-deploy:
@@ -281,10 +284,10 @@ services:
             dockerfile: Dockerfile
             target: deploy
             cache_from:
-              - ${DOCKER_USERNAME}/clang12-builder-ubuntu16.04:${CONAN_VERSION}
+              - ${DOCKER_USERNAME}/clang12-builder-${DISTRO}:${DOCKER_TAG}
             args:
                 <<: *common-args
-        image: ${DOCKER_USERNAME}/clang12-deploy-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang12-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: clang12-deploy
         tty: true
 
@@ -296,7 +299,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc5
-        image: ${DOCKER_USERNAME}/gcc5-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc5-${DISTRO}:${DOCKER_TAG}
         container_name: gcc5
         tty: true
     gcc6:
@@ -306,7 +309,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc6
-        image: ${DOCKER_USERNAME}/gcc6-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc6-${DISTRO}:${DOCKER_TAG}
         container_name: gcc6
         tty: true
     gcc7:
@@ -316,7 +319,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc7
-        image: ${DOCKER_USERNAME}/gcc7-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc7-${DISTRO}:${DOCKER_TAG}
         container_name: gcc7
         tty: true
     gcc8:
@@ -326,7 +329,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc8
-        image: ${DOCKER_USERNAME}/gcc8-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc8-${DISTRO}:${DOCKER_TAG}
         container_name: gcc8
         tty: true
     gcc9:
@@ -336,7 +339,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc9
-        image: ${DOCKER_USERNAME}/gcc9-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc9-${DISTRO}:${DOCKER_TAG}
         container_name: gcc9
         tty: true
     gcc10:
@@ -346,7 +349,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc10
-        image: ${DOCKER_USERNAME}/gcc10-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc10-${DISTRO}:${DOCKER_TAG}
         container_name: gcc10
         tty: true
     gcc11:
@@ -356,7 +359,7 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc11
-        image: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/gcc11-${DISTRO}:${DOCKER_TAG}
         container_name: gcc11
         tty: true
     clang10:
@@ -366,7 +369,7 @@ services:
             args:
                 <<: *common-args
                 <<: *llvm10
-        image: ${DOCKER_USERNAME}/clang10-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang10-${DISTRO}:${DOCKER_TAG}
         container_name: clang10
         tty: true
     clang11:
@@ -376,7 +379,7 @@ services:
             args:
                 <<: *common-args
                 <<: *llvm11
-        image: ${DOCKER_USERNAME}/clang11-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang11-${DISTRO}:${DOCKER_TAG}
         container_name: clang11
         tty: true
     clang12:
@@ -386,7 +389,7 @@ services:
             args:
                 <<: *common-args
                 <<: *llvm12
-        image: ${DOCKER_USERNAME}/clang12-ubuntu16.04:${CONAN_VERSION}
+        image: ${DOCKER_USERNAME}/clang12-${DISTRO}:${DOCKER_TAG}
         container_name: clang12
         tty: true
 
@@ -396,88 +399,88 @@ services:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc5-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc5-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc5-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/gcc5-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc5-jenkins
     gcc6-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc6-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc6-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc6-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/gcc6-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc6-jenkins
     gcc7-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc7-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc7-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc7-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/gcc7-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc7-jenkins
     gcc8-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc8-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc8-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc8-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/gcc8-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc8-jenkins
     gcc9-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc9-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc9-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc9-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/gcc9-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc9-jenkins
     gcc10-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc10-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc10-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc10-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/gcc10-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc10-jenkins
     gcc11-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc11-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc11-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc11-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/gcc11-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc11-jenkins
     clang10-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang10-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang10-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang10-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/clang10-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: clang10-jenkins
     clang11-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang11-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang11-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang11-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/clang11-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: clang11-jenkins
     clang12-jenkins:
         build:
             context: jenkins
             dockerfile: Dockerfile
             args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang12-ubuntu16.04:${CONAN_VERSION}
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang12-${DISTRO}:${DOCKER_TAG}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang12-ubuntu16.04-jenkins:${CONAN_VERSION}"
+        image: "${DOCKER_USERNAME}/clang12-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: clang12-jenkins

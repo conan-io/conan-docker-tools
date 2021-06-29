@@ -1,6 +1,9 @@
-ARG DOCKER_USERNAME CONAN_VERSION
+ARG DOCKER_USERNAME
+ARG DOCKER_TAG
+ARG DISTRO_VERSION
+ARG DISTRO
 
-FROM ubuntu:xenial as gcc-builder
+FROM ubuntu:${DISTRO_VERSION} as builder
 
 ARG GCC_VERSION
 
@@ -23,10 +26,12 @@ RUN apt-get -qq update \
        dh-autoreconf \
        libffi-dev \
        libssl-dev \
-       pkg-config \
-    && wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
-    && tar Jxf gcc-${GCC_VERSION}.tar.xz \
-    && cd gcc-${GCC_VERSION} \
+       pkg-config
+
+RUN wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
+    && tar Jxf gcc-${GCC_VERSION}.tar.xz
+
+RUN cd gcc-${GCC_VERSION} \
     && ./configure --build=x86_64-linux-gnu \
                    --disable-bootstrap \
                    --disable-multilib \
@@ -39,12 +44,12 @@ RUN apt-get -qq update \
     && make -s -j$(nproc) \
     && make install-strip
 
-FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
+FROM ${DOCKER_USERNAME}/base-${DISTRO}:${DOCKER_TAG} as deploy
 
 ARG GCC_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
 
-COPY --from=gcc-builder /tmp/install /tmp/install
+COPY --from=builder /tmp/install /tmp/install
 
 RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/lib/gcc/x86_64-linux-gnu/${GCC_VERSION} /usr/lib/gcc/x86_64-linux-gnu/ \
@@ -58,4 +63,5 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo update-alternatives --install /usr/local/bin/cpp cpp /usr/local/bin/g++ 100 \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/g++ 100 \
     && sudo rm /etc/ld.so.cache \
-    && sudo ldconfig -C /etc/ld.so.cache
+    && sudo ldconfig -C /etc/ld.so.cache \
+    && conan config init --force
