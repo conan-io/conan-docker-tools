@@ -124,6 +124,14 @@ node('Linux') {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
                     }
 
+                    sh 'pwd'
+                    sh 'whoami'
+                    sh 'id -g -n'
+                    sh 'id'
+                    sh 'ls -la'
+                    sh 'ls -la modern/tests'
+                    sh 'ls -la modern/tests/workingdir'
+                    sh 'ls -la modern/tests/workingdir/simple'
                     dir('modern') {
                         sh "pytest tests --image ${deployImage} --service deploy -vv"
                     }

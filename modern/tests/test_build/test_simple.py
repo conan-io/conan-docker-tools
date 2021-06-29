@@ -14,6 +14,21 @@ def _build_simple(request, container, expected):
     request.cls._build_directory = build_directory
 
     with container.working_dir(build_directory):
+        container.exec(['ls', '-la'])
+        container.exec(['ls', '-la', '/tmp'])
+        out, err = container.exec(['ls', '-la', '/tmp/workingdir'])
+        print(out)
+        print(err)
+        out, err = container.exec(['id'])
+        print(out)
+        print(err)
+        out, err = container.exec(['id', '-u'])
+        print(out)
+        print(err)
+        out, err = container.exec(['id', '-G'])
+        print(out)
+        print(err)
+        container.exec(['ls', '-la', '/tmp/workingdir/simple'])
         container.exec(['cmake', '/tmp/workingdir/simple', '-DCMAKE_BUILD_TYPE=Release'])
         container.exec(['cmake', '--build', '.'])
 
