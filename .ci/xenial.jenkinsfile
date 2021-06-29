@@ -183,17 +183,17 @@ node('Linux') {
     // Run the xtests. Do it in the same node to take advantage of the cache
     stage('Run GCC xtests') {
         echo 'Run tests that check binaries work in compatible images'
-        gccImages.each { v ->
+        gccImages.each { image ->
             dir('modern') {
-                echo "pytest tests --image ${jenkinsImage} --service xtest -vv"
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv"
             }
         }
     }
     stage('Run Clang xtests') {
         echo 'Run tests that check binaries work in compatible images'
-        clangImages.each { v ->
+        clangImages.each { image ->
             dir('modern') {
-                echo "pytest tests --image ${jenkinsImage} --service xtest -vv"
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv"
             }
         }
     }
