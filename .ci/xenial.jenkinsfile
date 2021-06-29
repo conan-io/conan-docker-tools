@@ -97,7 +97,7 @@ node('Linux') {
         }
 
         dir('modern') {
-            sh "pytest tests --image ${expectedImage} --service base"
+            sh "pytest tests --image ${expectedImage} --service base -vv"
         }
     }
 
@@ -123,10 +123,6 @@ node('Linux') {
                     dir("modern/${compiler}") {
                         buildImage(latestMaster, latestBranch, builderImage, compilerArgs, 'builder')
                     }
-
-                    dir('modern') {
-                        echo "pytest tests --image ${builderImage} --service builder"
-                    }
                 }
 
                 stage("${compiler.toUpperCase()} ${version} deploy") {
@@ -138,7 +134,7 @@ node('Linux') {
                     }
 
                     dir('modern') {
-                        echo "pytest tests --image ${deployImage} --service deploy"
+                        echo "pytest tests --image ${deployImage} --service deploy -vv"
                     }
                 }
 
@@ -151,7 +147,7 @@ node('Linux') {
                     }
 
                     dir('modern') {
-                        echo "pytest tests --image ${jenkinsImage} --service jenkins"
+                        echo "pytest tests --image ${jenkinsImage} --service jenkins -vv"
                     }
                 }
             }
@@ -160,30 +156,46 @@ node('Linux') {
 
     // Build GCC in parallel
     Map gccBuilds = [:]
+    List<String> gccImages = []
     gccVersions.each { v ->
         String gccVersion = v
         String gccVersionMajor = getVersionMajor(gccVersion)
+        gccImages.add("${gccVersion}${gccVersionMajor}-${distro}")
         gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
     parallel(gccBuilds)
 
-    stage('Run GCC xtests') {
-        echo 'Run tests that check binaries work in compatible images'
-    }
 
     // Build Clang in parallel
     Map clangBuilds = [:]
+    List<String> clangImages = []
     clangVersions.each { v ->
         String clangVersion = v
         String clangVersionMajor = getVersionMajor(clangVersion)
+        clangImages.add("${clangVersion}${clangVersionMajor}-${distro}")
         clangBuilds["Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
     }
     clangBuilds.failFast = true
     parallel(clangBuilds)
 
+
+    // Run the xtests. Do it in the same node to take advantage of the cache
+    stage('Run GCC xtests') {
+        echo 'Run tests that check binaries work in compatible images'
+        gccImages.each { v ->
+            dir('modern') {
+                echo "pytest tests --image ${jenkinsImage} --service xtest -vv"
+            }
+        }
+    }
     stage('Run Clang xtests') {
         echo 'Run tests that check binaries work in compatible images'
+        clangImages.each { v ->
+            dir('modern') {
+                echo "pytest tests --image ${jenkinsImage} --service xtest -vv"
+            }
+        }
     }
 
 
