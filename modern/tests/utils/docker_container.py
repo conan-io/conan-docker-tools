@@ -5,33 +5,33 @@ from contextlib import contextmanager
 
 
 class DockerContainer:
-    def __init__(self, image, tmpfolder=None):
+    def __init__(self, image, tmpfolder=None, user='root'):
         self.image = image
         self.name = str(uuid.uuid4())
         self._tmpfolder = tmpfolder
         self.tmp = '/tmp/build'
         self._working_dir = None
-        self._user = None
+        self._user = user
 
     def run(self):
         mount_volume = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'workingdir'))
         args = ["docker", "run", "-t", "-d", "-v", f"{mount_volume}:/tmp/workingdir"]
         if self._tmpfolder:
             args += ["-v", f"{self._tmpfolder}:{self.tmp}"]
+        if self._user:
+            args += ["--user", f"{self._user}"]
         args += ["--name", self.name, self.image]
         subprocess.check_call(args)
 
     @contextmanager
-    def working_dir(self, working_dir=None, user='root'):
+    def working_dir(self, working_dir=None):
         wdir = working_dir or os.path.join('/tmp', str(uuid.uuid4()))
         try:
-            self._user = user
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
             yield
         finally:
             self._working_dir = None
-            self._user = None
 
     def bash(self, bash_commands: list):
         return self.exec(['/bin/bash', ] + bash_commands)
