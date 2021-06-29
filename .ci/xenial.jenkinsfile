@@ -110,9 +110,7 @@ node('Linux') {
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
 
             node('Linux') {
-                stage('Checkout the sources') {
-                    checkout scm
-                }
+                checkout scm
 
                 stage("${compiler.toUpperCase()} ${version} builder") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
