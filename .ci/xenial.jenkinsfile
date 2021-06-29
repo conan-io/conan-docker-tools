@@ -151,7 +151,7 @@ node('Linux') {
     gccVersions.each { v ->
         String gccVersion = v
         String gccVersionMajor = getVersionMajor(gccVersion)
-        gccImages.add("$gcc${gccVersionMajor}-${distro}")
+        gccImages.add("gcc${gccVersionMajor}-${distro}")
         gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
@@ -164,7 +164,7 @@ node('Linux') {
     clangVersions.each { v ->
         String clangVersion = v
         String clangVersionMajor = getVersionMajor(clangVersion)
-        clangImages.add("$clang${clangVersionMajor}-${distro}")
+        clangImages.add("clang${clangVersionMajor}-${distro}")
         clangBuilds["Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
     }
     clangBuilds.failFast = true
