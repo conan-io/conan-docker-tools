@@ -21,6 +21,8 @@ class DockerContainer:
         print(f'>> {" ".join(args)}')
         subprocess.check_call(args)
 
+        self.exec(['sudo', 'chown', '-R', 'conan:1001', '/home/conan'])
+
     @contextmanager
     def working_dir(self, working_dir=None):
         wdir = working_dir or os.path.join('/home/conan', str(uuid.uuid4()))
