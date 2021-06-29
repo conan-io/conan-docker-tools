@@ -31,6 +31,7 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
 node('Linux') {
     // Checkout and install deps
     checkout scm
+    sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
     sh 'pip install pytest'
     
     String branchName = scm.branches[0].name.replaceAll('/', '-')
@@ -105,6 +106,7 @@ node('Linux') {
             node('Linux') {
                 // Checkout and install deps
                 checkout scm
+                sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
                 sh 'pip install pytest'
 
                 stage("${compiler.toUpperCase()} ${version} builder") {

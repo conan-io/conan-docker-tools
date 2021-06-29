@@ -35,6 +35,18 @@ class DockerContainer:
             print(out)
             print(err)
 
+            out, err = self.exec(['ls', '-la', '/home'])
+            print(out)
+            print(err)
+
+            out, err = self.exec(['ls', '-la', '/home/conan'])
+            print(out)
+            print(err)
+
+            out, err = self.exec(['ls', '-la', '/home/conan/build'])
+            print(out)
+            print(err)
+
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
             yield
