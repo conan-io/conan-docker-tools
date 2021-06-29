@@ -21,6 +21,7 @@ class DockerContainer:
         if self._user:
             args += ["--user", f"{self._user}"]
         args += ["--name", self.name, self.image]
+        print(f'>> {" ".join(args)}')
         subprocess.check_call(args)
 
     @contextmanager
