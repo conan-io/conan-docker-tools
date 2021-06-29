@@ -25,9 +25,9 @@ class DockerContainer:
     def working_dir(self, working_dir=None, user='conan'):
         wdir = working_dir or os.path.join('/tmp', str(uuid.uuid4()))
         try:
+            self._user = user
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
-            self._user = user
             yield
         finally:
             self._working_dir = None
