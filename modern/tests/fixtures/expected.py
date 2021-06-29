@@ -114,7 +114,7 @@ def get_compiler_versions():
     compiler_versions = defaultdict(list)
     for key, value in env_values.items():
         m_gcc = re.match(r'GCC\d+_VERSION', key)
-        m_clang = re.match('CLANG\d+_VERSION', key)
+        m_clang = re.match(r'CLANG\d+_VERSION', key)
         if m_gcc:
             compiler_versions['gcc'].append(Version(value))
         elif m_clang:

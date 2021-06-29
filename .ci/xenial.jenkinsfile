@@ -134,7 +134,7 @@ node('Linux') {
                     }
 
                     dir('modern') {
-                        echo "pytest tests --image ${deployImage} --service deploy -vv"
+                        sh "pytest tests --image ${deployImage} --service deploy -vv"
                     }
                 }
 
@@ -147,7 +147,7 @@ node('Linux') {
                     }
 
                     dir('modern') {
-                        echo "pytest tests --image ${jenkinsImage} --service jenkins -vv"
+                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv"
                     }
                 }
             }
