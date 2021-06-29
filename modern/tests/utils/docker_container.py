@@ -22,7 +22,7 @@ class DockerContainer:
         subprocess.check_call(args)
 
     @contextmanager
-    def working_dir(self, working_dir=None, user='conan'):
+    def working_dir(self, working_dir=None, user='root'):
         wdir = working_dir or os.path.join('/tmp', str(uuid.uuid4()))
         try:
             self._user = user
