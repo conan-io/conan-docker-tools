@@ -29,7 +29,9 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
 }
 
 node('Linux') {
+    // Checkout and install deps
     checkout scm
+    sh 'pip install pytest'
     
     String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
@@ -77,15 +79,6 @@ node('Linux') {
     }
     String buildArgs = job_environment.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
-    //stage('Detect changes') {
-    // TODO: Dependending on the files affected by the PR we might want to run
-    //   some building or other
-    //}
-
-    stage('Configure the job') {
-        sh 'pip install pytest'
-    }
-
     stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-${distro}:${branchName}-${commit}"
         String latestBranch = "${dockerUsername}/base-${distro}:${branchName}-latest"
@@ -110,7 +103,9 @@ node('Linux') {
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
 
             node('Linux') {
+                // Checkout and install deps
                 checkout scm
+                sh 'pip install pytest'
 
                 stage("${compiler.toUpperCase()} ${version} builder") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
