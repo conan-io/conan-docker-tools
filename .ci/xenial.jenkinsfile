@@ -44,8 +44,6 @@ def get_container_id() {
 node('Linux') {
     // Checkout and install deps
     checkout scm
-    //sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
-    //sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
     sh 'pip install pytest'
     String mainContainerID = get_container_id()
 
@@ -81,7 +79,6 @@ node('Linux') {
         // Environment to use in this job:
         job_environment['DOCKER_USERNAME'] = dockerUsername
         job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
-        //job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
         echo "job_environment:\n\n${ job_environment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
 
         // Parse more information
@@ -105,7 +102,6 @@ node('Linux') {
         }
 
         dir('modern') {
-            
             sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
         }
     }
@@ -123,8 +119,6 @@ node('Linux') {
             node('Linux') {
                 // Checkout and install deps
                 checkout scm
-                //sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
-                //sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
                 sh 'pip install pytest'
                 String containerID = get_container_id()
 
