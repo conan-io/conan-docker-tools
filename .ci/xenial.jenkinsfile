@@ -38,9 +38,9 @@ node('Linux') {
     sh 'cat /proc/self/cgroup'
     sh 'docker volume ls'
     sh 'docker ps'
-    docker.image('ubuntu:16.04').inside {
+    docker.image('conanio/ci-conantests').inside {
         sh 'docker ps'
-        docker.image('ubuntu:16.04').inside {
+        docker.image('conanio/ci-conantests').inside {
             sh 'docker ps'
         }
     }
