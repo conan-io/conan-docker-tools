@@ -36,6 +36,7 @@ node('Linux') {
     sh 'pip install pytest'
 
     sh 'cat /proc/self/cgroup'
+    sh 'docker volume ls'
     
     String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
@@ -45,8 +46,8 @@ node('Linux') {
     Map originalEnvironment = [:]
     Map job_environment = [:]
     String distro = null
-    List<String> gccVersions = []
-    List<String> clangVersions = []
+    List<String> gccVersions = ['5.5.0']
+    List<String> clangVersions = ['10.0.1']
     String conanVersion = null
     String originalUsername = null
     stage('Parse environment file') {
@@ -55,13 +56,14 @@ node('Linux') {
             def (name, value) = it.split('=')
             originalEnvironment.put(name, value)
             job_environment.put(name, value)
-
+            /*
             if (name =~ /GCC\d+_VERSION/) {
                 gccVersions.add(value)
             }
             if (name =~ /CLANG\d+_VERSION/) {
                 clangVersions.add(value)
             }
+            */
         }
         echo "originalEnvironment:\n\n${ originalEnvironment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
 
