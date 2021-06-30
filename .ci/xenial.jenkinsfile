@@ -49,6 +49,7 @@ node('Linux') {
 
 
     String branchName = scm.branches[0].name.replaceAll('/', '-')
+    String targetBranch = "${env.CHANGE_TARGET ?: 'master'}".name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
     echo ">> scm.branches[0].name: ${branchName}"
     String commit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
@@ -96,7 +97,7 @@ node('Linux') {
     stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-${distro}:${branchName}-${commit}"
         String latestBranch = "${dockerUsername}/base-${distro}:${branchName}-latest"
-        String latestMaster = "${dockerUsername}/base-${distro}:master-latest"
+        String latestMaster = "${dockerUsername}/base-${distro}:${targetBranch}-latest"
         dir('modern/base') {
             buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
         }
@@ -124,7 +125,7 @@ node('Linux') {
 
                 stage("${compiler.toUpperCase()} ${version} builder") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:master-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${targetBranch}-latest"
 
                     dir("modern/${compiler}") {
                         buildImage(latestMaster, latestBranch, builderImage, compilerArgs, 'builder')
@@ -133,7 +134,7 @@ node('Linux') {
 
                 stage("${compiler.toUpperCase()} ${version} deploy") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:master-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${targetBranch}-latest"
 
                     dir("modern/${compiler}") {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
@@ -146,7 +147,7 @@ node('Linux') {
 
                 stage("${compiler.toUpperCase()} ${version} jenkins") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:master-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${targetBranch}-latest"
 
                     dir('modern/jenkins') {
                         buildImage(latestMaster, latestBranch, jenkinsImage, "--build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
