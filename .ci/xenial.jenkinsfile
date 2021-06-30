@@ -37,6 +37,7 @@ node('Linux') {
 
     sh 'cat /proc/self/cgroup'
     sh 'docker volume ls'
+    sh 'docker ps'
     
     String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
@@ -132,6 +133,9 @@ node('Linux') {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
                     }
 
+                    sh 'cat /proc/self/cgroup'
+                    sh 'docker volume ls'
+                    sh 'docker ps'
                     docker.image(deployImage).inside {
                         sh 'pwd'
                         sh 'whoami'
