@@ -47,9 +47,9 @@ node('Linux') {
     //sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
     //sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
     sh 'pip install pytest'
+    String mainContainerID = get_container_id()
 
-    get_container_id()
-    
+
     String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
     echo ">> scm.branches[0].name: ${branchName}"
@@ -106,8 +106,8 @@ node('Linux') {
         }
 
         dir('modern') {
-            String containerID = get_container_id()
-            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${containerID} --user 0:0"
+            
+            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
         }
     }
 
@@ -124,8 +124,8 @@ node('Linux') {
             node('Linux') {
                 // Checkout and install deps
                 checkout scm
-                sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
-                sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
+                //sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
+                //sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
                 sh 'pip install pytest'
                 String containerID = get_container_id()
 
@@ -198,7 +198,7 @@ node('Linux') {
         echo 'Run tests that check binaries work in compatible images'
         gccImages.each { image ->
             dir('modern') {
-                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv"
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
             }
         }
     }
@@ -206,7 +206,7 @@ node('Linux') {
         echo 'Run tests that check binaries work in compatible images'
         clangImages.each { image ->
             dir('modern') {
-                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv"
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
             }
         }
     }
