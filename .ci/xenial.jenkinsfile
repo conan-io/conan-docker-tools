@@ -39,7 +39,10 @@ node('Linux') {
     sh 'docker volume ls'
     sh 'docker ps'
     docker.image('ubuntu:16.04').inside {
-        sh 'ls -la'
+        sh 'docker ps'
+        docker.image('ubuntu:16.04').inside {
+            sh 'docker ps'
+        }
     }
     
     String branchName = scm.branches[0].name.replaceAll('/', '-')
