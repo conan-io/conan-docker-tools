@@ -28,6 +28,18 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
     sh "docker push ${latestBranch}"
 }
 
+def get_container_id() {
+    String nodeName = "${NODE_NAME}"
+    echo nodeName
+    String output = sh(script: 'docker ps', returnStdout: true)
+    echo output
+    String line = output.split('\n').each({ it.trim() }).findAll({ it.contains(nodeName) && it.contains('/opt/entrypoint.sh') })[0]
+    echo line
+    String nodeId = line.split(' ')[0]
+    echo nodeId
+}
+
+
 node('Linux') {
     // Checkout and install deps
     checkout scm
@@ -35,18 +47,7 @@ node('Linux') {
     sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
     sh 'pip install pytest'
 
-    def node_name = "${NODE_NAME}"
-    echo "The Node Name is: ${node_name}"
-    
-    sh 'cat /proc/self/cgroup'
-    sh 'docker volume ls'
-    sh 'docker ps'
-    docker.image('conanio/ci-conantests').inside {
-        sh 'docker ps'
-        docker.image('conanio/ci-conantests').inside {
-            sh 'docker ps'
-        }
-    }
+    get_container_id()
     
     String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
