@@ -5,15 +5,18 @@ from contextlib import contextmanager
 
 
 class DockerContainer:
-    def __init__(self, image, volumes_from, working_dir):
+    def __init__(self, image, volumes_from, user=None):
         self.image = image
         self.name = str(uuid.uuid4())
         self._volumes_from = volumes_from
+        self._user = user
         # Assume working_dir is the root of the repository
         self._working_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
     def run(self):
         args = ["docker", "run", "-t", "-d", "--name", self.name]
+        if self._user:
+            args += ["-u", self._user]
         if self._volumes_from:
             args += ["--volumes-from", self._volumes_from]
         else:

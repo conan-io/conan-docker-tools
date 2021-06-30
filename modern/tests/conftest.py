@@ -17,7 +17,7 @@ def pytest_addoption(parser):
     parser.addoption("--service", action="store", choices=docker_compose_services)
     parser.addoption("--volumes-from", action="store", help="ID of the docker container to mount volumes from. Used"
                                                             " in Jenkins.")
-    parser.addoption("--working-dir", action="store", help="Working directory inside container. Used in Jenkins.")
+    parser.addoption("--user", action="store", help="user:group to run container. Used in Jenkins.")
 
 
 def pytest_configure(config):

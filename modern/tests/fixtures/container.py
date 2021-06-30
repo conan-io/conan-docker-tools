@@ -8,8 +8,8 @@ from utils.docker_container import run_container
 def container(pytestconfig):
     image = pytestconfig.getoption("image")
     volumes_from = pytestconfig.getoption("volumes_from")
-    working_dir = pytestconfig.getoption("working_dir")
-    print(f">> Run image '{image}' using volumes-from '{volumes_from}' on wdir '{working_dir}'")
+    user = pytestconfig.getoption("user")
+    print(f">> Run image '{image}' using volumes-from '{volumes_from}' on user '{user}'")
 
-    with run_container(image, volumes_from, working_dir) as container:
+    with run_container(image, volumes_from, user) as container:
         yield container

@@ -163,7 +163,7 @@ node('Linux') {
                     }
                     dir('modern') {
                         String containerID = get_container_id()
-                        sh "pytest tests --image ${deployImage} --service deploy -vv --volumes-from ${containerID}"
+                        sh "pytest tests --image ${deployImage} --service deploy -vv --volumes-from ${containerID} --user 0:0"
                     }
                 }
 
