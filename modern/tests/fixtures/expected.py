@@ -85,29 +85,6 @@ class Expected:
     def image_name(self, compiler, version):
         return f'{self.docker_username}/{compiler}{version.major}-{self.distro.name}{self.distro.version}:{self.docker_tag}'
 
-    def compatible_images(self, libstdcpp=False, libcpp=False):
-        """ Returns a list with the images that are compatible with the binaries generated in the expected distro """
-        # TODO: This function is first class citizen in this repository, move it closer to ROOT
-        # TODO: Some Clang can use GCC images and viceversa
-        compiler_versions = self.compiler_versions[self.compiler.name]
-        if self.compiler.name == 'gcc':
-            if libstdcpp:
-                # For GCC images, due to `libstdc++` version, they are only backward compatible.
-                compat_versions = [v for v in compiler_versions if self.compiler.version < v]
-            else:
-                compat_versions = compiler_versions
-            return [('gcc', v) for v in compat_versions]
-        elif self.compiler.name == 'clang':
-            if libcpp:
-                # For Clang images using libc++ we have the same issue, only backward compatible
-                compat_versions = [v for v in compiler_versions if self.compiler.version < v]
-            else:
-                # ... if using libstdc++, all our images use the same version
-                compat_versions = compiler_versions
-            return [('clang', v) for v in compat_versions]
-        else:
-            raise NotImplemented
-
 
 def get_compiler_versions():
     env_values = get_envfile_values()
