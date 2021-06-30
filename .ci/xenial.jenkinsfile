@@ -110,7 +110,7 @@ node('Linux') {
 
         dir('modern') {
             String containerID = get_container_id()
-            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${containerID}"
+            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${containerID} --user 0:0"
         }
     }
 

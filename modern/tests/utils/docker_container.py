@@ -85,7 +85,7 @@ class DockerContainer:
 
     @contextmanager
     def run_container(self, image):
-        with run_container(image, self._volumes_from, self._working_dir) as container:
+        with run_container(image, self._volumes_from, self._user) as container:
             yield container
 
 
