@@ -31,12 +31,13 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
 def get_container_id() {
     String nodeName = "${NODE_NAME}"
     echo nodeName
-    String output = sh(script: 'docker ps -q --no-trunc', returnStdout: true)
+    String output = sh(script: 'docker ps --no-trunc', returnStdout: true)
     echo output
     String line = output.split('\n').each({ it.trim() }).findAll({ it.contains(nodeName) && it.contains('/opt/entrypoint.sh') })[0]
     echo line
     String nodeId = line.split(' ')[0]
     echo nodeId
+    return nodeId
 }
 
 
