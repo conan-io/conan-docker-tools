@@ -33,13 +33,10 @@ def get_container_id() {
     //  I can figure out to get the ID of the running container to be able to mount the same volume when 
     //  using docker-in-docker.
     String nodeName = "${NODE_NAME}"
-    echo nodeName
     String output = sh(script: 'docker ps --no-trunc', returnStdout: true)
-    echo output
     String line = output.split('\n').each({ it.trim() }).findAll({ it.contains(nodeName) && it.contains('/opt/entrypoint.sh') })[0]
-    echo line
     String nodeId = line.split(' ')[0]
-    echo nodeId
+    echo "Node ${nodeName} with docker ID '${nodeId}'"
     return nodeId
 }
 
@@ -47,8 +44,8 @@ def get_container_id() {
 node('Linux') {
     // Checkout and install deps
     checkout scm
-    sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
-    sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
+    //sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
+    //sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
     sh 'pip install pytest'
 
     get_container_id()
@@ -130,6 +127,7 @@ node('Linux') {
                 sh 'chown -R 1000:1001 modern/tests/workingdir'  // Change owner to match the one running inside the container
                 sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
                 sh 'pip install pytest'
+                String containerID = get_container_id()
 
                 stage("${compiler.toUpperCase()} ${version} builder") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
@@ -148,21 +146,7 @@ node('Linux') {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
                     }
 
-                    sh 'cat /proc/self/cgroup'
-                    sh 'docker volume ls'
-                    sh 'docker ps'
-                    docker.image(deployImage).inside {
-                        sh 'pwd'
-                        sh 'whoami'
-                        sh 'id -g -n'
-                        sh 'id'
-                        sh 'ls -la'
-                        sh 'ls -la modern/tests'
-                        sh 'ls -la modern/tests/workingdir'
-                        sh 'ls -la modern/tests/workingdir/simple'
-                    }
                     dir('modern') {
-                        String containerID = get_container_id()
                         sh "pytest tests --image ${deployImage} --service deploy -vv --volumes-from ${containerID} --user 0:0"
                     }
                 }
@@ -176,7 +160,7 @@ node('Linux') {
                     }
 
                     dir('modern') {
-                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv"
+                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
                     }
                 }
             }
