@@ -49,9 +49,9 @@ node('Linux') {
 
 
     String branchName = scm.branches[0].name.replaceAll('/', '-')
-    String targetBranch = "${CHANGE_TARGET ?: 'master'}".name.replaceAll('/', '-')
+    String targetBranch = "${CHANGE_TARGET ?: 'master'}".replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
-    echo ">> scm.branches[0].name: ${branchName}"
+    echo ">> branchName: ${branchName}, targetBranch: ${targetBranch} (isMaster: ${isMaster})"
     String commit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
     Map originalEnvironment = [:]
