@@ -48,6 +48,12 @@ class DockerContainer:
     def working_dir(self, working_dir=''):
         old_wdir = self._working_dir
         try:
+            out, err = self.exec(['ls', '-la', self._working_dir])
+            print(out)
+            print(err)
+            out, err = self.exec(['ls', '-la'])
+            print(out)
+            print(err)
             wdir = os.path.join(self._working_dir, working_dir)
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
