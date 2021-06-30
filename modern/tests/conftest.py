@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 docker_compose_services = ['base',
@@ -17,6 +15,9 @@ pytest_plugins = [
 def pytest_addoption(parser):
     parser.addoption("--image", action="store", required=True)
     parser.addoption("--service", action="store", choices=docker_compose_services)
+    parser.addoption("--volumes-from", action="store", help="ID of the docker container to mount volumes from. Used"
+                                                            " in Jenkins.")
+    parser.addoption("--working-dir", action="store", help="Working directory inside container. Used in Jenkins.")
 
 
 def pytest_configure(config):
