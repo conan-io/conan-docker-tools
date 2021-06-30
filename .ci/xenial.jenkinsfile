@@ -28,14 +28,30 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
     sh "docker push ${latestBranch}"
 }
 
+def get_container_id() {
+    // This is quite fragile and might depends on the Jenkins configuration and deployment, but it is the best
+    //  I can figure out to get the ID of the running container to be able to mount the same volume when 
+    //  using docker-in-docker.
+    String nodeName = "${NODE_NAME}"
+    String output = sh(script: 'docker ps --no-trunc', returnStdout: true)
+    String line = output.split('\n').each({ it.trim() }).findAll({ it.contains(nodeName) && it.contains('/opt/entrypoint.sh') })[0]
+    String nodeId = line.split(' ')[0]
+    echo "Node ${nodeName} with docker ID '${nodeId}'"
+    return nodeId
+}
+
+
 node('Linux') {
-    stage('Checkout the sources') {
-        checkout scm
-    }
+    // Checkout and install deps
+    checkout scm
+    sh 'pip install pytest'
+    String mainContainerID = get_container_id()
+
 
     String branchName = scm.branches[0].name.replaceAll('/', '-')
+    String targetBranch = "${CHANGE_TARGET ?: 'master'}".replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
-    echo ">> scm.branches[0].name: ${branchName}"
+    echo ">> branchName: ${branchName}, targetBranch: ${targetBranch} (isMaster: ${isMaster})"
     String commit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
     Map originalEnvironment = [:]
@@ -64,7 +80,6 @@ node('Linux') {
         // Environment to use in this job:
         job_environment['DOCKER_USERNAME'] = dockerUsername
         job_environment['DOCKER_TAG'] = "${branchName}-${commit}"
-        //job_environment['BUILDKIT_INLINE_CACHE'] = '1'  // This makes the image usable as cache source
         echo "job_environment:\n\n${ job_environment.collect({ k, v -> "${k }=${v }"}).join('\n')}"
 
         // Parse more information
@@ -79,25 +94,16 @@ node('Linux') {
     }
     String buildArgs = job_environment.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
-    stage('Detect changes') {
-    // TODO: Dependending on the files affected by the PR we might want to run
-    //   some building or other
-    }
-
-    stage('Configure the job') {
-        sh 'pip install pytest'
-    }
-
     stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-${distro}:${branchName}-${commit}"
         String latestBranch = "${dockerUsername}/base-${distro}:${branchName}-latest"
-        String latestMaster = "${dockerUsername}/base-${distro}:master-latest"
+        String latestMaster = "${dockerUsername}/base-${distro}:${targetBranch}-latest"
         dir('modern/base') {
             buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
         }
 
         dir('modern') {
-            sh "pytest tests --image ${expectedImage} --service base"
+            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
         }
     }
 
@@ -112,46 +118,43 @@ node('Linux') {
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
 
             node('Linux') {
-                stage('Checkout the sources') {
-                    checkout scm
-                }
+                // Checkout and install deps
+                checkout scm
+                sh 'pip install pytest'
+                String containerID = get_container_id()
 
                 stage("${compiler.toUpperCase()} ${version} builder") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:master-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-builder:${targetBranch}-latest"
 
                     dir("modern/${compiler}") {
                         buildImage(latestMaster, latestBranch, builderImage, compilerArgs, 'builder')
-                    }
-
-                    dir('modern') {
-                        echo "pytest tests --image ${builderImage} --service builder"
                     }
                 }
 
                 stage("${compiler.toUpperCase()} ${version} deploy") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:master-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}:${targetBranch}-latest"
 
                     dir("modern/${compiler}") {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
                     }
 
                     dir('modern') {
-                        echo "pytest tests --image ${deployImage} --service deploy"
+                        sh "pytest tests --image ${deployImage} --service deploy -vv --volumes-from ${containerID} --user 0:0"
                     }
                 }
 
                 stage("${compiler.toUpperCase()} ${version} jenkins") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:master-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${targetBranch}-latest"
 
                     dir('modern/jenkins') {
                         buildImage(latestMaster, latestBranch, jenkinsImage, "--build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
                     }
 
                     dir('modern') {
-                        echo "pytest tests --image ${jenkinsImage} --service jenkins"
+                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
                     }
                 }
             }
@@ -160,30 +163,46 @@ node('Linux') {
 
     // Build GCC in parallel
     Map gccBuilds = [:]
+    List<String> gccImages = []
     gccVersions.each { v ->
         String gccVersion = v
         String gccVersionMajor = getVersionMajor(gccVersion)
+        gccImages.add("gcc${gccVersionMajor}-${distro}")
         gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
     parallel(gccBuilds)
 
-    stage('Run GCC xtests') {
-        echo 'Run tests that check binaries work in compatible images'
-    }
 
     // Build Clang in parallel
     Map clangBuilds = [:]
+    List<String> clangImages = []
     clangVersions.each { v ->
         String clangVersion = v
         String clangVersionMajor = getVersionMajor(clangVersion)
+        clangImages.add("clang${clangVersionMajor}-${distro}")
         clangBuilds["Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
     }
     clangBuilds.failFast = true
     parallel(clangBuilds)
 
+
+    // Run the xtests. Do it in the same node to take advantage of the cache
+    stage('Run GCC xtests') {
+        echo 'Run tests that check binaries work in compatible images'
+        gccImages.each { image ->
+            dir('modern') {
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
+            }
+        }
+    }
     stage('Run Clang xtests') {
         echo 'Run tests that check binaries work in compatible images'
+        clangImages.each { image ->
+            dir('modern') {
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
+            }
+        }
     }
 
 

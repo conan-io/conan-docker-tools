@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.compiler('gcc')
-@pytest.mark.service('builder', 'deploy', 'jenkins')
+@pytest.mark.service('deploy', 'jenkins')
 class TestGccCompiler:
 
     def test_version(self, container, expected):

@@ -283,8 +283,6 @@ class ConanDockerTools(object):
             "docker exec %s conan install cmake/3.18.6@ "
             "--build" % self.service, shell=True)
 
-        logging.info("Starting new Test: Simple")
-        subprocess.check_call([sys.executable, "test/simple/run.py", self.service])
         logging.info("Starting new Test: Standard")
         subprocess.check_call([sys.executable, "test/standard/run.py", self.service])
         logging.info("Starting new Test: System")

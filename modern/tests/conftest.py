@@ -1,8 +1,10 @@
-import os
-
 import pytest
 
-docker_compose_services = ['base', 'builder', 'deploy', 'jenkins']
+docker_compose_services = ['base',
+                           # 'builder',  This is just a helper image, do we need to test it?
+                           'deploy',
+                           'jenkins',
+                           'xtest']
 
 pytest_plugins = [
     "fixtures.container",
@@ -13,8 +15,9 @@ pytest_plugins = [
 def pytest_addoption(parser):
     parser.addoption("--image", action="store", required=True)
     parser.addoption("--service", action="store", choices=docker_compose_services)
-    parser.addoption("--env-file", action="store", default=os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '.env')),
-                     help="Path to the envfile used to generate the docker images")
+    parser.addoption("--volumes-from", action="store", help="ID of the docker container to mount volumes from. Used"
+                                                            " in Jenkins.")
+    parser.addoption("--user", action="store", help="user:group to run container. Used in Jenkins.")
 
 
 def pytest_configure(config):
