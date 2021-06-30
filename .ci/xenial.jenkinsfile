@@ -35,6 +35,9 @@ node('Linux') {
     sh 'chmod -R 777 modern/tests/workingdir'  // Change owner to match the one running inside the container
     sh 'pip install pytest'
 
+    def node_name = "${NODE_NAME}"
+    echo "The Node Name is: ${node_name}"
+    
     sh 'cat /proc/self/cgroup'
     sh 'docker volume ls'
     sh 'docker ps'
