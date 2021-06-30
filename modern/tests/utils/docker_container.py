@@ -23,40 +23,18 @@ class DockerContainer:
             mount_volume = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
             args += ["-v", f"{mount_volume}:{self._working_dir}:rw"]
         args += [self.image, ]
+
+        # If it is the Jenkins image, we need to modify the entrypoint
+        if '-jenkins:' in self.image:
+            args += ['/bin/bash', ]
+
         print(f'>> {" ".join(args)}')
         subprocess.check_call(args)
-
-    """
-    def __init__(self, image, tmpfolder=None):
-        self.image = image
-        self.name = str(uuid.uuid4())
-        self._tmpfolder = tmpfolder
-        self.tmp = '/home/conan/build'
-        self._working_dir = None
-    """
-    """
-    def run(self):
-        mount_volume = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'workingdir'))
-        args = ["docker", "run", "-t", "-d", "-v", f"{mount_volume}:/home/conan/workingdir:ro"]
-        if self._tmpfolder:
-            args += ["-v", f"{self._tmpfolder}:{self.tmp}:rw"]
-        args += ["--name", self.name, self.image]
-        print(f'>> {" ".join(args)}')
-        subprocess.check_call(args)
-
-        self.exec(['sudo', 'chown', '-R', 'conan:1001', '/home/conan'])
-    """
 
     @contextmanager
     def working_dir(self, working_dir=''):
         old_wdir = self._working_dir
         try:
-            out, err = self.exec(['ls', '-la', self._working_dir])
-            print(out)
-            print(err)
-            out, err = self.exec(['ls', '-la'])
-            print(out)
-            print(err)
             wdir = os.path.join(self._working_dir, working_dir)
             self.exec(['mkdir', '-p', wdir])
             self._working_dir = wdir
@@ -90,8 +68,8 @@ class DockerContainer:
 
 
 @contextmanager
-def run_container(image, volumes_from, working_dir):
-    container = DockerContainer(image, volumes_from, working_dir)
+def run_container(image, volumes_from, user):
+    container = DockerContainer(image, volumes_from, user)
     try:
         container.run()
         yield container
