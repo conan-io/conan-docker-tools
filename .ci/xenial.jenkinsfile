@@ -38,6 +38,9 @@ node('Linux') {
     sh 'cat /proc/self/cgroup'
     sh 'docker volume ls'
     sh 'docker ps'
+    docker.image('ubuntu:16.04').inside {
+        sh 'ls -la'
+    }
     
     String branchName = scm.branches[0].name.replaceAll('/', '-')
     boolean isMaster = (branchName == 'master')
