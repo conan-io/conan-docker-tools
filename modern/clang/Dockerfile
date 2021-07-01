@@ -1,4 +1,5 @@
 ARG DOCKER_USERNAME
+ARG LIBSTDCPP_MAJOR_VERSION
 ARG DOCKER_TAG
 ARG DISTRO_VERSION
 ARG DISTRO
@@ -121,18 +122,21 @@ RUN apt-get -qq update \
     && ninja compiler-rt \
     && ninja install-unwind install-cxxabi install-cxx install-clang install-lld install-compiler-rt \
     && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
-    && cp $(find lib -name "*.so*") /tmp/install/lib \
-    && mkdir /tmp/gcc \
-    && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
-    && tar zxf gcc-${LIBSTDCPP_VERSION}.tar.gz -C /tmp/gcc
+    && cp $(find lib -name "*.so*") /tmp/install/lib
+
+FROM ${DOCKER_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:${DOCKER_TAG} as libstdcpp
 
 FROM ${DOCKER_USERNAME}/base-${DISTRO}:${DOCKER_TAG} as deploy
 
 ARG LIBSTDCPP_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
 
+ARG DOCKER_USERNAME
+ARG DOCKER_TAG
+ARG DISTRO
+
 COPY --from=builder /tmp/install /tmp/clang
-COPY --from=builder /tmp/gcc /tmp/gcc
+COPY --from=libstdcpp /usr/local /tmp/gcc
 
 RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.${LIBSTDCPP_PATCH_VERSION} /usr/local/lib64/libstdc++.so.6 \

@@ -116,7 +116,7 @@ class ConanDockerTools(object):
     def get_latest_conan_version(self):
         """ Read latest Conan version available on Pypi
         """
-        if not self.latest_version:
+        if not self.latest_conan_version:
             url = "https://pypi.org/pypi/conan/json"
             response = requests.get(url)
             response.raise_for_status()
@@ -358,7 +358,7 @@ class ConanDockerTools(object):
                 self.login()
                 self.build()
                 self.tag()
-                self.test(compiler.name, compiler.version)
+                #self.test(compiler.name, compiler.version)
                 self.info()
                 self.deploy()
 
