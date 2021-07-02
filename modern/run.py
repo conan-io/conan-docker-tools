@@ -50,14 +50,12 @@ class ConanDockerTools(object):
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", self._get_docker_username())
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
-        artifactory_repo = os.getenv("ARTIFACTORY_REPOSITORY", "https://c3istg.jfrog.io/artifactory/dad-generic")
 
         docker_build_tag = self._get_conan_target_version()
         docker_cache = self._get_boolean_var("DOCKER_CACHE")
         build_base = self._get_boolean_var("BUILD_BASE", True)
 
         os.environ["DOCKER_USERNAME"] = docker_username
-        os.environ["ARTIFACTORY_REPOSITORY"] = artifactory_repo
 
         gcc_version = os.getenv("GCC_VERSION", "")
         clang_version = os.getenv("CLANG_VERSION", "")
