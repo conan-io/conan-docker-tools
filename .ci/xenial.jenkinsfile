@@ -47,9 +47,11 @@ node('Linux') {
     sh 'pip install pytest'
     String mainContainerID = get_container_id()
 
-
     String branchName = scm.branches[0].name.replaceAll('/', '-')
-    String targetBranch = "${CHANGE_TARGET ?: 'master'}".replaceAll('/', '-')
+    String targetBranch = 'master'  // Implicit knowledge of the underlying repository
+    if (env.BRANCH_NAME.startsWith('PR')) {  // Because it is Github
+        targetBranch = "${env.CHANGE_TARGET}".replaceAll('/', '-')
+    }
     boolean isMaster = (branchName == 'master')
     echo ">> branchName: ${branchName}, targetBranch: ${targetBranch} (isMaster: ${isMaster})"
     String commit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
