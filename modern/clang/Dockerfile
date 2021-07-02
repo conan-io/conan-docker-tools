@@ -7,7 +7,6 @@ ARG DISTRO
 FROM ubuntu:${DISTRO_VERSION} as builder
 
 ARG CLANG_VERSION
-ARG ARTIFACTORY_REPOSITORY
 ARG LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
