@@ -358,7 +358,7 @@ class ConanDockerTools(object):
                 self.login()
                 self.build()
                 self.tag()
-                #self.test(compiler.name, compiler.version)
+                self.test(compiler.name, compiler.version)
                 self.info()
                 self.deploy()
 
