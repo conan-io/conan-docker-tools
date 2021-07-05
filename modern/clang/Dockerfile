@@ -1,9 +1,12 @@
-ARG DOCKER_USERNAME CONAN_VERSION
+ARG DOCKER_USERNAME
+ARG LIBSTDCPP_MAJOR_VERSION
+ARG DOCKER_TAG
+ARG DISTRO_VERSION
+ARG DISTRO
 
-FROM ubuntu:xenial as clang-builder
+FROM ubuntu:${DISTRO_VERSION} as builder
 
-ARG LLVM_VERSION
-ARG ARTIFACTORY_REPOSITORY
+ARG CLANG_VERSION
 ARG LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
@@ -30,11 +33,11 @@ RUN apt-get -qq update \
     && apt-key add llvm-snapshot.gpg.key \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev \
-    && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_VERSION}.tar.gz \
-    && tar zxf llvmorg-${LLVM_VERSION}.tar.gz \
-    && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${LLVM_VERSION}/libunwind/src/CMakeLists.txt \
-    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${LLVM_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp \
-    && cd llvm-project-llvmorg-${LLVM_VERSION} \
+    && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${CLANG_VERSION}.tar.gz \
+    && tar zxf llvmorg-${CLANG_VERSION}.tar.gz \
+    && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${CLANG_VERSION}/libunwind/src/CMakeLists.txt \
+    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${CLANG_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp \
+    && cd llvm-project-llvmorg-${CLANG_VERSION} \
     && mkdir build \
     && cd build/ \
     && cmake ../llvm \
@@ -117,19 +120,22 @@ RUN apt-get -qq update \
     && ninja lld \
     && ninja compiler-rt \
     && ninja install-unwind install-cxxabi install-cxx install-clang install-lld install-compiler-rt \
-    && cp -a lib/clang/${LLVM_VERSION}/include /tmp/install/lib/clang/${LLVM_VERSION}/include \
-    && cp $(find lib -name "*.so*") /tmp/install/lib \
-    && mkdir /tmp/gcc \
-    && curl -s -O "${ARTIFACTORY_REPOSITORY}/gcc-${LIBSTDCPP_VERSION}.tar.gz" \
-    && tar zxf gcc-${LIBSTDCPP_VERSION}.tar.gz -C /tmp/gcc
+    && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
+    && cp $(find lib -name "*.so*") /tmp/install/lib
 
-FROM ${DOCKER_USERNAME}/base-ubuntu16.04:${CONAN_VERSION} as deploy
+FROM ${DOCKER_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:${DOCKER_TAG} as libstdcpp
+
+FROM ${DOCKER_USERNAME}/base-${DISTRO}:${DOCKER_TAG} as deploy
 
 ARG LIBSTDCPP_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
 
-COPY --from=clang-builder /tmp/install /tmp/clang
-COPY --from=clang-builder /tmp/gcc /tmp/gcc
+ARG DOCKER_USERNAME
+ARG DOCKER_TAG
+ARG DISTRO
+
+COPY --from=builder /tmp/install /tmp/clang
+COPY --from=libstdcpp /usr/local /tmp/gcc
 
 RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.${LIBSTDCPP_PATCH_VERSION} /usr/local/lib64/libstdc++.so.6 \
@@ -148,4 +154,5 @@ RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/clang++ 100 \
     && sudo update-alternatives --install /usr/local/bin/ld ld /usr/local/bin/ld.lld 100 \
     && sudo rm /etc/ld.so.cache \
-    && sudo ldconfig -C /etc/ld.so.cache
+    && sudo ldconfig -C /etc/ld.so.cache \
+    && conan config init --force

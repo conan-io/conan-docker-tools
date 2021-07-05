@@ -6,7 +6,7 @@ import logging
 import subprocess
 import sys
 import re
-from conans import __version__ as client_version
+import requests
 from conans import tools
 from cpt.ci_manager import CIManager
 from cpt.printer import Printer
@@ -26,6 +26,7 @@ class ConanDockerTools(object):
         self.clang_compiler = Compiler(name="clang", version=self.variables.clang_version, pretty="clang")
         self.loggedin = False
         self.service = None
+        self.latest_conan_version = None
 
         logging.info("""
     The follow compiler versions will be built:
@@ -49,14 +50,12 @@ class ConanDockerTools(object):
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", self._get_docker_username())
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
-        artifactory_repo = os.getenv("ARTIFACTORY_REPOSITORY", "https://c3istg.jfrog.io/artifactory/dad-generic")
 
         docker_build_tag = self._get_conan_target_version()
         docker_cache = self._get_boolean_var("DOCKER_CACHE")
         build_base = self._get_boolean_var("BUILD_BASE", True)
 
         os.environ["DOCKER_USERNAME"] = docker_username
-        os.environ["ARTIFACTORY_REPOSITORY"] = artifactory_repo
 
         gcc_version = os.getenv("GCC_VERSION", "")
         clang_version = os.getenv("CLANG_VERSION", "")
@@ -110,7 +109,18 @@ class ConanDockerTools(object):
     def _is_latest_version(self):
         """ Compare the target Conan version against the host Conan version
         """
-        return tools.Version(self.variables.docker_build_tag) >= client_version
+        return tools.Version(self.variables.docker_build_tag) >= self.get_latest_conan_version()
+
+    def get_latest_conan_version(self):
+        """ Read latest Conan version available on Pypi
+        """
+        if not self.latest_conan_version:
+            url = "https://pypi.org/pypi/conan/json"
+            response = requests.get(url)
+            response.raise_for_status()
+            json_data = response.json()
+            self.latest_conan_version = json_data["info"]["version"]
+        return self.latest_conan_version
 
     @property
     def _ubuntu_version(self):
@@ -271,8 +281,6 @@ class ConanDockerTools(object):
             "docker exec %s conan install cmake/3.18.6@ "
             "--build" % self.service, shell=True)
 
-        logging.info("Starting new Test: Simple")
-        subprocess.check_call([sys.executable, "test/simple/run.py", self.service])
         logging.info("Starting new Test: Standard")
         subprocess.check_call([sys.executable, "test/standard/run.py", self.service])
         logging.info("Starting new Test: System")
