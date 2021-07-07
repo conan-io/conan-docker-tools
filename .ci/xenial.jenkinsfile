@@ -42,8 +42,6 @@ def get_container_id() {
             nodeId = line.split(' ')[0]
         }
     })
-    //String line = output.split('\n').each({ it.trim() }).findAll({ it.contains(nodeName) && it.contains('/opt/entrypoint.sh') })[0]
-    //String nodeId = line.split(' ')[0]
     echo "Node ${nodeName} with docker ID '${nodeId}'"
     return nodeId
 }
