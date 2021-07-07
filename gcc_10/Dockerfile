@@ -48,7 +48,8 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-${GCC_VERSION} 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate -O /usr/local/bin/jfrog https://api.bintray.com/content/jfrog/jfrog-cli-go/\$latest/jfrog-cli-linux-amd64/jfrog?bt_package=jfrog-cli-linux-amd64 \
+    && curl -fL https://getcli.jfrog.io | sh \
+    && mv jfrog /usr/local/bin/jfrog \
     && chmod +x /usr/local/bin/jfrog \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
