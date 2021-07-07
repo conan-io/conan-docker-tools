@@ -43,6 +43,7 @@ class TestBuildGFortran:
                 out, err = vanilla.exec(['./hello'])
                 assert 'Hello world!' in out, f"out: '{out}' err: '{err}'"
 
+    @pytest.mark.xfail(reason="Each binary requires each own version of 'libgfortran.so.<v>' and it isn't backward compatible")
     @pytest.mark.service('xtest')
     @pytest.mark.parametrize("compiler, compiler_version", [(key, str(v)) for key, value in get_compiler_versions().items() for v in value])
     def test_compatible(self, container, expected, compiler, compiler_version):
