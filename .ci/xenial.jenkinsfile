@@ -28,6 +28,7 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
     sh "docker push ${latestBranch}"
 }
 
+@NonCPS
 def get_container_id() {
     // This is quite fragile and might depends on the Jenkins configuration and deployment, but it is the best
     //  I can figure out to get the ID of the running container to be able to mount the same volume when 
