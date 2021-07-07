@@ -34,6 +34,7 @@ class TestBuildGFortran:
             print(out)
             print(err)
 
+    @pytest.xfail("Runtime is not available in vanilla images, neither easily installable using apt")
     @pytest.mark.service('deploy', 'jenkins')
     def test_vanilla_image(self, container, expected):
         # C executable should run in vanilla image
