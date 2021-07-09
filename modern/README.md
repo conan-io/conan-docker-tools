@@ -1,42 +1,79 @@
 [![Build Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
 # Conan Docker Tools
 
-![logo](logo.png)
+![logo](../logo.png)
 
-Dockerfiles for Conan Center Continuous Integration.
-
-You can use these images directly in your project or with the [conan-package-tools project](https://github.com/conan-io/conan-package-tools).
+Dockerfiles for Conan Center Continuous Integration system.
 
 > :warning: **Warning:**
 The images listed below are intended for **generating open-source library packages** and we CAN NOT guarantee any kind of stability. We strongly recommend using your own generated images for production environments taking the dockerfiles in this repository as a reference.
 
-### New Docker Strategy (June 2021)
+## New Docker Strategy (June 2021)
 
-**TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same glibc and stdlibc++ versions.
+> **TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same system library versions (smae `glibc` version).
 
 
 After many updates, new compiler releases, instability and incompatibility problems, we decided to clean the house, move a step forward with Conan Docker Tools. So far, we usually follow the same recipe, when a compiler version is released, we also release a new docker image, but we have two main problems:
 
 - Ubuntu doesn’t package new compiler versions for each distro release, so we need to use a new Ubuntu version as base image. As a consequence, non LTS versions become a problem when EOL comes.
-- Each Ubuntu release uses different package versions, including very important projects, like glibc, which results in incompatibility from a package created by distro version to another version.
+- Each Ubuntu release uses different package versions, including very important projects, like `glibc`, which results in incompatibility and runtime errors when a package is built using one distro and we try to run in a different one.
 
-Given this priority (same base images, glibc and stdlibc++ versions for all) we will support only the compilers that we managed to build and run in the base image, the rest will be deprecated from ConanCenter because on this technical reasons.
+With these two problems in mind we defined one objective: **use the same
+Ubuntu distribution to generate all the packages in ConanCenter**, at least
+we will ensure that every binary will be linked with the same system libraries
+and the same `glibc` version.
 
-Second, we decided to use a single base image, not too old and not the latest, something in the middle, to keep a glibc still compatible for some old distro releases. Thus, we choose Ubuntu 16.04 LTS (Xenial) which its EOL is in 2024. When close to the EOL date, we can move to 18.04 and so on.
+As a consequence, we need to choose one base distribution and we will need
+to build from sources all the compiler versions that are not already available.
+In the end, we will be building from sources all the compiler versions we will
+be using. As a side-effect, some version might be deprecated if we cannot
+manage to build them from sources.
 
-As the compiler version is always a problem to align according to the distro release, we decided to build all compilers from sources, which includes GCC and Clang. Although this increased the build time considerably, we still now have full control over the compiler used in our images.
+We decided to use a single base image, not too old and not the latest, something in the middle, to keep a `glibc` still compatible for some old distro releases. Thus, we choose Ubuntu 16.04 LTS (Xenial) which its EOL is in 2024. When close to the EOL date, we can move to 18.04 and so on.
 
-We totally understand that companies and users are still using our “legacy” docker images, so we won’t deprecate them soon. This kind of change requires rebuilding all packages again, and depending on the number, it could take weeks. Thus, don’t worry, we won’t remove them from Docker hub.
+We totally understand that companies and users are still using our “legacy” docker images, so we won’t deprecate them soon. This kind of change requires rebuilding all packages again, and depending on the number, it could take weeks.
+Also, take into account that we won’t activaley remove them from Docker hub.
 
-### Legacy Docker Images
+Now the future of ConanCenter binaries is defined, it will take time to design
+the transition and move everything forward, don't expect it to change soon.
+
+## `stdlibc++` and `libc++` versions
+
+With this approach, we manage to use the same `glibc` version for all the
+binaries, and a version old enough that will be available in most of the
+distros out there. Nevertheless, still each GCC compiler version will use its
+matching `stdlibc++` version.
+
+In general terms, it means that C++ binaries that are not linking statically
+the `stdlibc++` library (most of them) are only forward compatible, they will
+work only in images that provide a library version equal or newer that the
+one used to compile them.
+
+The same applies to `libc++` library version used together with Clang compiler,
+the running system should provide a version equal or newer than the one used
+to link the compiled binary.
+
+What about Clang and `stdlibc++` version? We decided that all the Clang images
+will use the same library version as there is no one correspondence between 
+Clang compiler and `stdlibc++` version like it is for GCC compiler. All these
+Clang images will use the `stdlibc++` that corresponds to the latest LTS
+Ubuntu distribution (at the time of this writting, it is the one corresponding
+to GCC 10). This version should be new enough to provide most features and
+widespread enough to be available for consumers that need to install it to
+run pre-compiled binaries.
+
+## Legacy Docker Images
 
 Legacy docker images will be moved to "legacy" folder and eventually their dockerfiles will no longer be maintained in this repository (EOL to be decided).
+Anyway, they should always be available in DockerHub.
 
-### Official Docker Images
+## Official Docker Images
 
 These are the images uploaded to Docker Hub and currently used by [Conan Center](https://conan.io/center):
 
-#### GCC
+> Note.- Tags will use the Conan version available in those images.
+
+### GCC
 
 | Version                                                                            | Arch    |  Status, Life cycle  |
 |------------------------------------------------------------------------------------|---------|----------------------|
@@ -49,7 +86,7 @@ These are the images uploaded to Docker Hub and currently used by [Conan Center]
 | [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)       | x86_64  |  Supported           |
 
 
-#### Clang
+### Clang
 
 | Version                                                                                  | Arch   |  Status, Life cycle  |
 |------------------------------------------------------------------------------------------|--------|----------------------|
@@ -58,7 +95,7 @@ These are the images uploaded to Docker Hub and currently used by [Conan Center]
 | - [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/)     | x86_64 |  Supported           |
 
 
-#### Conan Server
+### Conan Server
 
 Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host. It's based on Alpine.
 
@@ -67,7 +104,7 @@ Conan Docker Tools provides an image version with only Conan Server installed, v
 | - [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)             | ANY    |  Supported           |
 
 
-#### Jenkins Client
+### Jenkins Client
 
 If you use Jenkins to build your packages and also you use Jenkins clients to run each docker container, you could use our Docker images prepared for Jenkins. Those images run the script [jenkins-client.sh](jenkins/jenkins-client), which starts the client during the container entrypoint.
 These images are mainly focused for Conan Center CI.
@@ -117,25 +154,29 @@ docker-compose run -v /tmp/.conan:/home/conan/.conan gcc11 bash -c "conan instal
 Build, Test and Deploy
 ======================
 
-## Introduce
+## Introduction
 
-The images are already built and uploaded to [conanio](https://hub.docker.com/r/conanio/) dockerhub account, but if you want to build your own images, read this section.
+The images are already built and uploaded to [conanio](https://hub.docker.com/r/conanio/) dockerhub account, we recommend you to use the images that are
+already avaiable, but if you want to build your own images, read this section.
 
-The `docker-compose.yml` file list all possible combinations of images and it will be explained below:
+We are using multistage dockerfiles, and some of them require to build other
+images first, so please, read carefully all the steps below.
 
-### Build
+We will be using docker compose command to build the images just for
+convenience. It will help to ensure that the same configuration is used to
+build all the images and the names match, but you can also use raw
+`docker build` command and provide all the required arguments in the 
+command line.
 
-Each image created on this stage will be tagged as  ``conanio/<compiler><compiler.version>-<distro><distro.version>``.
+Each image created will be tagged as  `conanio/<compiler><compiler.version>-<distro><distro.version>:<conan-version>`.
 
-For instance, building Clang 12 complete image:
+### Configuration
 
-    $ docker-compose build clang12
-
-The produced image will be named as ``conanio/clang12-ubuntu16.04``. The tag will follow the `CONAN_VERSION` in `.env` file.
+All the configuration is declared in the `.env` file that docker-compose will
+load automatically when running commands. Feel free to modify that file
+to match your requirements.
 
 #### Pre-Build stage (Base)
-
-Besides the final compiler image, there are other important images which can be built separately and are part of the final image.
 
 The Docker image `base` (same service name), installs all basic system APT packages, CMake, Python and Conan. So, if you are looking for an
 image without compiler, `base` is your candidate.
@@ -153,8 +194,7 @@ The Builder image can be built directly, it's useful if you want to investigate 
 
     $ docker-compose build gcc10-builder
 
-It will the Builder image for GCC 10, which takes around 15 minutes. For Clang case, it can take 1 hour.
-
+It will build image for GCC 10, which takes around 15 minutes. For Clang case, it can take 1 hour.
 
 #### Final stage (Deploy)
 
@@ -167,86 +207,42 @@ It's the default build command, for instance:
 
     $ docker-compose build gcc10
 
-#### Update Conan version
+> Take into account that in order to build Clang images it is required to build
+first the GCC image that will provide the `stdlibc++` version (whatever is
+defined in `LIBSTDCPP_MAJOR_VERSION` inside `.env` file).
 
-After having all images built and uploaded, probably you don't need to build all again. Eventually, Conan will release a new version and to
-avoid a massive build again, the argument `CONAN_VERSION` is separated in Base, which means, if you have your Docker cache, it will update
-Conan client version and tag your new image only.
-
-    $ cd modern/
-    $ sed -i 's/1.37.0/1.37.2/g' .env # Replace 1.37.0 Conan version in .env by 1.37.2
-    $ docker-compose build gcc10
-
-The Conan version used for the update is the same listed in `.env` file.
 
 ### Test
 
-Testing is an important step to validate each produced image. To summarize each one:
+Besides manual testing you could do by building packages in these images and
+running them in different images, there is a test-suite with some tests you
+can run to validate that images contain the applications expected, the
+versions match and the committed compatibility works.
 
-#### Simple
+You will need Python to run the test-suite, only `pytest` is required:
 
-Build a simple app using CMake, threads and show the date.
+```
+pip install pytest
+```
 
-To execute the entire test:
+To run the tests, just pass the name of the image to the command line
+and declare the _service_ you are testing:
 
-    $ cd modern && python test/simple/run.py clang12
+```
+pytest tests --image conanio/base-ubuntu16.04:1.37.2 --service base
+pytest tests --image conanio/gcc10-ubuntu16.04:1.37.2 --service deploy
+```
 
-It will run Docker container for Clang 12, mount a volume and run test/simple/test_simple.sh internally.
+It's also possible to test compatibility between images by building a binary
+on one of them and running that same binary in the others. In order to run
+these tests you will need to build all images for all compiler versions, all
+the test suite will try to run the binary in all of them. Once you have
+built all the images, you can run:
 
-#### Standard
+```
+pytest tests --image conanio/gcc10-ubuntu16.04:1.37.2
+```
 
-Build projects which require C++17 and C++20. It validates if a compiler supports a specific C++ standard.
-
-To execute the entire test:
-
-    $ cd modern && python test/standard/run.py gcc10
-
-It will run Docker container for GCC 10, mount a volume, run both test/simple/build_imagl.sh and test/simple/build_libsolace.sh
-
-#### System
-
-Some Conan packages can use `SystemPackageTool` to install system packages, which should not affect the compiler built and installed
-into the Docker image. To validate that case, this test installs GCC9 and libusb to try sabotage the image, but it must prefer the
-compiler already installed, including its libstdc++ version.
-
-To execute the entire test:
-
-    $ cd modern && python test/system/run.py gcc7
-
-It will run Docker container for GCC 7, mount a volume and run CMake to build test/system/CMakeLists.txt
-
-#### GCC
-
-It's a dedicated validation for GCC compiler. It builds a Conan project, using `libstdc++` and `libstdc++11`.
-Also, it builds a Fortran simple application, to validate if fortran is correctly built.
-
-To execute the entire GCC test:
-
-    $ cd modern && python test/gcc/conan/run.py gcc10
-
-It will build a Conan project, validate if both libstdc++ and libgcc_s are correctly used from /usr/local.
-Also, there is a second phase where the produced application is copied to a vanilla Ubuntu Xenial container,
-including the libstdc++ from the target container, and the application must work nicely.
-
-To execute the Fortran test:
-
-    $ cd modern && python test/gcc/fortran/run.py gcc10
-
-It will run Docker container for GCC 10, mount a volume and run CMake to build test/gcc/fortran/CMakeLists.txt
-
-#### Clang
-
-It's a dedicated validation for Clang compiler. It builds a Conan project using `libstdc++`, `libstdc++11` and `libc++`.
-
-To execute the entire Clang test:
-
-    $ cd modern && python test/clang/conan/run.py clang12
-
-It will build a Conan project, validate if the c++ library and runtime are correct. The Clang built for those images
-don't use GCC as dependency, instead, they use libunwind, compiler-rt, libc++ and libc++-abi.
-
-Also, there is a second phase where the produced application is copied to a vanilla Ubuntu Xenial container,
-including the libstdc++ and libc++ from the target container, and the application must work nicely.
 
 ### Deploy
 
@@ -262,64 +258,3 @@ Or, using Docker compose
 
 If you don't want to use hub.docker as default Docker registry, you may use [Artifactory](https://jfrog.com/start-free/#saas), which
 is free and well supported for Docker, Conan and more.
-
-### The run.py Script
-
-Now that you learned how to build, test and deploy manually, there is the script `run.py`, which automates all these steps for you.
-That script is configured by environment variables due CI, so we can build different images without changing any file or doing a new commit.
-
-#### Build Step
-
-The first stage collect the compiler version listed in ``CONAN_GCC_VERSION`` for ``GCC`` and in ``CONAN_CLANG_VERSION`` for ``Clang``. If you do not set any compiler version, the script will raise an error.
-
-For instance, to build GCC 10 image, you should execute:
-
-    $ GCC_VERSION=10 python run.py
-
-You can configure only a compiler version or a list, by these variables. If you skipped a compiler list, the build will not be executed for that compiler.
-
-The image tag can be configured by ``DOCKER_BUILD_TAG``. Build default will used **latest**. The Conan version installed, is the same listed as Docker image tag.
-
-#### Test Step
-
-The second stage runs the new image created, build some Conan packages, check for correct standard libraries installed and validate standard C++ supported.
-The same build variables, as ``CONAN_GCC_VERSION``, ``CONAN_CLANG_VERSION`` are used to select the compiler and version.
-
-``Gcc`` images use libstdc++.
-``Clang`` images use libc++ and libstdc++.
-
-The packages created on test, are not uploaded to Conan server, Are just to validate the image.
-
-#### Deploy Step
-
-The final stage pushes the image to docker server (hub.docker). ``DOCKER_UPLOAD`` should be true.
-
-The login uses ``DOCKER_LOGIN_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate.
-
-
-E.g Upload Docker images to Docker hub, after build and test:
-
-    $ DOCKER_USERNAME="<username>" DOCKER_PASSWORD="<password>" DOCKER_UPLOAD="TRUE" python run.py
-
-To see all supported variables, read the section below.
-
-## Environment configuration
-
-You can also use environment variables to change the behavior of Conan Docker Tools building.
-These variables are only consumed by `run.py` script and `docker` command, running `docker-compose` directly won't be affect by environment variables.
-This is especially useful for CI integration.
-
-Build and Test variables:
-
-- **GCC_VERSION**: GCC version to build, test and deploy, e.g. "11"
-- **CLANG_VERSION**: Clang version to build, test and deploy, e.g. "12"
-- **SUDO_COMMAND**: Sudo command used on Linux distros, e.g. "sudo"
-- **DOCKER_CACHE**: Allow to cache docker layers during the build, to speed up local testing
-
-Upload related variables:
-
-- **DOCKER_USERNAME**: Your Docker username to authenticate in Docker server.
-- **DOCKER_PASSWORD**: Your Docker password to authenticate in Docker server
-- **DOCKER_UPLOAD**: If attributed to true, it will upload the generated docker image, positive words are accepted, e.g "True", "1", "Yes". Default "False"
-- **BUILD_CONAN_SERVER_IMAGE**: If attributed to true, it will build and upload an image with the conan_server
-- **DOCKER_UPLOAD_ONLY_WHEN_STABLE**: Only upload only when is master branch.

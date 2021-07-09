@@ -1,9 +1,15 @@
 [![Build Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
+
+> :warning: **Warning:**
+Current images will be superseeded by the ones in [`modern`](./modern) folder,
+we encourage you to have a look at them and know how the future will look like.
+
+
 # Conan Docker Tools
 
 ![logo](logo.png)
 
-Dockerfiles for different gcc compiler versions.
+Dockerfiles for different GCC and Clang compiler versions.
 You can use these images directly in your project or with the [conan-package-tools project](https://github.com/conan-io/conan-package-tools).
 
 > :warning: **Warning:**
