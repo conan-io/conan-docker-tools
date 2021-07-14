@@ -30,18 +30,18 @@ class TestBuildSimple:
             assert 'Current date' in out, f"out: '{out}' err: '{err}'"
 
             # Check linked libs
-            out, _ = container.exec(['ldd', 'example-c'])
-            assert 'libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0' in out
-            assert 'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6' in out
-            assert '/lib64/ld-linux-x86-64.so.2' in out
+            out, err = container.exec(['ldd', 'example-c'])
+            assert 'libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0' in out, f"out: '{out}' err: '{err}'"
+            assert 'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6' in out, f"out: '{out}' err: '{err}'"
+            assert '/lib64/ld-linux-x86-64.so.2' in out, f"out: '{out}' err: '{err}'"
 
             out, err = container.exec(['ldd', 'example-cpp'])
-            assert 'libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0' in out
-	        assert 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6' in out
-	        assert 'libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6' in out
-	        assert 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1' in out
-	        assert 'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6' in out
-	        assert '/lib64/ld-linux-x86-64.so.2' in out
+            assert 'libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0' in out, f"out: '{out}' err: '{err}'"
+	        assert 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6' in out, f"out: '{out}' err: '{err}'"
+	        assert 'libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6' in out, f"out: '{out}' err: '{err}'"
+	        assert 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1' in out, f"out: '{out}' err: '{err}'"
+	        assert 'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6' in out, f"out: '{out}' err: '{err}'"
+	        assert '/lib64/ld-linux-x86-64.so.2' in out, f"out: '{out}' err: '{err}'"
 
     @pytest.mark.service('deploy', 'jenkins')
     def test_vanilla_image(self, container, expected):
