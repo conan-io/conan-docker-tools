@@ -22,4 +22,4 @@ import pytest
 def test_not_installed(container, tool):
     output, _ = container.exec([tool, "--version"])
     first_line = output.splitlines()[0]
-    assert f"\"{tool}\": executable file not found" in first_line.strip()
+    assert f'exec: \\\\"{tool}\\\\": executable file not found in $PATH' in first_line.strip()
