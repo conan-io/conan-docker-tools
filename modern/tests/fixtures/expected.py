@@ -61,9 +61,20 @@ class Expected:
     docker_tag: str
     python: Version
     cmake: Version
+    pkg_config: Version
+    make: Version
+    autoconf: Version
+    perl: Version
+    wget: Version
+    curl: Version
+    git: Version
+    subversion: Version
+    xzutils: Version
+    nasm: Version
     conan: Version = None
     compiler: Compiler = None
     compiler_versions: defaultdict(list) = None
+
 
     def __str__(self):
         return f"""
@@ -76,6 +87,16 @@ class Expected:
             - conan: {self.conan}
             - compiler: {self.compiler}
             - compiler_versions: {self.compiler_versions}
+            - pkg_config: {self.pkg_config}
+            - make: {self.make}
+            - autoconf: {self.autoconf}
+            - perl: {self.perl}
+            - wget: {self.wget}
+            - curl: {self.curl}
+            - git: {self.git}
+            - subversion: {self.subversion}
+            - xzutils: {self.xzutils}
+            - nasm: {self.nasm}
         """
 
     def vanilla_image(self):
@@ -132,7 +153,20 @@ def expected(request) -> Expected:
     distro = Distro(m.group('distro'), Version(m.group('distro_version')))
     python = Version(env_values.get('PYTHON_VERSION'))
     cmake = Version(env_values.get('CMAKE_VERSION_FULL'))
-    expected = Expected(distro, m.group('username'), m.group('tag'), python, cmake)
+    pkg_config = Version("0.29.1")
+    make = Version("4.1")
+    autoconf = Version("2.69")
+    perl = Version("5.22.1")
+    wget = Version("1.17.1")
+    curl = Version("7.47.0")
+    git = Version("2.7.4")
+    subversion = Version("1.9.3")
+    xzutils = Version("5.1.0alpha")
+    nasm = Version("2.11.08")
+
+    expected = Expected(distro, m.group('username'), m.group('tag'), python, cmake,
+                        pkg_config, make, autoconf, perl, wget, curl, git, subversion,
+                        xzutils, nasm)
     expected.conan = Version(env_values.get('CONAN_VERSION'))
     expected.compiler_versions = get_compiler_versions()
 
