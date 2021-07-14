@@ -43,6 +43,11 @@ class TestBuildSimple:
             assert 'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6' in out, f"out: '{out}' err: '{err}'"
             assert '/lib64/ld-linux-x86-64.so.2' in out, f"out: '{out}' err: '{err}'"
 
+            if expected.compiler.name == "clang":
+                print(f"out: '{out}'")
+                print(f"err: '{err}'")
+                assert False
+
     @pytest.mark.service('deploy', 'jenkins')
     def test_vanilla_image(self, container, expected):
         # C executable should run in vanilla image
