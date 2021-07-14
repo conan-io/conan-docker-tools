@@ -15,7 +15,6 @@ import pytest
         "xmake",
         "premake5",
         "b2",
-        "java",
         "lua",
     ],
 )
