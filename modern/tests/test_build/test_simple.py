@@ -31,22 +31,12 @@ class TestBuildSimple:
 
             # Check linked libs
             out, err = container.exec(['ldd', 'example-c'])
-            assert 'libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0' in out, f"out: '{out}' err: '{err}'"
-            assert 'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6' in out, f"out: '{out}' err: '{err}'"
-            assert '/lib64/ld-linux-x86-64.so.2' in out, f"out: '{out}' err: '{err}'"
+            for expected_lib in expected.compiler.system_libs_c:
+                assert expected_lib in out, f"out: '{out}' err: '{err}'"
 
             out, err = container.exec(['ldd', 'example-cpp'])
-            assert 'libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0' in out, f"out: '{out}' err: '{err}'"
-            assert 'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6' in out, f"out: '{out}' err: '{err}'"
-            assert 'libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6' in out, f"out: '{out}' err: '{err}'"
-            assert 'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1' in out, f"out: '{out}' err: '{err}'"
-            assert 'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6' in out, f"out: '{out}' err: '{err}'"
-            assert '/lib64/ld-linux-x86-64.so.2' in out, f"out: '{out}' err: '{err}'"
-
-            if expected.compiler.name == "clang":
-                print(f"out: '{out}'")
-                print(f"err: '{err}'")
-                assert False
+            for expected_lib in expected.compiler.system_libs_cpp:
+                assert expected_lib in out, f"out: '{out}' err: '{err}'"
 
     @pytest.mark.service('deploy', 'jenkins')
     def test_vanilla_image(self, container, expected):
