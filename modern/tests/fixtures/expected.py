@@ -52,8 +52,6 @@ class Distro:
 class Compiler:
     name: str
     version: Version
-    system_libs_c: list
-    system_libs_cpp: list
 
 
 @dataclass
@@ -116,29 +114,6 @@ def get_envfile_values():
     return env_values
 
 
-def get_system_libs_c():
-    return [
-        'libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0',
-        'libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6',
-        '/lib64/ld-linux-x86-64.so.2',
-    ]
-
-
-def get_system_libs_cpp(compiler):
-    if compiler == "gcc":
-        return [
-                'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6',
-                'libgcc_s.so.1 => /usr/local/lib64/libgcc_s.so.1',
-        ] + get_system_libs_c()
-    else:
-        return [
-            'libc++abi.so.1 => /usr/local/lib/libc++abi.so.1',
-            'libc++.so.1 => /usr/local/lib/libc++.so.1',
-            'libstdc++.so.6 => /usr/local/lib64/libstdc++.so.6',
-            'libllvm-unwind.so.1 => /usr/local/lib/libllvm-unwind.so.1',
-        ] + get_system_libs_c()
-
-
 @pytest.fixture(scope="session")
 def expected(request) -> Expected:
     # Parse the image filename
@@ -165,8 +140,7 @@ def expected(request) -> Expected:
         compiler = m.group('compiler')
         major = m.group('version')
         full_version = env_values.get(f"{compiler.upper()}{major}_VERSION")
-        expected.compiler = Compiler(compiler, Version(full_version),
-                                     get_system_libs_c(), get_system_libs_cpp(compiler))
+        expected.compiler = Compiler(compiler, Version(full_version))
 
     print(expected)
     return expected
