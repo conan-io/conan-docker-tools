@@ -234,6 +234,9 @@ node('Linux') {
                 String uploadImage = "${originalUsername}/${image}:${conanVersion}"
                 sh "docker pull ${builtImage}"
                 sh "docker tag ${builtImage} ${uploadImage}"
+                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'docker login --username $USERNAME --password $PASSWORD ' + "${originalUsername}"
+                }
                 // sh "docker push ${uploadImage}"
             }
         }
