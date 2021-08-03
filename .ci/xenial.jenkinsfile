@@ -31,7 +31,7 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
 
 def get_container_id() {
     // This is quite fragile and might depends on the Jenkins configuration and deployment, but it is the best
-    //  I can figure out to get the ID of the running container to be able to mount the same volume when 
+    //  I can figure out to get the ID of the running container to be able to mount the same volume when
     //  using docker-in-docker.
     String nodeName = "${NODE_NAME}"
     String output = sh(script: 'docker ps --no-trunc', returnStdout: true)
@@ -214,7 +214,7 @@ node('Linux') {
     }
 
 
-    //if (isMaster) {
+    if (isMaster) {
         // If it was master and everything is ok up to here
         stage('Upload images') {
             List images = ["base-${distro}"]
@@ -234,9 +234,9 @@ node('Linux') {
                 String uploadImage = "${originalUsername}/${image}:${conanVersion}"
                 sh "docker pull ${builtImage}"
                 sh "docker tag ${builtImage} ${uploadImage}"
-                // sh "docker push ${uploadImage}"
+                sh "docker push ${uploadImage}"
             }
         }
-    //}
+    }
 
 }
