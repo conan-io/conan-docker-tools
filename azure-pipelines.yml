@@ -10,15 +10,18 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -U docker-compose
-      docker-compose build ${SERVICE}
+      docker-compose build %SERVICE%
   strategy:
     matrix:
       MSVC_14:
         SERVICE: "msvc14"
         DOCKER_USERNAME: "conanio"
+        DOCKER_BUILD_TAG: "1.39.0"
       MSVC_15:
         SERVICE: "msvc15"
         DOCKER_USERNAME: "conanio"
+        DOCKER_BUILD_TAG: "1.39.0"
       MSVC_16:
         SERVICE: "msvc16"
         DOCKER_USERNAME: "conanio"
+        DOCKER_BUILD_TAG: "1.39.0"
