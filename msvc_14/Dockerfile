@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
