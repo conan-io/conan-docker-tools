@@ -10,7 +10,7 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -U docker-compose
-      docker-compose ${SERVICE}
+      docker-compose build ${SERVICE}
   strategy:
     matrix:
       MSVC_14:
