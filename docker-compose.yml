@@ -593,6 +593,15 @@ services:
         image: "${DOCKER_USERNAME}/msvc15:${DOCKER_BUILD_TAG}"
         container_name: msvc15
         tty: true
+    msvc16:
+        build:
+            context: msvc_16
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/msvc16:${DOCKER_BUILD_TAG}"
+        container_name: msvc16
+        tty: true
     android-clang8:
         build:
             context: android-clang_8

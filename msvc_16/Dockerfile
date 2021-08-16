@@ -18,10 +18,10 @@ RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.or
     choco install --no-progress --yes python3 --version=3.7.9 --params '"/InstallDir:C:\tools\python3"'
 
 RUN choco install --no-progress --yes --ignore-package-exit-codes=3010 dotnetfx --version=4.8.0.20190930
-RUN choco install --no-progress --yes visualstudio2017buildtools --version=15.9.37.0
-RUN choco install --yes --ignore-package-exit-codes=1 visualstudio2017-workload-vctools --version=1.3.3
-RUN choco install --no-progress --yes --execution-timeout=0 visualstudio2017-workload-manageddesktop --version=1.2.3
-RUN choco install --no-progress --yes windows-sdk-10.0 --version=10.0.26624
+RUN choco install --no-progress --yes  --ignore-package-exit-codes=-2147024770 visualstudio2019buildtools --version=16.10.4.0
+RUN choco install --yes visualstudio2019-workload-vctools --version=1.0.1
+RUN choco install --no-progress --yes --execution-timeout=0 visualstudio2019-workload-manageddesktop --version=1.0.2
+RUN choco install --no-progress --yes windows-sdk-10.1 --version=10.1.18362.1
 
 RUN python -m pip install --quiet --upgrade pip; \
     python -m pip install win-unicode-console --quiet --upgrade --force-reinstall --no-cache; \
