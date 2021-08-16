@@ -10,7 +10,7 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -U docker-compose
-      docker-compose build %SERVICE%
+      docker-compose build --build-arg CONAN_VERSION=1.39.0 %SERVICE%
   strategy:
     matrix:
       MSVC_14:
