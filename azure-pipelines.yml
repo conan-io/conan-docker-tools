@@ -1,5 +1,5 @@
 jobs:
-- job: Docker Windows
+- job: Docker_Windows
   pool:
     vmImage: 'windows-2019'
   timeoutInMinutes: 120
@@ -13,12 +13,12 @@ jobs:
       docker-compose ${SERVICE}
   strategy:
     matrix:
-      MSVC 14:
+      MSVC_14:
         SERVICE: "msvc14"
         DOCKER_USERNAME: "conanio"
-      MSVC 15:
+      MSVC_15:
         SERVICE: "msvc15"
         DOCKER_USERNAME: "conanio"
-      MSVC 16:
+      MSVC_16:
         SERVICE: "msvc16"
         DOCKER_USERNAME: "conanio"
