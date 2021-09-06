@@ -64,7 +64,7 @@ class ConanDockerTools(object):
             "x86_64"
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
-        docker_cache = os.getenv("DOCKER_CACHE", False)
+        docker_cache = self._get_boolean_var("DOCKER_CACHE")
         docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
