@@ -41,25 +41,29 @@ RUN apt-get -qq update \
        libncursesw5-dev \
        liblzma-dev \
        ca-certificates \
-       autoconf-archive \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 100 \
+       autoconf-archive
+
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-${GCC_VERSION} 100 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-${GCC_VERSION} 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -fL https://getcli.jfrog.io | sh \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fL https://getcli.jfrog.io | sh \
     && mv jfrog /usr/local/bin/jfrog \
-    && chmod +x /usr/local/bin/jfrog \
-    && groupadd 1001 -g 1001 \
+    && chmod +x /usr/local/bin/jfrog
+
+RUN groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
     && groupadd 999 -g 999 \
     && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
-    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
-    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
+    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+
+RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
