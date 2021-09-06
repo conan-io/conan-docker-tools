@@ -50,11 +50,11 @@ RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 1
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fL https://getcli.jfrog.io | sh \
+RUN curl -sfL https://getcli.jfrog.io | sh \
     && mv jfrog /usr/local/bin/jfrog \
     && chmod +x /usr/local/bin/jfrog
 
-RUN groupadd 1001 -g 1001 \
+RUN groupadd -f 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
     && groupadd 999 -g 999 \
