@@ -288,10 +288,10 @@ class ConanDockerTools(object):
                 shell=True)
 
         if "arm" in arch or self.variables.docker_cross == "android":
-            logging.warn("Skipping cmake_installer: cross-building results in Unverified HTTPS error")
+            logging.warn("Skipping CMake installer: cross-building results in Unverified HTTPS error")
         else:
             subprocess.check_call(
-                "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
+                "docker exec %s conan install cmake/3.20.5@ -s "
                 "arch_build=%s -s os_build=Linux --build" % (self.service, arch),
                 shell=True)
 
