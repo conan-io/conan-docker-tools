@@ -291,7 +291,7 @@ class ConanDockerTools(object):
             logging.warn("Skipping CMake installer: cross-building results in Unverified HTTPS error")
         else:
             subprocess.check_call(
-                "docker exec %s conan install cmake/3.20.5@ -s "
+                "docker exec %s conan install cmake/3.17.5@ -s "
                 "arch_build=%s -s os_build=Linux --build" % (self.service, arch),
                 shell=True)
 
