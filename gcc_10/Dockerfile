@@ -54,11 +54,11 @@ RUN curl -sfL https://getcli.jfrog.io | sh \
     && mv jfrog /usr/local/bin/jfrog \
     && chmod +x /usr/local/bin/jfrog
 
-RUN groupadd 1000 -g 1000 \
-    && groupadd 1001 -g 1001 \
-    && groupadd 2000 -g 2000 \
-    && groupadd 999 -g 999 \
-    && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
+RUN groupadd _1000 -g 1000 \
+    && groupadd _1001 -g 1001 \
+    && groupadd _2000 -g 2000 \
+    && groupadd _999 -g 999 \
+    && useradd -ms /bin/bash conan -g _1001 -G _1000,_2000,_999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
