@@ -13,7 +13,7 @@ from cpt.ci_manager import CIManager
 from cpt.printer import Printer
 
 
-TARGET_CONAN_VERSION = "1.39.0"
+TARGET_CONAN_VERSION = "1.40.0"
 
 
 class ConanDockerTools(object):
@@ -64,7 +64,7 @@ class ConanDockerTools(object):
             "x86_64"
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
-        docker_cache = os.getenv("DOCKER_CACHE", False)
+        docker_cache = self._get_boolean_var("DOCKER_CACHE")
         docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
@@ -288,10 +288,10 @@ class ConanDockerTools(object):
                 shell=True)
 
         if "arm" in arch or self.variables.docker_cross == "android":
-            logging.warn("Skipping cmake_installer: cross-building results in Unverified HTTPS error")
+            logging.warn("Skipping CMake installer: cross-building results in Unverified HTTPS error")
         else:
             subprocess.check_call(
-                "docker exec %s conan install cmake_installer/3.13.0@conan/stable -s "
+                "docker exec %s conan install cmake/3.16.9@ -s "
                 "arch_build=%s -s os_build=Linux --build" % (self.service, arch),
                 shell=True)
 

@@ -1,7 +1,7 @@
 jobs:
 - job: Docker
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-18.04'
   timeoutInMinutes: 120
   steps:
   - task: UsePythonVersion@0
@@ -48,10 +48,12 @@ jobs:
         GCC_VERSIONS: "10"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf"
         DOCKER_DISTRO: "jnlp-slave"
+        DOCKER_CACHE: False
       Ubuntu GCC 11:
         GCC_VERSIONS: "11"
         DOCKER_ARCHS: "x86_64"
         DOCKER_DISTRO: "jnlp-slave"
+        DOCKER_CACHE: False
 
       Ubuntu Clang 3.9 x86_64:
         CLANG_VERSIONS: "3.9"
