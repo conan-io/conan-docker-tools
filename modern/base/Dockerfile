@@ -93,5 +93,7 @@ RUN apt-get -qq update \
 
 USER conan
 WORKDIR /home/conan
+ENV CONAN_USER_HOME=/home/conan
 
-RUN pip install conan==${CONAN_VERSION}
+RUN pip install conan==${CONAN_VERSION} \
+    && conan config set general.revisions_enabled=1

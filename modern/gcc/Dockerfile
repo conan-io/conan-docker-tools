@@ -64,4 +64,5 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/g++ 100 \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache \
-    && conan config init --force
+    && conan profile new --detect --force default \
+    && conan profile update settings.compiler.libcxx=libstdc++11 default
