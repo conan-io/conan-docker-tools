@@ -95,5 +95,4 @@ USER conan
 WORKDIR /home/conan
 
 RUN pip install conan==${CONAN_VERSION}
-RUN conan config init --force \
-    && conan config set general.revisions_enabled=1
+RUN conan config set general.revisions_enabled=1
