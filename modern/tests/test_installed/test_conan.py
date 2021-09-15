@@ -2,10 +2,6 @@ def test_conan_version(container, expected):
     out, err = container.exec(['conan', '--version'])
     assert out.strip() == f'Conan version {expected.conan}', f"out: '{out}' err: '{err}'"
 
-def test_home(container):
-    out, err = container.exec(['conan', 'config', 'home'])
-    assert out.strip() == '/home/conan/.conan', f"out: '{out}' err: '{err}'"
-
 def test_revisions_enabled(container):
     out, err = container.exec(['conan', 'config', 'get', 'general.revisions_enabled'])
     assert out.strip() == '1', f"out: '{out}' err: '{err}'"
