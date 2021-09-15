@@ -4,7 +4,7 @@ def test_conan_version(container, expected):
 
 def test_revisions_enabled(container):
     out, err = container.exec(['conan', 'config', 'get', 'general.revisions_enabled'])
-    assert out.strip() == '1'
+    assert out.strip() + err.strip() == '1'
 
 def test_default_libcxx(container):
     out, err = container.exec(['conan', 'profile', 'show', 'default'])
