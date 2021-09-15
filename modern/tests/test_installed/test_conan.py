@@ -3,7 +3,7 @@ def test_conan_version(container, expected):
     assert out.strip() == f'Conan version {expected.conan}', f"out: '{out}' err: '{err}'"
 
 def test_revisions_enabled(container):
-    out, err = container.exec(['conan', 'config', 'get'])
+    out, err = container.exec(['conan', 'config', 'home'])
     assert out.strip() == '1', f"out: '{out}' err: '{err}'"
 
 def test_default_libcxx(container):
