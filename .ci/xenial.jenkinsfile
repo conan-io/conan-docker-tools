@@ -231,13 +231,21 @@ node('Linux') {
 
             images.each { image ->
                 String builtImage = "${dockerUsername}/${image}:${branchName}-${commit}"
-                String uploadImage = "${originalUsername}/${image}:${conanVersion}"
                 sh "docker pull ${builtImage}"
-                sh "docker tag ${builtImage} ${uploadImage}"
+
                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh 'docker login --username $USERNAME --password $PASSWORD'
                 }
+
+                // Upload with the corresponding tag version
+                String uploadImage = "${originalUsername}/${image}:${conanVersion}"
+                sh "docker tag ${builtImage} ${uploadImage}"
                 sh "docker push ${uploadImage}"
+
+                // Upload with tag 'latest'
+                String uploadLatest = "${originalUsername}/${image}:latest"
+                sh "docker tag ${builtImage} ${uploadLatest}"
+                sh "docker push ${uploadLatest}"
             }
         }
     }
