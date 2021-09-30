@@ -1,4 +1,5 @@
 **Azure (Windows)**: [![Azure Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
+
 **Jenkins (Linux)**: [![Jenkin Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools/Xenial/master)](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools/Xenial/master)
 
 > :warning: **Warning:**
