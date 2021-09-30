@@ -1,4 +1,5 @@
-[![Build Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
+[![Azure Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master)
+[![Jenkin Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools/Xenial/master)](![image](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools/Xenial/master)
 
 > :warning: **Warning:**
 Current images will be superseeded by the ones in [`modern`](./modern) folder,
