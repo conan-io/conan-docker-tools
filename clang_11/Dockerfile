@@ -90,10 +90,6 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
-    
-RUN grep -r "LIBCPP_ABI_VERSION" /usr/ && \
-    echo "#include<algorithm>\
-    static_assert(_LIBCPP_ABI_VERSION==1);" | clang++ -stdlib=libc++ -std=c++17 -x c++ -c -
 
 USER conan
 WORKDIR /home/conan
