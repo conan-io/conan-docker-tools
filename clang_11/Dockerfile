@@ -90,6 +90,8 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
+    
+RUN grep -r "LIBCPP_ABI_VERSION" /usr/
 
 USER conan
 WORKDIR /home/conan
