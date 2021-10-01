@@ -26,10 +26,10 @@ The images are uploaded to Docker Hub:
 | [conanio/gcc46: gcc 4.6](https://hub.docker.com/r/conanio/gcc46/)                     | x86_64  |  Deprecated |
 | [conanio/gcc48: gcc 4.8](https://hub.docker.com/r/conanio/gcc48/)                     | x86_64  |  Deprecated |
 | [conanio/gcc48-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-x86/)             | x86     |  Deprecated |
-| [conanio/gcc49: gcc 4.9](https://hub.docker.com/r/conanio/gcc49/)                     | x86_64  |  Supported |
+| [conanio/gcc49: gcc 4.9](https://hub.docker.com/r/conanio/gcc49/)                     | x86_64  |  Deprecated |
 | [conanio/gcc49-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-x86/)             | x86     |  Deprecated |
-| [conanio/gcc49-armv7: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7/)         | armv7   |  Supported |
-| [conanio/gcc49-armv7hf: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7hf/)     | armv7hf |  Supported |
+| [conanio/gcc49-armv7: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7/)         | armv7   |  Deprecated |
+| [conanio/gcc49-armv7hf: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7hf/)     | armv7hf |  Deprecated |
 | [conanio/gcc52: gcc 5.2](https://hub.docker.com/r/conanio/gcc52/)                     | x86_64  |  Deprecated |
 | [conanio/gcc53: gcc 5.3](https://hub.docker.com/r/conanio/gcc53/)                     | x86_64  | Deprecated  |
 | [conanio/gcc54: gcc 5.4](https://hub.docker.com/r/conanio/gcc54/)                     | x86_64  | Deprecated  |

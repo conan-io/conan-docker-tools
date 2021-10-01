@@ -19,11 +19,8 @@ jobs:
         GCC_VERSIONS: "7"
         DOCKER_ARCHS: "x86_64"
         DOCKER_DISTRO: "mingw"
+        CDT_SKIP_TEST: "TRUE"
 
-      Ubuntu GCC 4.9:
-        GCC_VERSIONS: "4.9"
-        DOCKER_ARCHS: "x86_64,armv7,armv7hf"
-        DOCKER_DISTRO: "jnlp-slave"
       Ubuntu GCC 5:
         GCC_VERSIONS: "5"
         DOCKER_ARCHS: "x86_64,armv7,armv7hf,armv8"

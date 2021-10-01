@@ -182,6 +182,10 @@ class ConanDockerTools(object):
         :param service: Docker compose service name
         :param distro: Use other linux distro
         """
+        if os.getenv("CDT_SKIP_TEST", False):
+            logging.info("Skipping tests for service %s." % self.service)
+            return
+
         logging.info("Testing Docker by service %s." % self.service)
         try:
             if compiler_name == "Visual Studio":
