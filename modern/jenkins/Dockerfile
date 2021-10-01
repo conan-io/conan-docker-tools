@@ -18,7 +18,8 @@ RUN /tmp/install-openjdk-ppa.sh \
 
 RUN pip3 install --no-cache virtualenv
     
-RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar \
+RUN mkdir -p /usr/share/jenkins \ 
+    && curl -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar \
     && chmod 755 /usr/share/jenkins \
     && chmod 644 /usr/share/jenkins/slave.jar \
     && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-client
