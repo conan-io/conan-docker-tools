@@ -158,7 +158,7 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${distro}-jenkins:${targetBranch}-latest"
 
                     dir('modern/jenkins') {
-                        buildImage(latestMaster, latestBranch, jenkinsImage, "--build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
+                        buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
                     }
 
                     dir('modern') {
