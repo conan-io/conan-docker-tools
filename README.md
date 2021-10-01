@@ -197,12 +197,12 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 
 | Version                                                                                       | Arch    |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|---------|------------|
-| [conanio/gcc46-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc46-jnlp-slave-x86: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave-x86/)  | x86  |  Supported |
-| [conanio/gcc48-jnlp-slave: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc48-jnlp-slave-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave-x86/)  | x86  |  Supported |
-| [conanio/gcc49-jnlp-slave: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc49-jnlp-slave-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave-x86/)  | x86  |  Supported |
+| [conanio/gcc46-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Deprecated |
+| [conanio/gcc46-jnlp-slave-x86: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave-x86/)  | x86  |  Deprecated |
+| [conanio/gcc48-jnlp-slave: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave/)        | x86_64  |  Deprecated |
+| [conanio/gcc48-jnlp-slave-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave-x86/)  | x86  |  Deprecated |
+| [conanio/gcc49-jnlp-slave: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave/)        | x86_64  |  Deprecated |
+| [conanio/gcc49-jnlp-slave-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave-x86/)  | x86  |  Deprecated |
 | [conanio/gcc5-jnlp-slave: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave/)        | x86_64  |  Supported |
 | [conanio/gcc5-jnlp-slave-x86: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave-x86/)  | x86  |  Supported |
 | [conanio/gcc6-jnlp-slave: gcc 6](https://hub.docker.com/r/conanio/gcc6-jnlp-slave/)        | x86_64  |  Supported |
@@ -239,6 +239,7 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 | - [conanio/clang8-jnlp-slave-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave-x86/)         | x86    |  Supported |
 | - [conanio/clang8-jnlp-slave: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave/)                 | x86_64 |  Supported |
 | - [conanio/clang8-jnlp-slave: clang 10](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 |  Supported |
+| - [conanio/clang8-jnlp-slave: clang 11](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 |  Supported |
 
 
 
