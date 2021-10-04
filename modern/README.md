@@ -54,7 +54,7 @@ the running system should provide a version equal or newer than the one used
 to link the compiled binary.
 
 What about Clang and `stdlibc++` version? We decided that all the Clang images
-will use the same library version as there is no one correspondence between 
+will use the same library version as there is no one correspondence between
 Clang compiler and `stdlibc++` version like it is for GCC compiler. All these
 Clang images will use the `stdlibc++` that corresponds to the latest LTS
 Ubuntu distribution (at the time of this writting, it is the one corresponding
@@ -93,6 +93,7 @@ These are the images uploaded to Docker Hub and currently used by [Conan Center]
 | - [conanio/clang10-ubuntu16.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/)     | x86_64 |  Supported           |
 | - [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/)     | x86_64 |  Supported           |
 | - [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/)     | x86_64 |  Supported           |
+| - [conanio/clang13-ubuntu16.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04/)     | x86_64 |  Supported           |
 
 
 ### Conan Server
@@ -165,7 +166,7 @@ images first, so please, read carefully all the steps below.
 We will be using docker compose command to build the images just for
 convenience. It will help to ensure that the same configuration is used to
 build all the images and the names match, but you can also use raw
-`docker build` command and provide all the required arguments in the 
+`docker build` command and provide all the required arguments in the
 command line.
 
 Each image created will be tagged as  `conanio/<compiler><compiler.version>-<distro><distro.version>:<conan-version>`.
