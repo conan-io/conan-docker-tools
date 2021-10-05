@@ -110,10 +110,10 @@ node('Linux') {
                       userRemoteConfigs: [[name         : 'origin', refspec: "+refs/pull/${params.scm_pr_number}/head:refs/remotes/origin/PR-${params.scm_pr_number} +refs/heads/master:refs/remotes/origin/master",
                                            credentialsId: 'GITHUB_CLONE', url: params.scm_repository]],
             ])
-            sh 'git config user.email "any@notused.com"',
-            sh 'git config user.name "CI bot"',
-            sh "git merge --no-ff ${params.scm_commit}",
-            sh 'git log -n 10 --graph --pretty=oneline --abbrev-commit --all --decorate=full',
+            sh 'git config user.email "any@notused.com"'
+            sh 'git config user.name "CI bot"'
+            sh "git merge --no-ff ${params.scm_commit}"
+            sh 'git log -n 10 --graph --pretty=oneline --abbrev-commit --all --decorate=full'
         }
         else {
             echo "Install reference from the SCM repository"
@@ -133,7 +133,7 @@ node('Linux') {
     String targetBranch = params.scm_base_branch.replaceAll('/', '-')
     String branchName = targetBranch
     if (params.scm_pr_number) {
-        String branchName = "PR-${params.scm_pr_number}"
+        branchName = "PR-${params.scm_pr_number}"
     }
 
     boolean isMaster = (branchName == 'master')
