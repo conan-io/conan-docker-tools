@@ -20,20 +20,6 @@ node('Linux') {
     // We need to build the list of parameters to call next job
     List parameters = []
 
-    /*
-                        // We need to merge the PR branch with master commit
-                        [$class: 'StringParameterValue', name: 'scm_repository', value: urlRepository],
-                        [$class: 'StringParameterValue', name: 'scm_commit', value: masterCommit],
-                        [$class: 'StringParameterValue', name: 'scm_pr_number', value: prNumber],
-                        [$class: 'StringParameterValue', name: 'scm_pr_commit', value: prCommit],
-                        // The rest of the parameters
-                        [$class: 'BooleanParameterValue', name: 'only_missing_pkgs', value: true],
-                        [$class: 'StringParameterValue', name: 'conan_center', value: centralRepoName],
-                        [$class: 'BooleanParameterValue', name: 'build_missing', value: false],
-                        [$class: 'StringParameterValue', name: 'upstream_repository', value: repoName],
-                ]
-    */
-
     stage('Parameters from repository') {
         checkout scm
         String scm_repository = scm.userRemoteConfigs[0].url
@@ -60,7 +46,7 @@ node('Linux') {
             - scm_pr_number: ${scm_pr_number}
             - scm_pr_commit: ${scm_pr_commit}
             """
-        
+
         parameters.add([$class: 'StringParameterValue', name: 'scm_repository', value: scm_repository])
         parameters.add([$class: 'StringParameterValue', name: 'scm_commit', value: scm_commit])
         parameters.add([$class: 'StringParameterValue', name: 'scm_base_branch', value: scm_base_branch])
