@@ -63,7 +63,7 @@ RUN dpkg --add-architecture i386 \
     && tar -xzf openssl-1.1.1l.tar.gz \
     && cd openssl-1.1.1l \
     && ./config no-unit-test shared \
-    && make -S \
+    && make -s \
     && make install_sw \
     && rm -rf openssl-* \
     && ln -sf /usr/local/bin/openssl /usr/bin/openssl \
