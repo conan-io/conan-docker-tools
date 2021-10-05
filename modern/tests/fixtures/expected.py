@@ -139,6 +139,7 @@ def expected(request) -> Expected:
     expected = Expected(distro, m.group('username'), m.group('tag'), python, cmake)
     expected.conan = Version(env_values.get('CONAN_VERSION'))
     expected.compiler_versions = get_compiler_versions()
+    expected.suffix = m.group('suffix')
 
     if m.group('compiler'):
         compiler = m.group('compiler')
