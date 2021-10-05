@@ -208,6 +208,7 @@ node('Linux') {
                     sh 'pip install pytest'
                     // TODO: Pass expected in a different way
                     writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+                    sh 'cat modern/.env'
                 }
 
                 String containerID = get_container_id()
