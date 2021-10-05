@@ -18,7 +18,7 @@ def detectPRCommits() {
 node('Linux') {
 
     checkout scm
-    String scm_repository = script.scm.userRemoteConfigs[0].url
+    String scm_repository = scm.userRemoteConfigs[0].url
 
     String branchName = scm.branches[0].name
     String targetBranch = 'master'  // Implicit knowledge of the underlying repository
