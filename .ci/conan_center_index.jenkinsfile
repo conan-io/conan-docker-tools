@@ -6,15 +6,6 @@ This pipeline is used to generate docker images for ConanCenter index
 
 node('Linux') {
 
-    stage('Input parameters') {
-        echo """
-        About tools installed:
-        - cmake_version: ${params.cmake_version}
-        - python_version: ${params.python_version}
-        - jenkins_agent_version: ${params.jenkins_agent_version}
-        """
-    }
-
     List<String> conanVersions = ['1.38.0', '1.39.0', '1.40.3']
     List<String> gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
     List<String> clangVersions = ['10.0.1', '11.1.0', '12.0.0', '13.0.0']
@@ -56,7 +47,7 @@ node('Linux') {
     for (conanVersion in conanVersions) {
         stage("Build images for Conan '${conanVersion}'")
         build(job: 'ConanDockerTools/GeneratePipeline', propagate: true, wait: true, parameters: parameters + [
-            [$class: 'StringParameterValue', name: 'conan_version', value: conanVersions]
+            [$class: 'StringParameterValue', name: 'conan_version', value: conanVersion]
         ])
     }
 }
