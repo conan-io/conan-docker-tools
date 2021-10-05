@@ -123,9 +123,9 @@ def expected(request) -> Expected:
     image = request.config.option.image
     m = re.match(r'((?P<domain>[\w\-.]+)\/)?'
                  r'(?P<username>[\w\-.]+)\/'
-                 r'(?P<compiler>gcc|clang)(?P<version>\d+)?'
+                 r'((?P<compiler>gcc|clang)(?P<version>\d+))?'
                  r'(?P<service_base>base)?'
-                 r'(-(?P<distro>[a-z]+)(?P<distro_version>[\d.]+)'
+                 r'-(?P<distro>[a-z]+)(?P<distro_version>[\d.]+)'
                  r'(-(?P<suffix>cci))?'
                  r'(-(?P<service>builder|jenkins))?'
                  r'(:(?P<tag>[\w\-.]+))?', image)
