@@ -1,0 +1,313 @@
+
+// Maybe parameterized somewhere
+dockerUsername = 'center-c3i-docker.jfrog.io'
+dockerhubUsername = 'conanio'
+
+
+def parseVersion(String version) {
+    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
+    return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
+}
+
+String getVersionMajor(String version) {
+    def (major, minor, patch) = parseVersion(version)
+    return major
+}
+
+
+def buildImage(String latestMaster, String latestBranch, String expectedImage, String buildArgs, String target = null, String extraCacheFrom = null) {
+    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
+    }
+
+    String cacheFrom = extraCacheFrom ? " --cache-from ${extraCacheFrom}" : ''
+    if (0 == sh(script: "docker pull ${latestMaster}", returnStatus: true)) {
+        cacheFrom = "${cacheFrom} --cache-from ${latestMaster}"
+    }
+    if (0 == sh(script: "docker pull ${latestBranch}", returnStatus: true)) {
+        cacheFrom = "${cacheFrom} --cache-from ${latestBranch}"
+    }
+
+    sh "docker build ${cacheFrom} -t ${expectedImage} ${buildArgs} ${target ? "--target $target": ''} ."
+
+    sh "docker push ${expectedImage}"
+    sh "docker tag ${expectedImage} ${latestBranch}"
+    sh "docker push ${latestBranch}"
+}
+
+
+def get_container_id() {
+    // This is quite fragile and might depends on the Jenkins configuration and deployment, but it is the best
+    //  I can figure out to get the ID of the running container to be able to mount the same volume when
+    //  using docker-in-docker.
+    String nodeName = "${NODE_NAME}"
+    String output = sh(script: 'docker ps --no-trunc', returnStdout: true)
+    String nodeId = null
+    output.split('\n').each({
+        String line = it.trim()
+        if (line.contains(nodeName) && line.contains('/opt/entrypoint.sh')) {
+            nodeId = line.split(' ')[0]
+        }
+    })
+    echo "Node ${nodeName} with docker ID '${nodeId}'"
+    return nodeId
+}
+
+
+node('Linux') {
+    stage('Input parameters') {
+        echo """
+        About sources:
+        - scm_repository: ${params.scm_repository}
+        - scm_commit: ${params.scm_commit}
+        - scm_base_branch: ${params.scm_base_branch}
+        - scm_pr_number: ${params.scm_pr_number}
+        - scm_pr_commit: ${params.scm_pr_commit}
+        """
+
+        echo """
+        About base docker:
+        - distro: ${params.distro}
+        - distro_version: ${params.distro_version}
+        """
+
+        echo """
+        About tools installed:
+        - conan_version: ${params.conan_version}
+        - cmake_version: ${params.cmake_version}
+        - python_version: ${params.python_version}
+        - jenkins_agent_version: ${params.jenkins_agent_version}
+        """
+
+        List<String> gccVersions = params.gcc_versions.split("\n")
+        List<String> clangVersions = params.clang_versions.split("\n")
+        echo """
+        Images to generate:
+        - gcc_versions: ${gccVersions.join(', ')}
+        - clang_versions: ${clangVersions.join(', ')}
+        - libstdcpp_version: ${params.libstdcpp_version}
+        - libstdcpp_patch_version: ${params.libstdcpp_patch_version}
+        - libstdcpp_major_version: ${params.libstdcpp_major_version}
+        """
+        assert gccVersions.size() > 0: "Expecting to build some GCC versions at least"
+        assert clangVersions.size() > 0: "Expecting to build some Clang versions at least"
+
+        echo """
+        About docker images generated:
+        - dockerUsername: ${dockerUsername}
+        - dockerhubUsername: ${dockerhubUsername}
+        - upload_latest: ${params.upload_latest}
+        - upload_dockerhub: ${params.upload_dockerhub}
+        """
+    }
+
+    stage('Checkout sources') {
+        if (params.scm_pr_number) {
+            echo "Install reference from SCM repository. PR ${params.scm_pr_number} merging with 'master' branch"
+            // TODO: Try using extension 'PreBuildMerge' (https://gist.github.com/martinda/b2ece95c2c71ddb4d4a762f0a02561b3)
+            checkout([$class           : 'GitSCM',
+                      branches         : [[name: params.scm_pr_commit]],
+                      userRemoteConfigs: [[name         : 'origin', refspec: "+refs/pull/${params.scm_pr_number}/head:refs/remotes/origin/PR-${params.scm_pr_number} +refs/heads/master:refs/remotes/origin/master",
+                                           credentialsId: 'GITHUB_CLONE', url: params.scm_repository]],
+            ])
+            sh 'git config user.email "any@notused.com"',
+            sh 'git config user.name "CI bot"',
+            sh "git merge --no-ff ${params.scm_commit}",
+            sh 'git log -n 10 --graph --pretty=oneline --abbrev-commit --all --decorate=full',
+        }
+        else {
+            echo "Install reference from the SCM repository"
+            checkout([$class           : 'GitSCM',
+                      branches         : [[name: params.scm_commit]],
+                      userRemoteConfigs: [[credentialsId: 'GITHUB_CLONE', url: params.scm_repository]],
+            ])
+        }
+    }
+
+    stage('Install deps') {
+        sh 'pip install pytest'
+    }
+
+    // Get some global information, used later
+    String mainContainerID = get_container_id()
+    String targetBranch = params.scm_base_branch.replaceAll('/', '-')
+    String branchName = targetBranch
+    if (params.scm_pr_number) {
+        String branchName = "PR-${params.scm_pr_number}"
+    }
+
+    boolean isMaster = (branchName == 'master')
+    echo ">> branchName: ${branchName}, targetBranch: ${targetBranch} (isMaster: ${isMaster})"
+    String commit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+
+    // Build build-args list
+    Map<String, String> buildArguments = [:]
+    stage("Build arguments") {
+        buildArguments.put('CONAN_VERSION', params.conan_version)
+        buildArguments.put('CMAKE_VERSION_FULL', params.cmake_version)
+        def (major, minor, patch) = parseVersion(params.cmake_version)
+        buildArguments.put('CMAKE_VERSION', "$major.$minor")
+        buildArguments.put('PYTHON_VERSION', params.python_version)
+        buildArguments.put('LIBSTDCPP_VERSION', params.libstdcpp_version)
+        buildArguments.put('LIBSTDCPP_PATCH_VERSION', params.libstdcpp_patch_version)
+        buildArguments.put('LIBSTDCPP_MAJOR_VERSION', params.libstdcpp_major_version)
+        buildArguments.put('DOCKER_USERNAME', dockerUsername)
+        buildArguments.put('JENKINS_AGENT_VERSION', params.jenkins_agent_version)
+        buildArguments.put('DISTRO', params.distro)
+        buildArguments.put('DISTRO_VERSION', params.distro_version)
+
+        buildArguments.put('DOCKER_TAG', "${branchName}-${commit}")
+    }
+    String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
+
+    stage('Xenial - Build base image') {
+        String expectedImage = "${dockerUsername}/base-${params.distro}:${branchName}-${commit}"
+        String latestBranch = "${dockerUsername}/base-${params.distro}:${branchName}-latest"
+        String latestMaster = "${dockerUsername}/base-${params.distro}:${targetBranch}-latest"
+        dir('modern/base') {
+            buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
+        }
+
+        dir('modern') {
+            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
+        }
+    }
+
+    // Define helper function to build the compiler
+    Closure compilerBuild = { String compiler, String version ->
+        return {
+            String versionMajor = getVersionMajor(version)
+
+            String builderImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-builder:${branchName}-${commit}"
+            String deployImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}:${branchName}-${commit}"
+            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-jenkins:${branchName}-${commit}"
+            String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
+
+            node('Linux') {
+                // Checkout and install deps
+                checkout scm
+                sh 'pip install pytest'
+                String containerID = get_container_id()
+
+                stage("${compiler.toUpperCase()} ${version} builder") {
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-builder:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-builder:${targetBranch}-latest"
+
+                    dir("modern/${compiler}") {
+                        buildImage(latestMaster, latestBranch, builderImage, compilerArgs, 'builder')
+                    }
+                }
+
+                stage("${compiler.toUpperCase()} ${version} deploy") {
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}:${targetBranch}-latest"
+
+                    dir("modern/${compiler}") {
+                        buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
+                    }
+
+                    dir('modern') {
+                        sh "pytest tests --image ${deployImage} --service deploy -vv --volumes-from ${containerID} --user 0:0"
+                    }
+                }
+
+                stage("${compiler.toUpperCase()} ${version} jenkins") {
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-jenkins:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-jenkins:${targetBranch}-latest"
+
+                    dir('modern/jenkins') {
+                        buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
+                    }
+
+                    dir('modern') {
+                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
+                    }
+                }
+            }
+        }
+    }
+
+    // Build GCC in parallel
+    Map gccBuilds = [:]
+    List<String> gccImages = []
+    gccVersions.each { v ->
+        String gccVersion = v
+        String gccVersionMajor = getVersionMajor(gccVersion)
+        gccImages.add("gcc${gccVersionMajor}-${params.distro}")
+        gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
+    }
+    gccBuilds.failFast = true
+    parallel(gccBuilds)
+
+
+    // Build Clang in parallel
+    Map clangBuilds = [:]
+    List<String> clangImages = []
+    clangVersions.each { v ->
+        String clangVersion = v
+        String clangVersionMajor = getVersionMajor(clangVersion)
+        clangImages.add("clang${clangVersionMajor}-${params.distro}")
+        clangBuilds["Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
+    }
+    clangBuilds.failFast = true
+    parallel(clangBuilds)
+
+
+    // Run the xtests. Do it in the same node to take advantage of the cache
+    stage('Run GCC xtests') {
+        echo 'Run tests that check binaries work in compatible images'
+        gccImages.each { image ->
+            dir('modern') {
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
+            }
+        }
+    }
+    stage('Run Clang xtests') {
+        echo 'Run tests that check binaries work in compatible images'
+        clangImages.each { image ->
+            dir('modern') {
+                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
+            }
+        }
+    }
+
+
+    if (isMaster && params.upload_dockerhub) {
+        // If it was master and everything is ok up to here
+        stage('Upload images') {
+            List images = ["base-${params.distro}"]
+            gccVersions.each { v ->
+                String versionMajor = getVersionMajor(v)
+                images.add("gcc${versionMajor}-${params.distro}")
+                images.add("gcc${versionMajor}-${params.distro}-jenkins")
+            }
+            clangVersions.each { v ->
+                String versionMajor = getVersionMajor(v)
+                images.add("clang${versionMajor}-${params.distro}")
+                images.add("clang${versionMajor}-${params.distro}-jenkins")
+            }
+
+            images.each { image ->
+                String builtImage = "${dockerUsername}/${image}:${branchName}-${commit}"
+                sh "docker pull ${builtImage}"
+
+                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'docker login --username $USERNAME --password $PASSWORD'
+                }
+
+                // Upload with the corresponding tag version
+                String uploadImage = "${dockerhubUsername}/${image}:${conanVersion}"
+                sh "docker tag ${builtImage} ${uploadImage}"
+                sh "docker push ${uploadImage}"
+
+                if (params.upload_latest) {
+                    // Upload with tag 'latest'
+                    String uploadLatest = "${dockerhubUsername}/${image}:latest"
+                    sh "docker tag ${builtImage} ${uploadLatest}"
+                    sh "docker push ${uploadLatest}"
+                }
+            }
+        }
+    }
+
+}
