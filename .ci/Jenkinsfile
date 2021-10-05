@@ -1,14 +1,44 @@
+
+def detectPRCommits() {
+    String prCommit = sh('git rev-parse HEAD').trim()
+    String masterCommit = sh('git rev-parse origin/master').trim()
+
+    String p = sh("git log --pretty=%P -n 1 --date-order").trim()
+    List<String> parentCommits = p.split(" ")
+    if (parentCommits.size() == 2) {
+        prCommit = parentCommits[0]
+        assert parentCommits[1] == masterCommit
+    } else {
+        // assert parentCommits[0] == masterCommit  (for a rebased PR this is not true, Jenkins uses fast-forward)
+    }
+    return [masterCommit, prCommit]
+}
+
+
 node('Linux') {
+
+    checkout scm
+    String scm_repository = script.scm.userRemoteConfigs[0].url
 
     String branchName = scm.branches[0].name
     String targetBranch = 'master'  // Implicit knowledge of the underlying repository
+    String prNumber = null
     if (env.BRANCH_NAME.startsWith('PR')) {  // Because it is Github
         targetBranch = "${env.CHANGE_TARGET}"
+        prNumber = env.BRANCH_NAME.replace("PR-", "")
+
+        // Get commits from master branch and from PR
     }
+    def (masterCommit, prCommit) = detectPRCommits()
+
 
     echo """
-        About tools installed:
+        Parsing arguments:
+        - scm_repository: ${scm_repository}
         - branchName: ${branchName}
         - targetBranch: ${targetBranch}
+        - prNumber: ${prNumber}
+        - masterCommit: ${masterCommit}
+        - prCommit: ${prCommit}
         """
 }
