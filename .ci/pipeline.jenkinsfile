@@ -55,6 +55,9 @@ def get_container_id() {
 
 
 node('Linux') {
+    List<String> gccVersions = params.gcc_versions.split("\n")
+    List<String> clangVersions = params.clang_versions.split("\n")
+    
     stage('Input parameters') {
         echo """
         About sources:
@@ -79,8 +82,6 @@ node('Linux') {
         - jenkins_agent_version: ${params.jenkins_agent_version}
         """
 
-        List<String> gccVersions = params.gcc_versions.split("\n")
-        List<String> clangVersions = params.clang_versions.split("\n")
         echo """
         Images to generate:
         - gcc_versions: ${gccVersions.join(', ')}
