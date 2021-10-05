@@ -3,6 +3,7 @@ ARG LIBSTDCPP_MAJOR_VERSION
 ARG DOCKER_TAG
 ARG DISTRO_VERSION
 ARG DISTRO
+ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
 
@@ -123,9 +124,9 @@ RUN apt-get -qq update \
     && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
     && cp $(find lib -name "*.so*") /tmp/install/lib
 
-FROM ${DOCKER_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:${DOCKER_TAG} as libstdcpp
+FROM ${DOCKER_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}${SUFFIX}:${DOCKER_TAG} as libstdcpp
 
-FROM ${DOCKER_USERNAME}/base-${DISTRO}:${DOCKER_TAG} as deploy
+FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 
 ARG LIBSTDCPP_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
