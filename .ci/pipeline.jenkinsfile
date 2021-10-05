@@ -157,6 +157,11 @@ node('Linux') {
         buildArguments.put('DISTRO_VERSION', params.distro_version)
 
         buildArguments.put('DOCKER_TAG', "${branchName}-${commit}")
+
+        // These will be used for testing purposes as well :cry:
+        // TODO: Pass expected in a different way
+        writeFile(file: 'modern/.env', text: buildArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+        sh 'cat modern/.env'
     }
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
