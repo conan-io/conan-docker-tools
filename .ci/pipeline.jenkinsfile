@@ -53,6 +53,28 @@ def get_container_id() {
     return nodeId
 }
 
+def checkoutSources() {
+    if (params.scm_pr_number) {
+        echo "Install reference from SCM repository. PR ${params.scm_pr_number} merging with 'master' branch"
+        // TODO: Try using extension 'PreBuildMerge' (https://gist.github.com/martinda/b2ece95c2c71ddb4d4a762f0a02561b3)
+        checkout([$class           : 'GitSCM',
+                    branches         : [[name: params.scm_pr_commit]],
+                    userRemoteConfigs: [[name         : 'origin', refspec: "+refs/pull/${params.scm_pr_number}/head:refs/remotes/origin/PR-${params.scm_pr_number} +refs/heads/master:refs/remotes/origin/master",
+                                        credentialsId: 'GITHUB_CLONE', url: params.scm_repository]],
+        ])
+        sh 'git config user.email "any@notused.com"'
+        sh 'git config user.name "CI bot"'
+        sh "git merge --no-ff ${params.scm_commit}"
+    }
+    else {
+        echo "Install reference from the SCM repository"
+        checkout([$class           : 'GitSCM',
+                    branches         : [[name: params.scm_commit]],
+                    userRemoteConfigs: [[credentialsId: 'GITHUB_CLONE', url: params.scm_repository]],
+        ])
+    }
+    sh 'git log -n 10 --graph --pretty=oneline --abbrev-commit --all --decorate=full'
+}
 
 node('Linux') {
     List<String> gccVersions = params.gcc_versions.split("\n")
@@ -103,26 +125,7 @@ node('Linux') {
     }
 
     stage('Checkout sources') {
-        if (params.scm_pr_number) {
-            echo "Install reference from SCM repository. PR ${params.scm_pr_number} merging with 'master' branch"
-            // TODO: Try using extension 'PreBuildMerge' (https://gist.github.com/martinda/b2ece95c2c71ddb4d4a762f0a02561b3)
-            checkout([$class           : 'GitSCM',
-                      branches         : [[name: params.scm_pr_commit]],
-                      userRemoteConfigs: [[name         : 'origin', refspec: "+refs/pull/${params.scm_pr_number}/head:refs/remotes/origin/PR-${params.scm_pr_number} +refs/heads/master:refs/remotes/origin/master",
-                                           credentialsId: 'GITHUB_CLONE', url: params.scm_repository]],
-            ])
-            sh 'git config user.email "any@notused.com"'
-            sh 'git config user.name "CI bot"'
-            sh "git merge --no-ff ${params.scm_commit}"
-            sh 'git log -n 10 --graph --pretty=oneline --abbrev-commit --all --decorate=full'
-        }
-        else {
-            echo "Install reference from the SCM repository"
-            checkout([$class           : 'GitSCM',
-                      branches         : [[name: params.scm_commit]],
-                      userRemoteConfigs: [[credentialsId: 'GITHUB_CLONE', url: params.scm_repository]],
-            ])
-        }
+        checkoutSources()
     }
 
     stage('Install deps') {
@@ -200,11 +203,12 @@ node('Linux') {
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
 
             node('Linux') {
-                // Checkout and install deps
-                checkout scm
-                sh 'pip install pytest'
-                // TODO: Pass expected in a different way
-                writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+                stage('Checkout and install deps') {
+                    checkoutSources()
+                    sh 'pip install pytest'
+                    // TODO: Pass expected in a different way
+                    writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+                }
 
                 String containerID = get_container_id()
 
