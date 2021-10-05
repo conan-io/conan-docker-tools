@@ -57,7 +57,7 @@ def get_container_id() {
 node('Linux') {
     List<String> gccVersions = params.gcc_versions.split("\n")
     List<String> clangVersions = params.clang_versions.split("\n")
-    
+
     stage('Input parameters') {
         echo """
         About sources:
@@ -127,6 +127,8 @@ node('Linux') {
 
     stage('Install deps') {
         sh 'pip install pytest'
+        // TODO: Pass expected in a different way
+        writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
     }
 
     // Get some global information, used later
@@ -193,6 +195,9 @@ node('Linux') {
                 // Checkout and install deps
                 checkout scm
                 sh 'pip install pytest'
+                // TODO: Pass expected in a different way
+                writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+
                 String containerID = get_container_id()
 
                 stage("${compiler.toUpperCase()} ${version} builder") {
