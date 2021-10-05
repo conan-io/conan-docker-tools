@@ -91,10 +91,10 @@ node('Linux') {
         - scm_pr_commit: ${params.scm_pr_commit}
         """
         if (params.scm_pr_number) {
-            currentBuild.description = "${params.suffix} | PR-${params.scm_pr_number} - ${params.scm_pr_commit.substring(0, min(8, params.scm_pr_commit.size()))}"
+            currentBuild.description = "${params.suffix} | PR-${params.scm_pr_number} - ${params.scm_pr_commit.substring(0, Math.min(8, params.scm_pr_commit.size()))}"
         }
         else {
-            currentBuild.description = "${params.suffix} | ${params.scm_base_branch} - ${params.scm_commit.substring(0, min(8, params.scm_commit.size()))}"
+            currentBuild.description = "${params.suffix} | ${params.scm_base_branch} - ${params.scm_commit.substring(0, Math.min(8, params.scm_commit.size()))}"
         }
         // TODO: currentBuild.description = "${}"
 
