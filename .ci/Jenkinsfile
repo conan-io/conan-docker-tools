@@ -23,13 +23,15 @@ node('Linux') {
     String branchName = scm.branches[0].name
     String targetBranch = 'master'  // Implicit knowledge of the underlying repository
     String prNumber = null
+    String masterCommit = null
+    String prCommit = null
     if (env.BRANCH_NAME.startsWith('PR')) {  // Because it is Github
         targetBranch = "${env.CHANGE_TARGET}"
         prNumber = env.BRANCH_NAME.replace("PR-", "")
 
         // Get commits from master branch and from PR
+        (masterCommit, prCommit) = detectPRCommits()
     }
-    def (masterCommit, prCommit) = detectPRCommits()
 
 
     echo """
