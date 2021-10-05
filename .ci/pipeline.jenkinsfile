@@ -127,8 +127,6 @@ node('Linux') {
 
     stage('Install deps') {
         sh 'pip install pytest'
-        // TODO: Pass expected in a different way
-        writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
     }
 
     // Get some global information, used later
@@ -145,10 +143,11 @@ node('Linux') {
 
     // Build build-args list
     Map<String, String> buildArguments = [:]
+    Map<String, String> testArguments = [:]
     stage("Build arguments") {
         buildArguments.put('CONAN_VERSION', params.conan_version)
         buildArguments.put('CMAKE_VERSION_FULL', params.cmake_version)
-        def (major, minor, patch) = parseVersion(params.cmake_version)
+        def (major, minor, _) = parseVersion(params.cmake_version)
         buildArguments.put('CMAKE_VERSION', "$major.$minor")
         buildArguments.put('PYTHON_VERSION', params.python_version)
         buildArguments.put('LIBSTDCPP_VERSION', params.libstdcpp_version)
@@ -160,10 +159,19 @@ node('Linux') {
         buildArguments.put('DISTRO_VERSION', params.distro_version)
 
         buildArguments.put('DOCKER_TAG', "${branchName}-${commit}")
+        
+        testArguments = buildArguments
+        gccVersions.each { v ->
+            String gccVersionMajor = getVersionMajor(v)
+            testArguments.put("GCC${gccVersionMajor}_VERSION", v)
+        }
+        clangVersions.each { v ->
+            String clangVersionMajor = getVersionMajor(v)
+            testArguments.put("CLANG${clangVersionMajor}_VERSION", v)
+        }
 
-        // These will be used for testing purposes as well :cry:
         // TODO: Pass expected in a different way
-        writeFile(file: 'modern/.env', text: buildArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+        writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
         sh 'cat modern/.env'
     }
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
