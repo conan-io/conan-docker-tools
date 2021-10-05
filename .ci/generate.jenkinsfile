@@ -216,6 +216,9 @@ node('Linux') {
             String deployImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${branchName}-${commit}"
             String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}"
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
+            if (suffix) {
+                compilerArgs = "${compilerArgs} --build-arg SUFFIX=${suffix}"
+            }
 
             node('Linux') {
                 stage('Checkout and install deps') {
