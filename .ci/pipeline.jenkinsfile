@@ -80,6 +80,7 @@ node('Linux') {
     List<String> gccVersions = params.gcc_versions.split("\n")
     List<String> clangVersions = params.clang_versions.split("\n")
 
+
     stage('Input parameters') {
         echo """
         About sources:
@@ -89,6 +90,13 @@ node('Linux') {
         - scm_pr_number: ${params.scm_pr_number}
         - scm_pr_commit: ${params.scm_pr_commit}
         """
+        if (params.scm_pr_number) {
+            currentBuild.description = "PR-${params.scm_pr_number} - ${params.scm_pr_commit}"
+        }
+        else {
+            currentBuild.description = "${params.scm_base_branch} - ${params.scm_commit}"
+        }
+        // TODO: currentBuild.description = "${}"
 
         echo """
         About base docker:

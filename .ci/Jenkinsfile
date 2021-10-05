@@ -63,8 +63,8 @@ node('Linux') {
         
         parameters.add([$class: 'StringParameterValue', name: 'scm_repository', value: scm_repository])
         parameters.add([$class: 'StringParameterValue', name: 'scm_commit', value: scm_commit])
+        parameters.add([$class: 'StringParameterValue', name: 'scm_base_branch', value: scm_base_branch])
         if (scm_pr_number) {
-            parameters.add([$class: 'StringParameterValue', name: 'scm_base_branch', value: scm_base_branch])
             parameters.add([$class: 'StringParameterValue', name: 'scm_pr_number', value: scm_pr_number])
             parameters.add([$class: 'StringParameterValue', name: 'scm_pr_commit', value: scm_pr_commit])
         }
