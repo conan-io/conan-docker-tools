@@ -39,7 +39,7 @@ node('Linux') {
         String scm_repository = scm.userRemoteConfigs[0].url
 
         //String branchName = scm.branches[0].name
-        String scm_base_branch = null  // Implicit knowledge of the underlying repository
+        String scm_base_branch = scm.branches[0].name  // Implicit knowledge of the underlying repository
         String scm_pr_number = null
         String scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
         String scm_pr_commit = null
