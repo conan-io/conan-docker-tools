@@ -91,10 +91,10 @@ node('Linux') {
         - scm_pr_commit: ${params.scm_pr_commit}
         """
         if (params.scm_pr_number) {
-            currentBuild.description = "PR-${params.scm_pr_number} - ${params.scm_pr_commit}"
+            currentBuild.description = "PR-${params.scm_pr_number} - ${params.scm_pr_commit.substring(0, 8)}"
         }
         else {
-            currentBuild.description = "${params.scm_base_branch} - ${params.scm_commit}"
+            currentBuild.description = "${params.scm_base_branch} - ${params.scm_commit.substring(0, 8)}"
         }
         // TODO: currentBuild.description = "${}"
 
@@ -125,6 +125,7 @@ node('Linux') {
 
         echo """
         About docker images generated:
+        - suffix: ${params.suffix}
         - dockerUsername: ${dockerUsername}
         - dockerhubUsername: ${dockerhubUsername}
         - upload_latest: ${params.upload_latest}
@@ -141,6 +142,7 @@ node('Linux') {
     }
 
     // Get some global information, used later
+    String suffix = params.suffix ? "-${params.suffix}" : ''
     String mainContainerID = get_container_id()
     String targetBranch = params.scm_base_branch.replaceAll('/', '-')
     String branchName = targetBranch
@@ -188,9 +190,9 @@ node('Linux') {
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
     stage('Xenial - Build base image') {
-        String expectedImage = "${dockerUsername}/base-${params.distro}:${branchName}-${commit}"
-        String latestBranch = "${dockerUsername}/base-${params.distro}:${branchName}-latest"
-        String latestMaster = "${dockerUsername}/base-${params.distro}:${targetBranch}-latest"
+        String expectedImage = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
+        String latestBranch = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-latest"
+        String latestMaster = "${dockerUsername}/base-${params.distro}${suffix}:${targetBranch}-latest"
         dir('modern/base') {
             buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
         }
@@ -205,9 +207,9 @@ node('Linux') {
         return {
             String versionMajor = getVersionMajor(version)
 
-            String builderImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-builder:${branchName}-${commit}"
-            String deployImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}:${branchName}-${commit}"
-            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-jenkins:${branchName}-${commit}"
+            String builderImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${branchName}-${commit}"
+            String deployImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${branchName}-${commit}"
+            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}"
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
 
             node('Linux') {
@@ -222,8 +224,8 @@ node('Linux') {
                 String containerID = get_container_id()
 
                 stage("${compiler.toUpperCase()} ${version} builder") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-builder:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-builder:${targetBranch}-latest"
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${targetBranch}-latest"
 
                     dir("modern/${compiler}") {
                         buildImage(latestMaster, latestBranch, builderImage, compilerArgs, 'builder')
@@ -231,8 +233,8 @@ node('Linux') {
                 }
 
                 stage("${compiler.toUpperCase()} ${version} deploy") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}:${targetBranch}-latest"
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${targetBranch}-latest"
 
                     dir("modern/${compiler}") {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
@@ -244,8 +246,8 @@ node('Linux') {
                 }
 
                 stage("${compiler.toUpperCase()} ${version} jenkins") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}-jenkins:${targetBranch}-latest"
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${targetBranch}-latest"
 
                     dir('modern/jenkins') {
                         buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
@@ -265,7 +267,7 @@ node('Linux') {
     gccVersions.each { v ->
         String gccVersion = v
         String gccVersionMajor = getVersionMajor(gccVersion)
-        gccImages.add("gcc${gccVersionMajor}-${params.distro}")
+        gccImages.add("gcc${gccVersionMajor}-${params.distro}${suffix}")
         gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
@@ -278,7 +280,7 @@ node('Linux') {
     clangVersions.each { v ->
         String clangVersion = v
         String clangVersionMajor = getVersionMajor(clangVersion)
-        clangImages.add("clang${clangVersionMajor}-${params.distro}")
+        clangImages.add("clang${clangVersionMajor}-${params.distro}${suffix}")
         clangBuilds["Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
     }
     clangBuilds.failFast = true
@@ -307,16 +309,16 @@ node('Linux') {
     if (isMaster && params.upload_dockerhub) {
         // If it was master and everything is ok up to here
         stage('Upload images') {
-            List images = ["base-${params.distro}"]
+            List images = ["base-${params.distro}${suffix}"]
             gccVersions.each { v ->
                 String versionMajor = getVersionMajor(v)
-                images.add("gcc${versionMajor}-${params.distro}")
-                images.add("gcc${versionMajor}-${params.distro}-jenkins")
+                images.add("gcc${versionMajor}-${params.distro}${suffix}")
+                images.add("gcc${versionMajor}-${params.distro}${suffix}-jenkins")
             }
             clangVersions.each { v ->
                 String versionMajor = getVersionMajor(v)
-                images.add("clang${versionMajor}-${params.distro}")
-                images.add("clang${versionMajor}-${params.distro}-jenkins")
+                images.add("clang${versionMajor}-${params.distro}${suffix}")
+                images.add("clang${versionMajor}-${params.distro}${suffix}-jenkins")
             }
 
             images.each { image ->
