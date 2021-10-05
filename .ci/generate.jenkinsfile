@@ -91,10 +91,10 @@ node('Linux') {
         - scm_pr_commit: ${params.scm_pr_commit}
         """
         if (params.scm_pr_number) {
-            currentBuild.description = "PR-${params.scm_pr_number} - ${params.scm_pr_commit.substring(0, 8)}"
+            currentBuild.description = "${params.suffix} | PR-${params.scm_pr_number} - ${params.scm_pr_commit.substring(0, 8)}"
         }
         else {
-            currentBuild.description = "${params.scm_base_branch} - ${params.scm_commit.substring(0, 8)}"
+            currentBuild.description = "${params.suffix} | ${params.scm_base_branch} - ${params.scm_commit.substring(0, 8)}"
         }
         // TODO: currentBuild.description = "${}"
 
@@ -128,8 +128,13 @@ node('Linux') {
         - suffix: ${params.suffix}
         - dockerUsername: ${dockerUsername}
         - dockerhubUsername: ${dockerhubUsername}
+        """
+
+        echo """
+        Workflow control
         - upload_latest: ${params.upload_latest}
         - upload_dockerhub: ${params.upload_dockerhub}
+        - dry_run: ${params.dry_run}
         """
     }
 
@@ -172,7 +177,7 @@ node('Linux') {
         buildArguments.put('DISTRO_VERSION', params.distro_version)
 
         buildArguments.put('DOCKER_TAG', "${branchName}-${commit}")
-        
+
         testArguments = buildArguments
         gccVersions.each { v ->
             String gccVersionMajor = getVersionMajor(v)
@@ -332,13 +337,17 @@ node('Linux') {
                 // Upload with the corresponding tag version
                 String uploadImage = "${dockerhubUsername}/${image}:${conanVersion}"
                 sh "docker tag ${builtImage} ${uploadImage}"
-                sh "docker push ${uploadImage}"
+                if (!params.dry_run) {
+                    sh "docker push ${uploadImage}"
+                }
 
                 if (params.upload_latest) {
                     // Upload with tag 'latest'
                     String uploadLatest = "${dockerhubUsername}/${image}:latest"
                     sh "docker tag ${builtImage} ${uploadLatest}"
-                    sh "docker push ${uploadLatest}"
+                    if (!params.dry_run) {
+                        sh "docker push ${uploadLatest}"
+                    }
                 }
             }
         }
