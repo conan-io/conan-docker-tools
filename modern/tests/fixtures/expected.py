@@ -64,6 +64,7 @@ class Expected:
     conan: Version = None
     compiler: Compiler = None
     compiler_versions: defaultdict(list) = None
+    suffix: str = None
 
     def __str__(self):
         return f"""
@@ -76,6 +77,7 @@ class Expected:
             - conan: {self.conan}
             - compiler: {self.compiler}
             - compiler_versions: {self.compiler_versions}
+            - suffix: {self.suffix}
         """
 
     def vanilla_image(self):
@@ -83,7 +85,8 @@ class Expected:
         return f"{self.distro.name}:{self.distro.version}"
 
     def image_name(self, compiler, version):
-        return f'{self.docker_username}/{compiler}{version.major}-{self.distro.name}{self.distro.version}:{self.docker_tag}'
+        suffix = f'-{self.suffix}' if self.suffix else ''
+        return f'{self.docker_username}/{compiler}{version.major}-{self.distro.name}{self.distro.version}{suffix}:{self.docker_tag}'
 
 
 def get_compiler_versions():
@@ -123,6 +126,7 @@ def expected(request) -> Expected:
                  r'((?P<compiler>gcc|clang)(?P<version>\d+)-)?'
                  r'((?P<service>base|builder|deploy|conan)-)?'
                  r'(?P<distro>[a-z]+)(?P<distro_version>[\d.]+)'
+                 r'(-(?P<suffix>cci))?'
                  r'(-(?P<jenkins>jenkins))?'
                  r'(:(?P<tag>[\w\-.]+))?', image)
 
