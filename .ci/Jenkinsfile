@@ -1,9 +1,9 @@
 
 def detectPRCommits() {
-    String prCommit = sh('git rev-parse HEAD').trim()
-    String masterCommit = sh('git rev-parse origin/master').trim()
+    String prCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    String masterCommit = sh(script: 'git rev-parse origin/master', returnStdout: true).trim()
 
-    String p = sh("git log --pretty=%P -n 1 --date-order").trim()
+    String p = sh(script: 'git log --pretty=%P -n 1 --date-order', returnStdout: true).trim()
     List<String> parentCommits = p.split(" ")
     if (parentCommits.size() == 2) {
         prCommit = parentCommits[0]
