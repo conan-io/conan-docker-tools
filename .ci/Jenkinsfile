@@ -122,5 +122,5 @@ node('Linux') {
         parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
     }
 
-    build(job: 'ConanDockerTools/GeneratePipeline', propagate: true, wait: true, parameters: parameters)
+    build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters)
 }

@@ -46,7 +46,7 @@ node('Linux') {
 
     for (conanVersion in conanVersions) {
         stage("Build images for Conan '${conanVersion}'")
-        build(job: 'ConanDockerTools/GeneratePipeline', propagate: true, wait: true, parameters: parameters + [
+        build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
             [$class: 'StringParameterValue', name: 'conan_version', value: conanVersion]
         ])
     }
