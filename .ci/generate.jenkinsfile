@@ -338,7 +338,7 @@ node('Linux') {
                 }
 
                 // Upload with the corresponding tag version
-                String uploadImage = "${dockerhubUsername}/${image}:${conanVersion}"
+                String uploadImage = "${dockerhubUsername}/${image}:${params.conan_version}"
                 sh "docker tag ${builtImage} ${uploadImage}"
                 if (!params.dry_run) {
                     sh "docker push ${uploadImage}"
