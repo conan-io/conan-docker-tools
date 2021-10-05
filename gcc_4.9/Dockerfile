@@ -71,10 +71,10 @@ RUN dpkg --add-architecture i386 \
     && sed -i '0,/python3/s//python/' /usr/bin/lsb_release \
     && rm /etc/ssl/certs/DST_Root_CA_X3.pem \
     && wget -q --no-check-certificate https://www.openssl.org/source/openssl-1.1.1l.tar.gz \
-    && tar -xvzf openssl-1.1.1l.tar.gz \
+    && tar -xzf openssl-1.1.1l.tar.gz \
     && cd openssl-1.1.1l \
     && ./config no-unit-test shared \
-    && make \
+    && make -S \
     && make install_sw \
     && rm -rf openssl-* \
     && ln -sf /usr/local/bin/openssl /usr/bin/openssl \
