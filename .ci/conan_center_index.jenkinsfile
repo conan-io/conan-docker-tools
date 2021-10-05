@@ -17,7 +17,7 @@ node('Linux') {
     // Version of libstdcpp used inside clang images:
     String libstdcpp_version = '10.3.0'
     String libstdcpp_patch_version = '28'
-    String libstdcpp_major_version = '28'
+    String libstdcpp_major_version = '10'
 
     List parameters = [
         // HEAD from 'master' branch
