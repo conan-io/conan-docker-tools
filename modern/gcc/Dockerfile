@@ -2,6 +2,7 @@ ARG DOCKER_USERNAME
 ARG DOCKER_TAG
 ARG DISTRO_VERSION
 ARG DISTRO
+ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
 
@@ -44,7 +45,7 @@ RUN cd gcc-${GCC_VERSION} \
     && make -s -j$(nproc) \
     && make install-strip
 
-FROM ${DOCKER_USERNAME}/base-${DISTRO}:${DOCKER_TAG} as deploy
+FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 
 ARG GCC_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
