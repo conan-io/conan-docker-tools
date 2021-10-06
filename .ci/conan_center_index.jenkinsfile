@@ -42,7 +42,7 @@ node('Linux') {
 
         [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
         [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true],
-        [$class: 'BooleanParameterValue', name: 'upload_latest', value: false], // TODO: Do we want `latest` in CCI
+        [$class: 'BooleanParameterValue', name: 'upload_latest', value: true],
     ]
 
     for (conanVersion in conanVersions) {
