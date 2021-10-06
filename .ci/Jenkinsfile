@@ -18,7 +18,11 @@ def detectPRCommits() {
 node('Linux') {
 
     // We need to build the list of parameters to call next job
-    List parameters = []
+    List parameters = [
+        [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
+        [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: false],  // TODO: Jenkins ones only uploaded by CCI
+        [$class: 'BooleanParameterValue', name: 'upload_latest', value: true],
+    ]
 
     stage('Parameters from repository') {
         checkout scm

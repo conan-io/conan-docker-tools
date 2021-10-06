@@ -40,8 +40,9 @@ node('Linux') {
         [$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"],
         [$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"],
 
-        [$class: 'BooleanParameterValue', name: 'upload_dockerhub', value: true],
-        [$class: 'BooleanParameterValue', name: 'upload_latest', value: false], // There is no such thing as "latest"
+        [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
+        [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true],
+        [$class: 'BooleanParameterValue', name: 'upload_latest', value: false], // TODO: Do we want `latest` in CCI
     ]
 
     for (conanVersion in conanVersions) {

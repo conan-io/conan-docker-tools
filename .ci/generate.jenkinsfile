@@ -10,7 +10,7 @@ def parseVersion(String version) {
 }
 
 String getVersionMajor(String version) {
-    def (major, minor, patch) = parseVersion(version)
+    def (major, _1, _2) = parseVersion(version)
     return major
 }
 
@@ -133,7 +133,8 @@ node('Linux') {
         echo """
         Workflow control
         - upload_latest: ${params.upload_latest}
-        - upload_dockerhub: ${params.upload_dockerhub}
+        - upload_main_images: ${params.upload_main_images}
+        - upload_jenkins_images: ${params.upload_jenkins_images}
         - dry_run: ${params.dry_run}
         """
     }
@@ -313,20 +314,27 @@ node('Linux') {
         }
     }
 
-
-    if (isMaster && params.upload_dockerhub) {
+    if (isMaster) {
         // If it was master and everything is ok up to here
         stage('Upload images') {
             List images = ["base-${params.distro}${suffix}"]
             gccVersions.each { v ->
                 String versionMajor = getVersionMajor(v)
-                images.add("gcc${versionMajor}-${params.distro}${suffix}")
-                images.add("gcc${versionMajor}-${params.distro}${suffix}-jenkins")
+                if (params.upload_main_images) {
+                    images.add("gcc${versionMajor}-${params.distro}${suffix}")
+                }
+                if (params.upload_jenkins_images) {
+                    images.add("gcc${versionMajor}-${params.distro}${suffix}-jenkins")
+                }
             }
             clangVersions.each { v ->
                 String versionMajor = getVersionMajor(v)
-                images.add("clang${versionMajor}-${params.distro}${suffix}")
-                images.add("clang${versionMajor}-${params.distro}${suffix}-jenkins")
+                if (params.upload_main_images) {
+                    images.add("clang${versionMajor}-${params.distro}${suffix}")
+                }
+                if (params.upload_jenkins_images) {
+                    images.add("clang${versionMajor}-${params.distro}${suffix}-jenkins")
+                }
             }
 
             images.each { image ->
