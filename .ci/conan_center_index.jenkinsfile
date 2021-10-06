@@ -103,10 +103,11 @@ node('Linux') {
     for (v in conanVersions) {
         String strVersion = "${v[0]}.${v[1]}.${v[2]}"
         boolean isLatest = (v == latestVersion)
-        stage("Build images for Conan '${strVersion}' (latest=${isLatest})")
-        build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
-            [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
-            [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
-        ])
+        stage("Build images for Conan '${strVersion}' (latest=${isLatest})") {
+            build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
+                [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
+                [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
+            ])
+        }
     }
 }
