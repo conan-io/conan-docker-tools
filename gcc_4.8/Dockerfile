@@ -58,13 +58,23 @@ RUN dpkg --add-architecture i386 \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
     && sed -i '0,/python3/s//python/' /usr/bin/lsb_release \
+    && rm /etc/ssl/certs/DST_Root_CA_X3.pem \
+    && wget -q --no-check-certificate https://www.openssl.org/source/openssl-1.1.1l.tar.gz \
+    && tar -xzf openssl-1.1.1l.tar.gz \
+    && cd openssl-1.1.1l \
+    && ./config no-unit-test shared \
+    && make -s \
+    && make install_sw \
+    && rm -rf openssl-* \
+    && ln -sf /usr/local/bin/openssl /usr/bin/openssl \
+    && ldconfig \
     && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
-    && pyenv global 3.6.7 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" CFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib pyenv install 3.6.15 \
+    && pyenv global 3.6.15 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
