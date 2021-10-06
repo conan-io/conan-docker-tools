@@ -4,41 +4,65 @@ This pipeline is used to generate docker images for ConanCenter index
 
 */
 
-def parseVersion(String version) {
-    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
-    return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
+
+@NonCPS
+def getMinConanVersion(content) {
+    def minVersion = (content =~ /String conanVersion = '(\d+).(\d+).(\d+)'/)
+    assert minVersion, '.ci/tests.jenkins file was changed! Cannot find conanVersion'
+    return [minVersion[0][1] as int, minVersion[0][2] as int, minVersion[0][3] as int]
 }
 
-node('Linux') {
+def parseVersion(String version) {
+    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
+    return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int]
+}
 
+
+node('Linux') {
+    def conanVersions = []
+    def latestVersion = null
     stage('Compute Conan versions') {
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
+            echo "Read lowest version from CCI requirements"
             checkout([$class           : 'GitSCM',
                     branches         : [[name: 'master']],
-                    userRemoteConfigs: [[credentialsId: 'GITHUB_CLONE', url: 'https://github.com/conan-io/c3i_jenkins.git']],
+                    userRemoteConfigs: [[credentialsId: 'conanci-gh-token', url: 'https://github.com/conan-io/c3i_jenkins.git']],
                     extensions       : [[$class           : 'RelativeTargetDirectory',
                                         relativeTargetDir: 'c3i_jenkins']],
             ])
-            def content = readFile 'c3i_jenkins/.ci/test.jenkins'
-            def minVersion = content =~ /String conanVersion = '(\d+).(\d+).(\d+)'/
-            assert minVersion, '.ci/tests.jenkins file was changed! Cannot find conanVersion'
-            // return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int]
-
+            def content = readFile "${env.WORKSPACE}/tmp/c3i_jenkins/.ci/tests.jenkins"
+            def minVersion = getMinConanVersion(content)
+            echo " - lowest: $minVersion"
+            
             // Up to latest version in pypi
-            def response = script.httpRequest 'https://pypi.python.org/pypi/conan/json'
-            Map<String, Object> requestJson = script.readJSON(text: response.content)
-            def latestVersion = requestJson.info.version
-            echo "latest: ${latestVersion}"
+            echo "Read latest version from pypi"
+            def response = httpRequest(url: 'https://pypi.python.org/pypi/conan/json')
+            Map<String, Object> requestJson = readJSON(text: response.content)
+            latestVersion = parseVersion(requestJson.info.version)
 
             for (String release in requestJson.releases.keySet()) {
-                echo "release: ${release}"
+                try {
+                    def version = parseVersion(release)
+                    if (version[0] > minVersion[0]) {
+                        conanVersions.add(version)
+                    }
+                    else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
+                        conanVersions.add(version)
+                    }
+                    else if (version[0] == minVersion[0] && version[1] == minVersion[1] &&  version[2] >= minVersion[2]) {
+                        conanVersions.add(version)
+                    }
+                }
+                catch(e) {
+                    echo "Failed to parse release '$release'"
+                }
             }
-
         }
     }
+    echo "Versions: ${conanVersions}"
+    echo "- latest: ${latestVersion}"
 
-    List<String> conanVersions = ['1.38.0', '1.39.0', '1.40.3']
     List<String> gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
     List<String> clangVersions = ['10.0.1', '11.1.0', '12.0.0', '13.0.0']
     String distro = 'ubuntu'
@@ -74,13 +98,15 @@ node('Linux') {
 
         [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
         [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true],
-        [$class: 'BooleanParameterValue', name: 'upload_latest', value: false],
     ]
 
-    for (conanVersion in conanVersions) {
-        stage("Build images for Conan '${conanVersion}'")
+    for (v in conanVersions) {
+        String strVersion = "${v[0]}.${v[1]}.${v[2]}"
+        boolean isLatest = (v == latestVersion)
+        stage("Build images for Conan '${strVersion}' (latest=${isLatest})")
         build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
-            [$class: 'StringParameterValue', name: 'conan_version', value: conanVersion]
+            [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
+            [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
         ])
     }
 }
