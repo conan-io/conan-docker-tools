@@ -25,7 +25,7 @@ node('Linux') {
         [$class: 'StringParameterValue', name: 'scm_commit', value: 'master'],
         [$class: 'StringParameterValue', name: 'scm_base_branch', value: 'master'],
 
-        [$class: 'StringParameterValue', name: 'suffix', value: 'cci'],
+        // [$class: 'StringParameterValue', name: 'suffix', value: 'cci'],
 
         [$class: 'StringParameterValue', name: 'distro', value: "${distro}${distro_version}"],
         [$class: 'StringParameterValue', name: 'distro_version', value: distro_version],
