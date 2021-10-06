@@ -4,7 +4,39 @@ This pipeline is used to generate docker images for ConanCenter index
 
 */
 
+def parseVersion(String version) {
+    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
+    return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
+}
+
 node('Linux') {
+
+    stage('Compute Conan versions') {
+        dir('tmp') {
+            // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
+            checkout([$class           : 'GitSCM',
+                    branches         : [[name: 'master']],
+                    userRemoteConfigs: [[credentialsId: 'GITHUB_CLONE', url: 'https://github.com/conan-io/c3i_jenkins.git']],
+                    extensions       : [[$class           : 'RelativeTargetDirectory',
+                                        relativeTargetDir: 'c3i_jenkins']],
+            ])
+            def content = readFile 'c3i_jenkins/.ci/test.jenkins'
+            def minVersion = content =~ /String conanVersion = '(\d+).(\d+).(\d+)'/
+            assert minVersion, '.ci/tests.jenkins file was changed! Cannot find conanVersion'
+            // return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int]
+
+            // Up to latest version in pypi
+            def response = script.httpRequest 'https://pypi.python.org/pypi/conan/json'
+            Map<String, Object> requestJson = script.readJSON(text: response.content)
+            def latestVersion = requestJson.info.version
+            echo "latest: ${latestVersion}"
+
+            for (String release in requestJson.releases.keySet()) {
+                echo "release: ${release}"
+            }
+
+        }
+    }
 
     List<String> conanVersions = ['1.38.0', '1.39.0', '1.40.3']
     List<String> gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
