@@ -64,6 +64,7 @@ class Expected:
     conan: Version = None
     compiler: Compiler = None
     compiler_versions: defaultdict(list) = None
+    suffix: str = None
 
     def __str__(self):
         return f"""
@@ -76,6 +77,7 @@ class Expected:
             - conan: {self.conan}
             - compiler: {self.compiler}
             - compiler_versions: {self.compiler_versions}
+            - suffix: {self.suffix}
         """
 
     def vanilla_image(self):
@@ -83,7 +85,8 @@ class Expected:
         return f"{self.distro.name}:{self.distro.version}"
 
     def image_name(self, compiler, version):
-        return f'{self.docker_username}/{compiler}{version.major}-{self.distro.name}{self.distro.version}:{self.docker_tag}'
+        suffix = f'-{self.suffix}' if self.suffix else ''
+        return f'{self.docker_username}/{compiler}{version.major}-{self.distro.name}{self.distro.version}{suffix}:{self.docker_tag}'
 
 
 def get_compiler_versions():
@@ -120,10 +123,11 @@ def expected(request) -> Expected:
     image = request.config.option.image
     m = re.match(r'((?P<domain>[\w\-.]+)\/)?'
                  r'(?P<username>[\w\-.]+)\/'
-                 r'((?P<compiler>gcc|clang)(?P<version>\d+)-)?'
-                 r'((?P<service>base|builder|deploy|conan)-)?'
-                 r'(?P<distro>[a-z]+)(?P<distro_version>[\d.]+)'
-                 r'(-(?P<jenkins>jenkins))?'
+                 r'((?P<compiler>gcc|clang)(?P<version>\d+))?'
+                 r'(?P<service_base>base)?'
+                 r'-(?P<distro>[a-z]+)(?P<distro_version>[\d.]+)'
+                 r'(-(?P<suffix>cci))?'
+                 r'(-(?P<service>builder|jenkins))?'
                  r'(:(?P<tag>[\w\-.]+))?', image)
 
     # Parse the envfile used to generate the docker images
@@ -135,6 +139,7 @@ def expected(request) -> Expected:
     expected = Expected(distro, m.group('username'), m.group('tag'), python, cmake)
     expected.conan = Version(env_values.get('CONAN_VERSION'))
     expected.compiler_versions = get_compiler_versions()
+    expected.suffix = m.group('suffix')
 
     if m.group('compiler'):
         compiler = m.group('compiler')

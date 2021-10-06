@@ -1,0 +1,116 @@
+
+def detectPRCommits() {
+    String prCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    String masterCommit = sh(script: 'git rev-parse origin/master', returnStdout: true).trim()
+
+    String p = sh(script: 'git log --pretty=%P -n 1 --date-order', returnStdout: true).trim()
+    List<String> parentCommits = p.split(" ")
+    if (parentCommits.size() == 2) {
+        prCommit = parentCommits[0]
+        assert parentCommits[1] == masterCommit
+    } else {
+        // assert parentCommits[0] == masterCommit  (for a rebased PR this is not true, Jenkins uses fast-forward)
+    }
+    return [masterCommit, prCommit]
+}
+
+
+node('Linux') {
+
+    // We need to build the list of parameters to call next job
+    List parameters = [
+        [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
+        [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: false],  // TODO: Jenkins ones only uploaded by CCI
+        [$class: 'BooleanParameterValue', name: 'upload_latest', value: true],
+    ]
+
+    stage('Parameters from repository') {
+        checkout scm
+        String scm_repository = scm.userRemoteConfigs[0].url
+
+        //String branchName = scm.branches[0].name
+        String scm_base_branch = scm.branches[0].name  // Implicit knowledge of the underlying repository
+        String scm_pr_number = null
+        String scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        String scm_pr_commit = null
+        if (env.BRANCH_NAME.startsWith('PR')) {  // Because it is Github
+            scm_base_branch = "${env.CHANGE_TARGET}"
+            scm_pr_number = env.BRANCH_NAME.replace("PR-", "")
+
+            // Get commits from master branch and from PR
+            (scm_commit, scm_pr_commit) = detectPRCommits()
+        }
+
+        echo """
+            Parsing arguments:
+            - scm_repository: ${scm_repository}
+            - scm_commit: ${scm_commit}
+            // - branchName: \${branchName}
+            - scm_base_branch: ${scm_base_branch}
+            - scm_pr_number: ${scm_pr_number}
+            - scm_pr_commit: ${scm_pr_commit}
+            """
+
+        parameters.add([$class: 'StringParameterValue', name: 'scm_repository', value: scm_repository])
+        parameters.add([$class: 'StringParameterValue', name: 'scm_commit', value: scm_commit])
+        parameters.add([$class: 'StringParameterValue', name: 'scm_base_branch', value: scm_base_branch])
+        if (scm_pr_number) {
+            parameters.add([$class: 'StringParameterValue', name: 'scm_pr_number', value: scm_pr_number])
+            parameters.add([$class: 'StringParameterValue', name: 'scm_pr_commit', value: scm_pr_commit])
+        }
+    }
+
+    // Regular CI builds will follow versions from the 'modern/.env' file
+    stage('Parse environment file') {
+        List<String> gccVersions = []
+        List<String> clangVersions = []
+
+        String content = readFile('modern/.env')
+        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
+            def (name, value) = it.split('=')
+
+            // docker
+            if (name == 'DISTRO') {
+                parameters.add([$class: 'StringParameterValue', name: 'distro', value: value])
+            }
+            else if (name == 'DISTRO_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'distro_version', value: value])
+            }
+
+            // tools installed
+            else if (name == 'CONAN_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
+            }
+            else if (name == 'CMAKE_VERSION_FULL') {
+                parameters.add([$class: 'StringParameterValue', name: 'cmake_version', value: value])
+            }
+            else if (name == 'PYTHON_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'python_version', value: value])
+            }
+            else if (name == 'JENKINS_AGENT_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
+            }
+
+            // compiler versions
+            else if (name =~ /GCC\d+_VERSION/) {
+                gccVersions.add(value)
+            }
+            else if (name =~ /CLANG\d+_VERSION/) {
+                clangVersions.add(value)
+            }
+            else if (name == 'LIBSTDCPP_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_version', value: value])
+            }
+            else if (name == 'LIBSTDCPP_PATCH_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_patch_version', value: value])
+            }
+            else if (name == 'LIBSTDCPP_MAJOR_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_major_version', value: value])
+            }
+        }
+        parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
+        parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
+    }
+
+    build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters)
+}
