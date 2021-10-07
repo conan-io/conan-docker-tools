@@ -91,9 +91,6 @@ node('Linux') {
             }
 
             // tools installed
-            else if (name == 'CONAN_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
-            }
             else if (name == 'CMAKE_VERSION_FULL') {
                 parameters.add([$class: 'StringParameterValue', name: 'cmake_version', value: value])
             }
