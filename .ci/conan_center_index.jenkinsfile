@@ -70,43 +70,68 @@ node('Linux') {
     echo "Versions: ${conanVersions}"
     echo "- latest: ${latestVersion}"
 
-    List<String> gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
-    List<String> clangVersions = ['10.0.1', '11.1.0', '12.0.0', '13.0.0']
-    String distro = 'ubuntu'
-    String distro_version = '16.04'
-    String cmake_version = '3.15.7'
-    String python_version = '3.6.15'
-    String jenkins_agent_version = '3.27'
-    // Version of libstdcpp used inside clang images:
-    String libstdcpp_version = '10.3.0'
-    String libstdcpp_patch_version = '28'
-    String libstdcpp_major_version = '10'
+    List parameters = []
 
-    List parameters = [
-        // HEAD from 'master' branch
-        [$class: 'StringParameterValue', name: 'scm_repository', value: 'https://github.com/conan-io/conan-docker-tools'],
-        [$class: 'StringParameterValue', name: 'scm_commit', value: 'master'],
-        [$class: 'StringParameterValue', name: 'scm_base_branch', value: 'master'],
+    // CCI uses same hardcoded values from the repository for the tools (only Conan version is changed)
+    stage('Parse environment file') {
+        checkout scm
+        List<String> gccVersions = []
+        List<String> clangVersions = []
 
-        // [$class: 'StringParameterValue', name: 'suffix', value: 'cci'],
+        String content = readFile('modern/.env')
+        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
+            def (name, value) = it.split('=')
 
-        [$class: 'StringParameterValue', name: 'distro', value: "${distro}${distro_version}"],
-        [$class: 'StringParameterValue', name: 'distro_version', value: distro_version],
-        [$class: 'StringParameterValue', name: 'cmake_version', value: cmake_version],
-        [$class: 'StringParameterValue', name: 'python_version', value: python_version],
-        [$class: 'StringParameterValue', name: 'jenkins_agent_version', value: jenkins_agent_version],
+            // docker
+            if (name == 'DISTRO') {
+                parameters.add([$class: 'StringParameterValue', name: 'distro', value: value])
+            }
+            else if (name == 'DISTRO_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'distro_version', value: value])
+            }
 
-        [$class: 'StringParameterValue', name: 'libstdcpp_version', value: libstdcpp_version],
-        [$class: 'StringParameterValue', name: 'libstdcpp_patch_version', value: libstdcpp_patch_version],
-        [$class: 'StringParameterValue', name: 'libstdcpp_major_version', value: libstdcpp_major_version],
+            // tools installed
+            else if (name == 'CMAKE_VERSION_FULL') {
+                parameters.add([$class: 'StringParameterValue', name: 'cmake_version', value: value])
+            }
+            else if (name == 'PYTHON_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'python_version', value: value])
+            }
+            else if (name == 'JENKINS_AGENT_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
+            }
 
-        [$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"],
-        [$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"],
+            // compiler versions
+            else if (name =~ /GCC\d+_VERSION/) {
+                gccVersions.add(value)
+            }
+            else if (name =~ /CLANG\d+_VERSION/) {
+                clangVersions.add(value)
+            }
+            else if (name == 'LIBSTDCPP_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_version', value: value])
+            }
+            else if (name == 'LIBSTDCPP_PATCH_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_patch_version', value: value])
+            }
+            else if (name == 'LIBSTDCPP_MAJOR_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_major_version', value: value])
+            }
+        }
+        parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
+        parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
+    }
 
-        [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
-        [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true],
-        [$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run],
-    ]
+    // HEAD from 'master' branch
+    String scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    parameters.add([$class: 'StringParameterValue', name: 'scm_repository', value: 'https://github.com/conan-io/conan-docker-tools'])
+    parameters.add([$class: 'StringParameterValue', name: 'scm_commit', value: scm_commit])
+    parameters.add([$class: 'StringParameterValue', name: 'scm_base_branch', value: 'master'])
+
+    // [$class: 'StringParameterValue', name: 'suffix', value: 'cci'],
+    parameters.add([$class: 'BooleanParameterValue', name: 'upload_main_images', value: true])
+    parameters.add([$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true])
+    parameters.add([$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run])
 
     for (v in conanVersions) {
         String strVersion = "${v[0]}.${v[1]}.${v[2]}"
