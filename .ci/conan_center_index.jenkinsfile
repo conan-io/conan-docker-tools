@@ -105,11 +105,7 @@ node('Linux') {
 
         [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
         [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true],
-<<<<<<< HEAD
-        [$class: 'BooleanParameterValue', name: 'upload_latest', value: false],
         [$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run],
-=======
->>>>>>> ce55cc1c7c9d3b7ce63bc33864504d73ba4493b5
     ]
 
     for (v in conanVersions) {
