@@ -6,6 +6,12 @@ This pipeline is used to generate docker images for ConanCenter index
 
 node('Linux') {
 
+    stage('Input parameters') {
+        echo """
+        - dry_run: ${params.dry_run}
+        """
+    }
+
     List<String> conanVersions = ['1.38.0', '1.39.0', '1.40.3']
     List<String> gccVersions = ['5.5.0', '6.5.0', '7.5.0', '8.4.0', '9.3.0', '10.3.0', '11.1.0']
     List<String> clangVersions = ['10.0.1', '11.1.0', '12.0.0', '13.0.0']
@@ -43,6 +49,7 @@ node('Linux') {
         [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
         [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true],
         [$class: 'BooleanParameterValue', name: 'upload_latest', value: false],
+        [$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run],
     ]
 
     for (conanVersion in conanVersions) {
