@@ -135,7 +135,7 @@ These images are mainly focused for Conan Center CI.
 
 ### Library Versions
 
-The system libraries used by those new Docker images may vary according the Linux distribution and compiler installed.
+The system libraries used by those new Docker images vary according to the Linux distribution and compiler installed as explained above.
 Here is a list of installed libraries and their versions:
 
 
