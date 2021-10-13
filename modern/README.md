@@ -130,7 +130,38 @@ These images are mainly focused for Conan Center CI.
 | - [conanio/clang10-ubuntu16.04-jenkins: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 | - [conanio/clang11-ubuntu16.04-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 | - [conanio/clang12-ubuntu16.04-jenkins: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
+| - [conanio/clang13-ubuntu16.04-jenkins: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 
+
+### Library Versions
+
+The system libraries used by those new Docker images may vary according the Linux distribution and compiler installed.
+Here is a list of installed libraries and their versions:
+
+
+|  Docker Image                |  glibc   |  libstdc++  |  libc++  |
+|------------------------------|----------|-------------|----------|
+| conanio/gcc5-ubuntu16.04     |   2.23   |  3.4.21     |   ---    |
+| conanio/gcc6-ubuntu16.04     |   2.23   |  3.4.22     |   ---    |
+| conanio/gcc7-ubuntu16.04     |   2.23   |  3.4.24     |   ---    |
+| conanio/gcc8-ubuntu16.04     |   2.23   |  3.4.25     |   ---    |
+| conanio/gcc9-ubuntu16.04     |   2.23   |  3.4.28     |   ---    |
+| conanio/gcc10-ubuntu16.04    |   2.23   |  3.4.28     |   ---    |
+| conanio/gcc11-ubuntu16.04    |   2.23   |  3.4.29     |   ---    |
+| conanio/clang10-ubuntu16.04  |   2.23   |  3.4.28     |   10000  |
+| conanio/clang11-ubuntu16.04  |   2.23   |  3.4.28     |   11000  |
+| conanio/clang12-ubuntu16.04  |   2.23   |  3.4.28     |   12000  |
+| conanio/clang13-ubuntu16.04  |   2.23   |  3.4.28     |   13000  |
+
+
+##### How to detect library versions
+
+To understand which version is installed, the follow commands should be executed:
+
+
+* GLIBC: `ldd --version`
+* libstdc++: `strings /usr/local/lib64/libstdc++.so.6 | grep LIBCXX`
+* libc++: `printf "#include <ciso646>\nint main(){}" | clang -E -stdlib=libc++ -x c++ -dM - | grep _LIBCPP_VERSION`
 
 
 Use the images locally
