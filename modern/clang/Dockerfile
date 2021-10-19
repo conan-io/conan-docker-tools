@@ -138,6 +138,11 @@ ARG DISTRO
 COPY --from=builder /tmp/install /tmp/clang
 COPY --from=libstdcpp /usr/local /tmp/gcc
 
+ENV CC=clang \
+    CXX=clang++ \
+    CMAKE_C_COMPILER=clang \
+    CMAKE_CXX_COMPILER=clang++
+
 RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo ln -s -f /usr/local/lib64/libstdc++.so.6.0.${LIBSTDCPP_PATCH_VERSION} /usr/local/lib64/libstdc++.so.6 \
     && sudo ln -s -f /usr/local/lib64/libstdc++.so.6 /usr/local/lib64/libstdc++.so \
