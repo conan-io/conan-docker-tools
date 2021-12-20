@@ -25,7 +25,7 @@ node('Linux') {
         - dry_run: ${params.dry_run}
         """
     }
-    
+
     def conanVersions = []
     def latestVersion = null
     stage('Compute Conan versions') {
@@ -41,7 +41,7 @@ node('Linux') {
             def content = readFile "${env.WORKSPACE}/tmp/c3i_jenkins/.ci/tests.jenkins"
             def minVersion = getMinConanVersion(content)
             echo " - lowest: $minVersion"
-            
+
             // Up to latest version in pypi
             echo "Read latest version from pypi"
             def response = httpRequest(url: 'https://pypi.python.org/pypi/conan/json')
@@ -51,7 +51,11 @@ node('Linux') {
             for (String release in requestJson.releases.keySet()) {
                 try {
                     def version = parseVersion(release)
-                    if (version[0] > minVersion[0]) {
+                    if (version[0] == 2) {
+                        echo "WARNING: The version '$release' is part of Conan 2.0 which will not be built now."
+                        continue
+                    }
+                    else if (version[0] > minVersion[0]) {
                         conanVersions.add(version)
                     }
                     else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
