@@ -15,34 +15,37 @@ COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends software-properties-common \
+    && add-apt-repository ppa:git-core/ppa -y \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests \
-       sudo=1.* \
-       binutils=2.* \
-       wget=1.* \
-       git=1:2.* \
-       libc6-dev-i386=2.* \
-       libc6-dev=2.* \
-       linux-libc-dev:i386=5* \
+       sudo \
+       binutils \
+       wget \
+       git \
+       libc6-dev-i386 \
+       libc6-dev \
+       linux-libc-dev:i386 \
        g++-9-multilib \
-       libgmp-dev=2:6.* \
-       libmpfr-dev=4.* \
-       libmpc-dev=1.* \
-       nasm=2.* \
-       dh-autoreconf=19 \
-       ninja-build=1.* \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=8.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=6.* \
-       libncursesw5-dev=6.* \
-       liblzma-dev=5.* \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       nasm \
+       dh-autoreconf \
+       ninja-build \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100 \
