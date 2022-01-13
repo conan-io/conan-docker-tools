@@ -13,33 +13,36 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends software-properties-common \
+    && add-apt-repository ppa:git-core/ppa -y \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests \
-       sudo=1.* \
-       build-essential=12.* \
-       wget=1.* \
-       git=1:2.* \
-       libc6-dev-i386=2.* \
-       g++-multilib=4:5.* \
-       libgmp-dev=2:6.* \
-       libmpfr-dev=3.* \
-       libmpc-dev=1.* \
-       libc6-dev=2.* \
-       nasm=2.* \
-       dh-autoreconf=11 \
-       ninja-build=1.*  \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=6.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=6.* \
-       libncursesw5-dev=6.* \
-       liblzma-dev=5.* \
+       sudo \
+       build-essential \
+       wget \
+       git \
+       libc6-dev-i386 \
+       g++-multilib \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       libc6-dev \
+       nasm \
+       dh-autoreconf \
+       ninja-build  \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
        && rm -rf /var/lib/apt/lists/* \
