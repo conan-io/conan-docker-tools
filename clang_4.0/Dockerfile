@@ -18,42 +18,45 @@ COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends software-properties-common \
+    && add-apt-repository ppa:git-core/ppa -y \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests \
-       sudo=1.* \
-       wget=1.* \
-       git=1:2.* \
-       g++-multilib=4:7.* \
-       clang-${LLVM_VERSION}=1:4.* \
-       llvm-${LLVM_VERSION}=1:4.* \
-       llvm-${LLVM_VERSION}-dev=1:4.* \
-       llvm-${LLVM_VERSION}-runtime=1:4.* \
-       llvm=1:4.* \
-       make=4.* \
-       libc6-dev-i386=2.* \
-       libgmp-dev=2:6.* \
-       libmpfr-dev=3.* \
-       libmpc-dev=1.* \
-       nasm=2.* \
-       dh-autoreconf=14 \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       ninja-build=1.* \
-       libc++-dev=3.* \
-       libc++-dev:i386=3.* \
-       libc++abi-dev=3.* \
-       libc++abi-dev:i386=3.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=7.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=6.* \
-       libncursesw5-dev=6.* \
-       liblzma-dev=5.* \
-       ca-certificates=20170717 \
+       sudo \
+       wget \
+       git \
+       g++-multilib \
+       clang-${LLVM_VERSION} \
+       llvm-${LLVM_VERSION} \
+       llvm-${LLVM_VERSION}-dev \
+       llvm-${LLVM_VERSION}-runtime \
+       llvm \
+       make \
+       libc6-dev-i386 \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       nasm \
+       dh-autoreconf \
+       libffi-dev \
+       libssl-dev \
+       ninja-build \
+       libc++-dev \
+       libc++-dev:i386 \
+       libc++abi-dev \
+       libc++abi-dev:i386 \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
+       ca-certificates \
        autoconf-archive \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \

@@ -16,6 +16,9 @@ ENV LLVM_VERSION=10 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends software-properties-common \
+    && add-apt-repository ppa:git-core/ppa -y \
+    apt-get -qq update \
     # Install basics
     && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo \
@@ -30,7 +33,6 @@ RUN dpkg --add-architecture i386 \
     # Install compiler toolset
     && apt-get install -y --no-install-recommends --no-install-suggests \
        lsb-release \
-       software-properties-common \
     && wget https://apt.llvm.org/llvm.sh \
     && chmod +x llvm.sh \
     && sudo ./llvm.sh ${LLVM_VERSION} \

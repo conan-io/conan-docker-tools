@@ -16,38 +16,41 @@ ENV LLVM_VERSION=6.0 \
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends software-properties-common \
+    && add-apt-repository ppa:git-core/ppa -y \
+    && apt-get -qq update \
     && apt-get install -y --no-install-recommends --no-install-suggests \
-       sudo=1.* \
-       wget=1.* \
+       sudo \
+       wget \
        git \
-       g++-multilib=4:7.* \
-       clang-6.0=1:6.* \
-       make=4.* \
-       libc6-dev-i386=2.* \
-       libgmp-dev=2:6.* \
-       libmpfr-dev=4.* \
-       libmpc-dev=1.* \
-       nasm=2.* \
-       dh-autoreconf=17 \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       ninja-build=1.* \
-       libc++-dev=6.* \
-       libc++-dev:i386=6.* \
-       libc++abi-dev=6.* \
-       libc++abi-dev:i386=6.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=7.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=6.* \
-       libncursesw5-dev=6.* \
-       liblzma-dev=5.* \
-       ca-certificates=20180409 \
+       g++-multilib \
+       clang-6.0 \
+       make \
+       libc6-dev-i386 \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       nasm \
+       dh-autoreconf \
+       libffi-dev \
+       libssl-dev \
+       ninja-build \
+       libc++-dev \
+       libc++-dev:i386 \
+       libc++abi-dev \
+       libc++abi-dev:i386 \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
+       ca-certificates \
        autoconf-archive \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 100 \

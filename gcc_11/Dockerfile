@@ -12,10 +12,13 @@ ENV GCC_VERSION=11 \
     DEBIAN_FRONTEND=noninteractive
 
 RUN dpkg --add-architecture i386 \
+
+
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends --no-install-suggests gnupg \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests gnupg software-properties-common \
     && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu focal main\n" >> /etc/apt/sources.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
+    && add-apt-repository ppa:git-core/ppa -y \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo \
