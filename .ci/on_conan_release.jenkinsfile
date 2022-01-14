@@ -14,8 +14,10 @@ node('Linux') {
     }
 
     stage('New docker images') {
-        // Trigger the build (no need to wait)
+        // Trigger the build
         if (params.build_new_images) {
+            // We need to wait for a while, to be sure that new release will be returned from the API
+            sleep time: 120, unit: 'SECONDS'
             build(job: 'ConanCenterIndex', wait: false)
         }
     }
