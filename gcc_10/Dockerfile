@@ -16,7 +16,7 @@ ENV GCC_VERSION=10 \
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
     && add-apt-repository ppa:git-core/ppa -y \
-    apt-get -qq update \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo \
        binutils \
