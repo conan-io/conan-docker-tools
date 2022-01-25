@@ -18,7 +18,7 @@ RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
     && add-apt-repository ppa:git-core/ppa -y \
-    apt-get -qq update \
+    && apt-get -qq update \
     # Install basics
     && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo \
