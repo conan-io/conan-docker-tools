@@ -235,8 +235,12 @@ class ConanDockerTools(object):
         subprocess.check_call("docker run -t -d --name %s %s" % (self.service,
             self.created_image_name), shell=True)
 
-        for sudo_command in sudo_commands:
+        try:
+            subprocess.check_call(["lsb_release"])
+        except FileNotFoundError:
+            pass
 
+        for sudo_command in sudo_commands:
             logging.info("Testing command prefix: '{}'".format(sudo_command))
             output = subprocess.check_output(
                 "docker exec %s %s python3 --version" % (self.service, sudo_command), shell=True)
