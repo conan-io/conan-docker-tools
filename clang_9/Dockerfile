@@ -90,6 +90,7 @@ RUN dpkg --add-architecture i386 \
     && pyenv global 3.7.5 \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
+    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.7.5/lib/python3.7/lsb_release.py \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

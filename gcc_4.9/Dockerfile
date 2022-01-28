@@ -86,6 +86,8 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" CFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib pyenv install 3.6.15 \
     && pyenv global 3.6.15 \
+    && sed -e 's/! \/usr/!\/usr\/local/g' -i /usr/bin/lsb_release \
+    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.6.15/lib/python3.6/lsb_release.py \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
