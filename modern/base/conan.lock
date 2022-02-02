@@ -1,0 +1,42 @@
+{
+ "graph_lock": {
+  "nodes": {
+   "1": {
+    "ref": "binutils/2.37#7e1081ddda1762c3f97d47399c4b1691",
+    "options": "readline:fPIC=True\nreadline:shared=False\nreadline:with_library=termcap\ntermcap:fPIC=True\ntermcap:shared=False\nzlib:fPIC=True\nzlib:shared=False",
+    "package_id": "8e7714e05da644d1474247995163817b009f35ad",
+    "prev": "92231e81212010b1f015f78125760d49",
+    "requires": [
+     "2",
+     "3"
+    ],
+    "context": "host"
+   },
+   "2": {
+    "ref": "zlib/1.2.11#b46bf663179824c23085bb71666ba8e6",
+    "options": "fPIC=True\nshared=False",
+    "package_id": "dfbe50feef7f3c6223a476cd5aeadb687084a646",
+    "prev": "f064738ed9ea565f75cd7ebc20c2be62",
+    "context": "host"
+   },
+   "3": {
+    "ref": "readline/8.0#1d21941e543bef7a06551f5a56c8a87e",
+    "options": "fPIC=True\nshared=False\nwith_library=termcap\ntermcap:fPIC=True\ntermcap:shared=False",
+    "package_id": "0dd0336dbd4a73b0c2d71bd9b9bd75a1d84cd661",
+    "requires": [
+     "4"
+    ],
+    "context": "host"
+   },
+   "4": {
+    "ref": "termcap/1.3.1#a66ace38d82bcfa0c0b39e9d4d0c71d6",
+    "options": "fPIC=True\nshared=False",
+    "package_id": "dfbe50feef7f3c6223a476cd5aeadb687084a646",
+    "context": "host"
+   }
+  },
+  "revisions_enabled": true
+ },
+ "version": "0.4",
+ "profile_host": "[settings]\narch=x86_64\narch_build=x86_64\nbuild_type=Release\ncompiler=gcc\ncompiler.libcxx=libstdc++11\ncompiler.version=11\nos=Linux\nos_build=Linux\n[options]\n[build_requires]\n[env]\n"
+}
