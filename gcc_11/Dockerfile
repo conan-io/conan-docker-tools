@@ -8,12 +8,10 @@ ENV GCC_VERSION=11 \
     CXX=/usr/bin/g++ \
     PYENV_ROOT=/opt/pyenv \
     PYTHON_VERSION=3.7.5 \
-    PATH=/opt/pyenv/shims:${PATH} \
+    PATH=/opt/pyenv/shims:/opt/conan/.conan/data/binutils/2.37/_/_/package/8e7714e05da644d1474247995163817b009f35ad/bin:${PATH} \
     DEBIAN_FRONTEND=noninteractive
 
 RUN dpkg --add-architecture i386 \
-
-
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests gnupg software-properties-common \
     && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu focal main\n" >> /etc/apt/sources.list \
@@ -80,7 +78,8 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
-    && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
+    && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100 \
+    && CONAN_USER_HOME=/opt/conan conan install binutils/2.37@ -r conancenter --build=missing
 
 USER conan
 WORKDIR /home/conan
