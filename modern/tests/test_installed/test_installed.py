@@ -34,7 +34,8 @@ def test_git_version(container, expected):
     m = re.match(r'git version (\d+\.\d+\.\d+)', output.strip())
     vRunning = Version(m.group(1))
     vRequired = Version(git_versions[expected.distro.version.full_version])
-    assert vRunning > vRequired
+    assert vRunning >= vRequired
+    assert vRunning < Version('3.0.0')
 
 @pytest.mark.parametrize("tool", expected_versions.keys())
 def test_installed_system_package_version(container, expected, tool):
