@@ -5,7 +5,7 @@ FROM ubuntu:${DISTRO_VERSION}
 LABEL maintainer="Conan.io <info@conan.io>"
 
 ENV PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:${PATH}
+    PATH=/opt/pyenv/shims:/opt/conan/.conan/data/binutils/2.37/_/_/package/8e7714e05da644d1474247995163817b009f35ad/bin:${PATH}
 
 ARG CMAKE_VERSION
 ARG CMAKE_VERSION_FULL
@@ -91,6 +91,7 @@ RUN apt-get -qq update \
     && apt-get -qq update \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
+    && CONAN_USER_HOME=/opt/conan conan download binutils/2.37@ -r conancenter \
     && runuser -u conan -- printf 'eval "$(pyenv init -)"\n' >> /home/conan/.bashrc \
     && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \
     && chown -R conan:1001 /opt/pyenv
