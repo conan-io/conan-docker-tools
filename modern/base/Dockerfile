@@ -93,8 +93,6 @@ RUN apt-get -qq update \
     && apt-get -qq update \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
-    && conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock binutils/2.37@ --build=missing \
-    && rm -rf /root/.conan \
     && runuser -u conan -- printf 'eval "$(pyenv init -)"\n' >> /home/conan/.bashrc \
     && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \
     && chown -R conan:1001 /opt/pyenv
@@ -105,3 +103,6 @@ ENV CONAN_USER_HOME=/home/conan
 
 RUN pip install conan==${CONAN_VERSION} \
     && conan config set general.revisions_enabled=1
+
+RUN conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock binutils/2.37@ --build=missing \
+    && rm -rf /home/conan/.conan/data
