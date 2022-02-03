@@ -1,4 +1,7 @@
 import pytest
+import re
+
+from utils.version import Version
 
 
 expected_versions = {
@@ -9,12 +12,12 @@ expected_versions = {
     "perl": {"16.04": "5.22.1"},
     "wget": {"16.04": "1.17.1"},
     "curl": {"16.04": "7.47.0"},
-    "git": {"16.04": "2.34.1"},
     "svn": {"16.04": "1.9.3"},
     "xz": {"16.04": "5.1.0"},
     "nasm": {"16.04": "2.11.08"},
 }
 
+git_versions = {"16.04": "2.34.0"}
 
 def test_cmake_version(container, expected):
     output, _ = container.exec(["cmake", "--version"])
@@ -26,6 +29,13 @@ def test_python_version(container, expected):
     output, _ = container.exec(["python", "--version"])
     assert output.strip() == f"Python {expected.python}"
 
+def test_git_version(container, expected):
+    output, _ = container.exec(["git", "--version"])
+    m = re.match(r'git version (\d+\.\d+\.\d+)', output.strip())
+    vRunning = Version(m.group(1))
+    vRequired = Version(git_versions[expected.distro.version.full_version])
+    assert vRequired < vRunning
+    assert vRunning < Version('3.0.0')
 
 @pytest.mark.parametrize("tool", expected_versions.keys())
 def test_installed_system_package_version(container, expected, tool):
