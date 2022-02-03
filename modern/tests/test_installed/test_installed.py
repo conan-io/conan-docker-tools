@@ -17,7 +17,7 @@ expected_versions = {
     "nasm": {"16.04": "2.11.08"},
 }
 
-git_versions = {"16.04": "2.34.1"}
+git_versions = {"16.04": "2.34.0"}
 
 def test_cmake_version(container, expected):
     output, _ = container.exec(["cmake", "--version"])
@@ -34,7 +34,7 @@ def test_git_version(container, expected):
     m = re.match(r'git version (\d+\.\d+\.\d+)', output.strip())
     vRunning = Version(m.group(1))
     vRequired = Version(git_versions[expected.distro.version.full_version])
-    assert vRunning >= vRequired
+    assert vRequired < vRunning
     assert vRunning < Version('3.0.0')
 
 @pytest.mark.parametrize("tool", expected_versions.keys())
