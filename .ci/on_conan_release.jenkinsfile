@@ -35,14 +35,13 @@ node('Linux') {
 
         // Modify files that list Conan version. Change defaults to match this latest version
         def content1 = readFile(file: 'conan-docker-tools/build.py')
-        content1 = content1.replaceAll(/TARGET_CONAN_VERSION = "\d+\.\d+.\d+"/, "TARGET_CONAN_VERSION = \"${params.conan_version}\"")
+        content1 = content1.replaceAll(/TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", "\d+\.\d+.\d+")/, "TARGET_CONAN_VERSION = os.getenv(\"CONAN_VERSION\", \"${params.conan_version}\")")
         writeFile(file: 'conan-docker-tools/build.py', text: content1)
 
         def content2 = readFile(file: 'conan-docker-tools/modern/.env')
         content2 = content2.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
         content2 = content2.replaceAll(/DOCKER_TAG=\d+\.\d+.\d+/, "DOCKER_TAG=${params.conan_version}")
         writeFile(file: 'conan-docker-tools/modern/.env', text: content2)
-
 
         String branchName = "bot/release-${params.conan_version}".replaceAll(/\./, '_')
         dir('conan-docker-tools') {
