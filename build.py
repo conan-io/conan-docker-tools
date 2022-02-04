@@ -13,7 +13,7 @@ from cpt.ci_manager import CIManager
 from cpt.printer import Printer
 
 
-TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", "1.44.1")
+TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", "1.45.0")
 
 
 class ConanDockerTools(object):
