@@ -67,6 +67,3 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo ldconfig -C /etc/ld.so.cache \
     && conan profile new --detect --force default \
     && conan profile update settings.compiler.libcxx=libstdc++11 default
-
-RUN conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock binutils/2.37@ --build=missing \
-    && rm -rf /home/conan/.conan/data
