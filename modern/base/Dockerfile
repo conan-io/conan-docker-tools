@@ -103,6 +103,5 @@ WORKDIR /home/conan
 ENV CONAN_USER_HOME=/home/conan
 
 RUN pip install conan==${CONAN_VERSION} \
-    && conan config set general.revisions_enabled=1
-
-RUN CONAN_USER_HOME=/opt/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock binutils/2.37@
+    && conan config set general.revisions_enabled=1 \
+    && CONAN_USER_HOME=/opt/conan CONAN_REVISIONS_ENABLED=1 conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock binutils/2.37@
