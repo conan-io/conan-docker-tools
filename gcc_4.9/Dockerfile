@@ -2,7 +2,11 @@ FROM ubuntu:trusty
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV PYENV_ROOT=/opt/pyenv \
+ARG CONAN_VERSION
+
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
+    CMAKE_VERSION_FULL=3.18.2 \
+    PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc
@@ -11,30 +15,30 @@ RUN dpkg --add-architecture i386 \
     && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
-    && apt-get install -y --force-yes --no-install-recommends \
-       sudo=1.* \
-       g++-4.9=4.9.* \
-       g++-4.9-multilib=4.9.* \
-       libc6-dev-i386=2.* \
-       gcc-multilib=4:4.* \
-       wget=1.* \
+    && apt-get install -y --force-yes --no-install-recommends --no-install-suggests \
+       sudo \
+       g++-4.9 \
+       g++-4.9-multilib \
+       libc6-dev-i386 \
+       gcc-multilib \
+       wget \
        git \
-       nasm=2.* \
-       dh-autoreconf=9 \
-       ninja-build=1.* \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=6.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=5.* \
-       libncursesw5-dev=5.* \
-       liblzma-dev=5.* \
+       nasm \
+       dh-autoreconf \
+       ninja-build \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
     && update-ca-certificates \
@@ -44,14 +48,19 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 100 \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.15.3-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
-       --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.15.3-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.15.3-Linux-x86_64 \
-    && rm cmake-3.15.3-Linux-x86_64.tar.gz \
+       --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
+       --exclude=share/vim \
+       --exclude=share/vim \
+    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
+    && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
+    && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && curl -fL https://getcli.jfrog.io | sh \
+    && mv jfrog /usr/local/bin/jfrog \
+    && chmod +x /usr/local/bin/jfrog \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -61,15 +70,27 @@ RUN dpkg --add-architecture i386 \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
     && sed -i '0,/python3/s//python/' /usr/bin/lsb_release \
+    && rm /etc/ssl/certs/DST_Root_CA_X3.pem \
+    && wget -q --no-check-certificate https://www.openssl.org/source/openssl-1.1.1l.tar.gz \
+    && tar -xzf openssl-1.1.1l.tar.gz \
+    && cd openssl-1.1.1l \
+    && ./config no-unit-test shared \
+    && make -s \
+    && make install_sw \
+    && rm -rf openssl-* \
+    && ln -sf /usr/local/bin/openssl /usr/bin/openssl \
+    && ldconfig \
     && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
-    && pyenv global 3.6.7 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" CFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib pyenv install 3.6.15 \
+    && pyenv global 3.6.15 \
+    && sed -e 's/! \/usr/!\/usr\/local/g' -i /usr/bin/lsb_release \
+    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.6.15/lib/python3.6/lsb_release.py \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

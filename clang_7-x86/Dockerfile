@@ -3,7 +3,11 @@ ENTRYPOINT ["linux32", "--"]  # https://github.com/conan-io/conan-docker-tools/i
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV LLVM_VERSION=7.0 \
+    CMAKE_VERSION_MAJOR_MINOR=3.18 \
+    CMAKE_VERSION_FULL=3.18.2 \
     CC=clang \
     CXX=clang++ \
     CMAKE_C_COMPILER=clang \
@@ -12,8 +16,10 @@ ENV LLVM_VERSION=7.0 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
+COPY sources.list /etc/apt/sources.list
+
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        sudo=1.* \
        wget=1.* \
        git=1:2.* \
@@ -51,9 +57,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.15/cmake-3.15.3.tar.gz \
-    && tar -xzf cmake-3.15.3.tar.gz \
-    && cd cmake-3.15.3 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
@@ -72,10 +78,10 @@ RUN apt-get -qq update \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.1 \
-    && pyenv global 3.7.1 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
+    && pyenv global 3.7.5 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

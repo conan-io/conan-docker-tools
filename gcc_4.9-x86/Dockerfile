@@ -3,7 +3,11 @@ ENTRYPOINT ["linux32", "--"]
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV CONAN_ENV_ARCH=x86 \
+ARG CONAN_VERSION
+
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
+    CMAKE_VERSION_FULL=3.18.2 \
+    CONAN_ENV_ARCH=x86 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
@@ -13,28 +17,28 @@ RUN dpkg --add-architecture i386 \
     && printf "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main\n" >> /etc/apt/sources.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F \
     && apt-get -qq update \
-    && apt-get install -y --force-yes --no-install-recommends \
-       sudo=1.* \
-       g++-4.9=4.* \
-       g++-4.9-multilib=4.9.* \
-       wget=1.* \
+    && apt-get install -y --force-yes --no-install-recommends --no-install-suggests \
+       sudo \
+       g++-4.9 \
+       g++-4.9-multilib \
+       wget \
        git \
-       nasm=2.* \
-       dh-autoreconf=9 \
-       ninja-build=1.* \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=6.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=5.* \
-       libncursesw5-dev=5.* \
-       liblzma-dev=5.* \
+       nasm \
+       dh-autoreconf \
+       ninja-build \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
     && update-ca-certificates \
@@ -44,9 +48,9 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
     && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 100 \
-    && wget --no-check-certificate --quiet https://cmake.org/files/v3.15/cmake-3.15.3.tar.gz \
-    && tar -xzf cmake-3.15.3.tar.gz \
-    && cd cmake-3.15.3 \
+    && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}.tar.gz \
+    && cd cmake-${CMAKE_VERSION_FULL} \
     && ./bootstrap > /dev/null \
     && make -s -j`nproc` \
     && make -s install > /dev/null \
@@ -66,10 +70,10 @@ RUN dpkg --add-architecture i386 \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
-    && pyenv global 3.6.7 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.15 \
+    && pyenv global 3.6.15 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

@@ -1,4 +1,7 @@
 /.pydevproject
 /.project
-/.idea
-
+.vscode/
+__pycache__/
+_venv/
+.idea/
+modern/tests/tmp/

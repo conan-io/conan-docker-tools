@@ -2,6 +2,8 @@ FROM conanio/gcc5
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
+ARG CONAN_VERSION
+
 ENV CC=arm-linux-gnueabi-gcc-5 \
     CXX=arm-linux-gnueabi-g++-5 \
     CMAKE_C_COMPILER=arm-linux-gnueabi-gcc-5 \
@@ -14,13 +16,13 @@ ENV CC=arm-linux-gnueabi-gcc-5 \
     FC=arm-linux-gnueabi-gfortran-5
 
 RUN sudo apt-get -qq update \
-    && sudo apt-get -qq install -y --force-yes --no-install-recommends \
+    && sudo apt-get -qq install -y --force-yes --no-install-recommends --no-install-suggests \
        ".*5.*arm-linux-gnueabi.*" \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-g++ arm-linux-gnueabi-g++ /usr/bin/arm-linux-gnueabi-g++-5 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-c++ arm-linux-gnueabi-c++ /usr/bin/arm-linux-gnueabi-g++-5 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcc arm-linux-gnueabi-gcc /usr/bin/arm-linux-gnueabi-gcc-5 100 \
     && sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-cc arm-linux-gnueabi-cc /usr/bin/arm-linux-gnueabi-gcc-5 100 \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && pip install -q --no-cache-dir conan conan-package-tools --upgrade \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools --upgrade \
     && conan profile new default --detect \
     && conan profile update settings.arch=armv7 default

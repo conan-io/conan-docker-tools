@@ -2,51 +2,62 @@ FROM ubuntu:xenial
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV PYENV_ROOT=/opt/pyenv \
+ARG CONAN_VERSION
+
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
+    CMAKE_VERSION_FULL=3.18.2 \
+    PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
-       sudo=1.* \
-       build-essential=12.* \
-       wget=1.* \
-       git=1:2.* \
-       libc6-dev-i386=2.* \
-       g++-multilib=4:5.* \
-       libgmp-dev=2:6.* \
-       libmpfr-dev=3.* \
-       libmpc-dev=1.* \
-       libc6-dev=2.* \
-       nasm=2.* \
-       dh-autoreconf=11 \
-       ninja-build=1.*  \
-       libffi-dev=3.* \
-       libssl-dev=1.* \
-       pkg-config=0.* \
-       subversion=1.* \
-       zlib1g-dev=1:1.* \
-       libbz2-dev=1.* \
-       libsqlite3-dev=3.* \
-       libreadline-dev=6.* \
-       xz-utils=5.* \
-       curl=7.* \
-       libncurses5-dev=6.* \
-       libncursesw5-dev=6.* \
-       liblzma-dev=5.* \
+    && apt-get -qq install -y --no-install-recommends software-properties-common \
+    && add-apt-repository ppa:git-core/ppa -y \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
+       sudo \
+       build-essential \
+       wget \
+       git \
+       libc6-dev-i386 \
+       g++-multilib \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       libc6-dev \
+       nasm \
+       dh-autoreconf \
+       ninja-build  \
+       libffi-dev \
+       libssl-dev \
+       pkg-config \
+       subversion \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       xz-utils \
+       curl \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
        ca-certificates \
        autoconf-archive \
        && rm -rf /var/lib/apt/lists/* \
-       && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.tar.gz \
-       && tar -xzf cmake-3.15.3-Linux-x86_64.tar.gz \
+       && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+       && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
           --exclude=bin/cmake-gui \
           --exclude=doc/cmake \
-          --exclude=share/cmake-3.12/Help \
-       && cp -fR cmake-3.15.3-Linux-x86_64/* /usr \
-       && rm -rf cmake-3.15.3-Linux-x86_64 \
-       && rm cmake-3.15.3-Linux-x86_64.tar.gz \
+          --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
+       --exclude=share/vim \
+       && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
+       && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
+       && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+       && curl -fL https://getcli.jfrog.io | sh \
+       && mv jfrog /usr/local/bin/jfrog \
+       && chmod +x /usr/local/bin/jfrog \
        && groupadd 1001 -g 1001 \
        && groupadd 1000 -g 1000 \
        && groupadd 2000 -g 2000 \
@@ -60,10 +71,11 @@ RUN dpkg --add-architecture i386 \
        && /tmp/pyenv-installer \
        && rm /tmp/pyenv-installer \
        && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-       && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.1 \
-       && pyenv global 3.7.1 \
+       && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.5 \
+       && pyenv global 3.7.5 \
+       && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.7.5/lib/python3.7/lsb_release.py \
        && pip install -q --upgrade --no-cache-dir pip \
-       && pip install -q --no-cache-dir conan conan-package-tools \
+       && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
        && chown -R conan:1001 /opt/pyenv \
        # remove all __pycache__ directories created by pyenv
        && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \

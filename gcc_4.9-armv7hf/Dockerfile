@@ -2,14 +2,18 @@ FROM ubuntu:wily
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
-ENV PYENV_ROOT=/opt/pyenv \
+ARG CONAN_VERSION
+
+ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
+    CMAKE_VERSION_FULL=3.18.2 \
+    PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH}
 
 COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture armhf \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
     ".*4\.9.*arm-linux-gnueabihf.*" \
     sudo=1.8.* \
     build-essential=12.* \
@@ -36,14 +40,15 @@ RUN dpkg --add-architecture armhf \
     autoconf-archive \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-3.15.3-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
-       --exclude=share/cmake-3.12/Help \
-    && cp -fR cmake-3.15.3-Linux-x86_64/* /usr \
-    && rm -rf cmake-3.15.3-Linux-x86_64 \
-    && rm cmake-3.15.3-Linux-x86_64.tar.gz \
+       --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
+       --exclude=share/vim \
+    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
+    && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
+    && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && groupadd 1001 -g 1001 \
     && groupadd 1000 -g 1000 \
     && groupadd 2000 -g 2000 \
@@ -57,10 +62,10 @@ RUN dpkg --add-architecture armhf \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.7 \
-    && pyenv global 3.6.7 \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.15 \
+    && pyenv global 3.6.15 \
     && pip install -q --upgrade --no-cache-dir pip \
-    && pip install -q --no-cache-dir conan conan-package-tools \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
     && chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
