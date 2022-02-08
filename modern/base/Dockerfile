@@ -5,7 +5,8 @@ FROM ubuntu:${DISTRO_VERSION}
 LABEL maintainer="Conan.io <info@conan.io>"
 
 ENV PYENV_ROOT=/opt/pyenv \
-    PATH=/opt/pyenv/shims:/opt/conan/binutils/bin:${PATH}
+    PATH=/opt/pyenv/shims:/opt/conan/binutils/bin:${PATH} \
+    CONAN_REVISIONS_ENABLED=1
 
 ARG CMAKE_VERSION
 ARG CMAKE_VERSION_FULL
@@ -15,6 +16,7 @@ ARG CONAN_VERSION
 WORKDIR /root
 
 COPY conan.lock /opt/conan/conan.lock
+COPY conanfile.txt /opt/conan/conanfile.txt
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
@@ -103,5 +105,4 @@ WORKDIR /home/conan
 ENV CONAN_USER_HOME=/home/conan
 
 RUN pip install conan==${CONAN_VERSION} \
-    && conan config set general.revisions_enabled=1 \
-    && CONAN_USER_HOME=/opt/conan CONAN_REVISIONS_ENABLED=1 conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock binutils/2.37@
+    && CONAN_USER_HOME=/opt/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt
