@@ -1,2 +1,2 @@
-[requirements]
+[requires]
 binutils/2.37@
