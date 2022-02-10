@@ -15,7 +15,7 @@ ARG CONAN_VERSION
 
 WORKDIR /root
 
-COPY conan.lock conanfile.txt profile /opt/conan/
+COPY conan.lock conanfile.txt /opt/conan/
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
@@ -103,6 +103,6 @@ USER conan
 WORKDIR /home/conan
 
 RUN pip install conan==${CONAN_VERSION} \
-    && CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock -pr /opt/conan/profile /opt/conan/conanfile.txt \
+    && CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt \
     && rm -rf /tmp/conan \
     && conan config set general.revisions_enabled=1
