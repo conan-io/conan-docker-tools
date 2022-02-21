@@ -50,7 +50,7 @@ node('Linux') {
 
             sh 'git config --local user.email "javierg@jfrog.com"'
             sh 'git config --local user.name "Release Bot"'
-            sh 'git commit -am "[up conan] Update Conan version"'
+            sh 'git commit -am "[up conan] [azp skip] Update Conan version"'
 
             if (params.build_old_images) {
                 withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
@@ -63,7 +63,7 @@ node('Linux') {
         // Open PR in Github
         stage('Open PR in Github') {
             def data = readJSON text: '{}'
-            data.title = "[up conan] Update Conan version (${params.conan_version})" as String
+            data.title = "[up conan] [azp skip] Update Conan version (${params.conan_version})" as String
             data.head = branchName
             data.base = 'master' as String
             data.body = '''\
