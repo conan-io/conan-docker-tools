@@ -80,7 +80,7 @@ node('Linux') {
     stage('Legacy - Parse environment file') {
         checkout scm
         List<String> gccVersions = ["5", "6", "7", "8", "9", "10", "11"]
-        List<String> clangVersions = ["7", "8", "9", "10", "11", "12"]
+        List<String> clangVersions = ["7", "8", "9", "10", "11"]
 
         parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
         parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
