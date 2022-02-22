@@ -70,7 +70,7 @@ node('Linux') {
             def (name, value) = it.split('=')
 
             // tools installed
-            else if (name == 'CONAN_VERSION') {
+            if (name == 'CONAN_VERSION') {
                 parameters.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
             }
             else if (name == 'JENKINS_AGENT_VERSION') {
