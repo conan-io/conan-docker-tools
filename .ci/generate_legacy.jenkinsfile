@@ -12,17 +12,6 @@ dockerUsername = 'center-c3i-docker.jfrog.io'
 dockerhubUsername = 'conanio'
 
 
-def parseVersion(String version) {
-    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
-    return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
-}
-
-String getVersionMajor(String version) {
-    def (major, _1, _2) = parseVersion(version)
-    return major
-}
-
-
 def buildImage(String latestMaster, String latestBranch, String expectedImage, String buildArgs, String target = null, String extraCacheFrom = null) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
@@ -89,7 +78,7 @@ node('Linux') {
     List<String> clangVersions = params.clang_versions.split("\n")
 
 
-    stage('Input parameters') {
+    stage('Legacy - Input parameters') {
         echo """
         About sources:
         - scm_repository: ${params.scm_repository}
@@ -147,12 +136,12 @@ node('Linux') {
         """
     }
 
-    stage('Checkout sources') {
+    stage('Legacy - Checkout sources') {
         checkoutSources()
     }
 
-    stage('Install deps') {
-        sh 'pip install pytest'
+    stage('Legacy - Install deps') {
+        sh 'pip install docker-compose humanfriendly conan conan-package-tools'
     }
 
     // Get some global information, used later
@@ -171,31 +160,8 @@ node('Linux') {
     // Build build-args list
     Map<String, String> buildArguments = [:]
     Map<String, String> testArguments = [:]
-    stage("Build arguments") {
+    stage("Legacy - Build arguments") {
         buildArguments.put('CONAN_VERSION', params.conan_version)
-        buildArguments.put('CMAKE_VERSION_FULL', params.cmake_version)
-        def (major, minor, _) = parseVersion(params.cmake_version)
-        buildArguments.put('CMAKE_VERSION', "$major.$minor")
-        buildArguments.put('PYTHON_VERSION', params.python_version)
-        buildArguments.put('LIBSTDCPP_VERSION', params.libstdcpp_version)
-        buildArguments.put('LIBSTDCPP_PATCH_VERSION', params.libstdcpp_patch_version)
-        buildArguments.put('LIBSTDCPP_MAJOR_VERSION', params.libstdcpp_major_version)
-        buildArguments.put('DOCKER_USERNAME', dockerUsername)
-        buildArguments.put('JENKINS_AGENT_VERSION', params.jenkins_agent_version)
-        buildArguments.put('DISTRO', params.distro)
-        buildArguments.put('DISTRO_VERSION', params.distro_version)
-
-        buildArguments.put('DOCKER_TAG', "${branchName}-${commit}")
-
-        testArguments = buildArguments
-        gccVersions.each { v ->
-            String gccVersionMajor = getVersionMajor(v)
-            testArguments.put("GCC${gccVersionMajor}_VERSION", v)
-        }
-        clangVersions.each { v ->
-            String clangVersionMajor = getVersionMajor(v)
-            testArguments.put("CLANG${clangVersionMajor}_VERSION", v)
-        }
 
         // TODO: Pass expected in a different way
         writeFile(file: '.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
@@ -203,75 +169,39 @@ node('Linux') {
     }
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
-    stage('Xenial - Build base image') {
-        String expectedImage = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
-        String latestBranch = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-latest"
-        String latestMaster = "${dockerUsername}/base-${params.distro}${suffix}:${targetBranch}-latest"
-        dir('modern/base') {
-            buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
-        }
-
-        dir('modern') {
-            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
-        }
-    }
-
     // Define helper function to build the compiler
     Closure compilerBuild = { String compiler, String version ->
         return {
-            String versionMajor = getVersionMajor(version)
+            String versionMajor = version
 
-            String builderImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${branchName}-${commit}"
-            String deployImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${branchName}-${commit}"
-            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}"
-            String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
-            if (suffix) {
-                compilerArgs = "${compilerArgs} --build-arg SUFFIX=${suffix}"
-            }
+            String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
+            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}"
+            String compilerArgs = "${buildArgs}"
 
             node('Linux') {
-                stage('Checkout and install deps') {
+                stage('Legacy - Checkout and install deps') {
                     checkoutSources()
-                    sh 'pip install pytest'
-                    // TODO: Pass expected in a different way
-                    writeFile(file: '.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
                     sh 'cat .env'
                 }
 
                 String containerID = get_container_id()
 
-                stage("${compiler.toUpperCase()} ${version} builder") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${targetBranch}-latest"
+                stage("Legacy - ${compiler.toUpperCase()} ${version} deploy") {
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}:${targetBranch}-latest"
 
-                    dir("modern/${compiler}") {
-                        buildImage(latestMaster, latestBranch, builderImage, compilerArgs, 'builder')
+                    dir("${compiler}_${versionMajor}") {
+                        buildImage(latestMaster, latestBranch, deployImage, compilerArgs)
                     }
                 }
 
-                stage("${compiler.toUpperCase()} ${version} deploy") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${targetBranch}-latest"
+                stage("Legacy - ${compiler.toUpperCase()} ${version} jenkins") {
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-latest"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${targetBranch}-latest"
 
-                    dir("modern/${compiler}") {
-                        buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy', builderImage)
-                    }
-
-                    dir('modern') {
-                        sh "pytest tests --image ${deployImage} --service deploy -vv --volumes-from ${containerID} --user 0:0"
-                    }
-                }
-
-                stage("${compiler.toUpperCase()} ${version} jenkins") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${targetBranch}-latest"
-
-                    dir('modern/jenkins') {
-                        buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
-                    }
-
-                    dir('modern') {
-                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
+                    dir('jenkins-jnlp-slave') {
+                        String jenkins_args = "--build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg AGENT_VERSION=${params.jenkins_agent_version}"
+                        buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} ${jenkins_args}")
                     }
                 }
             }
@@ -283,9 +213,9 @@ node('Linux') {
     List<String> gccImages = []
     gccVersions.each { v ->
         String gccVersion = v
-        String gccVersionMajor = getVersionMajor(gccVersion)
-        gccImages.add("gcc${gccVersionMajor}-${params.distro}${suffix}")
-        gccBuilds["GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
+        String gccVersionMajor = gccVersion
+        gccImages.add("gcc${gccVersionMajor}")
+        gccBuilds["Legacy GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
     }
     gccBuilds.failFast = true
     parallel(gccBuilds)
@@ -296,52 +226,33 @@ node('Linux') {
     List<String> clangImages = []
     clangVersions.each { v ->
         String clangVersion = v
-        String clangVersionMajor = getVersionMajor(clangVersion)
-        clangImages.add("clang${clangVersionMajor}-${params.distro}${suffix}")
-        clangBuilds["Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
+        String clangVersionMajor = clangVersion
+        clangImages.add("clang${clangVersionMajor}")
+        clangBuilds["Legacy Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
     }
     clangBuilds.failFast = true
     parallel(clangBuilds)
 
-
-    // Run the xtests. Do it in the same node to take advantage of the cache
-    stage('Run GCC xtests') {
-        echo 'Run tests that check binaries work in compatible images'
-        gccImages.each { image ->
-            dir('modern') {
-                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
-            }
-        }
-    }
-    stage('Run Clang xtests') {
-        echo 'Run tests that check binaries work in compatible images'
-        clangImages.each { image ->
-            dir('modern') {
-                sh "pytest tests --image ${dockerUsername}/${image}:${branchName}-${commit} --service xtest -vv --volumes-from ${mainContainerID} --user 0:0"
-            }
-        }
-    }
-
     if (isMaster) {
         // If it was master and everything is ok up to here
-        stage('Upload images') {
-            List images = ["base-${params.distro}${suffix}"]
+        stage('Legacy - Upload images') {
+            List images = []
             gccVersions.each { v ->
-                String versionMajor = getVersionMajor(v)
+                String versionMajor = v
                 if (params.upload_main_images) {
-                    images.add("gcc${versionMajor}-${params.distro}${suffix}")
+                    images.add("gcc${versionMajor}")
                 }
                 if (params.upload_jenkins_images) {
-                    images.add("gcc${versionMajor}-${params.distro}${suffix}-jenkins")
+                    images.add("gcc${versionMajor}-jnlp-slave")
                 }
             }
             clangVersions.each { v ->
-                String versionMajor = getVersionMajor(v)
+                String versionMajor = v
                 if (params.upload_main_images) {
-                    images.add("clang${versionMajor}-${params.distro}${suffix}")
+                    images.add("clang${versionMajor}")
                 }
                 if (params.upload_jenkins_images) {
-                    images.add("clang${versionMajor}-${params.distro}${suffix}-jenkins")
+                    images.add("clang${versionMajor}-jnlp-slave")
                 }
             }
 

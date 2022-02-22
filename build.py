@@ -2,6 +2,7 @@
 """Build, Test and Deploy Docker images for Conan project"""
 import collections
 import os
+import re
 import logging
 import subprocess
 import requests
@@ -13,7 +14,17 @@ from cpt.ci_manager import CIManager
 from cpt.printer import Printer
 
 
-TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", "1.45.0")
+def _read_conan_version():
+    regex = re.compile("CONAN_VERSION=(\d\.\d+\.\d+)")
+    fd = open(".env", "r")
+    for line in fd.readlines():
+        match = regex.search(line)
+        if match:
+            return match.group(1)
+    raise Exception("Could not read CONAN_VERSION on .env")
+
+
+TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", _read_conan_version())
 
 
 class ConanDockerTools(object):
@@ -65,7 +76,7 @@ class ConanDockerTools(object):
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
         docker_cache = self._get_boolean_var("DOCKER_CACHE")
-        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
+        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else ["jnlp-slave"]
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []

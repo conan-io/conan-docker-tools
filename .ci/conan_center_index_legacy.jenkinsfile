@@ -28,7 +28,7 @@ node('Linux') {
 
     def conanVersions = []
     def latestVersion = null
-    stage('Compute Conan versions') {
+    stage('Legacy - Compute Conan versions') {
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
             echo "Read lowest version from CCI requirements"
@@ -77,51 +77,11 @@ node('Linux') {
     List parameters = []
 
     // CCI uses same hardcoded values from the repository for the tools (only Conan version is changed)
-    stage('Parse environment file') {
+    stage('Legacy - Parse environment file') {
         checkout scm
-        List<String> gccVersions = []
-        List<String> clangVersions = []
+        List<String> gccVersions = ["5", "6", "7", "8", "9", "10", "11"]
+        List<String> clangVersions = ["7", "8", "9", "10", "11"]
 
-        String content = readFile('.env')
-        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
-            def (name, value) = it.split('=')
-
-            // docker
-            if (name == 'DISTRO') {
-                parameters.add([$class: 'StringParameterValue', name: 'distro', value: value])
-            }
-            else if (name == 'DISTRO_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'distro_version', value: value])
-            }
-
-            // tools installed
-            else if (name == 'CMAKE_VERSION_FULL') {
-                parameters.add([$class: 'StringParameterValue', name: 'cmake_version', value: value])
-            }
-            else if (name == 'PYTHON_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'python_version', value: value])
-            }
-            else if (name == 'JENKINS_AGENT_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
-            }
-
-            // compiler versions
-            else if (name =~ /GCC\d+_VERSION/) {
-                gccVersions.add(value)
-            }
-            else if (name =~ /CLANG\d+_VERSION/) {
-                clangVersions.add(value)
-            }
-            else if (name == 'LIBSTDCPP_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_version', value: value])
-            }
-            else if (name == 'LIBSTDCPP_PATCH_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_patch_version', value: value])
-            }
-            else if (name == 'LIBSTDCPP_MAJOR_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'libstdcpp_major_version', value: value])
-            }
-        }
         parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
         parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
     }
@@ -140,8 +100,8 @@ node('Linux') {
     for (v in conanVersions) {
         String strVersion = "${v[0]}.${v[1]}.${v[2]}"
         boolean isLatest = (v == latestVersion)
-        stage("Build images for Conan '${strVersion}' (latest=${isLatest})") {
-            build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
+        stage("Build legacy images for Conan '${strVersion}' (latest=${isLatest})") {
+            build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters + [
                 [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
                 [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
             ])
