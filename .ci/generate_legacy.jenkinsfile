@@ -211,7 +211,8 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${targetBranch}-latest"
 
                     dir('jenkins-jnlp-slave') {
-                        buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
+                        String jenkins_args = "${compilerArgs} SOURCE_CONANIO_IMAGE=${deployImage} AGENT_VERSION=${params.jenkins_agent_version}"
+                        buildImage(latestMaster, latestBranch, jenkinsImage, jenkins_args)
                     }
                 }
             }
