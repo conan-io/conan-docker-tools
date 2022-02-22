@@ -76,7 +76,7 @@ class ConanDockerTools(object):
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
         docker_cache = self._get_boolean_var("DOCKER_CACHE")
-        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else []
+        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else ["jnlp-slave"]
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
