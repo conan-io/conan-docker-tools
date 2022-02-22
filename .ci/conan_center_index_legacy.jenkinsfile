@@ -1,0 +1,110 @@
+/*
+
+This pipeline is used to generate docker images for ConanCenter index
+
+*/
+
+
+@NonCPS
+def getMinConanVersion(content) {
+    def minVersion = (content =~ /String conanVersion = '(\d+).(\d+).(\d+)'/)
+    assert minVersion, '.ci/tests.jenkins file was changed! Cannot find conanVersion'
+    return [minVersion[0][1] as int, minVersion[0][2] as int, minVersion[0][3] as int]
+}
+
+def parseVersion(String version) {
+    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
+    return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int]
+}
+
+
+node('Linux') {
+
+    stage('Input parameters') {
+        echo """
+        - dry_run: ${params.dry_run}
+        """
+    }
+
+    def conanVersions = []
+    def latestVersion = null
+    stage('Legacy - Compute Conan versions') {
+        dir('tmp') {
+            // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
+            echo "Read lowest version from CCI requirements"
+            checkout([$class           : 'GitSCM',
+                    branches         : [[name: 'master']],
+                    userRemoteConfigs: [[credentialsId: 'conanci-gh-token', url: 'https://github.com/conan-io/c3i_jenkins.git']],
+                    extensions       : [[$class           : 'RelativeTargetDirectory',
+                                        relativeTargetDir: 'c3i_jenkins']],
+            ])
+            def content = readFile "${env.WORKSPACE}/tmp/c3i_jenkins/.ci/tests.jenkins"
+            def minVersion = getMinConanVersion(content)
+            echo " - lowest: $minVersion"
+
+            // Up to latest version in pypi
+            echo "Read latest version from pypi"
+            def response = httpRequest(url: 'https://pypi.python.org/pypi/conan/json')
+            Map<String, Object> requestJson = readJSON(text: response.content)
+            latestVersion = parseVersion(requestJson.info.version)
+
+            for (String release in requestJson.releases.keySet()) {
+                try {
+                    def version = parseVersion(release)
+                    if (version[0] == 2) {
+                        echo "WARNING: The version '$release' is part of Conan 2.0 which will not be built now."
+                        continue
+                    }
+                    else if (version[0] > minVersion[0]) {
+                        conanVersions.add(version)
+                    }
+                    else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
+                        conanVersions.add(version)
+                    }
+                    else if (version[0] == minVersion[0] && version[1] == minVersion[1] &&  version[2] >= minVersion[2]) {
+                        conanVersions.add(version)
+                    }
+                }
+                catch(e) {
+                    echo "Failed to parse release '$release'"
+                }
+            }
+        }
+    }
+    echo "Versions: ${conanVersions}"
+    echo "- latest: ${latestVersion}"
+
+    List parameters = []
+
+    // CCI uses same hardcoded values from the repository for the tools (only Conan version is changed)
+    stage('Legacy - Parse environment file') {
+        checkout scm
+        List<String> gccVersions = ["5", "6", "7", "8", "9", "10", "11"]
+        List<String> clangVersions = ["7", "8", "9", "10", "11", "12"]
+
+        parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
+        parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
+    }
+
+    // HEAD from 'master' branch
+    String scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    parameters.add([$class: 'StringParameterValue', name: 'scm_repository', value: 'https://github.com/conan-io/conan-docker-tools'])
+    parameters.add([$class: 'StringParameterValue', name: 'scm_commit', value: scm_commit])
+    parameters.add([$class: 'StringParameterValue', name: 'scm_base_branch', value: 'master'])
+
+    // [$class: 'StringParameterValue', name: 'suffix', value: 'cci'],
+    parameters.add([$class: 'BooleanParameterValue', name: 'upload_main_images', value: true])
+    parameters.add([$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true])
+    parameters.add([$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run])
+
+    for (v in conanVersions) {
+        String strVersion = "${v[0]}.${v[1]}.${v[2]}"
+        boolean isLatest = (v == latestVersion)
+        stage("Build legacy images for Conan '${strVersion}' (latest=${isLatest})") {
+            build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters + [
+                [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
+                [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
+            ])
+        }
+    }
+}

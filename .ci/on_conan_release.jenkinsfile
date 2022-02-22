@@ -20,65 +20,10 @@ node('Linux') {
             sleep time: 120, unit: 'SECONDS'
             build(job: 'ConanCenterIndex', wait: false)
         }
-    }
-
-    stage('Old docker images') {
-        // Here we need to create a PR modifying the Conan version
-
-        // Clone, save and check if diff
-        checkout([$class           : 'GitSCM',
-                  branches         : [[name: '*/master']],
-                  userRemoteConfigs: [[credentialsId: 'conanci-gh-token', url: 'https://github.com/conan-io/conan-docker-tools.git']],
-                  extensions       : [[$class           : 'RelativeTargetDirectory',
-                                       relativeTargetDir: 'conan-docker-tools']],
-        ])
-
-        // Modify files that list Conan version. Change defaults to match this latest version
-        def content2 = readFile(file: 'conan-docker-tools/.env')
-        content2 = content2.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
-        content2 = content2.replaceAll(/DOCKER_TAG=\d+\.\d+.\d+/, "DOCKER_TAG=${params.conan_version}")
-        writeFile(file: 'conan-docker-tools/.env', text: content2)
-
-        String branchName = "bot/release-${params.conan_version}".replaceAll(/\./, '_')
-        dir('conan-docker-tools') {
-            sh "git checkout -b ${branchName}"
-            sh "git diff"
-
-            sh 'git config --local user.email "javierg@jfrog.com"'
-            sh 'git config --local user.name "Release Bot"'
-            sh 'git commit -am "[up conan] Update Conan version"'
-
-            if (params.build_old_images) {
-                withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
-                        sh "git remote set-url origin https://$GH_USER:$GH_PASS@github.com/conan-io/conan-docker-tools.git"
-                        sh "git push origin ${branchName}"
-                }
-            }
-        }
-
-        // Open PR in Github
-        stage('Open PR in Github') {
-            def data = readJSON text: '{}'
-            data.title = "[up conan] Update Conan version (${params.conan_version})" as String
-            data.head = branchName
-            data.base = 'master' as String
-            data.body = '''\
-                New Conan version released.
-
-                Please, @conan-io/barbarians have a look to this PR
-
-                ---
-
-                <sup>This PR has been created automatically by CI</sup>
-                '''.stripIndent() as String
-            writeJSON json: data, file: 'data.json'
-
-            if (params.build_old_images) {
-                withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
-                    String create_pr_url = 'https://api.github.com/repos/conan-io/conan-docker-tools/pulls'
-                    sh script: "curl --fail --connect-timeout 20 --max-time 40 --retry 5 --retry-delay 10 --retry-max-time 40 -s -u $GH_USER:$GH_PASS --request POST ${create_pr_url} -d \"@data.json\""
-                }
-            }
+        if (params.build_old_images) {
+            // We need to wait for a while, to be sure that new release will be returned from the API
+            sleep time: 120, unit: 'SECONDS'
+            build(job: 'ConanCenterIndexLegacy', wait: false)
         }
     }
 }

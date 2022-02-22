@@ -112,5 +112,10 @@ node('Linux') {
         parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
     }
 
-    build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters)
+    if (params.build_new_images) {
+        build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters)
+    }
+    if (params.build_old_images) {
+        build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters)
+    }
 }
