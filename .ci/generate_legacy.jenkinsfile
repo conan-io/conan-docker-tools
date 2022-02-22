@@ -202,7 +202,7 @@ node('Linux') {
                     String latestMaster = "${dockerUsername}/${compiler}${versionMajor}:${targetBranch}-latest"
 
                     dir("${compiler}_${versionMajor}") {
-                        buildImage(latestMaster, latestBranch, deployImage, compilerArgs, 'deploy')
+                        buildImage(latestMaster, latestBranch, deployImage, compilerArgs)
                     }
                 }
 
