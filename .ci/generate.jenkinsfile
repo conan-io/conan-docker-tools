@@ -198,8 +198,8 @@ node('Linux') {
         }
 
         // TODO: Pass expected in a different way
-        writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
-        sh 'cat modern/.env'
+        writeFile(file: '.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+        sh 'cat .env'
     }
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
@@ -234,8 +234,8 @@ node('Linux') {
                     checkoutSources()
                     sh 'pip install pytest'
                     // TODO: Pass expected in a different way
-                    writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
-                    sh 'cat modern/.env'
+                    writeFile(file: '.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+                    sh 'cat .env'
                 }
 
                 String containerID = get_container_id()

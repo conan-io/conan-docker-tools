@@ -60,12 +60,12 @@ node('Linux') {
         }
     }
 
-    // Regular CI builds will follow versions from the 'modern/.env' file
+    // Regular CI builds will follow versions from the '.env' file
     stage('Parse environment file') {
         List<String> gccVersions = []
         List<String> clangVersions = []
 
-        String content = readFile('modern/.env')
+        String content = readFile('.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
             def (name, value) = it.split('=')
 

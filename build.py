@@ -2,6 +2,7 @@
 """Build, Test and Deploy Docker images for Conan project"""
 import collections
 import os
+import re
 import logging
 import subprocess
 import requests
@@ -13,7 +14,17 @@ from cpt.ci_manager import CIManager
 from cpt.printer import Printer
 
 
-TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", "1.45.0")
+def _read_conan_version():
+    regex = re.compile("CONAN_VERSION=(\d\.\d+\.\d+)")
+    fd = open(".env", "r")
+    for line in fd.readlines():
+        match = regex.search(line)
+        if match:
+            return match.group(1)
+    raise Exception("Could not read CONAN_VERSION on .env")
+
+
+TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", _read_conan_version())
 
 
 class ConanDockerTools(object):
