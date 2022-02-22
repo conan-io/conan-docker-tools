@@ -12,17 +12,6 @@ dockerUsername = 'center-c3i-docker.jfrog.io'
 dockerhubUsername = 'conanio'
 
 
-def parseVersion(String version) {
-    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
-    return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
-}
-
-String getVersionMajor(String version) {
-    def (major, _1, _2) = parseVersion(version)
-    return major
-}
-
-
 def buildImage(String latestMaster, String latestBranch, String expectedImage, String buildArgs, String target = null, String extraCacheFrom = null) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
@@ -183,7 +172,7 @@ node('Linux') {
     // Define helper function to build the compiler
     Closure compilerBuild = { String compiler, String version ->
         return {
-            String versionMajor = getVersionMajor(version)
+            String versionMajor = version
 
             String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
             String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}"
@@ -224,7 +213,7 @@ node('Linux') {
     List<String> gccImages = []
     gccVersions.each { v ->
         String gccVersion = v
-        String gccVersionMajor = getVersionMajor(gccVersion)
+        String gccVersionMajor = gccVersion
         gccImages.add("gcc${gccVersionMajor}")
         gccBuilds["Legacy GCC ${gccVersionMajor}"] = compilerBuild('gcc', gccVersion)
     }
@@ -237,7 +226,7 @@ node('Linux') {
     List<String> clangImages = []
     clangVersions.each { v ->
         String clangVersion = v
-        String clangVersionMajor = getVersionMajor(clangVersion)
+        String clangVersionMajor = clangVersion
         clangImages.add("clang${clangVersionMajor}")
         clangBuilds["Legacy Clang ${clangVersionMajor}"] = compilerBuild('clang', clangVersion)
     }
@@ -249,7 +238,7 @@ node('Linux') {
         stage('Legacy - Upload images') {
             List images = []
             gccVersions.each { v ->
-                String versionMajor = getVersionMajor(v)
+                String versionMajor = v
                 if (params.upload_main_images) {
                     images.add("gcc${versionMajor}")
                 }
@@ -258,7 +247,7 @@ node('Linux') {
                 }
             }
             clangVersions.each { v ->
-                String versionMajor = getVersionMajor(v)
+                String versionMajor = v
                 if (params.upload_main_images) {
                     images.add("clang${versionMajor}")
                 }
