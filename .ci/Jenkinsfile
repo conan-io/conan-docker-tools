@@ -61,7 +61,7 @@ node('Linux') {
     }
 
 
-    List<String> parameters_modern = parameters
+    List<String> parameters_modern = parameters.clone()
     // Regular CI builds will follow versions from the '.env' file
     stage('Parse environment file') {
         List<String> gccVersions = []
