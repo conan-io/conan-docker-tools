@@ -60,9 +60,10 @@ node('Linux') {
         }
     }
 
+
+    List<String> parameters_modern = parameters
     // Regular CI builds will follow versions from the '.env' file
     stage('Parse environment file') {
-        List<String> parameters_modern = parameters
         List<String> gccVersions = []
         List<String> clangVersions = []
 
