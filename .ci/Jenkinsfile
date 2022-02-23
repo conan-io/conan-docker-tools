@@ -61,7 +61,7 @@ node('Linux') {
     }
 
 
-    List<String> parameters_modern = parameters
+    List<String> parameters_modern = parameters.clone()
     // Regular CI builds will follow versions from the '.env' file
     stage('Parse environment file') {
         List<String> gccVersions = []
@@ -110,8 +110,8 @@ node('Linux') {
                 parameters_modern.add([$class: 'StringParameterValue', name: 'libstdcpp_major_version', value: value])
             }
         }
-        parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
-        parameters.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
+        parameters_modern.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
+        parameters_modern.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
     }
 
     build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters_modern)
@@ -119,9 +119,9 @@ node('Linux') {
 
 
     // Legacy CI builds will follow versions from the '.env' file
-    List parameters_legacy = parameters
+    List parameters_legacy = parameters.clone()
     stage('Legacy - Parse environment file') {
-        String content = readFile('legacy/.env')
+        String content = readFile('.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
             def (name, value) = it.split('=')
 
