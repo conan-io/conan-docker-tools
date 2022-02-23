@@ -70,7 +70,7 @@ def get_compiler_versions():
 
 
 def get_envfile_values():
-    envfile = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
+    envfile = os.path.join(os.path.dirname(__file__), '..', '..', '..', '.env')
     env_values = {}
     with open(envfile, 'r') as f:
         for line in f:

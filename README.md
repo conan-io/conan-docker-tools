@@ -1,7 +1,6 @@
 | Service | OS |  Status  |
 |---------|----|----------|
-| Azure | Windows | [![Azure Status](https://dev.azure.com/conanio/conan-docker-tools/_apis/build/status/conan-io.conan-docker-tools?branchName=master)](https://dev.azure.com/conanio/conan-docker-tools/_build/latest?definitionId=1&branchName=master) |
-| Jenkins | Linux | [[![Build Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools%2FXenial%2Fmaster)](https://ci.conan.io/job/ConanDockerTools/job/Xenial/job/master/) |
+| Jenkins | Linux | [![Build Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools%2FXenial%2Fmaster)](https://ci.conan.io/job/ConanDockerTools/job/Xenial/job/master/) |
 
 > :warning: **Warning:**
 Current images will be superseeded by the ones in [`modern`](./modern) folder,
