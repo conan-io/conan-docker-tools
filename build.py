@@ -16,12 +16,12 @@ from cpt.printer import Printer
 
 def _read_conan_version():
     regex = re.compile("CONAN_VERSION=(\d\.\d+\.\d+)")
-    fd = open(".env", "r")
+    fd = open("modern/.env", "r")
     for line in fd.readlines():
         match = regex.search(line)
         if match:
             return match.group(1)
-    raise Exception("Could not read CONAN_VERSION on .env")
+    raise Exception("Could not read CONAN_VERSION on modern/.env")
 
 
 TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", _read_conan_version())
