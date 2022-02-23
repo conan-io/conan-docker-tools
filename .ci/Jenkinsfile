@@ -60,38 +60,12 @@ node('Linux') {
         }
     }
 
-    // Legacy CI builds will follow versions from the '.env' file
-    stage('Legacy - Parse environment file') {
-        String content = readFile('.env')
-        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
-            def (name, value) = it.split('=')
-
-            // tools installed
-            if (name == 'CONAN_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
-            }
-            else if (name == 'JENKINS_AGENT_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
-            }
-
-            // compiler versions
-            else if (name == 'GCC_LEGACY_VERSIONS') {
-                parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${value.replaceAll(',', '\n')}"])
-            }
-            else if (name == 'CLANG_LEGACY_VERSIONS') {
-                parameters.add([$class: 'StringParameterValue', name: 'clangVersions', value: "${value.replaceAll(',', '\n')}"])
-            }
-        }
-    }
-
-    build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters)
-
     // Regular CI builds will follow versions from the '.env' file
     stage('Parse environment file') {
         List<String> gccVersions = []
         List<String> clangVersions = []
 
-        String content = readFile('.env')
+        String content = readFile('modern/.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
             def (name, value) = it.split('=')
 
@@ -139,5 +113,34 @@ node('Linux') {
     }
 
     build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters)
+
+
+
+    // Legacy CI builds will follow versions from the '.env' file
+    List parameters_legacy = parameters
+    stage('Legacy - Parse environment file') {
+        String content = readFile('.env')
+        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
+            def (name, value) = it.split('=')
+
+            // tools installed
+            if (name == 'CONAN_VERSION') {
+                parameters_legacy.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
+            }
+            else if (name == 'JENKINS_AGENT_VERSION') {
+                parameters_legacy.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
+            }
+
+            // compiler versions
+            else if (name == 'GCC_LEGACY_VERSIONS') {
+                parameters_legacy.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${value.replaceAll(',', '\n')}"])
+            }
+            else if (name == 'CLANG_LEGACY_VERSIONS') {
+                parameters_legacy.add([$class: 'StringParameterValue', name: 'clangVersions', value: "${value.replaceAll(',', '\n')}"])
+            }
+        }
+    }
+
+    build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters_legacy)
 
 }
