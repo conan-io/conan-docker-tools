@@ -15,15 +15,15 @@ node('Linux') {
 
     stage('New docker images') {
         // Trigger the build
-        if (params.build_new_images) {
+        if (params.build_new_images || params.build_old_images) {
             // We need to wait for a while, to be sure that new release will be returned from the API
             sleep time: 120, unit: 'SECONDS'
-            build(job: 'ConanCenterIndex', wait: false)
-        }
-        if (params.build_old_images) {
-            // We need to wait for a while, to be sure that new release will be returned from the API
-            sleep time: 120, unit: 'SECONDS'
-            build(job: 'ConanCenterIndexLegacy', wait: false)
+            if (params.build_new_images) {
+                build(job: 'ConanCenterIndex', wait: false)
+            }
+            if (params.build_old_images) {
+                build(job: 'ConanCenterIndexLegacy', wait: false)
+            }
         }
     }
 }

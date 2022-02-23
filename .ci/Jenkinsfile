@@ -121,7 +121,7 @@ node('Linux') {
     // Legacy CI builds will follow versions from the '.env' file
     List parameters_legacy = parameters.clone()
     stage('Legacy - Parse environment file') {
-        String content = readFile('.env')
+        String content = readFile('legacy/.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
             def (name, value) = it.split('=')
 
