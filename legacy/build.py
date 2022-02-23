@@ -16,7 +16,7 @@ from cpt.printer import Printer
 
 def _read_conan_version():
     regex = re.compile("CONAN_VERSION=(\d\.\d+\.\d+)")
-    fd = open("modern/.env", "r")
+    fd = open(".env", "r")
     for line in fd.readlines():
         match = regex.search(line)
         if match:

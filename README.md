@@ -2,8 +2,9 @@
 |---------|----|----------|
 | Jenkins | Linux | [![Build Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools%2FXenial%2Fmaster)](https://ci.conan.io/job/ConanDockerTools/job/Xenial/job/master/) |
 
+
 > :warning: **Warning:**
-Current images will be superseeded by the ones in [`modern`](./modern) folder,
+Current images on ['legacy'](./legacy) folder will be superseded by the ones in [`modern`](./modern) folder,
 we encourage you to have a look at them and know how the future will look like.
 
 
