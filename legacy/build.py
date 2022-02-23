@@ -21,7 +21,7 @@ def _read_conan_version():
         match = regex.search(line)
         if match:
             return match.group(1)
-    raise Exception("Could not read CONAN_VERSION on modern/.env")
+    raise Exception("Could not read CONAN_VERSION on .env")
 
 
 TARGET_CONAN_VERSION = os.getenv("CONAN_VERSION", _read_conan_version())
