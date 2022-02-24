@@ -96,16 +96,8 @@ node('Linux') {
         // TODO: currentBuild.description = "${}"
 
         echo """
-        About base docker:
-        - distro: ${params.distro}
-        - distro_version: ${params.distro_version}
-        """
-
-        echo """
         About tools installed:
         - conan_version: ${params.conan_version}
-        - cmake_version: ${params.cmake_version}
-        - python_version: ${params.python_version}
         - jenkins_agent_version: ${params.jenkins_agent_version}
         """
 
@@ -113,16 +105,12 @@ node('Linux') {
         Images to generate:
         - gcc_versions: ${gccVersions.join(', ')}
         - clang_versions: ${clangVersions.join(', ')}
-        - libstdcpp_version: ${params.libstdcpp_version}
-        - libstdcpp_patch_version: ${params.libstdcpp_patch_version}
-        - libstdcpp_major_version: ${params.libstdcpp_major_version}
         """
         assert gccVersions.size() > 0: "Expecting to build some GCC versions at least"
         assert clangVersions.size() > 0: "Expecting to build some Clang versions at least"
 
         echo """
         About docker images generated:
-        - suffix: ${params.suffix}
         - dockerUsername: ${dockerUsername}
         - dockerhubUsername: ${dockerhubUsername}
         """
@@ -164,10 +152,15 @@ node('Linux') {
         buildArguments.put('CONAN_VERSION', params.conan_version)
 
         // TODO: Pass expected in a different way
-        writeFile(file: '.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
-        sh 'cat .env'
+        writeFile(file: 'legacy/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+        sh 'cat legacy/.env'
     }
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
+
+    // Execute login: 1) Validate the login 2) Needed for docker pull/push
+    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
+    }
 
     // Define helper function to build the compiler
     Closure compilerBuild = { String compiler, String version ->
@@ -181,7 +174,7 @@ node('Linux') {
             node('Linux') {
                 stage('Legacy - Checkout and install deps') {
                     checkoutSources()
-                    sh 'cat .env'
+                    sh 'cat legacy/.env'
                 }
 
                 String containerID = get_container_id()
@@ -190,7 +183,7 @@ node('Linux') {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-latest"
                     String latestMaster = "${dockerUsername}/${compiler}${versionMajor}:${targetBranch}-latest"
 
-                    dir("${compiler}_${versionMajor}") {
+                    dir("legacy/${compiler}_${versionMajor}") {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs)
                     }
                 }
@@ -199,7 +192,7 @@ node('Linux') {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-latest"
                     String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${targetBranch}-latest"
 
-                    dir('jenkins-jnlp-slave') {
+                    dir('legacy/jenkins-jnlp-slave') {
                         String jenkins_args = "--build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg AGENT_VERSION=${params.jenkins_agent_version}"
                         buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} ${jenkins_args}")
                     }
