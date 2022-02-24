@@ -27,6 +27,7 @@ node('Linux') {
     }
 
     def conanVersions = []
+    List<String> ignoreVersions = []
     def latestVersion = null
     stage('Compute Conan versions') {
         dir('tmp') {
@@ -51,11 +52,26 @@ node('Linux') {
             for (String release in requestJson.releases.keySet()) {
                 try {
                     def version = parseVersion(release)
+
+                    // Ignore all Conan v2 versions
                     if (version[0] == 2) {
                         echo "WARNING: The version '$release' is part of Conan 2.0 which will not be built now."
                         continue
                     }
-                    else if (version[0] > minVersion[0]) {
+
+                    // Ignore Conan < 1.44: https://github.com/conan-io/conan/issues/10611
+                    if ((version[0] < 1) || (version[0] == 1 && version[1] < 44)) {
+                        echo "WARNING: The version '$release' is skipped because of https://github.com/conan-io/conan/issues/10611."
+                        continue
+                    }
+
+                    // Ignore listed versions
+                    if (ignoreVersions.contains(release)) {
+                        echo "WARNING: The version '$release' is explicitly ignored."
+                        continue
+                    }
+
+                    if (version[0] > minVersion[0]) {
                         conanVersions.add(version)
                     }
                     else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
@@ -71,6 +87,7 @@ node('Linux') {
             }
         }
     }
+
     echo "Versions: ${conanVersions}"
     echo "- latest: ${latestVersion}"
 
