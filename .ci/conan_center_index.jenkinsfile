@@ -59,6 +59,12 @@ node('Linux') {
                         continue
                     }
 
+                    // Ignore Conan < 1.44: https://github.com/conan-io/conan/issues/10611
+                    if ((version[0] < 1) || (version[0] == 1 && version[1] < 44)) {
+                        echo "WARNING: The version '$release' is skipped because of https://github.com/conan-io/conan/issues/10611."
+                        continue
+                    }
+
                     // Ignore listed versions
                     if (ignoreVersions.contains(release)) {
                         echo "WARNING: The version '$release' is explicitly ignored."
