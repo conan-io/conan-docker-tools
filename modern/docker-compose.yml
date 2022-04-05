@@ -47,6 +47,8 @@ x-llvm12: &llvm12
 x-llvm13: &llvm13
     CLANG_VERSION: ${CLANG13_VERSION}
 
+x-llvm14: &llvm14
+    CLANG_VERSION: ${CLANG14_VERSION}
 
 services:
     # Base image
@@ -184,6 +186,18 @@ services:
         container_name: clang13-builder
         tty: true
 
+    clang14-builder:
+        build:
+            context: clang
+            dockerfile: Dockerfile
+            target: clang-builder
+            args:
+                <<: *common-args
+                <<: *llvm14
+        image: ${DOCKER_USERNAME}/clang14-builder-${DISTRO}:${DOCKER_TAG}
+        container_name: clang14-builder
+        tty: true
+
     # Deploy images
     gcc5-deploy:
         build:
@@ -319,6 +333,19 @@ services:
         container_name: clang13-deploy
         tty: true
 
+    clang14-deploy:
+        build:
+            context: clang
+            dockerfile: Dockerfile
+            target: deploy
+            cache_from:
+              - ${DOCKER_USERNAME}/clang14-builder-${DISTRO}:${DOCKER_TAG}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/clang14-deploy-${DISTRO}:${DOCKER_TAG}
+        container_name: clang14-deploy
+        tty: true
+
     # Images
     gcc5:
         build:
@@ -432,6 +459,17 @@ services:
         container_name: clang13
         tty: true
 
+    clang14:
+        build:
+            context: clang
+            dockerfile: Dockerfile
+            args:
+                <<: *common-args
+                <<: *llvm14
+        image: ${DOCKER_USERNAME}/clang14-${DISTRO}:${DOCKER_TAG}
+        container_name: clang14
+        tty: true
+
     # Jenkins images
     gcc5-jenkins:
         build:
@@ -532,3 +570,13 @@ services:
                 <<: *common-args
         image: "${DOCKER_USERNAME}/clang13-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: clang13-jenkins
+
+    clang14-jenkins:
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang14-${DISTRO}:${DOCKER_TAG}
+                <<: *common-args
+        image: "${DOCKER_USERNAME}/clang14-${DISTRO}-jenkins:${DOCKER_TAG}"
+        container_name: clang14-jenkins
