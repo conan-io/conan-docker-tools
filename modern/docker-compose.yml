@@ -48,7 +48,7 @@ x-llvm13: &llvm13
     CLANG_VERSION: ${CLANG13_VERSION}
 
 x-llvm14: &llvm14
-    CLANG_VERSION: ${CLANG13_VERSION}
+    CLANG_VERSION: ${CLANG14_VERSION}
 
 services:
     # Base image
