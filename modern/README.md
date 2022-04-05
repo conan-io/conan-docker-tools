@@ -155,7 +155,7 @@ Here is a list of installed libraries and their versions:
 | conanio/clang11-ubuntu16.04  |   2.23   |  3.4.28     |   11000  |
 | conanio/clang12-ubuntu16.04  |   2.23   |  3.4.28     |   12000  |
 | conanio/clang13-ubuntu16.04  |   2.23   |  3.4.28     |   13000  |
-| conanio/clang13-ubuntu16.04  |   2.23   |  3.4.28     |   14000  |
+| conanio/clang14-ubuntu16.04  |   2.23   |  3.4.28     |   14000  |
 
 
 ##### How to detect library versions
