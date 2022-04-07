@@ -40,16 +40,18 @@ RUN apt-get -qq update \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
-    && wget https://apt.llvm.org/llvm.sh \
-    && chmod +x llvm.sh \
-    && ./llvm.sh ${LLVM_VERSION} \
-    && rm llvm.sh \
-    # Further LLVM packages not installed by the llvm.sh script
-    && apt-get install -y --no-install-recommends --no-install-suggests \
+    && printf 'deb http://apt.llvm.org/bionic/   llvm-toolchain-bionic-11  main' >> /etc/apt/sources.list \
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
+       clang-11 \
+       lldb-11 \
+       lld-11 \
+       clangd-11 \
        libc++-11-dev \
        libc++abi-11-dev \
-    && apt-get autoremove -y \
-    && apt-get clean all \
+    && apt-get -qq autoremove -y \
+    && apt-get -qq clean all \
     # Update default compiler
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
