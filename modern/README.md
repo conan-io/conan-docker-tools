@@ -94,6 +94,8 @@ These are the images uploaded to Docker Hub and currently used by [Conan Center]
 | - [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/)     | x86_64 |  Supported           |
 | - [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/)     | x86_64 |  Supported           |
 | - [conanio/clang13-ubuntu16.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04/)     | x86_64 |  Supported           |
+| - [conanio/clang14-ubuntu16.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04/)     | x86_64 |  Supported           |
+
 
 
 ### Conan Server
@@ -131,6 +133,7 @@ These images are mainly focused for Conan Center CI.
 | - [conanio/clang11-ubuntu16.04-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 | - [conanio/clang12-ubuntu16.04-jenkins: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 | - [conanio/clang13-ubuntu16.04-jenkins: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
+| - [conanio/clang14-ubuntu16.04-jenkins: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
 
 
 ### Library Versions
@@ -152,6 +155,7 @@ Here is a list of installed libraries and their versions:
 | conanio/clang11-ubuntu16.04  |   2.23   |  3.4.28     |   11000  |
 | conanio/clang12-ubuntu16.04  |   2.23   |  3.4.28     |   12000  |
 | conanio/clang13-ubuntu16.04  |   2.23   |  3.4.28     |   13000  |
+| conanio/clang14-ubuntu16.04  |   2.23   |  3.4.28     |   14000  |
 
 
 ##### How to detect library versions
