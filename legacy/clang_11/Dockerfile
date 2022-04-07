@@ -41,7 +41,7 @@ RUN apt-get -qq update \
        libncursesw5-dev \
        liblzma-dev \
     && printf 'deb http://apt.llvm.org/bionic/   llvm-toolchain-bionic-11  main' >> /etc/apt/sources.list \
-    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && wget --no-check-certificate --quiet -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests \
        clang-11 \
