@@ -14,12 +14,10 @@ ENV LLVM_VERSION=11 \
     PYTHON_VERSION=3.8.2 \
     PATH=/opt/pyenv/shims:${PATH}
 
-RUN dpkg --add-architecture i386 \
-    && apt-get -qq update \
+RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
     && add-apt-repository ppa:git-core/ppa -y \
     && apt-get -qq update \
-    # Install basics
     && apt-get install -y --no-install-recommends --no-install-suggests \
        sudo \
        wget \
@@ -30,20 +28,7 @@ RUN dpkg --add-architecture i386 \
        ca-certificates \
        dh-autoreconf \
        pkg-config \
-    # Install compiler toolset
-    && apt-get install -y --no-install-recommends --no-install-suggests \
        lsb-release \
-    && wget https://apt.llvm.org/llvm.sh \
-    && chmod +x llvm.sh \
-    && sudo ./llvm.sh ${LLVM_VERSION} \
-    && rm llvm.sh \
-    # Further LLVM packages not installed by the llvm.sh script
-    && apt-get install -y --no-install-recommends --no-install-suggests \
-       libc++-11-dev \
-       libc++abi-11-dev \
-    && apt-get remove -y lsb-release software-properties-common \
-    # Install dependencies of Python
-    && apt-get install -y --no-install-recommends --no-install-suggests \
        libreadline-dev \
        libsqlite3-dev \
        libffi-dev \
@@ -55,8 +40,18 @@ RUN dpkg --add-architecture i386 \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
-    && apt-get autoremove -y \
-    && apt-get clean all \
+    && printf 'deb http://apt.llvm.org/bionic/   llvm-toolchain-bionic-11  main' >> /etc/apt/sources.list \
+    && wget --no-check-certificate --quiet -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests \
+       clang-11 \
+       lldb-11 \
+       lld-11 \
+       clangd-11 \
+       libc++-11-dev \
+       libc++abi-11-dev \
+    && apt-get -qq autoremove -y \
+    && apt-get -qq clean all \
     # Update default compiler
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
