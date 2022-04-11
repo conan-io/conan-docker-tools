@@ -11,7 +11,7 @@ ENV LLVM_VERSION=11 \
     CMAKE_C_COMPILER=clang \
     CMAKE_CXX_COMPILER=clang++ \
     PYENV_ROOT=/opt/pyenv \
-    PYTHON_VERSION=3.8.2 \
+    PYTHON_VERSION=3.7.13 \
     PATH=/opt/pyenv/shims:${PATH}
 
 RUN apt-get -qq update \
