@@ -88,7 +88,7 @@ RUN apt-get -qq update \
     && mv /etc/ld.so.conf.d/libc.conf /etc/ld.so.conf.d/10libc.conf \
     && rm /etc/ld.so.cache \
     && ldconfig -C /etc/ld.so.cache \
-    && apt-get -qq purge -y g++-multilib gcc gcc-5 \
+    && apt-get -qq purge -y g++-multilib gcc \
     && apt-get -qq autoremove -y \
     && apt-get -qq autoclean \
     && apt-get -qq update \
