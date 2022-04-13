@@ -102,7 +102,8 @@ RUN apt-get -qq update \
 USER conan
 WORKDIR /home/conan
 
+COPY conan_bootstrap.sh /tmp/conan_bootstrap.sh
+
 RUN pip install conan==${CONAN_VERSION} \
-    && CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt \
-    && rm -rf /tmp/conan \
-    && conan config set general.revisions_enabled=1
+    && chmod +x /tmp/conan_bootstrap.sh \
+    && /tmp/conan_bootstrap.sh
