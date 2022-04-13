@@ -81,14 +81,14 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100 \
     && update-alternatives --install /usr/local/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/local/bin/pip pip /opt/pyenv/shims/pip 100 \
-    && ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/3.7.13/lib/python3.7/site-packages/lsb_release.py \
+    && ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python${PYTHON_VERSION%.*}/site-packages/lsb_release.py \
     && pip install -q --upgrade --no-cache-dir pip \
     && printf '/usr/local/lib\n' > /etc/ld.so.conf.d/20local-lib.conf \
     && printf '/usr/local/lib64\n' >> /etc/ld.so.conf.d/20local-lib.conf \
     && mv /etc/ld.so.conf.d/libc.conf /etc/ld.so.conf.d/10libc.conf \
     && rm /etc/ld.so.cache \
     && ldconfig -C /etc/ld.so.cache \
-    && apt-get -qq purge -y g++-multilib gcc gcc-5 \
+    && apt-get -qq purge -y g++-multilib gcc \
     && apt-get -qq autoremove -y \
     && apt-get -qq autoclean \
     && apt-get -qq update \

@@ -16,7 +16,7 @@ RUN apt-get -qq update \
        gcc \
        curl \
        wget \
-       zlib1g \
+       zlib1g-dev \
        ca-certificates \
        autoconf-archive \
        binutils \
