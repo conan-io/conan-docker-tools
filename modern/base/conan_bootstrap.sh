@@ -2,13 +2,15 @@
 
 set -ex
 
-version=$(conan --version | awk '{print $1}')
-major=$(awk '{print substr($0, 0, 1)}' <<< ${version})
+pip install conan==$1
+version=`conan --version | awk '{print $3}'`
 
-if [[ "${major}" == "2" ]]
+if [[ "${version}" == 2.* ]]
 then
-    CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -of /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt
+    pip install conan==1.47.0
+    CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt
     rm -rf /tmp/conan
+    pip install conan==${version}
 else
     CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt
     rm -rf /tmp/conan
