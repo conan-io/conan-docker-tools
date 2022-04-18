@@ -47,6 +47,8 @@ RUN apt-get -qq update \
        liblzma-dev \
        ca-certificates \
        autoconf-archive \
+       language-pack-en \
+    && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
@@ -96,6 +98,7 @@ RUN apt-get -qq update \
     && rm -rf /tmp/* \
     && runuser -u conan -- printf 'eval "$(pyenv init -)"\n' >> /home/conan/.bashrc \
     && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \
+    && runuser -u conan -- printf "export LC_ALL=\"en_US.UTF-8\"\\n" >> /home/conan/.bashrc \
     && chown -R conan:1001 /opt/pyenv \
     && chown -R conan:1001 /opt/conan
 
