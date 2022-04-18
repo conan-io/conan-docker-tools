@@ -51,6 +51,7 @@ ARG GCC_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
 
 COPY --from=builder /tmp/install /tmp/install
+COPY gcc_bootstrap.sh /opt/conan/gcc_bootstrap.sh
 
 RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/lib/gcc/x86_64-linux-gnu/${GCC_VERSION} /usr/lib/gcc/x86_64-linux-gnu/ \
@@ -65,5 +66,7 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/g++ 100 \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache \
-    && conan profile new --detect --force default \
-    && conan profile update settings.compiler.libcxx=libstdc++11 default
+    && sudo chmod +x /opt/conan/gcc_bootstrap.sh
+
+RUN /opt/conan/gcc_bootstrap.sh
+
