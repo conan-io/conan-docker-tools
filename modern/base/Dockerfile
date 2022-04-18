@@ -98,7 +98,7 @@ RUN apt-get -qq update \
     && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \
     && chown -R conan:1001 /opt/pyenv \
     && chmod +x /opt/conan/conan_bootstrap.sh \
-    && chown -R conan:1001 /opt/conan \
+    && chown -R conan:1001 /opt/conan 
 
 USER conan
 WORKDIR /home/conan
