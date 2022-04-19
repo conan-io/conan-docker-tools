@@ -29,7 +29,7 @@ RUN apt-get -qq update \
        binutils \
        wget \
        git \
-       g++ \
+       g++-multilib \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \
