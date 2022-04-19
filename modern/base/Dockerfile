@@ -15,7 +15,7 @@ ARG CONAN_VERSION
 
 WORKDIR /root
 
-COPY conan.lock conanfile.txt conan_bootstrap.sh /opt/conan/
+COPY conan.lock conanfile.txt /opt/conan/
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
@@ -26,7 +26,7 @@ RUN apt-get -qq update \
        binutils \
        wget \
        git \
-       g++-multilib \
+       g++ \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \
@@ -98,9 +98,12 @@ RUN apt-get -qq update \
     && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \
     && chown -R conan:1001 /opt/pyenv \
     && chmod +x /opt/conan/conan_bootstrap.sh \
-    && chown -R conan:1001 /opt/conan 
+    && chown -R conan:1001 /opt/conan
 
 USER conan
 WORKDIR /home/conan
 
-RUN /opt/conan/conan_bootstrap.sh ${CONAN_VERSION}
+RUN pip install conan~=1.0 \
+    && CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt \
+    && rm -rf /tmp/conan \
+    && pip install conan==${CONAN_VERSION}

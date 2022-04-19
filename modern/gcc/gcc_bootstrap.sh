@@ -9,6 +9,7 @@ if [[ "${version}" == 2.* ]]
 then
     conan profile detect
 else
-    conan profile new --detect --force default 
+    conan config set general.revisions_enabled=1
+    conan profile new --detect --force default
     conan profile update settings.compiler.libcxx=libstdc++11 default
 fi
