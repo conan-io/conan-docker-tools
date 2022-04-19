@@ -66,7 +66,5 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/g++ 100 \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache \
-    && sudo chmod +x /opt/conan/gcc_bootstrap.sh
-
-RUN /opt/conan/gcc_bootstrap.sh
-
+    && sudo chmod +x /opt/conan/gcc_bootstrap.sh \
+    && /opt/conan/gcc_bootstrap.sh
