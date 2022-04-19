@@ -6,7 +6,10 @@ LABEL maintainer="Conan.io <info@conan.io>"
 
 ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:/opt/conan/binutils/bin:${PATH} \
-    CONAN_USER_HOME=/home/conan
+    CONAN_USER_HOME=/home/conan \
+    LC_ALL="en_US.UTF-8" \
+    LANG="en_US.UTF-8" \
+    LANGUAGE="en_US.UTF-8"
 
 ARG CMAKE_VERSION
 ARG CMAKE_VERSION_FULL
@@ -47,6 +50,8 @@ RUN apt-get -qq update \
        liblzma-dev \
        ca-certificates \
        autoconf-archive \
+       language-pack-en \
+    && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
@@ -95,7 +100,7 @@ RUN apt-get -qq update \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
     && runuser -u conan -- printf 'eval "$(pyenv init -)"\n' >> /home/conan/.bashrc \
-    && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \
+    && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> /home/conan/.bashrc \
     && chown -R conan:1001 /opt/pyenv \
     && chmod +x /opt/conan/conan_bootstrap.sh \
     && chown -R conan:1001 /opt/conan
