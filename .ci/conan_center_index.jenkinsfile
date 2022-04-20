@@ -34,7 +34,7 @@ node('Linux') {
     def conanVersions = []
     List<String> ignoreVersions = []
     def latestVersion = null
-    def preVersion = parsePreVersion("2.0.0a5")
+    def preVersion = null
     stage('Compute Conan versions') {
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
@@ -74,7 +74,7 @@ node('Linux') {
                     // Build only the latest 2.0.0-pre version
                     if (version[0] == 2) {
                         version = parsePreVersion(release)
-                        if ((version[4] > preVersion[4]) || (version[4] == preVersion[4] && version[5] > preVersion[5])) {
+                        if (!preVersion || (version[4] > preVersion[4]) || (version[4] == preVersion[4] && version[5] > preVersion[5])) {
                             preVersion = version
                         }
                     }
@@ -92,12 +92,16 @@ node('Linux') {
                     echo "Failed to parse release '$release'"
                 }
             }
-            conanVersions.add(preVersion)
+
+            if (preVersion) {
+                conanVersions.add(preVersion)
+            }
         }
     }
 
     echo "Versions: ${conanVersions}"
     echo "- latest: ${latestVersion}"
+    echo "- preVersion: ${preVersion}"
 
     List parameters = []
 
