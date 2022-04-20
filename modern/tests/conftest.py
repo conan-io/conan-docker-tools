@@ -27,7 +27,10 @@ def pytest_configure(config):
 
 
 def pytest_runtest_setup(item):
-    envnames = [mark.args[0] for mark in item.iter_markers(name="service")]
+    envnames = []
+    for mark in item.iter_markers(name="service"):
+        envnames += mark.args
+
     if envnames:
         opt = item.config.getoption("--service")
         if opt and opt not in envnames:
