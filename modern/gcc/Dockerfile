@@ -61,7 +61,7 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo cp -a /tmp/install/bin/* /usr/local/bin/ \
     && sudo rm -rf /tmp/install \
     && sudo update-alternatives --install /usr/local/bin/cc cc /usr/local/bin/gcc 100 \
-    && sudo update-alternatives --install /usr/local/bin/cpp cpp /usr/local/bin/g++ 100 \
+    && sudo update-alternatives --install /usr/local/bin/cpp cpp /usr/local/bin/cpp 100 \
     && sudo update-alternatives --install /usr/local/bin/c++ c++ /usr/local/bin/g++ 100 \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache \
