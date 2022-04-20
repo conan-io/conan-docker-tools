@@ -13,7 +13,7 @@ dockerhubUsername = 'conanio'
 
 
 def parseVersion(String version) {
-    def matcher = (version =~ /(\d+).(\d+).(\d+)/)
+    def matcher = (version =~ /(\d+).(\d+).(\d+)(\w{1}\d+)?/)
     return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
 }
 
@@ -353,9 +353,9 @@ node('Linux') {
                     sh 'docker login --username $USERNAME --password $PASSWORD'
                 }
                 String tagVersion = params.conan_version
-                String parsedVersion = parseVersion(params.conan_version)
-                if (parsedVersion[0] == 2) {
-                    tagVersion = "2.0.0-pre"
+                def (major, minor, patch) = parseVersion(params.conan_version)
+                if (major == '2') {
+                    tagVersion = "${major}.${minor}.${patch}-pre"
                 }
 
                 // Upload with the corresponding tag version
@@ -365,7 +365,7 @@ node('Linux') {
                     sh "docker push ${uploadImage}"
                 }
 
-                if (params.upload_latest && parsedVersion[0] == 1) {
+                if (params.upload_latest && major == '1') {
                     // Upload with tag 'latest'
                     String uploadLatest = "${dockerhubUsername}/${image}:latest"
                     sh "docker tag ${builtImage} ${uploadLatest}"
