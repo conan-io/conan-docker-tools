@@ -162,7 +162,6 @@ RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo update-alternatives --install /usr/local/bin/ld ld /usr/local/bin/ld.lld 100 \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache \
-    && sudo chmod +x /opt/conan/clang_bootstrap.sh
-
-RUN /opt/conan/clang_bootstrap.sh
-
+    && sudo chmod +x /opt/conan/clang_bootstrap.sh \
+    && /opt/conan/clang_bootstrap.sh \
+    && sudo rm -f /opt/conan/clang_bootstrap.sh
