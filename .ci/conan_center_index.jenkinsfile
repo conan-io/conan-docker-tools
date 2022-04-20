@@ -74,7 +74,7 @@ node('Linux') {
                     // Build only the latest 2.0.0-pre version
                     if (version[0] == 2) {
                         version = parsePreVersion(release)
-                        if (version[4] >= preVersion[4] && version[5] >= preVersion[5]) {
+                        if ((version[4] > preVersion[4]) || (version[4] == preVersion[4] && version[5] > preVersion[5])) {
                             preVersion = version
                         }
                     }

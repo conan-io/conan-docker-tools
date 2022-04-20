@@ -1,10 +1,14 @@
+import pytest
+
+
 def test_conan_version(container, expected):
     out, err = container.exec(['conan', '--version'])
     assert out.strip() == f'Conan version {expected.conan}', f"out: '{out}' err: '{err}'"
 
+@pytest.mark.service('deploy', 'jenkins')
 def test_revisions_enabled(container):
     out, _ = container.exec(['conan', '--version'])
-    if "Conan version 1." in out.strip() and "base-" not in container.image:
+    if "Conan version 1." in out.strip():
         out, err = container.exec(['conan', 'config', 'get', 'general.revisions_enabled'])
         assert out.strip() == '1', f"out: '{out}' err: '{err}'"
 
