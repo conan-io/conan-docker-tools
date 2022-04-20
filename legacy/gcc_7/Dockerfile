@@ -49,7 +49,12 @@ RUN dpkg --add-architecture i386 \
        ca-certificates \
        autoconf-archive \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 100 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 100 \
+    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-7 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-7 100 \
+    && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 100 \
+    && update-alternatives --install /usr/bin/gcov-dump gcov-dump /usr/bin/gcov-dump-7 100 \
+    && update-alternatives --install /usr/bin/gcov-tool gcov-tool /usr/bin/gcov-tool-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
