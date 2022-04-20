@@ -17,6 +17,11 @@ def parseVersion(String version) {
     return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int]
 }
 
+def parsePreVersion(String version) {
+    def matcher = (version =~ /(\d+).(\d+).(\d+)(\w)(\d+)/)
+    return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int, matcher[0][4] as char, matcher[0][5] as int]
+}
+
 
 node('Linux') {
 
@@ -29,6 +34,7 @@ node('Linux') {
     def conanVersions = []
     List<String> ignoreVersions = []
     def latestVersion = null
+    def preVersion = parsePreVersion("2.0.0a5")
     stage('Compute Conan versions') {
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
@@ -53,12 +59,6 @@ node('Linux') {
                 try {
                     def version = parseVersion(release)
 
-                    // Ignore all Conan v2 versions
-                    if (version[0] == 2) {
-                        echo "WARNING: The version '$release' is part of Conan 2.0 which will not be built now."
-                        continue
-                    }
-
                     // Ignore Conan < 1.44: https://github.com/conan-io/conan/issues/10611
                     if ((version[0] < 1) || (version[0] == 1 && version[1] < 44)) {
                         echo "WARNING: The version '$release' is skipped because of https://github.com/conan-io/conan/issues/10611."
@@ -71,7 +71,14 @@ node('Linux') {
                         continue
                     }
 
-                    if (version[0] > minVersion[0]) {
+                    // Build only the latest 2.0.0-pre version
+                    if (version[0] == 2) {
+                        version = parsePreVersion(release)
+                        if ((version[4] > preVersion[4]) || (version[4] == preVersion[4] && version[5] > preVersion[5])) {
+                            preVersion = version
+                        }
+                    }
+                    else if (version[0] > minVersion[0]) {
                         conanVersions.add(version)
                     }
                     else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
@@ -85,6 +92,7 @@ node('Linux') {
                     echo "Failed to parse release '$release'"
                 }
             }
+            conanVersions.add(preVersion)
         }
     }
 
