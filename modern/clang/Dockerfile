@@ -163,4 +163,5 @@ RUN sudo mv /tmp/gcc/lib64 /usr/local/ \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache \
     && sudo chmod +x /opt/conan/clang_bootstrap.sh \
-    && /opt/conan/clang_bootstrap.sh
+    && /opt/conan/clang_bootstrap.sh \
+    && sudo rm -f /opt/conan/clang_bootstrap.sh

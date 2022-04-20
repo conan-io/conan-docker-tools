@@ -67,4 +67,5 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo rm /etc/ld.so.cache \
     && sudo ldconfig -C /etc/ld.so.cache \
     && sudo chmod +x /opt/conan/gcc_bootstrap.sh \
-    && /opt/conan/gcc_bootstrap.sh
+    && /opt/conan/gcc_bootstrap.sh \
+    && sudo rm -f /opt/conan/gcc_bootstrap.sh
