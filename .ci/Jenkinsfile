@@ -60,6 +60,13 @@ node('Linux') {
         }
     }
 
+    stage('Check for skip build') {
+        String scm_title = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+        if (scm_title.contains("[skip ci]") || scm_title.contains("[ci skip]")) {
+            currentBuild.result = 'ABORTED'
+            error("Skiping CI ...")
+        }
+    }
 
     List<String> parameters_modern = parameters.clone()
     // Regular CI builds will follow versions from the '.env' file
