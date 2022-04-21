@@ -47,6 +47,7 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 100 \
+    && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 100 \
     && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
     && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
