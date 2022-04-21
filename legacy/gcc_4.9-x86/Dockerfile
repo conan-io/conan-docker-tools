@@ -55,10 +55,10 @@ RUN dpkg --add-architecture i386 \
     && make -s install > /dev/null \
     && cd - \
     && rm -rf cmake-* \
-    && groupadd 1001 -g 1001 \
-    && groupadd 1000 -g 1000 \
-    && groupadd 2000 -g 2000 \
-    && groupadd 999 -g 999 \
+    && groupadd -f conan-1001 -g 1001 \
+    && groupadd -f conan-1000 -g 1000 \
+    && groupadd -f conan-2000 -g 2000 \
+    && groupadd -f conan-999 -g 999 \
     && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
