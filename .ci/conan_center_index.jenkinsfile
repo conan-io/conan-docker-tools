@@ -96,7 +96,7 @@ node('Linux') {
             }
 
             if (preVersion) {
-                conanVersions.add(release)
+                conanVersions.add(preVersionStr)
             }
         }
     }
