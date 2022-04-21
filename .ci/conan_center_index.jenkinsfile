@@ -33,8 +33,9 @@ node('Linux') {
 
     def conanVersions = []
     List<String> ignoreVersions = []
-    def latestVersion = null
+    String latestVersion = null
     def preVersion = null
+    String preVersionStr = null
     stage('Compute Conan versions') {
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
@@ -53,7 +54,7 @@ node('Linux') {
             echo "Read latest version from pypi"
             def response = httpRequest(url: 'https://pypi.python.org/pypi/conan/json')
             Map<String, Object> requestJson = readJSON(text: response.content)
-            latestVersion = parseVersion(requestJson.info.version)
+            latestVersion = requestJson.info.version
 
             for (String release in requestJson.releases.keySet()) {
                 try {
@@ -76,16 +77,17 @@ node('Linux') {
                         version = parsePreVersion(release)
                         if (!preVersion || (version[4] > preVersion[4]) || (version[4] == preVersion[4] && version[5] > preVersion[5])) {
                             preVersion = version
+                            preVersionStr = release
                         }
                     }
                     else if (version[0] > minVersion[0]) {
-                        conanVersions.add(version)
+                        conanVersions.add(release)
                     }
                     else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
-                        conanVersions.add(version)
+                        conanVersions.add(release)
                     }
                     else if (version[0] == minVersion[0] && version[1] == minVersion[1] &&  version[2] >= minVersion[2]) {
-                        conanVersions.add(version)
+                        conanVersions.add(release)
                     }
                 }
                 catch(e) {
@@ -94,14 +96,14 @@ node('Linux') {
             }
 
             if (preVersion) {
-                conanVersions.add(preVersion)
+                conanVersions.add(release)
             }
         }
     }
 
     echo "Versions: ${conanVersions}"
     echo "- latest: ${latestVersion}"
-    echo "- preVersion: ${preVersion}"
+    echo "- preVersion: ${preVersionStr}"
 
     List parameters = []
 
@@ -166,8 +168,7 @@ node('Linux') {
     parameters.add([$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true])
     parameters.add([$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run])
 
-    for (v in conanVersions) {
-        String strVersion = "${v[0]}.${v[1]}.${v[2]}"
+    for (strVersion in conanVersions) {
         boolean isLatest = (v == latestVersion)
         stage("Build images for Conan '${strVersion}' (latest=${isLatest})") {
             build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
