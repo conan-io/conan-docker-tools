@@ -4,7 +4,7 @@ def detectPRCommits() {
     String masterCommit = sh(script: 'git rev-parse origin/master', returnStdout: true).trim()
 
     String p = sh(script: 'git log --pretty=%P -n 1 --date-order', returnStdout: true).trim()
-    List<String> parentCommits = p.split(" ")
+    List<String> parentCommits = p.split(' ')
     if (parentCommits.size() == 2) {
         prCommit = parentCommits[0]
         assert parentCommits[1] == masterCommit
@@ -14,9 +14,7 @@ def detectPRCommits() {
     return [masterCommit, prCommit]
 }
 
-
 node('Linux') {
-
     // We need to build the list of parameters to call next job
     List parameters = [
         [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
@@ -35,7 +33,7 @@ node('Linux') {
         String scm_pr_commit = null
         if (env.BRANCH_NAME.startsWith('PR')) {  // Because it is Github
             scm_base_branch = "${env.CHANGE_TARGET}"
-            scm_pr_number = env.BRANCH_NAME.replace("PR-", "")
+            scm_pr_number = env.BRANCH_NAME.replace('PR-', '')
 
             // Get commits from master branch and from PR
             (scm_commit, scm_pr_commit) = detectPRCommits()
@@ -60,12 +58,12 @@ node('Linux') {
         }
     }
 
-    stage('Check for skip build') {
-        String scm_title = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-        if (scm_title.contains("[skip ci]") || scm_title.contains("[ci skip]")) {
-            currentBuild.result = 'ABORTED'
-            error("Aborting: Found [skip ci] on the commit message")
-        }
+    // Check for skip build
+    String scmTitle = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+    if (scmTitle.contains('[skip ci]') || scmTitle.contains('[ci skip]')) {
+        currentBuild.result = 'ABORTED'
+        echo 'Aborting: Found [skip ci] on the commit message'
+        return  // Outside stage
     }
 
     List<String> parameters_modern = parameters.clone()
@@ -123,8 +121,6 @@ node('Linux') {
 
     build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters_modern)
 
-
-
     // Legacy CI builds will follow versions from the '.env' file
     List parameters_legacy = parameters.clone()
     stage('Legacy - Parse environment file') {
@@ -151,5 +147,4 @@ node('Linux') {
     }
 
     build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters_legacy)
-
 }
