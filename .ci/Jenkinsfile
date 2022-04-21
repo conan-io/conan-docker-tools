@@ -61,7 +61,7 @@ node('Linux') {
     // Check for skip build
     String scmTitle = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
     if (scmTitle.contains('[skip ci]') || scmTitle.contains('[ci skip]')) {
-        currentBuild.result = 'ABORTED'
+        currentBuild.result = 'SUCCESS'  // Keep success, so GitHub shows green status check
         echo 'Aborting: Found [skip ci] on the commit message'
         return  // Outside stage
     }
