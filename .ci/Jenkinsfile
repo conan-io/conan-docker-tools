@@ -62,6 +62,7 @@ node('Linux') {
 
     stage('Check for skip build') {
         String scm_title = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+        echo "TITLE: ${scm_title}"
         if (scm_title.contains("[skip ci]") || scm_title.contains("[ci skip]")) {
             currentBuild.result = 'ABORTED'
             error("Skiping CI ...")
