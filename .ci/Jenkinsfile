@@ -64,7 +64,7 @@ node('Linux') {
         String scm_title = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
         if (scm_title.contains("[skip ci]") || scm_title.contains("[ci skip]")) {
             currentBuild.result = 'ABORTED'
-            error("Skiping CI ...")
+            error("Aborting: Found [skip ci] on the commit message")
         }
     }
 
