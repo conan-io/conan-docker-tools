@@ -521,7 +521,7 @@ services:
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
         container_name: conan_server
-    conan_client:
+    conan:
         build:
             context: conan_client
             dockerfile: Dockerfile

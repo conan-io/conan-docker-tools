@@ -131,6 +131,14 @@ Conan Docker Tools provides an image version with only Conan Server installed, v
 |-----------------------------------------------------------------------------------------------|--------|------------|
 | - [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)             | ANY |  Supported |
 
+#### Conan Client
+
+Conan Docker Tools provides an image version with only Conan client installed, very useful for the cases it is necessary to run a command without touching the host.
+
+| Version                                                                                       | Arch   |  Status, Life cycle  |
+|-----------------------------------------------------------------------------------------------|--------|------------|
+| - [conanio/conan](https://hub.docker.com/r/conanio/conan/)             | ANY |  Supported |
+
 
 #### Conan Installer
 
