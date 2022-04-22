@@ -521,6 +521,14 @@ services:
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
         container_name: conan_server
+    conan:
+        build:
+            context: conan_client
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/conan:${DOCKER_BUILD_TAG}"
+        container_name: conan_client
     clang8:
         build:
             context: clang_8
