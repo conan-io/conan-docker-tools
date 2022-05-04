@@ -215,7 +215,7 @@ node('Linux') {
 
                 String containerID = get_container_id()
 
-                stage("Legacy - ${compiler.toUpperCase()} ${dir} deploy") {
+                stage("Legacy - ${app.toUpperCase()} ${dir} deploy") {
                     String latestBranch = "${dockerUsername}/${app}:${branchName}-latest"
                     String latestMaster = "${dockerUsername}/${app}:${targetBranch}-latest"
 
