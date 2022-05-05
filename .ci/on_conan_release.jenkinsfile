@@ -38,19 +38,15 @@ node('Linux') {
                                        relativeTargetDir: 'conan-docker-tools']],
         ])
 
-        {
-            def content = readFile(file: 'conan-docker-tools/modern/.env')
-            content = content.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
-            content = content.replaceAll(/DOCKER_TAG=\d+\.\d+.\d+/, "DOCKER_TAG=${params.conan_version}")
-            writeFile(file: 'conan-docker-tools/modern/.env', text: content)
-        }
+        def content1 = readFile(file: 'conan-docker-tools/modern/.env')
+        content1 = content1.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
+        content1 = content1.replaceAll(/DOCKER_TAG=\d+\.\d+.\d+/, "DOCKER_TAG=${params.conan_version}")
+        writeFile(file: 'conan-docker-tools/modern/.env', text: content1)
 
-        {
-            def content = readFile(file: 'conan-docker-tools/legacy/.env')
-            content = content.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
-            content = content.replaceAll(/DOCKER_BUILD_TAG=\d+\.\d+.\d+/, "DOCKER_BUILD_TAG=${params.conan_version}")
-            writeFile(file: 'conan-docker-tools/legacy/.env', text: content)
-        }
+        def content2 = readFile(file: 'conan-docker-tools/legacy/.env')
+        content2 = content.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
+        content2 = content.replaceAll(/DOCKER_BUILD_TAG=\d+\.\d+.\d+/, "DOCKER_BUILD_TAG=${params.conan_version}")
+        writeFile(file: 'conan-docker-tools/legacy/.env', text: content2)
 
         String branchName = "bot/release-${params.conan_version}".replaceAll(/\./, '_')
         dir('conan-docker-tools') {
