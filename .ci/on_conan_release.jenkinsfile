@@ -57,11 +57,9 @@ node('Linux') {
             sh 'git config --local user.name "Release Bot"'
             sh 'git commit -am "[up conan] Update Conan version"'
 
-            if (params.build_old_images) {
-                withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
-                        sh "git remote set-url origin https://$GH_USER:$GH_PASS@github.com/conan-io/conan-docker-tools.git"
-                        sh "git push origin ${branchName}"
-                }
+            withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
+                    sh "git remote set-url origin https://$GH_USER:$GH_PASS@github.com/conan-io/conan-docker-tools.git"
+                    sh "git push origin ${branchName}"
             }
         }
 
@@ -82,11 +80,9 @@ node('Linux') {
                 '''.stripIndent() as String
             writeJSON json: data, file: 'data.json'
 
-            if (params.build_old_images) {
-                withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
-                    String create_pr_url = 'https://api.github.com/repos/conan-io/conan-docker-tools/pulls'
-                    sh script: "curl --fail --connect-timeout 20 --max-time 40 --retry 5 --retry-delay 10 --retry-max-time 40 -s -u $GH_USER:$GH_PASS --request POST ${create_pr_url} -d \"@data.json\""
-                }
+            withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
+                String create_pr_url = 'https://api.github.com/repos/conan-io/conan-docker-tools/pulls'
+                sh script: "curl --fail --connect-timeout 20 --max-time 40 --retry 5 --retry-delay 10 --retry-max-time 40 -s -u $GH_USER:$GH_PASS --request POST ${create_pr_url} -d \"@data.json\""
             }
         }
     }
