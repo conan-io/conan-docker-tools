@@ -52,7 +52,7 @@ node('Linux') {
                 try {
                     def version = parseVersion(release)
                     if (version[0] == 2) {
-                        echo "WARNING: The version '$release' is part of Conan 2.0 which will not be built now."
+                        echo "WARNING: The version '$release' is part of Conan 2.0 which will not be built for legacy images."
                         continue
                     }
                     else if (version[0] > minVersion[0]) {
