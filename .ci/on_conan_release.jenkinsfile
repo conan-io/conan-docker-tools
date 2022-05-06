@@ -38,12 +38,12 @@ node('Linux') {
                                        relativeTargetDir: 'conan-docker-tools']],
         ])
 
-        def content1 = readFile(file: 'conan-docker-tools/modern/.env')
+        String content1 = readFile(file: 'conan-docker-tools/modern/.env')
         content1 = content1.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
         content1 = content1.replaceAll(/DOCKER_TAG=\d+\.\d+.\d+/, "DOCKER_TAG=${params.conan_version}")
         writeFile(file: 'conan-docker-tools/modern/.env', text: content1)
 
-        def content2 = readFile(file: 'conan-docker-tools/legacy/.env')
+        String content2 = readFile(file: 'conan-docker-tools/legacy/.env')
         content2 = content2.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
         content2 = content2.replaceAll(/DOCKER_BUILD_TAG=\d+\.\d+.\d+/, "DOCKER_BUILD_TAG=${params.conan_version}")
         writeFile(file: 'conan-docker-tools/legacy/.env', text: content2)
@@ -64,26 +64,44 @@ node('Linux') {
         }
 
         // Open PR in Github
+        int prNumber = null
         stage('Open PR in Github') {
-            def data = readJSON text: '{}'
+            Map data = [:]
             data.title = "[up conan] Update Conan version (${params.conan_version})" as String
             data.head = branchName
-            data.base = 'master' as String
+            data.base = 'master'
             data.body = '''\
                 New Conan version released.
-
-                Please, @conan-io/barbarians have a look to this PR
 
                 ---
 
                 <sup>This PR has been created automatically by CI</sup>
                 '''.stripIndent() as String
-            writeJSON json: data, file: 'data.json'
 
-            withCredentials([usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_PASS')]) {
-                String create_pr_url = 'https://api.github.com/repos/conan-io/conan-docker-tools/pulls'
-                sh script: "curl --fail --connect-timeout 20 --max-time 40 --retry 5 --retry-delay 10 --retry-max-time 40 -s -u $GH_USER:$GH_PASS --request POST ${create_pr_url} -d \"@data.json\""
-            }
+            String jsonContent = writeJSON(json: data, returnText: true)
+            Map response = script.httpRequest(
+                url: 'https://api.github.com/repos/conan-io/conan-docker-tools/pulls',
+                httpMode: 'POST',
+                authentication: 'conanci-gh-token',
+                timeout: 20,
+                requestBody: jsonContent,
+            )
+
+            Map<String, Object> responseData = readJSON(text: response.content)
+            prNumber = responseData.id as int
+        }
+
+        stage('Request reviewers') {
+            Map data = [:]
+            data.reviewers = ['uilianries', 'jgsogo']
+            String jsonContent = writeJSON(json: data, returnText: true)
+            script.httpRequest(
+                url: "https://api.github.com/repos/conan-io/conan-docker-tools/pulls/${prNumber}/requested_reviewers",
+                httpMode: 'POST',
+                authentication: 'conanci-gh-token',
+                timeout: 20,
+                requestBody: jsonContent,
+            )
         }
     }
 }
