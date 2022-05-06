@@ -188,8 +188,6 @@ node('Linux') {
                     sh 'cat legacy/.env'
                 }
 
-                String containerID = get_container_id()
-
                 stage("Legacy - ${compiler.toUpperCase()} ${version} deploy") {
                     String latestBranch = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-latest"
                     String latestMaster = "${dockerUsername}/${compiler}${versionMajor}:${targetBranch}-latest"
@@ -215,7 +213,7 @@ node('Linux') {
     }
 
     // Define helper function to build the compiler
-    Closure appBuild = { String dir , String app ->
+    Closure appBuild = { String folder , String app ->
         return {
             String deployImage = "${dockerUsername}/${app}:${branchName}-${commit}"
             String compilerArgs = "${buildArgs}"
@@ -226,13 +224,11 @@ node('Linux') {
                     sh 'cat legacy/.env'
                 }
 
-                String containerID = get_container_id()
-
-                stage("Legacy - ${app.toUpperCase()} ${dir} deploy") {
+                stage("Legacy - ${app.toUpperCase()} ${folder} deploy") {
                     String latestBranch = "${dockerUsername}/${app}:${branchName}-latest"
                     String latestMaster = "${dockerUsername}/${app}:${targetBranch}-latest"
 
-                    dir("legacy/${dir}") {
+                    dir("legacy/${folder}") {
                         buildImage(latestMaster, latestBranch, deployImage, compilerArgs)
                     }
                 }
