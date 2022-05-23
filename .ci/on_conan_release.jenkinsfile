@@ -79,7 +79,7 @@ node('Linux') {
                 '''.stripIndent() as String
 
             String jsonContent = writeJSON(json: data, returnText: true)
-            Map response = httpRequest(
+            def response = httpRequest(
                 url: 'https://api.github.com/repos/conan-io/conan-docker-tools/pulls',
                 httpMode: 'POST',
                 authentication: 'conanci-gh-token',
