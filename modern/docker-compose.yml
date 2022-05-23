@@ -151,8 +151,8 @@ services:
             args:
                 <<: *common-args
                 <<: *gcc12
-        image: ${DOCKER_USERNAME}/gcc11-builder-${DISTRO}:${DOCKER_TAG}
-        container_name: gcc11-builder
+        image: ${DOCKER_USERNAME}/gcc12-builder-${DISTRO}:${DOCKER_TAG}
+        container_name: gcc12-builder
         tty: true
     clang10-builder:
         build:
