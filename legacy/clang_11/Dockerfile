@@ -78,6 +78,7 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
     && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
+    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python3.7/lsb_release.py \
     && pip install -q --upgrade --no-cache-dir pip \
     && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools cmake==${CMAKE_VERSION_FULL} \
     && chown -R conan:1001 /opt/pyenv \
