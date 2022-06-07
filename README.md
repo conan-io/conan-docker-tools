@@ -117,10 +117,10 @@ However, you can download the Docker recipe and build.
 
 | Version                                                                                       | Arch   |  Status, Life cycle  |
 |-----------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/android-clang8: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8/)             | x86_64 |  Deprecated  |
-| - [conanio/android-clang8-x86: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8-x86/)     | x86    |  Deprecated |
-| - [conanio/android-clang8-armv7: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8-armv7/) | x86    |  Deprecated  |
-| - [conanio/android-clang8-armv8: Android clang 3.8](https://hub.docker.com/r/conanio/android-clang8-armv8/) | x86    |  Deprecated  |
+| - [conanio/android-clang8: Android clang 8 x86_64](https://hub.docker.com/r/conanio/android-clang8/)             | x86_64 |  Deprecated  |
+| - [conanio/android-clang8-x86: Android clang 8 x86](https://hub.docker.com/r/conanio/android-clang8-x86/)     | x86    |  Deprecated |
+| - [conanio/android-clang8-armv7: Android clang 8 ARMv7](https://hub.docker.com/r/conanio/android-clang8-armv7/) | armv7    |  Deprecated  |
+| - [conanio/android-clang8-armv8: Android clang 8 ARMv8](https://hub.docker.com/r/conanio/android-clang8-armv8/) | armv8    |  Deprecated  |
 
 
 #### Conan Server
