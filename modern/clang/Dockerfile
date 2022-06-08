@@ -164,7 +164,6 @@ RUN apt-get -qq update \
              llvm-nm \
              llvm-ranlib \
              llvm-size \
-             llvm-tblgen \
              llvm-cxxdump \
              llvm-dwarfdump \
              llvm-install-name-tool \
@@ -222,7 +221,6 @@ RUN apt-get -qq update \
              install-llvm-nm \
              install-llvm-ranlib \
              install-llvm-size \
-             install-llvm-tblgen \
              install-llvm-cxxdump \
              install-llvm-dwarfdump \
              install-llvm-install-name-tool \
