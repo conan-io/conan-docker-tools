@@ -93,7 +93,21 @@ RUN apt-get -qq update \
     && mv /etc/ld.so.conf.d/libc.conf /etc/ld.so.conf.d/10libc.conf \
     && rm /etc/ld.so.cache \
     && ldconfig -C /etc/ld.so.cache \
-    && apt-get -qq purge -y g++-multilib gcc \
+    && apt-get -qq purge -y \
+       g++-multilib \
+       gcc \
+       libgmp-dev \
+       libmpfr-dev \
+       libmpc-dev \
+       libffi-dev \
+       libssl-dev \
+       zlib1g-dev \
+       libbz2-dev \
+       libsqlite3-dev \
+       libreadline-dev \
+       libncurses5-dev \
+       libncursesw5-dev \
+       liblzma-dev \
     && apt-get -qq autoremove -y \
     && apt-get -qq autoclean \
     && apt-get -qq update \
