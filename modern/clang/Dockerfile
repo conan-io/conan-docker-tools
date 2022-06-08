@@ -66,7 +66,7 @@ RUN apt-get -qq update \
        -DLLVM_BUILD_DOCS=OFF \
        -DLLVM_BUILD_TESTS=OFF \
        -DLLVM_BUILD_32_BITS=OFF \
-       -DLLVM_BUILD_TOOLS=OFF \
+       -DLLVM_BUILD_TOOLS=ON \
        -DLLVM_BUILD_UTILS=OFF \
        -DLLVM_BUILD_EXAMPLES=OFF \
        -DLLVM_BUILD_BENCHMARKS=OFF \
@@ -120,7 +120,117 @@ RUN apt-get -qq update \
     && ninja clang \
     && ninja lld \
     && ninja compiler-rt \
-    && ninja install-unwind install-cxxabi install-cxx install-clang install-lld install-compiler-rt \
+    && ninja llvm-cat \
+             llvm-cxxfilt \
+             llvm-dwp \
+             llvm-jitlink \
+             llvm-mc \
+             llvm-objdump \
+             llvm-readelf \
+             llvm-stress \
+             llvm-xray \
+             llvm-addr2line \
+             llvm-cfi-verify \
+             llvm-c-test \
+             llvm-cxxmap \
+             llvm-lib \
+             llvm-mca \
+             llvm-opt-report \
+             llvm-readobj \
+             llvm-strings \
+             llvm-ar \
+             llvm-config \
+             llvm-diff \
+             llvm-exegesis \
+             llvm-link \
+             llvm-modextract \
+             llvm-pdbutil \
+             llvm-reduce \
+             llvm-strip \
+             llvm-as \
+             llvm-cov \
+             llvm-dis \
+             llvm-extract \
+             llvm-lipo \
+             llvm-mt \
+             llvm-profdata \
+             llvm-rtdyld \
+             llvm-symbolizer \
+             llvm-bcanalyzer \
+             llvm-cvtres \
+             llvm-dlltool \
+             llvm-ifs \
+             llvm-lto \
+             llvm-nm \
+             llvm-ranlib \
+             llvm-size \
+             llvm-tblgen \
+             llvm-cxxdump \
+             llvm-dwarfdump \
+             llvm-install-name-tool \
+             llvm-lto2 \
+             llvm-objcopy \
+             llvm-rc \
+             llvm-split \
+             llvm-undname \
+    && ninja install-unwind \
+             install-cxxabi \
+             install-cxx \
+             install-clang \
+             install-lld \
+             install-compiler-rt \
+             install-llvm-cat \
+             install-llvm-cxxfilt \
+             install-llvm-dwp \
+             install-llvm-jitlink \
+             install-llvm-mc \
+             install-llvm-objdump \
+             install-llvm-readelf \
+             install-llvm-stress \
+             install-llvm-xray \
+             install-llvm-addr2line \
+             install-llvm-cfi-verify \
+             install-llvm-cxxmap \
+             install-llvm-lib \
+             install-llvm-mca \
+             install-llvm-opt-report \
+             install-llvm-readobj \
+             install-llvm-strings \
+             install-llvm-ar \
+             install-llvm-config \
+             install-llvm-diff \
+             install-llvm-exegesis \
+             install-llvm-link \
+             install-llvm-modextract \
+             install-llvm-pdbutil \
+             install-llvm-reduce \
+             install-llvm-strip \
+             install-llvm-as \
+             install-llvm-cov \
+             install-llvm-dis \
+             install-llvm-extract \
+             install-llvm-lipo \
+             install-llvm-mt \
+             install-llvm-profdata \
+             install-llvm-rtdyld \
+             install-llvm-symbolizer \
+             install-llvm-bcanalyzer \
+             install-llvm-cvtres \
+             install-llvm-dlltool \
+             install-llvm-ifs \
+             install-llvm-lto \
+             install-llvm-nm \
+             install-llvm-ranlib \
+             install-llvm-size \
+             install-llvm-tblgen \
+             install-llvm-cxxdump \
+             install-llvm-dwarfdump \
+             install-llvm-install-name-tool \
+             install-llvm-lto2 \
+             install-llvm-objcopy \
+             install-llvm-rc \
+             install-llvm-split \
+             install-llvm-undname \
     && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
     && cp $(find lib -name "*.so*") /tmp/install/lib
 
