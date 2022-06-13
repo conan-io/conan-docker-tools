@@ -87,7 +87,6 @@ RUN dpkg --add-architecture i386 \
           libgmp-dev \
           libmpfr-dev \
           libmpc-dev \
-          libc6-dev \
           ninja-build \
           libffi-dev \
           libssl-dev \
