@@ -93,7 +93,25 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
-    && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
+    && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100 \
+    && apt-get -qq purge -y \
+          libgmp-dev \
+          libmpfr-dev \
+          libmpc-dev \
+          ninja-build \
+          libffi-dev \
+          libssl-dev \
+          zlib1g-dev \
+          libbz2-dev \
+          libsqlite3-dev \
+          libreadline-dev \
+          libncurses5-dev \
+          libncursesw5-dev \
+          liblzma-dev \
+       && apt-get -qq autoremove -y \
+       && apt-get -qq autoclean \
+       && apt-get -qq update \
+       && rm -rf /var/lib/apt/lists/*
 
 USER conan
 WORKDIR /home/conan
