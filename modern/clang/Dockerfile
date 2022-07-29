@@ -16,6 +16,10 @@ LABEL maintainer="Conan.io <info@conan.io>"
 #        We could add a patch with target_link_directories, but I prefered copying libc++abi to /usr/lib
 #
 # NOTE:  Clang 12 requires newer versions of CMake and Ninja, Xenial does not support those required version, that's why pip.
+#
+# NOTE: (2022-07-29) We needed to revert libunwind usage due compatibility on Linux. We will keep libgcc_s.
+#                    No Linux distro adopted libunwind instead of libgcc_s yet and it may cause segfault, or missing libraries on runtime.
+#
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \
@@ -89,7 +93,7 @@ RUN apt-get -qq update \
        -DLIBCXX_BUILD_32_BITS=OFF \
        -DLIBCXX_CXX_ABI=libcxxabi \
        -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON \
-       -DLIBCXX_USE_COMPILER_RT=ON \
+       -DLIBCXX_USE_COMPILER_RT=OFF \
        -DLIBCXX_DEBUG_BUILD=OFF \
        -DLIBCXX_CXX_ABI=libcxxabi \
        -DLIBCXX_CXX_ABI_INCLUDE_PATHS=../libcxxabi/include/ \
