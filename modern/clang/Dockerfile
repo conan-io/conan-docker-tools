@@ -40,6 +40,8 @@ RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev \
     && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${CLANG_VERSION}.tar.gz \
     && tar zxf llvmorg-${CLANG_VERSION}.tar.gz \
+    && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${CLANG_VERSION}/libunwind/src/CMakeLists.txt \
+    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${CLANG_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp \
     && cd llvm-project-llvmorg-${CLANG_VERSION} \
     && mkdir build \
     && cd build/ \
@@ -64,7 +66,7 @@ RUN apt-get -qq update \
        -DLLVM_ENABLE_WARNINGS=OFF \
        -DLLVM_ENABLE_PEDANTIC=OFF \
        -DLLVM_ENABLE_ASSERTIONS=OFF \
-       -DLLVM_ENABLE_PROJECTS="clang;libcxx;libcxxabi;lld;compiler-rt" \
+       -DLLVM_ENABLE_PROJECTS="libunwind;clang;libcxx;libcxxabi;lld;compiler-rt" \
        -DLLVM_BUILD_DOCS=OFF \
        -DLLVM_BUILD_TESTS=OFF \
        -DLLVM_BUILD_32_BITS=OFF \
@@ -76,6 +78,11 @@ RUN apt-get -qq update \
        -DLLVM_USE_SANITIZER=OFF \
        -DLLVM_USE_LINKER=lld-10 \
        -DLLVM_OPTIMIZED_TABLEGEN=ON \
+       -DLIBUNWIND_ENABLE_ASSERTIONS=OFF \
+       -DLIBUNWIND_ENABLE_PEDANTIC=OFF \
+       -DLIBUNWIND_ENABLE_SHARED=ON \
+       -DLIBUNWIND_ENABLE_STATIC=OFF \
+       -DLIBUNWIND_USE_COMPILER_RT=OFF \
        -DCLANG_INCLUDE_TESTS=OFF \
        -DCLANG_ENABLE_ARCMT=OFF \
        -DCLANG_ENABLE_STATIC_ANALYZER=OFF \
@@ -105,8 +112,12 @@ RUN apt-get -qq update \
        -DLIBCXXABI_ENABLE_STATIC=ON \
        -DLIBCXXABI_USE_COMPILER_RT=NO \
        -DLIBCXXABI_USE_LLVM_UNWINDER=OFF \
+       -DLIBCXXABI_ENABLE_STATIC_UNWINDER=OFF \
+       -DLIBCXXABI_STATICALLY_LINK_UNWINDER_IN_SHARED_LIBRARY=OFF \
+       -DLIBCXXABI_LIBUNWIND_INCLUDES_INTERNAL=OFF \
        -DCOMPILER_RT_INCLUDE_TESTS=OFF \
        -DCOMPILER_RT_USE_LIBCXX=ON \
+    && ninja unwind \
     && ninja cxxabi \
     && cp lib/libc++abi* /usr/lib/ \
     && ninja cxx \
@@ -165,7 +176,8 @@ RUN apt-get -qq update \
              llvm-rc \
              llvm-split \
              llvm-undname \
-    && ninja install-cxxabi \
+    && ninja install-unwind \
+             install-cxxabi \
              install-cxx \
              install-clang \
              install-lld \
