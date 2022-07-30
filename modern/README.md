@@ -15,7 +15,7 @@ The images listed below are intended for **generating open-source library packag
 
 After many updates, new compiler releases, instability and incompatibility problems, we decided to clean the house, move a step forward with Conan Docker Tools. So far, we usually follow the same recipe, when a compiler version is released, we also release a new docker image, but we have two main problems:
 
-- Ubuntu doesn’t package new compiler versions for each distro release, so we need to use a new Ubuntu version as base image. As a consequence, non LTS versions become a problem when EOL comes.
+- Ubuntu doesn't package new compiler versions for each distro release, so we need to use a new Ubuntu version as base image. As a consequence, non LTS versions become a problem when EOL comes.
 - Each Ubuntu release uses different package versions, including very important projects, like `glibc`, which results in incompatibility and runtime errors when a package is built using one distro and we try to run in a different one.
 
 With these two problems in mind we defined one objective: **use the same
@@ -31,8 +31,8 @@ manage to build them from sources.
 
 We decided to use a single base image, not too old and not the latest, something in the middle, to keep a `glibc` still compatible for some old distro releases. Thus, we choose Ubuntu 16.04 LTS (Xenial) which its EOL is in 2024. When close to the EOL date, we can move to 18.04 and so on.
 
-We totally understand that companies and users are still using our “legacy” docker images, so we won’t deprecate them soon. This kind of change requires rebuilding all packages again, and depending on the number, it could take weeks.
-Also, take into account that we won’t activaley remove them from Docker hub.
+We totally understand that companies and users are still using our "legacy" docker images, so we won't deprecate them soon. This kind of change requires rebuilding all packages again, and depending on the number, it could take weeks.
+Also, take into account that we won't activaley remove them from Docker hub.
 
 Now the future of ConanCenter binaries is defined, it will take time to design
 the transition and move everything forward, don't expect it to change soon.
@@ -71,30 +71,31 @@ Anyway, they should always be available in DockerHub.
 
 These are the images uploaded to Docker Hub and currently used by [Conan Center](https://conan.io/center):
 
-> Note.- Tags will use the Conan version available in those images.
+> **Note:**
+Tags will use the Conan version available in those images.
 
 ### GCC
 
-| Version                                                                            | Arch    |  Status, Life cycle  |
-|------------------------------------------------------------------------------------|---------|----------------------|
-| [conanio/gcc5-ubuntu16.04: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc6-ubuntu16.04: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc7-ubuntu16.04: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc8-ubuntu16.04: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc9-ubuntu16.04: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04/)          | x86_64  |  Supported           |
-| [conanio/gcc10-ubuntu16.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)       | x86_64  |  Supported           |
-| [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)       | x86_64  |  Supported           |
+| Version                                                                                   | Arch   | Status, Life cycle           |
+|-------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/gcc5-ubuntu16.04: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc6-ubuntu16.04: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc7-ubuntu16.04: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc8-ubuntu16.04: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc9-ubuntu16.04: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc10-ubuntu16.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
 
 
 ### Clang
 
-| Version                                                                                  | Arch   |  Status, Life cycle  |
-|------------------------------------------------------------------------------------------|--------|----------------------|
-| - [conanio/clang10-ubuntu16.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/)     | x86_64 |  Supported           |
-| - [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/)     | x86_64 |  Supported           |
-| - [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/)     | x86_64 |  Supported           |
-| - [conanio/clang13-ubuntu16.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04/)     | x86_64 |  Supported           |
-| - [conanio/clang14-ubuntu16.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04/)     | x86_64 |  Supported           |
+| Version                                                                                        | Arch   | Status, Life cycle           |
+|------------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/clang10-ubuntu16.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang13-ubuntu16.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang14-ubuntu16.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
 
 
 
@@ -102,9 +103,9 @@ These are the images uploaded to Docker Hub and currently used by [Conan Center]
 
 Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host. It's based on Alpine.
 
-| Version                                                                              | Arch   |  Status, Life cycle  |
-|--------------------------------------------------------------------------------------|--------|----------------------|
-| - [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)             | ANY    |  Supported           |
+| Version                                                                | Arch   | Status, Life cycle           |
+|------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/) | ANY    | :white_check_mark: Supported |
 
 
 ### Jenkins Client
@@ -114,26 +115,26 @@ These images are mainly focused for Conan Center CI.
 
 #### GCC
 
-| Version                                                                                                   | Arch    |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------------------|---------|----------------------|
-| [conanio/gcc5-ubuntu16.04-jenkins: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04-jenkins/)     | x86_64  |  Supported           |
-| [conanio/gcc6-ubuntu16.04-jenkins: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04-jenkins/)     | x86_64  |  Supported           |
-| [conanio/gcc7-ubuntu16.04-jenkins: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04-jenkins/)     | x86_64  |  Supported           |
-| [conanio/gcc8-ubuntu16.04-jenkins: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04-jenkins/)     | x86_64  |  Supported           |
-| [conanio/gcc9-ubuntu16.04-jenkins: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04-jenkins/)     | x86_64  |  Supported           |
-| [conanio/gcc10-ubuntu16.04-jenkins: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04-jenkins/)  | x86_64  |  Supported           |
-| [conanio/gcc11-ubuntu16.04-jenkins: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04-jenkins/)  | x86_64  |  Supported           |
+| Version                                                                                                   | Arch    | Status, Life cycle           |
+|-----------------------------------------------------------------------------------------------------------|---------|------------------------------|
+| [conanio/gcc5-ubuntu16.04-jenkins: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc6-ubuntu16.04-jenkins: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc7-ubuntu16.04-jenkins: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc8-ubuntu16.04-jenkins: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc9-ubuntu16.04-jenkins: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc10-ubuntu16.04-jenkins: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04-jenkins/)  | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc11-ubuntu16.04-jenkins: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04-jenkins/)  | x86_64  | :white_check_mark: Supported |
 
 
 #### Clang
 
-| Version                                                                                                                  | Arch   |  Status, Life cycle  |
-|--------------------------------------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/clang10-ubuntu16.04-jenkins: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
-| - [conanio/clang11-ubuntu16.04-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
-| - [conanio/clang12-ubuntu16.04-jenkins: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
-| - [conanio/clang13-ubuntu16.04-jenkins: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
-| - [conanio/clang14-ubuntu16.04-jenkins: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04-jenkins/)          | x86_64 |  Supported |
+| Version                                                                                                        | Arch   | Status, Life cycle           |
+|----------------------------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/clang10-ubuntu16.04-jenkins: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04-jenkins/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang11-ubuntu16.04-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04-jenkins/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang12-ubuntu16.04-jenkins: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04-jenkins/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang13-ubuntu16.04-jenkins: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04-jenkins/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang14-ubuntu16.04-jenkins: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04-jenkins/) | x86_64 | :white_check_mark: Supported |
 
 
 ### Library Versions
@@ -142,20 +143,20 @@ The system libraries used by those new Docker images vary according to the Linux
 Here is a list of installed libraries and their versions:
 
 
-|  Docker Image                |  glibc   |  libstdc++  |  libc++  |
+| Docker Image                 | glibc    | libstdc++   | libc++   |
 |------------------------------|----------|-------------|----------|
-| conanio/gcc5-ubuntu16.04     |   2.23   |  3.4.21     |   ---    |
-| conanio/gcc6-ubuntu16.04     |   2.23   |  3.4.22     |   ---    |
-| conanio/gcc7-ubuntu16.04     |   2.23   |  3.4.24     |   ---    |
-| conanio/gcc8-ubuntu16.04     |   2.23   |  3.4.25     |   ---    |
-| conanio/gcc9-ubuntu16.04     |   2.23   |  3.4.28     |   ---    |
-| conanio/gcc10-ubuntu16.04    |   2.23   |  3.4.28     |   ---    |
-| conanio/gcc11-ubuntu16.04    |   2.23   |  3.4.29     |   ---    |
-| conanio/clang10-ubuntu16.04  |   2.23   |  3.4.28     |   10000  |
-| conanio/clang11-ubuntu16.04  |   2.23   |  3.4.28     |   11000  |
-| conanio/clang12-ubuntu16.04  |   2.23   |  3.4.28     |   12000  |
-| conanio/clang13-ubuntu16.04  |   2.23   |  3.4.28     |   13000  |
-| conanio/clang14-ubuntu16.04  |   2.23   |  3.4.28     |   14000  |
+| conanio/gcc5-ubuntu16.04     | 2.23     | 3.4.21      | ---      |
+| conanio/gcc6-ubuntu16.04     | 2.23     | 3.4.22      | ---      |
+| conanio/gcc7-ubuntu16.04     | 2.23     | 3.4.24      | ---      |
+| conanio/gcc8-ubuntu16.04     | 2.23     | 3.4.25      | ---      |
+| conanio/gcc9-ubuntu16.04     | 2.23     | 3.4.28      | ---      |
+| conanio/gcc10-ubuntu16.04    | 2.23     | 3.4.28      | ---      |
+| conanio/gcc11-ubuntu16.04    | 2.23     | 3.4.29      | ---      |
+| conanio/clang10-ubuntu16.04  | 2.23     | 3.4.28      | 10000    |
+| conanio/clang11-ubuntu16.04  | 2.23     | 3.4.28      | 11000    |
+| conanio/clang12-ubuntu16.04  | 2.23     | 3.4.28      | 12000    |
+| conanio/clang13-ubuntu16.04  | 2.23     | 3.4.28      | 13000    |
+| conanio/clang14-ubuntu16.04  | 2.23     | 3.4.28      | 14000    |
 
 
 ##### How to detect library versions
@@ -173,7 +174,7 @@ Use the images locally
 
 You can also use the images locally to build or test packages, this is an example command:
 
-```
+```shell
 docker run --rm -v /tmp/.conan:/home/conan/.conan conanio/gcc11-ubuntu16.04 bash -c "conan install boost/1.76.0@ --build"
 ```
 
@@ -182,7 +183,7 @@ You can change the directory or execute any other command that works for your ne
 
 If you are familiarized with Docker compose, also it's possible to start a new container by:
 
-```
+```shell
 docker-compose run -v /tmp/.conan:/home/conan/.conan gcc11 bash -c "conan install boost/1.74.0@ --build"
 ```
 
@@ -217,7 +218,9 @@ to match your requirements.
 The Docker image `base` (same service name), installs all basic system APT packages, CMake, Python and Conan. So, if you are looking for an
 image without compiler, `base` is your candidate.
 
-    $ docker-compose build base
+```shell
+$ docker-compose build base
+```
 
 The produced image can be configured by `.env`. Most important package versions installed in Base are listed there.
 
@@ -228,7 +231,9 @@ The decision made serves to avoid possible rebuilds when updating Base for some 
 
 The Builder image can be built directly, it's useful if you want to investigate compiler building steps and all artifacts produced.
 
-    $ docker-compose build gcc10-builder
+```shell
+$ docker-compose build gcc10-builder
+```
 
 It will build image for GCC 10, which takes around 15 minutes. For Clang case, it can take 1 hour.
 
@@ -241,7 +246,9 @@ This image avoids all Builder cache, using Docker multi-stage feature, we copy o
 
 It's the default build command, for instance:
 
-    $ docker-compose build gcc10
+```shell
+$ docker-compose build gcc10
+```
 
 > Take into account that in order to build Clang images it is required to build
 first the GCC image that will provide the `stdlibc++` version (whatever is
@@ -257,14 +264,14 @@ versions match and the committed compatibility works.
 
 You will need Python to run the test-suite, only `pytest` is required:
 
-```
+```shell
 pip install pytest
 ```
 
 To run the tests, just pass the name of the image to the command line
 and declare the _service_ you are testing:
 
-```
+```shell
 pytest tests --image conanio/base-ubuntu16.04:1.37.2 --service base
 pytest tests --image conanio/gcc10-ubuntu16.04:1.37.2 --service deploy
 ```
@@ -275,7 +282,7 @@ these tests you will need to build all images for all compiler versions, all
 the test suite will try to run the binary in all of them. Once you have
 built all the images, you can run:
 
-```
+```shell
 pytest tests --image conanio/gcc10-ubuntu16.04:1.37.2
 ```
 
@@ -284,13 +291,17 @@ pytest tests --image conanio/gcc10-ubuntu16.04:1.37.2
 
 If you want to distribute your image, you have to upload it to somewhere. There two ways to upload an image:
 
-    $ docker login -p <password> -u <username>
-    $ docker push conanio/gcc10-ubuntu16.04
+```shell
+$ docker login -p <password> -u <username>
+$ docker push conanio/gcc10-ubuntu16.04
+```
 
 Or, using Docker compose
 
-    $ docker login -p <password> -u <username>
-    $ docker-compose push gcc10
+```shell
+$ docker login -p <password> -u <username>
+$ docker-compose push gcc10
+```
 
 If you don't want to use hub.docker as default Docker registry, you may use [Artifactory](https://jfrog.com/start-free/#saas), which
 is free and well supported for Docker, Conan and more.
