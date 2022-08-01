@@ -15,7 +15,7 @@ The images listed below are intended for **generating open-source library packag
 
 ### Legacy and Modern folders
 
-There are two main folders which store our Dockerfiles [legacy](legacy/) and (modern)[modern/].
+There are two main folders which store our Dockerfiles [legacy](legacy/) and [modern](modern/).
 
 #### Legacy
 
@@ -33,111 +33,111 @@ The Modern folder stores our new design, re-using the same Dockerfile for any co
 The images are uploaded to Docker Hub:
 
 #### GCC
-| Version                                                                                       | Arch    |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------|---------|------------|
-| [conanio/gcc46: gcc 4.6](https://hub.docker.com/r/conanio/gcc46/)                     | x86_64  |  Deprecated |
-| [conanio/gcc48: gcc 4.8](https://hub.docker.com/r/conanio/gcc48/)                     | x86_64  |  Deprecated |
-| [conanio/gcc48-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-x86/)             | x86     |  Deprecated |
-| [conanio/gcc49: gcc 4.9](https://hub.docker.com/r/conanio/gcc49/)                     | x86_64  |  Deprecated |
-| [conanio/gcc49-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-x86/)             | x86     |  Deprecated |
-| [conanio/gcc49-armv7: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7/)         | armv7   |  Deprecated |
-| [conanio/gcc49-armv7hf: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7hf/)     | armv7hf |  Deprecated |
-| [conanio/gcc52: gcc 5.2](https://hub.docker.com/r/conanio/gcc52/)                     | x86_64  |  Deprecated |
-| [conanio/gcc53: gcc 5.3](https://hub.docker.com/r/conanio/gcc53/)                     | x86_64  | Deprecated  |
-| [conanio/gcc54: gcc 5.4](https://hub.docker.com/r/conanio/gcc54/)                     | x86_64  | Deprecated  |
-| [conanio/gcc63: gcc 6.3](https://hub.docker.com/r/conanio/gcc63/)                     | x86_64  | Deprecated  |
-| [conanio/gcc64: gcc 6.4](https://hub.docker.com/r/conanio/gcc64/)                     | x86_64  | Deprecated  |
-| [conanio/gcc72: gcc 7.2](https://hub.docker.com/r/conanio/gcc72/)                     | x86_64  | Deprecated  |
+| Version                                                                               | Arch    | Status, Life cycle           |
+|---------------------------------------------------------------------------------------|---------|------------------------------|
+| [conanio/gcc46: gcc 4.6](https://hub.docker.com/r/conanio/gcc46/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc48: gcc 4.8](https://hub.docker.com/r/conanio/gcc48/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc48-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-x86/)             | x86     | :warning: Deprecated         |
+| [conanio/gcc49: gcc 4.9](https://hub.docker.com/r/conanio/gcc49/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc49-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-x86/)             | x86     | :warning: Deprecated         |
+| [conanio/gcc49-armv7: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7/)         | armv7   | :warning: Deprecated         |
+| [conanio/gcc49-armv7hf: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-armv7hf/)     | armv7hf | :warning: Deprecated         |
+| [conanio/gcc52: gcc 5.2](https://hub.docker.com/r/conanio/gcc52/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc53: gcc 5.3](https://hub.docker.com/r/conanio/gcc53/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc54: gcc 5.4](https://hub.docker.com/r/conanio/gcc54/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc63: gcc 6.3](https://hub.docker.com/r/conanio/gcc63/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc64: gcc 6.4](https://hub.docker.com/r/conanio/gcc64/)                     | x86_64  | :warning: Deprecated         |
+| [conanio/gcc72: gcc 7.2](https://hub.docker.com/r/conanio/gcc72/)                     | x86_64  | :warning: Deprecated         |
 
 
 GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are generic images by major version. If you are interested to understand the motivation, read this [issue](https://github.com/conan-io/conan/issues/1214).
 
-| Version                                                                                    | Arch    |  Status, Life cycle  |
-|--------------------------------------------------------------------------------------------|---------|----------------------|
-| [conanio/gcc5: gcc 5](https://hub.docker.com/r/conanio/gcc5/)                      | x86_64  |  Supported           |
-| [conanio/gcc5-x86: gcc 5](https://hub.docker.com/r/conanio/gcc5-x86/)              | x86     |  Deprecated          |
-| [conanio/gcc5-armv7: gcc 5](https://hub.docker.com/r/conanio/gcc5-armv7/)          | armv7   |  Deprecated          |
-| [conanio/gcc5-armv7hf: gcc 5](https://hub.docker.com/r/conanio/gcc5-armv7hf/)      | armv7hf |  Deprecated          |
-| [conanio/gcc6: gcc 6](https://hub.docker.com/r/conanio/gcc6/)                      | x86_64  |  Supported           |
-| [conanio/gcc6-x86: gcc 6](https://hub.docker.com/r/conanio/gcc6-x86/)              | x86     |  Deprecated          |
-| [conanio/gcc6-armv7: gcc 6](https://hub.docker.com/r/conanio/gcc6-armv7/)          | armv7   |  Deprecated          |
-| [conanio/gcc6-armv7hf: gcc 6](https://hub.docker.com/r/conanio/gcc6-armv7hf/)      | armv7hf |  Deprecated          |
-| [conanio/gcc7-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-x86/)              | x86     |  Deprecated          |
-| [conanio/gcc7: gcc 7](https://hub.docker.com/r/conanio/gcc7/)                      | x86_64  |  Supported           |
-| [conanio/gcc7-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-centos6/)      | x86_64  |  Deprecated          |
-| [conanio/gcc7-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-centos6-x86/) | x86  |  Deprecated          |
-| [conanio/gcc7-mingw: gcc 7](https://hub.docker.com/r/conanio/gcc7-mingw/)          | x86_64  |  Deprecated          |
-| [conanio/gcc7-armv7: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7/)          | armv7   |  Deprecated          |
-| [conanio/gcc7-armv7hf: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7hf/)      | armv7hf |  Deprecated          |
-| [conanio/gcc8-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-x86/)              | x86     |  Deprecated          |
-| [conanio/gcc8: gcc 8](https://hub.docker.com/r/conanio/gcc8/)                      | x86_64  |  Supported           |
-| [conanio/gcc8-armv7: gcc 8](https://hub.docker.com/r/conanio/gcc8-armv7/)          | armv7   |  Deprecated          |
-| [conanio/gcc8-armv7hf: gcc 8](https://hub.docker.com/r/conanio/gcc8-armv7hf/)      | armv7hf |  Deprecated          |
-| [conanio/gcc9-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-x86/)              | x86     |  Deprecated          |
-| [conanio/gcc9: gcc 9](https://hub.docker.com/r/conanio/gcc9/)                      | x86_64  |  Supported           |
-| [conanio/gcc9-armv7: gcc 9](https://hub.docker.com/r/conanio/gcc9-armv7/)          | armv7   |  Deprecated          |
-| [conanio/gcc9-armv7hf: gcc 9](https://hub.docker.com/r/conanio/gcc9-armv7hf/)      | armv7hf |  Deprecated          |
-| [conanio/gcc10: gcc 10](https://hub.docker.com/r/conanio/gcc10/)                   | x86_64  |  Supported           |
-| [conanio/gcc10-armv7: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7/)       | armv7   |  Deprecated          |
-| [conanio/gcc10-armv7hf: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7hf/)   | armv7hf |  Deprecated          |
-| [conanio/gcc11: gcc 11](https://hub.docker.com/r/conanio/gcc11/)                   | x86_64  |  Supported           |
+| Version                                                                               | Arch    | Status, Life cycle           |
+|---------------------------------------------------------------------------------------|---------|------------------------------|
+| [conanio/gcc5: gcc 5](https://hub.docker.com/r/conanio/gcc5/)                         | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc5-x86: gcc 5](https://hub.docker.com/r/conanio/gcc5-x86/)                 | x86     | :warning: Deprecated         |
+| [conanio/gcc5-armv7: gcc 5](https://hub.docker.com/r/conanio/gcc5-armv7/)             | armv7   | :warning: Deprecated         |
+| [conanio/gcc5-armv7hf: gcc 5](https://hub.docker.com/r/conanio/gcc5-armv7hf/)         | armv7hf | :warning: Deprecated         |
+| [conanio/gcc6: gcc 6](https://hub.docker.com/r/conanio/gcc6/)                         | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc6-x86: gcc 6](https://hub.docker.com/r/conanio/gcc6-x86/)                 | x86     | :warning: Deprecated         |
+| [conanio/gcc6-armv7: gcc 6](https://hub.docker.com/r/conanio/gcc6-armv7/)             | armv7   | :warning: Deprecated         |
+| [conanio/gcc6-armv7hf: gcc 6](https://hub.docker.com/r/conanio/gcc6-armv7hf/)         | armv7hf | :warning: Deprecated         |
+| [conanio/gcc7-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-x86/)                 | x86     | :warning: Deprecated         |
+| [conanio/gcc7: gcc 7](https://hub.docker.com/r/conanio/gcc7/)                         | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc7-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-centos6/)         | x86_64  | :warning: Deprecated         |
+| [conanio/gcc7-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-centos6-x86/) | x86     | :warning: Deprecated         |
+| [conanio/gcc7-mingw: gcc 7](https://hub.docker.com/r/conanio/gcc7-mingw/)             | x86_64  | :warning: Deprecated         |
+| [conanio/gcc7-armv7: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7/)             | armv7   | :warning: Deprecated         |
+| [conanio/gcc7-armv7hf: gcc 7](https://hub.docker.com/r/conanio/gcc7-armv7hf/)         | armv7hf | :warning: Deprecated         |
+| [conanio/gcc8-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-x86/)                 | x86     | :warning: Deprecated         |
+| [conanio/gcc8: gcc 8](https://hub.docker.com/r/conanio/gcc8/)                         | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc8-armv7: gcc 8](https://hub.docker.com/r/conanio/gcc8-armv7/)             | armv7   | :warning: Deprecated         |
+| [conanio/gcc8-armv7hf: gcc 8](https://hub.docker.com/r/conanio/gcc8-armv7hf/)         | armv7hf | :warning: Deprecated         |
+| [conanio/gcc9-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-x86/)                 | x86     | :warning: Deprecated         |
+| [conanio/gcc9: gcc 9](https://hub.docker.com/r/conanio/gcc9/)                         | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc9-armv7: gcc 9](https://hub.docker.com/r/conanio/gcc9-armv7/)             | armv7   | :warning: Deprecated         |
+| [conanio/gcc9-armv7hf: gcc 9](https://hub.docker.com/r/conanio/gcc9-armv7hf/)         | armv7hf | :warning: Deprecated         |
+| [conanio/gcc10: gcc 10](https://hub.docker.com/r/conanio/gcc10/)                      | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc10-armv7: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7/)          | armv7   | :warning: Deprecated         |
+| [conanio/gcc10-armv7hf: gcc 10](https://hub.docker.com/r/conanio/gcc10-armv7hf/)      | armv7hf | :warning: Deprecated         |
+| [conanio/gcc11: gcc 11](https://hub.docker.com/r/conanio/gcc11/)                      | x86_64  | :white_check_mark: Supported |
 
 
 
 #### Clang
 
-| Version                                                                                       | Arch   |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/clang38: clang 3.8](https://hub.docker.com/r/conanio/clang38/)             | x86_64 |  Deprecated |
-| - [conanio/clang39-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-x86/)     | x86    |  Deprecated |
-| - [conanio/clang39: clang 3.9](https://hub.docker.com/r/conanio/clang39/)             | x86_64 |  Supported  |
-| - [conanio/clang40-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-x86)      | x86    |  Deprecated |
-| - [conanio/clang40: clang 4.0](https://hub.docker.com/r/conanio/clang40/)             | x86_64 |  Supported  |
-| - [conanio/clang50-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-x86/)     | x86    |  Deprecated |
-| - [conanio/clang50: clang 5.0](https://hub.docker.com/r/conanio/clang50/)             | x86_64 |  Supported  |
-| - [conanio/clang60-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-x86/)     | x86    |  Deprecated |
-| - [conanio/clang60: clang 6.0](https://hub.docker.com/r/conanio/clang60/)             | x86_64 |  Supported  |
-| - [conanio/clang7-x86: clang 7](https://hub.docker.com/r/conanio/clang7-x86/)         | x86    |  Deprecated |
-| - [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                 | x86_64 |  Supported  |
-| - [conanio/clang8-x86: clang 8](https://hub.docker.com/r/conanio/clang8-x86/)         | x86    |  Deprecated |
-| - [conanio/clang8: clang 8](https://hub.docker.com/r/conanio/clang8/)                 | x86_64 |  Supported  |
-| - [conanio/clang9-x86: clang 9](https://hub.docker.com/r/conanio/clang9-x86/)         | x86    |  Deprecated |
-| - [conanio/clang9: clang 9](https://hub.docker.com/r/conanio/clang9/)                 | x86_64 |  Supported  |
-| - [conanio/clang10: clang 10](https://hub.docker.com/r/conanio/clang10/)              | x86_64 |  Supported  |
+| Version                                                                               | Arch    | Status, Life cycle           |
+|---------------------------------------------------------------------------------------|---------|------------------------------|
+| [conanio/clang38: clang 3.8](https://hub.docker.com/r/conanio/clang38/)               | x86_64  | :warning: Deprecated         |
+| [conanio/clang39-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-x86/)       | x86     | :warning: Deprecated         |
+| [conanio/clang39: clang 3.9](https://hub.docker.com/r/conanio/clang39/)               | x86_64  | :white_check_mark: Supported |
+| [conanio/clang40-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-x86)        | x86     | :warning: Deprecated         |
+| [conanio/clang40: clang 4.0](https://hub.docker.com/r/conanio/clang40/)               | x86_64  | :white_check_mark: Supported |
+| [conanio/clang50-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-x86/)       | x86     | :warning: Deprecated         |
+| [conanio/clang50: clang 5.0](https://hub.docker.com/r/conanio/clang50/)               | x86_64  | :white_check_mark: Supported |
+| [conanio/clang60-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-x86/)       | x86     | :warning: Deprecated         |
+| [conanio/clang60: clang 6.0](https://hub.docker.com/r/conanio/clang60/)               | x86_64  | :white_check_mark: Supported |
+| [conanio/clang7-x86: clang 7](https://hub.docker.com/r/conanio/clang7-x86/)           | x86     | :warning: Deprecated         |
+| [conanio/clang7: clang 7](https://hub.docker.com/r/conanio/clang7/)                   | x86_64  | :white_check_mark: Supported |
+| [conanio/clang8-x86: clang 8](https://hub.docker.com/r/conanio/clang8-x86/)           | x86     | :warning: Deprecated         |
+| [conanio/clang8: clang 8](https://hub.docker.com/r/conanio/clang8/)                   | x86_64  | :white_check_mark: Supported |
+| [conanio/clang9-x86: clang 9](https://hub.docker.com/r/conanio/clang9-x86/)           | x86     | :warning: Deprecated         |
+| [conanio/clang9: clang 9](https://hub.docker.com/r/conanio/clang9/)                   | x86_64  | :white_check_mark: Supported |
+| [conanio/clang10: clang 10](https://hub.docker.com/r/conanio/clang10/)                | x86_64  | :white_check_mark: Supported |
 
 
 #### Visual Studio
 
-We can not re-distribute Windows docker images, since Visual Studio Build Tools is licensed as supplemental license for Visual Studio.
-To have more information about: https://github.com/Microsoft/vs-dockerfiles#samples
+We cannot re-distribute Windows docker images, since Visual Studio Build Tools is licensed as supplemental license for Visual Studio.
+For more information, see https://github.com/Microsoft/vs-dockerfiles#samples.
 However, you can download the Docker recipe and build.
 
 
 #### Android
 
-| Version                                                                                       | Arch   |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/android-clang8: Android clang 8 x86_64](https://hub.docker.com/r/conanio/android-clang8/)             | x86_64 |  Deprecated  |
-| - [conanio/android-clang8-x86: Android clang 8 x86](https://hub.docker.com/r/conanio/android-clang8-x86/)     | x86    |  Deprecated |
-| - [conanio/android-clang8-armv7: Android clang 8 ARMv7](https://hub.docker.com/r/conanio/android-clang8-armv7/) | armv7    |  Deprecated  |
-| - [conanio/android-clang8-armv8: Android clang 8 ARMv8](https://hub.docker.com/r/conanio/android-clang8-armv8/) | armv8    |  Deprecated  |
+| Version                                                                                                       | Arch   | Status, Life cycle           |
+|---------------------------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/android-clang8: Android clang 8 x86_64](https://hub.docker.com/r/conanio/android-clang8/)            | x86_64 | :warning: Deprecated         |
+| [conanio/android-clang8-x86: Android clang 8 x86](https://hub.docker.com/r/conanio/android-clang8-x86/)       | x86    | :warning: Deprecated         |
+| [conanio/android-clang8-armv7: Android clang 8 ARMv7](https://hub.docker.com/r/conanio/android-clang8-armv7/) | armv7  | :warning: Deprecated         |
+| [conanio/android-clang8-armv8: Android clang 8 ARMv8](https://hub.docker.com/r/conanio/android-clang8-armv8/) | armv8  | :warning: Deprecated         |
 
 
 #### Conan Server
 
 Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host.
 
-| Version                                                                                       | Arch   |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)             | ANY |  Supported |
+| Version                                                                                       | Arch   | Status, Life cycle           |
+|-----------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)                        | ANY    | :white_check_mark: Supported |
 
 #### Conan Client
 
 Conan Docker Tools provides an image version with only Conan client installed, very useful for the cases it is necessary to run a command without touching the host.
 
-| Version                                                                                       | Arch   |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------|--------|------------|
-| - [conanio/conan](https://hub.docker.com/r/conanio/conan/)             | ANY |  Supported |
+| Version                                                                                       | Arch   | Status, Life cycle           |
+|-----------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/conan](https://hub.docker.com/r/conanio/conan/)                                      | ANY    | :white_check_mark: Supported |
 
 
 #### Conan Installer
@@ -146,66 +146,63 @@ Conan Docker Tools provides an image version with only Conan client installed, v
 
 **conanio/gcc7-centos6-x86** is a special image version based on CentOS 6 i386, GCC 7 and **glibc 2.12** (very old glibc version). This is intended to build executables that run almost on any Linux because **glibc** guarantees backward compatibility. You can use this image to build your Conan build tools packages (`build_requires`). This image is **ONLY** able to build **x86** binaries.
 
-** WARNING ** CentOS 6 reached [EOL](https://wiki.centos.org/About/Product) and won't be longer maintained. Thus, both `conanio/gcc7-centos6` and `conanio/gcc7-centos6-x86` are still available for download, but no new version will be released.
+> :warning: **Warning:**
+CentOS 6 reached [EOL](https://wiki.centos.org/About/Product) and won't be longer maintained. Thus, both `conanio/gcc7-centos6` and `conanio/gcc7-centos6-x86` are still available for download, but no new version will be released.
 
 Use the images to test your C++ project in Travis CI
 ======================================================
 
 These Docker images can be used to build your project using the Travis CI CI service, even if you are not using Conan.
-It's always recommended to build and test your C/C++ projects in a Docker image running in travis:
+It's always recommended to build and test your C/C++ projects in a Docker image running in Travis:
 
 - Travis CI images are old, so installing a newer version of gcc and the needed tools can be hard. Check [this thread](https://github.com/travis-ci/travis-ci/issues/6300).
-- The generated binaries will use the old **libc/libstdc++*| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Deprecated |* installed in the system, so ABI incompatibilities
-      can occur if you use these packages in more modern di| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Deprecated |stributions.
-| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Deprecated |
-To setup your project, copy the contents of the folder **ex| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Supported |ample_project_test** to your project.
-You need to modify:| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Deprecated |
-- ``.travis.yml`` file to enable or disable more ``GCC`` or| [conanio/gcc5-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Deprecated | ``CLang`` versions add more entries to the matrix using DOCKER_IMAGE
-- ``.travis/run_project_build.sh`` With the lines that you need to build or test your project
+- The generated binaries will use the old **libc/libstdc++** installed in the system, so ABI incompatibilities can occur if you use these packages in more modern distributions.
+
+To setup your project, copy the contents of the folder **example_project_test** to your project.
+You need to modify:
+
+- ``.travis.yml``: enable or disable additional ``GCC`` or ``Clang`` versions by adding more entries to the matrix using DOCKER_IMAGE
+- ``.travis/run_project_build.sh``: adapt to build or test your project
 
 **.travis.yml**
 
-```
-    os: linux
-    services:
-       - docker
-    sudo: required
-    language: python
-    env:
-      matrix:
-        - DOCKER_IMAGE=conanio/gcc8 # GCC 8.x
-        - DOCKER_IMAGE=conanio/clang7 # Clang 7
+```yaml
+os: linux
+services:
+  - docker
+sudo: required
+language: python
+env:
+  matrix:
+    - DOCKER_IMAGE=conanio/gcc8 # GCC 8.x
+    - DOCKER_IMAGE=conanio/clang7 # Clang 7
 
-    matrix:
-       include:
-           - os: osx
-             osx_image: xcode11.3 # Apple-Clang 11.0
-             language: generic
-             env:
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode11.3 # Apple-Clang 11.0
+      language: generic
+      env:
 
-    before_install:
-      - ./.travis/before_install.sh
+before_install:
+  - ./.travis/before_install.sh
 
-    install:
-      - ./.travis/install.sh
+install:
+  - ./.travis/install.sh
 
-    script:
-      - ./.travis/run.sh
-
-
+script:
+  - ./.travis/run.sh
 ```
 
 **.travis/run_project_build.sh**. Change it according your project build needed commands:
 
-```
-    #!/bin/bash
+```bash
+#!/bin/bash
 
-    rm -rf build && mkdir -p build && cd build
-    conan install ../ --build=missing
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
-    cmake --build .
-
+rm -rf build && mkdir -p build && cd build
+conan install ../ --build=missing
+cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
 ```
 
 #### Jenkins Slave
@@ -214,51 +211,51 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 
 #### GCC
 
-| Version                                                                                       | Arch    |  Status, Life cycle  |
-|-----------------------------------------------------------------------------------------------|---------|------------|
-| [conanio/gcc46-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)        | x86_64  |  Deprecated |
-| [conanio/gcc46-jnlp-slave-x86: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc48-jnlp-slave: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave/)        | x86_64  |  Deprecated |
-| [conanio/gcc48-jnlp-slave-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc49-jnlp-slave: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave/)        | x86_64  |  Deprecated |
-| [conanio/gcc49-jnlp-slave-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc5-jnlp-slave: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc5-jnlp-slave-x86: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc6-jnlp-slave: gcc 6](https://hub.docker.com/r/conanio/gcc6-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc6-jnlp-slave-x86: gcc 6](https://hub.docker.com/r/conanio/gcc6-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc7-jnlp-slave: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc7-jnlp-slave-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc8-jnlp-slave: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc8-jnlp-slave-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc9-jnlp-slave: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc9-jnlp-slave-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave-x86/)  | x86  |  Deprecated |
-| [conanio/gcc10-jnlp-slave: gcc 10](https://hub.docker.com/r/conanio/gcc10-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc11-jnlp-slave: gcc 11](https://hub.docker.com/r/conanio/gcc11-jnlp-slave/)        | x86_64  |  Supported |
-| [conanio/gcc7-jnlp-slave-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6/)        | x86_64  |  Supported |
-| [conanio/gcc7-jnlp-slave-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6-x86/)  | x86  |  Deprecated |
+| Version                                                                                                   | Arch   | Status, Life cycle           |
+|-----------------------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/gcc46-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
+| [conanio/gcc46-jnlp-slave-x86: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave-x86/)           | x86    | :warning: Deprecated         |
+| [conanio/gcc48-jnlp-slave: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
+| [conanio/gcc48-jnlp-slave-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave-x86/)           | x86    | :warning: Deprecated         |
+| [conanio/gcc49-jnlp-slave: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
+| [conanio/gcc49-jnlp-slave-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave-x86/)           | x86    | :warning: Deprecated         |
+| [conanio/gcc5-jnlp-slave: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc5-jnlp-slave-x86: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc6-jnlp-slave: gcc 6](https://hub.docker.com/r/conanio/gcc6-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc6-jnlp-slave-x86: gcc 6](https://hub.docker.com/r/conanio/gcc6-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc7-jnlp-slave: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc7-jnlp-slave-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc8-jnlp-slave: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc8-jnlp-slave-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc9-jnlp-slave: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc9-jnlp-slave-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc10-jnlp-slave: gcc 10](https://hub.docker.com/r/conanio/gcc10-jnlp-slave/)                    | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc11-jnlp-slave: gcc 11](https://hub.docker.com/r/conanio/gcc11-jnlp-slave/)                    | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc7-jnlp-slave-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6/)       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc7-jnlp-slave-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6-x86/) | x86  | :warning: Deprecated         |
 
 
 #### Clang
 
-| Version                                                                                       | Arch   |  Status, Life cycle   |
-|-----------------------------------------------------------------------------------------------|--------|-------------|
-| - [conanio/clang38-jnlp-slave: clang 3.8](https://hub.docker.com/r/conanio/clang38-jnlp-slave/)             | x86_64 |  Deprecated |
-| - [conanio/clang39-jnlp-slave-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave-x86/)     | x86    |  Deprecated |
-| - [conanio/clang39-jnlp-slave: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave/)             | x86_64 |  Deprecated |
-| - [conanio/clang40-jnlp-slave-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave-x86)      | x86    |  Deprecated |
-| - [conanio/clang40-jnlp-slave: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave/)             | x86_64 |  Supported  |
-| - [conanio/clang50-jnlp-slave-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave-x86/)     | x86    |  Deprecated |
-| - [conanio/clang50-jnlp-slave: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave/)             | x86_64 |  Supported  |
-| - [conanio/clang60-jnlp-slave-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave-x86/)     | x86    |  Deprecated |
-| - [conanio/clang60-jnlp-slave: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave/)             | x86_64 |  Supported  |
-| - [conanio/clang7-jnlp-slave-x86: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave-x86/)         | x86    |  Deprecated |
-| - [conanio/clang7-jnlp-slave: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave/)                 | x86_64 |  Supported  |
-| - [conanio/clang8-jnlp-slave-x86: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave-x86/)         | x86    |  Deprecated |
-| - [conanio/clang8-jnlp-slave: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave/)                 | x86_64 |  Supported  |
-| - [conanio/clang8-jnlp-slave-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave-x86/)         | x86    |  Deprecated |
-| - [conanio/clang8-jnlp-slave: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave/)                 | x86_64 |  Supported  |
-| - [conanio/clang8-jnlp-slave: clang 10](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 |  Supported  |
-| - [conanio/clang8-jnlp-slave: clang 11](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 |  Supported  |
+| Version                                                                                                   | Arch   | Status, Life cycle           |
+|-----------------------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/clang38-jnlp-slave: clang 3.8](https://hub.docker.com/r/conanio/clang38-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
+| [conanio/clang39-jnlp-slave-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave-x86/)     | x86    | :warning: Deprecated         |
+| [conanio/clang39-jnlp-slave: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
+| [conanio/clang40-jnlp-slave-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave-x86)      | x86    | :warning: Deprecated         |
+| [conanio/clang40-jnlp-slave: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave/)             | x86_64 | :white_check_mark: Supported |
+| [conanio/clang50-jnlp-slave-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave-x86/)     | x86    | :warning: Deprecated         |
+| [conanio/clang50-jnlp-slave: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave/)             | x86_64 | :white_check_mark: Supported |
+| [conanio/clang60-jnlp-slave-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave-x86/)     | x86    | :warning: Deprecated         |
+| [conanio/clang60-jnlp-slave: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave/)             | x86_64 | :white_check_mark: Supported |
+| [conanio/clang7-jnlp-slave-x86: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
+| [conanio/clang7-jnlp-slave: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave/)                 | x86_64 | :white_check_mark: Supported |
+| [conanio/clang8-jnlp-slave-x86: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
+| [conanio/clang8-jnlp-slave: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave/)                 | x86_64 | :white_check_mark: Supported |
+| [conanio/clang8-jnlp-slave-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
+| [conanio/clang8-jnlp-slave: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave/)                 | x86_64 | :white_check_mark: Supported |
+| [conanio/clang8-jnlp-slave: clang 10](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 | :white_check_mark: Supported |
+| [conanio/clang8-jnlp-slave: clang 11](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 | :white_check_mark: Supported |
 
 
 
@@ -267,7 +264,7 @@ Use the images locally
 
 You can also use the images locally to build or test packages, this is an example command:
 
-```
+```shell
 docker run -v/tmp/.conan:/home/conan/.conan conanio/gcc63 bash -c "conan install lz4/1.8.3@bincrafters/stable --build missing"
 ```
 
@@ -276,7 +273,7 @@ You can change the directory or execute any other command that works for your ne
 
 If you are familiarized with Docker compose, also it's possible to start a new container by:
 
-```
+```shell
 docker-compose run -v/tmp/.conan:/home/conan/.conan gcc63 bash -c "conan install lz4/1.8.3@bincrafters/stable --build missing"
 ```
 
@@ -285,9 +282,9 @@ Build, Test and Deploy
 ======================
 
 ## Introduce
-The images are already built and uploaded to **"conanio(https://hub.docker.com/r/conanio/)"** dockerhub account, If you want to build your own images you can do it by:
+The images are already built and uploaded to the [conanio](https://hub.docker.com/r/conanio/) Docker Hub account. If you want to build your own images you can do it by:
 
-```
+```shell
 $ python build.py
 ```
 
@@ -296,17 +293,17 @@ The script *build.py* will build, test and deploy your Docker image. You can con
 Also, you can build only a version:
 
 E.g Build and test only a image with Conan and gcc-6
-```
+```shell
 $ CONAN_GCC_VERSIONS="6" python build.py
 ```
 
 E.g Build and test only the images with Conan and clang-8, clang-9
-```
+```shell
 $ CONAN_CLANG_VERSIONS="8,9" python build.py
 ```
 
 E.g Build and test only the images with Conan and Visual Studio 14.0 (It **ONLY** works on Windows).
-```
+```shell
 $ CONAN_VISUAL_VERSIONS="14.0" python build.py
 ```
 
@@ -342,7 +339,7 @@ The login uses ``DOCKER_LOGIN_USERNAME`` and ``DOCKER_PASSWORD`` to authenticate
 
 
 E.g Upload Docker images to Docker hub, after build and test:
-```
+```shell
 $ DOCKER_USERNAME="conanio" DOCKER_PASSWORD="conan" DOCKER_UPLOAD="TRUE" python build.py
 ```
 
