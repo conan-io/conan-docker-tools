@@ -29,10 +29,18 @@ RUN apt-get -qq update \
        curl \
        ca-certificates \
        git \
-       python3 \
-       python3-pip \
-    && pip3 install ninja cmake \
-    && ln -s /usr/bin/python3 /usr/bin/python \
+       unzip \
+    && wget -q --no-check-certificate https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip \
+    && unzip ninja-linux.zip \
+    && mv ninja /usr/bin/ninja \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.7-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.15-Linux-x86_64.tar.gz \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.15/Help \
+       --exclude=share/vim \
+       --exclude=share/vim \
+    && cp -fR cmake-3.15-Linux-x86_64/* /usr \
     && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
