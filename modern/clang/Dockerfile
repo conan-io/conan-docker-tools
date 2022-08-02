@@ -16,6 +16,10 @@ LABEL maintainer="Conan.io <info@conan.io>"
 #        We could add a patch with target_link_directories, but I prefered copying libc++abi to /usr/lib
 #
 # NOTE:  Clang 12 requires newer versions of CMake and Ninja, Xenial does not support those required version, that's why pip.
+#
+# NOTE: (2022-07-29) We needed to revert libunwind usage due compatibility on Linux. We will keep libgcc_s.
+#                    No Linux distro adopted libunwind instead of libgcc_s yet and it may cause segfault, or missing libraries on runtime.
+#
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \
@@ -26,9 +30,18 @@ RUN apt-get -qq update \
        ca-certificates \
        git \
        python3 \
-       python3-pip \
-    && pip3 install ninja cmake \
-    && ln -s /usr/bin/python3 /usr/bin/python \
+       unzip \
+    && wget -q --no-check-certificate https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip \
+    && unzip ninja-linux.zip \
+    && mv ninja /usr/bin/ninja \
+    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.7-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-3.15.7-Linux-x86_64.tar.gz \
+       --exclude=bin/cmake-gui \
+       --exclude=doc/cmake \
+       --exclude=share/cmake-3.15/Help \
+       --exclude=share/vim \
+       --exclude=share/vim \
+    && cp -fR cmake-3.15.7-Linux-x86_64/* /usr \
     && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
@@ -77,16 +90,16 @@ RUN apt-get -qq update \
        -DLIBUNWIND_ENABLE_ASSERTIONS=OFF \
        -DLIBUNWIND_ENABLE_PEDANTIC=OFF \
        -DLIBUNWIND_ENABLE_SHARED=ON \
-       -DLIBUNWIND_ENABLE_STATIC=ON \
-       -DLIBUNWIND_USE_COMPILER_RT=ON \
+       -DLIBUNWIND_ENABLE_STATIC=OFF \
+       -DLIBUNWIND_USE_COMPILER_RT=OFF \
        -DCLANG_INCLUDE_TESTS=OFF \
        -DCLANG_ENABLE_ARCMT=OFF \
        -DCLANG_ENABLE_STATIC_ANALYZER=OFF \
        -DCLANG_INCLUDE_DOCS=OFF \
        -DCLANG_BUILD_EXAMPLES=OFF \
        -DCLANG_ENABLE_BOOTSTRAP=OFF \
-       -DCLANG_DEFAULT_RTLIB=compiler-rt \
-       -DCLANG_DEFAULT_UNWINDLIB=libunwind \
+       -DCLANG_DEFAULT_RTLIB=libgcc \
+       -DCLANG_DEFAULT_UNWINDLIB=libgcc \
        -DLIBCXX_INCLUDE_TESTS=OFF \
        -DLIBCXX_ENABLE_SHARED=YES \
        -DLIBCXX_ENABLE_STATIC=OFF \
@@ -96,7 +109,7 @@ RUN apt-get -qq update \
        -DLIBCXX_BUILD_32_BITS=OFF \
        -DLIBCXX_CXX_ABI=libcxxabi \
        -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON \
-       -DLIBCXX_USE_COMPILER_RT=ON \
+       -DLIBCXX_USE_COMPILER_RT=OFF \
        -DLIBCXX_DEBUG_BUILD=OFF \
        -DLIBCXX_CXX_ABI=libcxxabi \
        -DLIBCXX_CXX_ABI_INCLUDE_PATHS=../libcxxabi/include/ \
@@ -106,11 +119,11 @@ RUN apt-get -qq update \
        -DLIBCXXABI_INCLUDE_TESTS=OFF \
        -DLIBCXXABI_ENABLE_SHARED=ON \
        -DLIBCXXABI_ENABLE_STATIC=ON \
-       -DLIBCXXABI_USE_COMPILER_RT=ON \
-       -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
-       -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON \
-       -DLIBCXXABI_STATICALLY_LINK_UNWINDER_IN_SHARED_LIBRARY=ON \
-       -DLIBCXXABI_LIBUNWIND_INCLUDES_INTERNAL=ON \
+       -DLIBCXXABI_USE_COMPILER_RT=OFF \
+       -DLIBCXXABI_USE_LLVM_UNWINDER=OFF \
+       -DLIBCXXABI_ENABLE_STATIC_UNWINDER=OFF \
+       -DLIBCXXABI_STATICALLY_LINK_UNWINDER_IN_SHARED_LIBRARY=OFF \
+       -DLIBCXXABI_LIBUNWIND_INCLUDES_INTERNAL=OFF \
        -DCOMPILER_RT_INCLUDE_TESTS=OFF \
        -DCOMPILER_RT_USE_LIBCXX=ON \
     && ninja unwind \
