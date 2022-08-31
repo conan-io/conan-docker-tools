@@ -32,11 +32,18 @@ RUN apt-get -qq update \
 RUN wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
     && tar Jxf gcc-${GCC_VERSION}.tar.xz
 
+# INFO: GCC build reference: https://gcc.gnu.org/install/configure.html
+# Disabling bootstrap save us around 1h
+# Disable multilib as Conan Center no longer supports x86
+# Enable Fortran as lapack package is basically broken
+# No nls (native language support) because we only use English in Conan Center
+
 RUN cd gcc-${GCC_VERSION} \
-    && ./configure --build=x86_64-linux-gnu \
+    && ./configure \
+                   --build=x86_64-linux-gnu \
                    --disable-bootstrap \
                    --disable-multilib \
-                   --disable-nsl \
+                   --disable-nls \
                    --enable-languages=c,c++,fortran \
                    --disable-werror \
                    --without-isl \
