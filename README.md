@@ -115,12 +115,18 @@ However, you can download the Docker recipe and build.
 
 #### Android
 
-| Version                                                                                                       | Arch   | Status, Life cycle           |
-|---------------------------------------------------------------------------------------------------------------|--------|------------------------------|
-| [conanio/android-clang8: Android clang 8 x86_64](https://hub.docker.com/r/conanio/android-clang8/)            | x86_64 | :warning: Deprecated         |
-| [conanio/android-clang8-x86: Android clang 8 x86](https://hub.docker.com/r/conanio/android-clang8-x86/)       | x86    | :warning: Deprecated         |
-| [conanio/android-clang8-armv7: Android clang 8 ARMv7](https://hub.docker.com/r/conanio/android-clang8-armv7/) | armv7  | :warning: Deprecated         |
-| [conanio/android-clang8-armv8: Android clang 8 ARMv8](https://hub.docker.com/r/conanio/android-clang8-armv8/) | armv8  | :warning: Deprecated         |
+| Version                                                                                                          | Arch   | Status, Life cycle           |
+|------------------------------------------------------------------------------------------------------------------|--------|------------------------------|
+| [conanio/android-clang8: Android clang 8 x86_64](https://hub.docker.com/r/conanio/android-clang8/)               | x86_64 | :warning: Deprecated         |
+| [conanio/android-clang8-x86: Android clang 8 x86](https://hub.docker.com/r/conanio/android-clang8-x86/)          | x86    | :warning: Deprecated         |
+| [conanio/android-clang8-armv7: Android clang 8 ARMv7](https://hub.docker.com/r/conanio/android-clang8-armv7/)    | armv7  | :warning: Deprecated         |
+| [conanio/android-clang8-armv8: Android clang 8 ARMv8](https://hub.docker.com/r/conanio/android-clang8-armv8/)    | armv8  | :warning: Deprecated         |
+| [conanio/android-clang14: Android clang 14 x86_64](https://hub.docker.com/r/conanio/android-clang14/)            | x86_64 | :warning: Deprecated         |
+| [conanio/android-clang14-x86: Android clang 14 x86](https://hub.docker.com/r/conanio/android-clang14-x86/)       | x86    | :warning: Deprecated         |
+| [conanio/android-clang14-armv7: Android clang 14 ARMv7](https://hub.docker.com/r/conanio/android-clang14-armv7/) | armv7  | :warning: Deprecated         |
+| [conanio/android-clang14-armv8: Android clang 14 ARMv8](https://hub.docker.com/r/conanio/android-clang14-armv8/) | armv8  | :warning: Deprecated         |
+
+To learn how to build using Android docker images, please, visit [official docs](https://docs.conan.io/en/latest/integrations/cross_platform/android.html#using-android-ndk-package-tool-require).
 
 
 #### Conan Server

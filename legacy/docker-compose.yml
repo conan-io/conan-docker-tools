@@ -636,6 +636,41 @@ services:
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
         image: "${DOCKER_USERNAME}/android-clang8-armv8:${DOCKER_BUILD_TAG}"
         container_name: android-clang8-armv8
+    android-clang14:
+        build:
+            context: android-clang_14
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/android-clang14:${DOCKER_BUILD_TAG}"
+        container_name: android-clang14
+        tty: true
+    android-clang14-x86:
+        build:
+            context: android-clang_14-x86
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/android-clang14-x86:${DOCKER_BUILD_TAG}"
+        container_name: android-clang14-x86
+        tty: true
+    android-clang14-armv7:
+        build:
+            context: android-clang_14-armv7
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/android-clang14-armv7:${DOCKER_BUILD_TAG}"
+        container_name: android-clang14-armv7
+        tty: true
+    android-clang14-armv8:
+        build:
+            context: android-clang_14-armv8
+            dockerfile: Dockerfile
+            args:
+                CONAN_VERSION: ${DOCKER_BUILD_TAG}
+        image: "${DOCKER_USERNAME}/android-clang14-armv8:${DOCKER_BUILD_TAG}"
+        container_name: android-clang14-armv8
     gcc46-jnlp-slave:
         build:
             context: jenkins-jnlp-slave
