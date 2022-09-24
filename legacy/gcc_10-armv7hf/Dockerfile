@@ -1,19 +1,8 @@
 FROM conanio/gcc10
 
-LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
+LABEL maintainer="Conan.io <info@conan.io>"
 
 ARG CONAN_VERSION
-
-ENV CC=arm-linux-gnueabihf-gcc-10 \
-    CXX=arm-linux-gnueabihf-g++-10 \
-    CMAKE_C_COMPILER=arm-linux-gnueabihf-gcc-10 \
-    CMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++-10 \
-    STRIP=arm-linux-gnueabihf-strip \
-    RANLIB=arm-linux-gnueabihf-ranlib \
-    AS=arm-linux-gnueabihf-as \
-    AR=arm-linux-gnueabihf-ar \
-    LD=arm-linux-gnueabihf-ld \
-    FC=arm-linux-gnueabihf-gfortran-10
 
 RUN sudo dpkg --add-architecture armhf \
     && sudo sed -i 's/deb\s/deb \[arch=amd64,i386\] /' /etc/apt/sources.list \
@@ -27,4 +16,17 @@ RUN sudo dpkg --add-architecture armhf \
     && sudo rm -rf /var/lib/apt/lists/* \
     && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools --upgrade \
     && conan profile new default --detect \
-    && conan profile update settings.arch=armv7hf default
+    && conan profile update settings.compiler.libcxx=libstdc++11 default \
+    && conan profile new armv7hf --detect \
+    && conan profile update settings.arch=armv7hf armv7hf \
+    && conan profile update settings.compiler.libcxx=libstdc++11 armv7hf \
+    && conan profile update env.CC=/usr/bin/arm-linux-gnueabihf-gcc-10 armv7hf \
+    && conan profile update env.CXX=/usr/bin/arm-linux-gnueabihf-g++-10 armv7hf \
+    && conan profile update env.CMAKE_C_COMPILER=/usr/bin/arm-linux-gnueabihf-gcc-10 armv7hf \
+    && conan profile update env.CMAKE_CXX_COMPILER=/usr/bin/arm-linux-gnueabihf-g++-10 armv7hf \
+    && conan profile update env.STRIP=/usr/bin/arm-linux-gnueabihf-strip armv7hf \
+    && conan profile update env.AS=/usr/bin/arm-linux-gnueabihf-as armv7hf \
+    && conan profile update env.AR=/usr/bin/arm-linux-gnueabihf-ar armv7hf \
+    && conan profile update env.LD=/usr/bin/arm-linux-gnueabihf-ld armv7hf \
+    && conan profile update env.FC=/usr/bin/arm-linux-gnueabihf-gfortran-10 armv7hf \
+    && conan profile update env.GCOV=/usr/bin/arm-linux-gnueabihf-gcov-10 armv7hf
