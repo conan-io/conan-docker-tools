@@ -31,6 +31,7 @@ RUN apt-get -qq update \
        git \
        python3 \
        unzip \
+       gnupg \
     && wget -q --no-check-certificate https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip \
     && unzip ninja-linux.zip \
     && mv ninja /usr/bin/ninja \
