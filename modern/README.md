@@ -10,7 +10,7 @@ The images listed below are intended for **generating open-source library packag
 
 ## New Docker Strategy (June 2021)
 
-> **TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same system library versions (smae `glibc` version).
+> **TL;DR** New Docker images will use Ubuntu 18.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same system library versions (smae `glibc` version).
 
 
 After many updates, new compiler releases, instability and incompatibility problems, we decided to clean the house, move a step forward with Conan Docker Tools. So far, we usually follow the same recipe, when a compiler version is released, we also release a new docker image, but we have two main problems:
