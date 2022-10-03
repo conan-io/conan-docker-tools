@@ -121,10 +121,6 @@ However, you can download the Docker recipe and build.
 | [conanio/android-clang8-x86: Android clang 8 x86](https://hub.docker.com/r/conanio/android-clang8-x86/)          | x86    | :warning: Deprecated         |
 | [conanio/android-clang8-armv7: Android clang 8 ARMv7](https://hub.docker.com/r/conanio/android-clang8-armv7/)    | armv7  | :warning: Deprecated         |
 | [conanio/android-clang8-armv8: Android clang 8 ARMv8](https://hub.docker.com/r/conanio/android-clang8-armv8/)    | armv8  | :warning: Deprecated         |
-| [conanio/android-clang14: Android clang 14 x86_64](https://hub.docker.com/r/conanio/android-clang14/)            | x86_64 | :warning: Deprecated         |
-| [conanio/android-clang14-x86: Android clang 14 x86](https://hub.docker.com/r/conanio/android-clang14-x86/)       | x86    | :warning: Deprecated         |
-| [conanio/android-clang14-armv7: Android clang 14 ARMv7](https://hub.docker.com/r/conanio/android-clang14-armv7/) | armv7  | :warning: Deprecated         |
-| [conanio/android-clang14-armv8: Android clang 14 ARMv8](https://hub.docker.com/r/conanio/android-clang14-armv8/) | armv8  | :warning: Deprecated         |
 
 To learn how to build using Android docker images, please, visit [official docs](https://docs.conan.io/en/latest/integrations/cross_platform/android.html#using-android-ndk-package-tool-require).
 
@@ -220,7 +216,6 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 | Version                                                                                                   | Arch   | Status, Life cycle           |
 |-----------------------------------------------------------------------------------------------------------|--------|------------------------------|
 | [conanio/gcc46-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
-| [conanio/gcc46-jnlp-slave-x86: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave-x86/)           | x86    | :warning: Deprecated         |
 | [conanio/gcc48-jnlp-slave: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
 | [conanio/gcc48-jnlp-slave-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave-x86/)           | x86    | :warning: Deprecated         |
 | [conanio/gcc49-jnlp-slave: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
@@ -245,7 +240,6 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 
 | Version                                                                                                   | Arch   | Status, Life cycle           |
 |-----------------------------------------------------------------------------------------------------------|--------|------------------------------|
-| [conanio/clang38-jnlp-slave: clang 3.8](https://hub.docker.com/r/conanio/clang38-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
 | [conanio/clang39-jnlp-slave-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave-x86/)     | x86    | :warning: Deprecated         |
 | [conanio/clang39-jnlp-slave: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
 | [conanio/clang40-jnlp-slave-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave-x86)      | x86    | :warning: Deprecated         |
