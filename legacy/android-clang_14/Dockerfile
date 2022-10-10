@@ -7,7 +7,7 @@ ARG ANDROID_NDK_API_LEVEL=21
 ARG CONAN_VERSION=1.52.0
 
 RUN pip install conan==${CONAN_VERSION} \
-    && conan profile new default --dosetect \
+    && conan profile new default --detect \
     && conan profile update settings.compiler.libcxx=libstdc++11 default \
     && conan profile new android --detect \
     && conan profile update settings.os=Android android \
