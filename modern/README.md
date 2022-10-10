@@ -85,6 +85,7 @@ Tags will use the Conan version available in those images.
 | [conanio/gcc9-ubuntu16.04: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
 | [conanio/gcc10-ubuntu16.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
 | [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc12-ubuntu16.04: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
 
 
 ### Clang
@@ -124,6 +125,7 @@ These images are mainly focused for Conan Center CI.
 | [conanio/gcc9-ubuntu16.04-jenkins: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
 | [conanio/gcc10-ubuntu16.04-jenkins: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04-jenkins/)  | x86_64  | :white_check_mark: Supported |
 | [conanio/gcc11-ubuntu16.04-jenkins: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04-jenkins/)  | x86_64  | :white_check_mark: Supported |
+| [conanio/gcc12-ubuntu16.04-jenkins: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu16.04-jenkins/)  | x86_64  | :white_check_mark: Supported |
 
 
 #### Clang
@@ -152,6 +154,7 @@ Here is a list of installed libraries and their versions:
 | conanio/gcc9-ubuntu16.04     | 2.23     | 3.4.28      | ---      |
 | conanio/gcc10-ubuntu16.04    | 2.23     | 3.4.28      | ---      |
 | conanio/gcc11-ubuntu16.04    | 2.23     | 3.4.29      | ---      |
+| conanio/gcc12-ubuntu16.04    | 2.23     | 3.4.29      | ---      |
 | conanio/clang10-ubuntu16.04  | 2.23     | 3.4.28      | 10000    |
 | conanio/clang11-ubuntu16.04  | 2.23     | 3.4.28      | 11000    |
 | conanio/clang12-ubuntu16.04  | 2.23     | 3.4.28      | 12000    |
