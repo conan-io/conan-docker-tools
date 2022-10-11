@@ -9,6 +9,16 @@ Dockerfiles for Conan Center Continuous Integration system.
 > :warning: **Warning:**
 The images listed below are intended for **generating open-source library packages** and we CAN NOT guarantee any kind of stability. We strongly recommend using your own generated images for production environments taking the dockerfiles in this repository as a reference.
 
+## Ubuntu 18.04 Bionic as default distro (October 2022)
+
+Since Conan 1.53.0, we have adopted Ubuntu 18.04 as base distribution for all modern images.
+Some important packages started to require new glibc versions or newer system packages which are not available on Ubuntu 16.
+For Conan Center there is no impact, all tooling packages (CMake, Ninja, autoconf, ...) are built only with GCC 5, from the legacy folder,
+which keeps Ubuntu 16.
+It should affect only packages built with GCC >=10 and Clang >=11 on Linux.
+In case of questions, please, open an issue.
+
+
 ## New Docker Strategy (June 2021)
 
 > **TL;DR** New Docker images will use Ubuntu 18.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same system library versions (smae `glibc` version).
@@ -37,15 +47,6 @@ Also, take into account that we won't activaley remove them from Docker hub.
 
 Now the future of ConanCenter binaries is defined, it will take time to design
 the transition and move everything forward, don't expect it to change soon.
-
-## Ubuntu 18.04 Bionic as default distro (October 2022)
-
-Since Conan 1.53.0, we have adopted Ubuntu 18.04 as base distribution for all modern images.
-Some important packages started to require new glibc versions or newer system packages which are not available on Ubuntu 16.
-For Conan Center there is no impact, all tooling packages (CMake, Ninja, autoconf, ...) are built only with GCC 5, from the legacy folder,
-which keeps Ubuntu 16.
-It should affect only packages built with GCC >=10 and Clang >=11 on Linux.
-In case of questions, please, open an issue.
 
 ## `stdlibc++` and `libc++` versions
 
