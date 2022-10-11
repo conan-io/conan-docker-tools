@@ -97,7 +97,7 @@ Tags will use the Conan version available in those images.
 | [conanio/gcc10-ubuntu16.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)  | x86_64 | :warning: Deprecated         |
 | [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)  | x86_64 | :warning: Deprecated         |
 | [conanio/gcc12-ubuntu16.04: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu16.04/)  | x86_64 | :warning: Deprecated         |
-|-------------------------------------------------------------------------------------------|--------|------------------------------|
+|                                                                                           |        |                              |
 | [conanio/gcc5-ubuntu18.04: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu18.04/)     | x86_64 | :white_check_mark: Supported |
 | [conanio/gcc6-ubuntu18.04: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu18.04/)     | x86_64 | :white_check_mark: Supported |
 | [conanio/gcc7-ubuntu18.04: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu18.04/)     | x86_64 | :white_check_mark: Supported |
@@ -117,7 +117,7 @@ Tags will use the Conan version available in those images.
 | [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
 | [conanio/clang13-ubuntu16.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
 | [conanio/clang14-ubuntu16.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
-|------------------------------------------------------------------------------------------------|--------|------------------------------|
+|                                                                                                |        |                              |
 | [conanio/clang10-ubuntu18.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu18.04/) | x86_64 | :white_check_mark: Supported |
 | [conanio/clang11-ubuntu18.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu18.04/) | x86_64 | :white_check_mark: Supported |
 | [conanio/clang12-ubuntu18.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu18.04/) | x86_64 | :white_check_mark: Supported |
@@ -153,7 +153,7 @@ These images are mainly focused for Conan Center CI.
 | [conanio/gcc10-ubuntu16.04-jenkins: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04-jenkins/)  | x86_64  | :warning: Supported          |
 | [conanio/gcc11-ubuntu16.04-jenkins: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04-jenkins/)  | x86_64  | :warning: Supported          |
 | [conanio/gcc12-ubuntu16.04-jenkins: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu16.04-jenkins/)  | x86_64  | :warning: Supported          |
-|-----------------------------------------------------------------------------------------------------------|---------|------------------------------|
+|                                                                                                           |         |                               |
 | [conanio/gcc5-ubuntu18.04-jenkins: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu18.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
 | [conanio/gcc6-ubuntu18.04-jenkins: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu18.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
 | [conanio/gcc7-ubuntu18.04-jenkins: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu18.04-jenkins/)     | x86_64  | :white_check_mark: Supported |
@@ -203,7 +203,7 @@ Here is a list of installed libraries and their versions:
 | conanio/clang12-ubuntu16.04  | 2.23     | 3.4.28      | 12000    |
 | conanio/clang13-ubuntu16.04  | 2.23     | 3.4.28      | 13000    |
 | conanio/clang14-ubuntu16.04  | 2.23     | 3.4.28      | 14000    |
-|------------------------------|----------|-------------|----------|
+|                              |          |             |          |
 | conanio/gcc5-ubuntu18.04     | 2.27     | 3.4.21      | ---      |
 | conanio/gcc6-ubuntu18.04     | 2.27     | 3.4.22      | ---      |
 | conanio/gcc7-ubuntu18.04     | 2.27     | 3.4.24      | ---      |
