@@ -1,4 +1,4 @@
-[![Build Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools%2FConanCenterIndex)](https://ci.conan.io/job/ConanDockerTools/job/ConanCenterIndex/)
+[![Build Status](https://ci.conan.io/job/ConanDockerTools/job/ConanCenterIndex/badge/icon)](https://ci.conan.io/job/ConanDockerTools/job/ConanCenterIndex/)
 
 # Conan Docker Tools
 
