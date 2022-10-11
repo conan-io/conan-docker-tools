@@ -1,5 +1,3 @@
-[![Build Status](https://ci.conan.io/job/ConanDockerTools/job/ConanCenterIndex/badge/icon)](https://ci.conan.io/job/ConanDockerTools/job/ConanCenterIndex/)
-
 # Conan Docker Tools
 
 ![logo](../logo.png)
