@@ -38,9 +38,10 @@ RUN wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/g
 # Enable Fortran as lapack package is basically broken
 # No nls (native language support) because we only use English in Conan Center
 
-RUN cd gcc-${GCC_VERSION} \
+RUN gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+    && cd gcc-${GCC_VERSION} \
     && ./configure \
-                   --build=x86_64-linux-gnu \
+                   --build=$gnuArch \
                    --disable-bootstrap \
                    --disable-multilib \
                    --disable-nls \
@@ -60,8 +61,9 @@ ARG LIBSTDCPP_PATCH_VERSION
 COPY --from=builder /tmp/install /tmp/install
 COPY gcc_bootstrap.sh /opt/conan/gcc_bootstrap.sh
 
-RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
-    && sudo cp -a /tmp/install/lib/gcc/x86_64-linux-gnu/${GCC_VERSION} /usr/lib/gcc/x86_64-linux-gnu/ \
+RUN gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+    && sudo rm -rf /usr/lib/gcc/$gnuArch/* \
+    && sudo cp -a /tmp/install/lib/gcc/$gnuArch/${GCC_VERSION} /usr/lib/gcc/$gnuArch/ \
     && sudo cp -a /tmp/install/include/* /usr/local/include/ \
     && sudo cp -a /tmp/install/lib64/ /usr/local/ \
     && sudo cp -a /tmp/install/libexec/ /usr/local/ \

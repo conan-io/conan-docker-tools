@@ -29,7 +29,7 @@ RUN apt-get -qq update \
        binutils \
        wget \
        git \
-       g++-multilib \
+       g++ \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \
@@ -94,7 +94,7 @@ RUN apt-get -qq update \
     && rm /etc/ld.so.cache \
     && ldconfig -C /etc/ld.so.cache \
     && apt-get -qq purge -y \
-       g++-multilib \
+       g++ \
        gcc \
        libgmp-dev \
        libmpfr-dev \
