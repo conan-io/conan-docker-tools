@@ -44,7 +44,7 @@ RUN apt-get -qq update \
        --exclude=share/vim \
        --exclude=share/vim \
     && cp -fR cmake-3.15.7-Linux-x86_64/* /usr \
-    && printf 'deb http://apt.llvm.org/bionic/   llvm-toolchain-bionic-10  main\n' > /etc/apt/sources.list.d/llvm.list \
+    && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
     && apt-get -qq update \

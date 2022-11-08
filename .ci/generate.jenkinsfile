@@ -203,7 +203,7 @@ node('Linux') {
     }
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
 
-    stage('Bionic - Build base image') {
+    stage('Xenial - Build base image') {
         String expectedImage = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
         String latestBranch = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-latest"
         String latestMaster = "${dockerUsername}/base-${params.distro}${suffix}:${targetBranch}-latest"
