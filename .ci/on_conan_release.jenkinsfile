@@ -53,7 +53,7 @@ node('Linux') {
             sh "git checkout -b ${branchName}"
             sh "git diff"
 
-            sh 'git config --local user.email "javierg@jfrog.com"'
+            sh 'git config --local user.email "conancenter@jfrog.com"'
             sh 'git config --local user.name "Release Bot"'
             sh 'git commit -am "[up conan] Update Conan version"'
 
