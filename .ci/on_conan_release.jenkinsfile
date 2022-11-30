@@ -53,7 +53,7 @@ node('Linux') {
             sh "git checkout -b ${branchName}"
             sh "git diff"
 
-            sh 'git config --local user.email "conancenter@jfrog.com"'
+            sh 'git config --local user.email "luism+1@jfrog.com"'
             sh 'git config --local user.name "Release Bot"'
             sh 'git commit -am "[up conan] Update Conan version"'
 
@@ -93,7 +93,7 @@ node('Linux') {
 
         stage('Request reviewers') {
             Map data = [:]
-            data.reviewers = ['uilianries', 'jgsogo']
+            data.reviewers = ['uilianries']
             String jsonContent = writeJSON(json: data, returnText: true)
             httpRequest(
                 url: "https://api.github.com/repos/conan-io/conan-docker-tools/pulls/${prNumber}/requested_reviewers",
