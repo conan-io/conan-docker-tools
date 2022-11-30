@@ -93,7 +93,7 @@ node('Linux') {
 
         stage('Request reviewers') {
             Map data = [:]
-            data.reviewers = ['uilianries', 'jgsogo']
+            data.reviewers = ['uilianries']
             String jsonContent = writeJSON(json: data, returnText: true)
             httpRequest(
                 url: "https://api.github.com/repos/conan-io/conan-docker-tools/pulls/${prNumber}/requested_reviewers",
