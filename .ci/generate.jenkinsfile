@@ -352,12 +352,8 @@ node('Linux') {
                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh 'docker login --username $USERNAME --password $PASSWORD'
                 }
-                String tagVersion = params.conan_version
-                def (major, minor, patch) = parseVersion(params.conan_version)
-                if (major == '2') {
-                    tagVersion = "${major}.${minor}.${patch}-pre"
-                }
 
+                String tagVersion = params.conan_version
                 // Upload with the corresponding tag version
                 String uploadImage = "${dockerhubUsername}/${image}:${tagVersion}"
                 sh "docker tag ${builtImage} ${uploadImage}"
@@ -376,5 +372,4 @@ node('Linux') {
             }
         }
     }
-
 }
