@@ -95,14 +95,14 @@ Tags will use the Conan version available in those images.
 | [conanio/gcc10-ubuntu18.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu18.04/)  | x86_64 | :white_check_mark: Supported |
 | [conanio/gcc11-ubuntu18.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu18.04/)  | x86_64 | :white_check_mark: Supported |
 | [conanio/gcc12-ubuntu18.04: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu18.04/)  | x86_64 | :white_check_mark: Supported |
-| [conanio/gcc5-ubuntu16.04: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04/)     | x86_64 | :warning: Deprecated         |
-| [conanio/gcc6-ubuntu16.04: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04/)     | x86_64 | :warning: Deprecated         |
-| [conanio/gcc7-ubuntu16.04: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04/)     | x86_64 | :warning: Deprecated         |
-| [conanio/gcc8-ubuntu16.04: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04/)     | x86_64 | :warning: Deprecated         |
-| [conanio/gcc9-ubuntu16.04: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04/)     | x86_64 | :warning: Deprecated         |
-| [conanio/gcc10-ubuntu16.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)  | x86_64 | :warning: Deprecated         |
-| [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)  | x86_64 | :warning: Deprecated         |
-| [conanio/gcc12-ubuntu16.04: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu16.04/)  | x86_64 | :warning: Deprecated         |
+| [conanio/gcc5-ubuntu16.04: gcc 5](https://hub.docker.com/r/conanio/gcc5-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc6-ubuntu16.04: gcc 6](https://hub.docker.com/r/conanio/gcc6-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc7-ubuntu16.04: gcc 7](https://hub.docker.com/r/conanio/gcc7-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc8-ubuntu16.04: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc9-ubuntu16.04: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04/)     | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc10-ubuntu16.04: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc11-ubuntu16.04: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc12-ubuntu16.04: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu16.04/)  | x86_64 | :white_check_mark: Supported |
 
 
 ### Clang
@@ -114,11 +114,11 @@ Tags will use the Conan version available in those images.
 | [conanio/clang12-ubuntu18.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu18.04/) | x86_64 | :white_check_mark: Supported |
 | [conanio/clang13-ubuntu18.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu18.04/) | x86_64 | :white_check_mark: Supported |
 | [conanio/clang14-ubuntu18.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu18.04/) | x86_64 | :white_check_mark: Supported |
-| [conanio/clang10-ubuntu16.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
-| [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
-| [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
-| [conanio/clang13-ubuntu16.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
-| [conanio/clang14-ubuntu16.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04/) | x86_64 | :warning: Deprecated         |
+| [conanio/clang10-ubuntu16.04: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang11-ubuntu16.04: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang12-ubuntu16.04: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang13-ubuntu16.04: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
+| [conanio/clang14-ubuntu16.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
 
 
 

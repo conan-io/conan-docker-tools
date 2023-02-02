@@ -4,7 +4,7 @@ LABEL maintainer="Conan.io <info@conan.io>"
 
 ARG ANDROID_NDK_VERSION=r25
 ARG ANDROID_NDK_API_LEVEL=21
-ARG CONAN_VERSION=1.52.0
+ARG CONAN_VERSION=1.56.0
 
 RUN pip install conan==${CONAN_VERSION} \
     && conan profile new default --detect \
