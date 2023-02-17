@@ -75,7 +75,7 @@ node('Linux') {
                     // Build only the latest 2.0.0-pre version
                     if (version[0] == 2) {
                         def (major, minor, patch, pre, preNumber) = parsePreVersion(release)
-                        if (!preVersion || (pre > preVersion[4]) || (pre == preVersion[4] && preNumber > preVersion[5])) {
+                        if (!preVersion || (pre > preVersion[3]) || (pre == preVersion[3] && preNumber > preVersion[4])) {
                             preVersion = [major, minor, patch, pre, preNumber]
                             preVersionStr = "${major}.${minor}.${patch}-${pre == 'a' ? 'alpha' : (pre == 'b' ? 'beta' : pre)}${preNumber}"
                         }
