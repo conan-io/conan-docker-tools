@@ -18,7 +18,6 @@ def parseVersion(String version) {
 }
 
 def parsePreVersion(String version) {
-    echo "parsePreVersion: ${version}"
     def matcher = (version =~ /(\d+).(\d+).(\d+)(\w)(\d+)/)
     return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int, matcher[0][4] as char, matcher[0][5] as int]
 }
@@ -53,7 +52,7 @@ node('Linux') {
 
             // Up to latest version in pypi
             echo "Read latest version from pypi"
-            def response = httpRequest(url: 'https://pypi.org/pypi/conan/json')
+            def response = httpRequest(url: 'https://pypi.python.org/pypi/conan/json')
             Map<String, Object> requestJson = readJSON(text: response.content)
             latestVersion = requestJson.info.version
 
@@ -75,18 +74,10 @@ node('Linux') {
 
                     // Build only the latest 2.0.0-pre version
                     if (version[0] == 2) {
-                        echo "Found version 2.x: ${version}"
                         def (major, minor, patch, pre, preNumber) = parsePreVersion(release)
-                        echo "Major: ${major}"
-                        echo "minor: ${minor}"
-                        echo "patch: ${patch}"
-                        echo "pre: ${pre}"
-                        echo "preNumber: ${preNumber}"
-                        echo "preVersion: ${preVersion}"
                         if (!preVersion || (pre > preVersion[4]) || (pre == preVersion[4] && preNumber > preVersion[5])) {
                             preVersion = [major, minor, patch, pre, preNumber]
                             preVersionStr = "${major}.${minor}.${patch}-${pre == 'a' ? 'alpha' : (pre == 'b' ? 'beta' : pre)}${preNumber}"
-                            echo "preVersionStr: ${preVersionStr}"
                         }
                     }
                     else if (version[0] > minVersion[0]) {
