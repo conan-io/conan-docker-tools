@@ -361,8 +361,7 @@ node('Linux') {
                     sh "docker push ${uploadImage}"
                 }
 
-                def (conanVersionMajor, _1, _2) = parseVersion(params.conan_version)
-                if (params.upload_latest && conanVersionMajor == '1') {
+                if (params.upload_latest) {
                     // Upload with tag 'latest'
                     String uploadLatest = "${dockerhubUsername}/${image}:latest"
                     sh "docker tag ${builtImage} ${uploadLatest}"
