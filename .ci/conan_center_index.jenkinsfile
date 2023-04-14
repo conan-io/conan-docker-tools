@@ -84,6 +84,12 @@ node('Linux') {
                 }
             }
             conanVersions = conanVersions.reverse()
+
+            // Ensure at least one version of Conan 1.x and three from Conan 2.x
+            def conan2Versions = conanVersions.findAll{element -> element[0] == '2'}
+            conan2Versions = conan2Versions.size() > 3 ? conan2Versions.subList(0, 3) : conan2Versions
+            def conan1Versions = conanVersions.findAll{element -> element[0] == '1'}
+            conanVersions = conan2Versions + conan1Versions
         }
     }
 
