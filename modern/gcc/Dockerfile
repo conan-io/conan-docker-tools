@@ -29,7 +29,7 @@ RUN apt-get -qq update \
        libssl-dev \
        pkg-config
 
-RUN wget -q --no-check-certificate http://mirrors.concertpass.com/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
+RUN wget -q --no-check-certificate http://mirror.koddos.net/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
     && tar Jxf gcc-${GCC_VERSION}.tar.xz
 
 # INFO: GCC build reference: https://gcc.gnu.org/install/configure.html
