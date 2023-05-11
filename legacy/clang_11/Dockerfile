@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
