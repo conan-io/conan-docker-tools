@@ -40,7 +40,7 @@ RUN apt-get -qq update \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
-    && printf 'deb http://apt.llvm.org/bionic/   llvm-toolchain-bionic-11  main' >> /etc/apt/sources.list \
+    && printf 'deb http://apt.llvm.org/focal/   llvm-toolchain-focal-11  main' >> /etc/apt/sources.list \
     && wget --no-check-certificate --quiet -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests \
