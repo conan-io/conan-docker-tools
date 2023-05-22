@@ -16,6 +16,10 @@ def buildImage(String latestMaster, String latestBranch, String expectedImage, S
     withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD'
         sh 'docker pull docker.io/library/ubuntu:artful'
+        sh 'docker pull docker.io/library/ubuntu:xenial'
+        sh 'docker pull docker.io/library/ubuntu:bionic'
+        sh 'docker pull docker.io/library/ubuntu:eoan'
+        sh 'docker pull docker.io/library/ubuntu:focal'
     }
 
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
