@@ -17,11 +17,11 @@ def parseVersion(String version) {
     return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int]
 }
 
-environment {
-    DOCKER_BUILDKIT = 0
-}
-
 node('Linux') {
+
+    environment {
+        DOCKER_BUILDKIT = 0
+    }
 
     stage('Input parameters') {
         echo """

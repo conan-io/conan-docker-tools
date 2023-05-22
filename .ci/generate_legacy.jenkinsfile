@@ -89,6 +89,10 @@ node('Linux') {
     List<String> gccVersions = params.gcc_versions.split('\n')
     List<String> clangVersions = params.clang_versions.split('\n')
 
+    environment {
+        DOCKER_BUILDKIT = 0
+    }
+
     stage('Legacy - Input parameters') {
         echo """
         About sources:
