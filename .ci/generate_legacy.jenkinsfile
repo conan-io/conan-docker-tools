@@ -168,6 +168,14 @@ node('Linux') {
     }
     String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
 
+    stage('Download base Ubuntu images from docker.io') {
+        sh 'docker pull ubuntu:xenial'
+        sh 'docker pull ubuntu:artful'
+        sh 'docker pull ubuntu:bionic'
+        sh 'docker pull ubuntu:eoan'
+        sh 'docker pull ubuntu:focal'
+    }
+
     // Execute login: 1) Validate the login 2) Needed for docker pull/push
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"

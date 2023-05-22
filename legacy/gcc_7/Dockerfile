@@ -1,4 +1,4 @@
-FROM ubuntu:17.10
+FROM ubuntu:artful
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
