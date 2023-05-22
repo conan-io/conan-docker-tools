@@ -11,6 +11,8 @@ dockerUsername = 'center-c3i-docker.jfrog.io'
 dockerhubUsername = 'conanio'
 
 def buildImage(String latestMaster, String latestBranch, String expectedImage, String buildArgs, String target = null, String extraCacheFrom = null) {
+    sh 'export DOCKER_BUILDKIT=0'
+
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
     }
