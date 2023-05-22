@@ -126,6 +126,9 @@ node('Linux') {
             else if (name == 'JENKINS_AGENT_VERSION') {
                 parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
             }
+            else if (name == 'JENKINS_AGENT_NEW_VERSION') {
+                parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_new_version', value: value])
+            }
 
             // compiler versions
             else if (name =~ /GCC\d+_VERSION/) {
