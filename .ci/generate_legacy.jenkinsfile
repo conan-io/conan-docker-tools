@@ -89,6 +89,10 @@ node('Linux') {
     List<String> gccVersions = params.gcc_versions.split('\n')
     List<String> clangVersions = params.clang_versions.split('\n')
 
+    environment {
+        DOCKER_BUILDKIT = 0
+    }
+
     stage('Legacy - Input parameters') {
         echo """
         About sources:
@@ -141,14 +145,6 @@ node('Linux') {
 
     stage('Legacy - Install deps') {
         sh 'pip install docker-compose humanfriendly conan conan-package-tools'
-    }
-
-    stage('Download base Ubuntu images from docker.io') {
-        sh 'docker pull ubuntu:xenial'
-        sh 'docker pull ubuntu:artful'
-        sh 'docker pull ubuntu:bionic'
-        sh 'docker pull ubuntu:eoan'
-        sh 'docker pull ubuntu:focal'
     }
 
     // Get some global information, used later
