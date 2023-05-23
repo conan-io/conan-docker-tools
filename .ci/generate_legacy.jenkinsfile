@@ -196,7 +196,7 @@ node('Linux') {
 
             String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
             String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}"
-            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}-${params.jenkins_agent_version}"
+            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}-${params.jenkins_agent_new_version}"
             String compilerArgs = "${buildArgs}"
 
             node('Linux') {
