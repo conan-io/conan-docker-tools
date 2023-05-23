@@ -388,8 +388,8 @@ node('Linux') {
 
                 // Upload Jenkins images with new client version
                 if (params.upload_jenkins_images && image.endsWith('-jenkins')) {
-                    String builtImage = "${dockerUsername}/${image}:${params.jenkins_agent_new_version}-${branchName}-${commit}"
-                    sh "docker pull ${builtImage}"
+                    String builtNewImage = "${dockerUsername}/${image}:${params.jenkins_agent_new_version}-${branchName}-${commit}"
+                    sh "docker pull ${builtNewImage}"
 
                     withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login --username $USERNAME --password $PASSWORD'
@@ -398,7 +398,7 @@ node('Linux') {
                     String tagVersion = "${params.conan_version}-${params.jenkins_agent_new_version}"
                     // Upload with the corresponding tag version
                     String uploadImage = "${dockerhubUsername}/${image}:${tagVersion}"
-                    sh "docker tag ${builtImage} ${uploadImage}"
+                    sh "docker tag ${builtNewImage} ${uploadImage}"
                     if (!params.dry_run) {
                         sh "docker push ${uploadImage}"
                     }
@@ -406,7 +406,7 @@ node('Linux') {
                     if (params.upload_latest) {
                         // Upload with tag 'latest'
                         String uploadLatest = "${dockerhubUsername}/${image}:latest-${tagVersion}"
-                        sh "docker tag ${builtImage} ${uploadLatest}"
+                        sh "docker tag ${builtNewImage} ${uploadLatest}"
                         if (!params.dry_run) {
                             sh "docker push ${uploadLatest}"
                         }
