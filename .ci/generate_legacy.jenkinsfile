@@ -364,18 +364,18 @@ node('Linux') {
                     }
 
                     // Upload with the corresponding tag version
-                    String uploadImage = "${dockerhubUsername}/${image}:${params.conan_version}-${params.jenkins_agent_new_version}"
-                    sh "docker tag ${builtNewImage} ${uploadImage}"
+                    String uploadNewImage = "${dockerhubUsername}/${image}:${params.conan_version}-${params.jenkins_agent_new_version}"
+                    sh "docker tag ${builtNewImage} ${uploadNewImage}"
                     if (!params.dry_run) {
-                        sh "docker push ${uploadImage}"
+                        sh "docker push ${uploadNewImage}"
                     }
 
                     if (params.upload_latest) {
                         // Upload with tag 'latest'
-                        String uploadLatest = "${dockerhubUsername}/${image}:latest-${params.jenkins_agent_new_version}"
-                        sh "docker tag ${builtNewImage} ${uploadLatest}"
+                        String uploadNewLatest = "${dockerhubUsername}/${image}:latest-${params.jenkins_agent_new_version}"
+                        sh "docker tag ${builtNewImage} ${uploadNewLatest}"
                         if (!params.dry_run) {
-                            sh "docker push ${uploadLatest}"
+                            sh "docker push ${uploadNewLatest}"
                         }
                     }
                 }

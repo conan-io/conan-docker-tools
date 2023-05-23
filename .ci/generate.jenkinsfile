@@ -395,20 +395,20 @@ node('Linux') {
                         sh 'docker login --username $USERNAME --password $PASSWORD'
                     }
 
-                    String tagVersion = "${params.conan_version}-${params.jenkins_agent_new_version}"
+                    String tagNewVersion = "${params.conan_version}-${params.jenkins_agent_new_version}"
                     // Upload with the corresponding tag version
-                    String uploadImage = "${dockerhubUsername}/${image}:${tagVersion}"
-                    sh "docker tag ${builtNewImage} ${uploadImage}"
+                    String uploadNewImage = "${dockerhubUsername}/${image}:${tagNewVersion}"
+                    sh "docker tag ${builtNewImage} ${uploadNewImage}"
                     if (!params.dry_run) {
-                        sh "docker push ${uploadImage}"
+                        sh "docker push ${uploadNewImage}"
                     }
 
                     if (params.upload_latest) {
                         // Upload with tag 'latest'
-                        String uploadLatest = "${dockerhubUsername}/${image}:latest-${tagVersion}"
-                        sh "docker tag ${builtNewImage} ${uploadLatest}"
+                        String uploadNewLatest = "${dockerhubUsername}/${image}:latest-${tagNewVersion}"
+                        sh "docker tag ${builtNewImage} ${uploadNewLatest}"
                         if (!params.dry_run) {
-                            sh "docker push ${uploadLatest}"
+                            sh "docker push ${uploadNewLatest}"
                         }
                     }
                 }
