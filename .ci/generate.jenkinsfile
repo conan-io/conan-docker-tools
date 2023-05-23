@@ -226,7 +226,7 @@ node('Linux') {
             String builderImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${branchName}-${commit}"
             String deployImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${branchName}-${commit}"
             String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}"
-            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${params.jenkins_agent_new_version}-${branchName}-${commit}"
+            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}-${params.jenkins_agent_new_version}"
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
             if (suffix) {
                 compilerArgs = "${compilerArgs} --build-arg SUFFIX=${suffix}"
@@ -279,11 +279,11 @@ node('Linux') {
                 }
 
                 stage("${compiler.toUpperCase()} ${version} jenkins new") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${params.jenkins_agent_new_version}-${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${params.jenkins_agent_new_version}-${targetBranch}-latest"
+                    String latestNewBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-latest-${params.jenkins_agent_new_version}"
+                    String latestNewMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${targetBranch}-latest-${params.jenkins_agent_new_version}"
 
                     dir('modern/jenkins') {
-                        buildImage(latestMaster, latestBranch, jenkinsNewImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg JENKINS_AGENT_VERSION=${params.jenkins_agent_new_version}")
+                        buildImage(latestNewMaster, latestNewBranch, jenkinsNewImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg JENKINS_AGENT_VERSION=${params.jenkins_agent_new_version}")
                     }
 
                     dir('modern') {
@@ -388,7 +388,7 @@ node('Linux') {
 
                 // Upload Jenkins images with new client version
                 if (params.upload_jenkins_images && image.endsWith('-jenkins')) {
-                    String builtNewImage = "${dockerUsername}/${image}:${params.jenkins_agent_new_version}-${branchName}-${commit}"
+                    String builtNewImage = "${dockerUsername}/${image}:${branchName}-${commit}-${params.jenkins_agent_new_version}"
                     sh "docker pull ${builtNewImage}"
 
                     withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {

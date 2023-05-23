@@ -196,7 +196,7 @@ node('Linux') {
 
             String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
             String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}"
-            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-new-slave:${branchName}-${commit}"
+            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}-${params.jenkins_agent_version}"
             String compilerArgs = "${buildArgs}"
 
             node('Linux') {
@@ -226,12 +226,12 @@ node('Linux') {
                     }
 
                     stage("Legacy - ${compiler.toUpperCase()} ${version} new jenkins") {
-                        String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${params.jenkins_agent_new_version}-${branchName}-latest"
-                        String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${params.jenkins_agent_new_version}-${targetBranch}-latest"
+                        String latestNewBranch = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-latest-${params.jenkins_agent_new_version}"
+                        String latestNewMaster = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${targetBranch}-latest-${params.jenkins_agent_new_version}"
 
                         dir('legacy/jenkins-jnlp-slave') {
-                            String jenkins_args = "--build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg AGENT_VERSION=${params.jenkins_agent_new_version}"
-                            buildImage(latestMaster, latestBranch, jenkinsNewImage, "${compilerArgs} ${jenkins_args}")
+                            String jenkins_new_args = "--build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg AGENT_VERSION=${params.jenkins_agent_new_version}"
+                            buildImage(latestNewMaster, latestNewBranch, jenkinsNewImage, "${compilerArgs} ${jenkins_new_args}")
                         }
                     }
                 }
@@ -356,7 +356,7 @@ node('Linux') {
 
                 // Upload Docker images with newer Jenkins client version
                 if (params.upload_jenkins_images && image.endsWith('-jnlp-slave')) {
-                    String builtNewImage = "${dockerUsername}/${image}:${params.jenkins_agent_new_version}-${branchName}-${commit}"
+                    String builtNewImage = "${dockerUsername}/${image}:${branchName}-${commit}-${params.jenkins_agent_new_version}"
                     sh "docker pull ${builtNewImage}"
 
                     withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
