@@ -37,6 +37,9 @@ x-gcc11: &gcc11
 x-gcc12: &gcc12
     GCC_VERSION: ${GCC12_VERSION}
 
+x-gcc13: &gcc13
+    GCC_VERSION: ${GCC13_VERSION}
+
 x-llvm10: &llvm10
     CLANG_VERSION: ${CLANG10_VERSION}
 
@@ -161,6 +164,18 @@ services:
                 <<: *gcc12
         image: ${DOCKER_USERNAME}/gcc12-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc12-builder
+        tty: true
+    gcc13-builder:
+        platform: ${PLATFORM}
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: gcc-builder
+            args:
+                <<: *common-args
+                <<: *gcc13
+        image: ${DOCKER_USERNAME}/gcc13-builder-${DISTRO}:${DOCKER_TAG}
+        container_name: gcc13-builder
         tty: true
     clang10-builder:
         platform: ${PLATFORM}
@@ -330,6 +345,19 @@ services:
         image: ${DOCKER_USERNAME}/gcc12-deploy-${DISTRO}:${DOCKER_TAG}
         container_name: gcc12-deploy
         tty: true
+    gcc13-deploy:
+        platform: ${PLATFORM}
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            target: deploy
+            cache_from:
+              - ${DOCKER_USERNAME}/gcc13-builder-${DISTRO}:${DOCKER_TAG}
+            args:
+                <<: *common-args
+        image: ${DOCKER_USERNAME}/gcc13-deploy-${DISTRO}:${DOCKER_TAG}
+        container_name: gcc13-deploy
+        tty: true
     clang10-deploy:
         platform: ${PLATFORM}
         build:
@@ -486,6 +514,16 @@ services:
         image: ${DOCKER_USERNAME}/gcc12-${DISTRO}:${DOCKER_TAG}
         container_name: gcc12
         tty: true
+    gcc13:
+        build:
+            context: gcc
+            dockerfile: Dockerfile
+            args:
+                <<: *common-args
+                <<: *gcc13
+        image: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
+        container_name: gcc13
+        tty: true
     clang10:
         platform: ${PLATFORM}
         build:
@@ -633,6 +671,16 @@ services:
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc12-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc12-jenkins
+    gcc13-jenkins:
+        platform: ${PLATFORM}
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
+                <<: *common-args
+        image: "${DOCKER_USERNAME}/gcc13-${DISTRO}-jenkins:${DOCKER_TAG}"
+        container_name: gcc13-jenkins
     clang10-jenkins:
         platform: ${PLATFORM}
         build:
