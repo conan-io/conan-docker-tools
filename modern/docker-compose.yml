@@ -76,8 +76,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc5
+                <<: [*common-args, *gcc5]
         image: ${DOCKER_USERNAME}/gcc5-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc5-builder
         tty: true
@@ -88,8 +87,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc6
+                <<: [*common-args, *gcc6]
         image: ${DOCKER_USERNAME}/gcc6-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc6-builder
         tty: true
@@ -100,8 +98,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc7
+                <<: [*common-args, *gcc7]
         image: ${DOCKER_USERNAME}/gcc7-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc7-builder
         tty: true
@@ -112,8 +109,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc8
+                <<: [*common-args, *gcc8]
         image: ${DOCKER_USERNAME}/gcc8-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc8-builder
         tty: true
@@ -124,8 +120,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc9
+                <<: [*common-args, *gcc9]
         image: ${DOCKER_USERNAME}/gcc9-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc9-builder
         tty: true
@@ -136,8 +131,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc10
+                <<: [*common-args, *gcc10]
         image: ${DOCKER_USERNAME}/gcc10-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc10-builder
         tty: true
@@ -148,8 +142,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc11
+                <<: [*common-args, *gcc11]
         image: ${DOCKER_USERNAME}/gcc11-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc11-builder
         tty: true
@@ -160,8 +153,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc12
+                <<: [*common-args, *gcc12]
         image: ${DOCKER_USERNAME}/gcc12-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc12-builder
         tty: true
@@ -172,8 +164,7 @@ services:
             dockerfile: Dockerfile
             target: gcc-builder
             args:
-                <<: *common-args
-                <<: *gcc13
+                <<: [*common-args, *gcc13]
         image: ${DOCKER_USERNAME}/gcc13-builder-${DISTRO}:${DOCKER_TAG}
         container_name: gcc13-builder
         tty: true
@@ -184,8 +175,7 @@ services:
             dockerfile: Dockerfile
             target: clang-builder
             args:
-                <<: *common-args
-                <<: *llvm10
+                <<: [*common-args, *llvm10]
         image: ${DOCKER_USERNAME}/clang10-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang10-builder
         tty: true
@@ -196,8 +186,7 @@ services:
             dockerfile: Dockerfile
             target: clang-builder
             args:
-                <<: *common-args
-                <<: *llvm11
+                <<: [*common-args, *llvm11]
         image: ${DOCKER_USERNAME}/clang11-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang11-builder
         tty: true
@@ -208,8 +197,7 @@ services:
             dockerfile: Dockerfile
             target: clang-builder
             args:
-                <<: *common-args
-                <<: *llvm12
+                <<: [*common-args, *llvm12]
         image: ${DOCKER_USERNAME}/clang12-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang12-builder
         tty: true
@@ -221,8 +209,7 @@ services:
             dockerfile: Dockerfile
             target: clang-builder
             args:
-                <<: *common-args
-                <<: *llvm13
+                <<: [*common-args, *llvm13]
         image: ${DOCKER_USERNAME}/clang13-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang13-builder
         tty: true
@@ -234,8 +221,7 @@ services:
             dockerfile: Dockerfile
             target: clang-builder
             args:
-                <<: *common-args
-                <<: *llvm14
+                <<: [*common-args, *llvm14]
         image: ${DOCKER_USERNAME}/clang14-builder-${DISTRO}:${DOCKER_TAG}
         container_name: clang14-builder
         tty: true
@@ -433,8 +419,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc5
+                <<: [*common-args, *gcc5]
         image: ${DOCKER_USERNAME}/gcc5-${DISTRO}:${DOCKER_TAG}
         container_name: gcc5
         tty: true
@@ -444,8 +429,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc6
+                <<: [*common-args, *gcc6]
         image: ${DOCKER_USERNAME}/gcc6-${DISTRO}:${DOCKER_TAG}
         container_name: gcc6
         tty: true
@@ -455,8 +439,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc7
+                <<: [*common-args, *gcc7]
         image: ${DOCKER_USERNAME}/gcc7-${DISTRO}:${DOCKER_TAG}
         container_name: gcc7
         tty: true
@@ -466,8 +449,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc8
+                <<: [*common-args, *gcc8]
         image: ${DOCKER_USERNAME}/gcc8-${DISTRO}:${DOCKER_TAG}
         container_name: gcc8
         tty: true
@@ -477,8 +459,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc9
+                <<: [*common-args, *gcc9]
         image: ${DOCKER_USERNAME}/gcc9-${DISTRO}:${DOCKER_TAG}
         container_name: gcc9
         tty: true
@@ -488,8 +469,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc10
+                <<: [*common-args, *gcc10]
         image: ${DOCKER_USERNAME}/gcc10-${DISTRO}:${DOCKER_TAG}
         container_name: gcc10
         tty: true
@@ -499,8 +479,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc11
+                <<: [*common-args, *gcc11]
         image: ${DOCKER_USERNAME}/gcc11-${DISTRO}:${DOCKER_TAG}
         container_name: gcc11
         tty: true
@@ -509,8 +488,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc12
+                <<: [*common-args, *gcc12]
         image: ${DOCKER_USERNAME}/gcc12-${DISTRO}:${DOCKER_TAG}
         container_name: gcc12
         tty: true
@@ -519,8 +497,7 @@ services:
             context: gcc
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *gcc13
+                <<: [*common-args, *gcc13]
         image: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
         container_name: gcc13
         tty: true
@@ -530,8 +507,7 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *llvm10
+                <<: [*common-args, *llvm10]
         image: ${DOCKER_USERNAME}/clang10-${DISTRO}:${DOCKER_TAG}
         container_name: clang10
         tty: true
@@ -541,8 +517,7 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *llvm11
+                <<: [*common-args, *llvm11]
         image: ${DOCKER_USERNAME}/clang11-${DISTRO}:${DOCKER_TAG}
         container_name: clang11
         tty: true
@@ -552,8 +527,7 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *llvm12
+                <<: [*common-args, *llvm12]
         image: ${DOCKER_USERNAME}/clang12-${DISTRO}:${DOCKER_TAG}
         container_name: clang12
         tty: true
@@ -564,8 +538,7 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *llvm13
+                <<: [*common-args, *llvm13]
         image: ${DOCKER_USERNAME}/clang13-${DISTRO}:${DOCKER_TAG}
         container_name: clang13
         tty: true
@@ -576,8 +549,7 @@ services:
             context: clang
             dockerfile: Dockerfile
             args:
-                <<: *common-args
-                <<: *llvm14
+                <<: [*common-args, *llvm14]
         image: ${DOCKER_USERNAME}/clang14-${DISTRO}:${DOCKER_TAG}
         container_name: clang14
         tty: true
