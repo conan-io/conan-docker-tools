@@ -18,7 +18,7 @@ RUN /tmp/install-openjdk-ppa.sh \
     && apt-get -q install -y openjdk-8-jre-headless
 
 FROM base AS branch-download
-RUN wget -q --no-check-certificate https://download.java.net/java/ga/jdk11/openjdk-11_linux-x64_bin.tar.gz -O /tmp/openjdk.tar.gz \
+RUN wget -q --no-check-certificate https://download.java.net/java/ga/jdk11/openjdk-${JAVA_JDK_VERSION}_linux-x64_bin.tar.gz -O /tmp/openjdk.tar.gz \
     && mkdir -p /opt/openjdk \
     && tar -xzf /tmp/openjdk.tar.gz -C /opt/openjdk --strip-components=1 \
     && sudo update-alternatives --install /usr/bin/java java /opt/openjdk/bin/java 100 \
