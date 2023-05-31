@@ -650,6 +650,7 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
+                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc13-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc13-jenkins
