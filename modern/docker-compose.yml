@@ -650,6 +650,7 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
+                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc13-${DISTRO}-jenkins:${DOCKER_TAG}"
         container_name: gcc13-jenkins
@@ -719,6 +720,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc5-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc5-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc5-jenkins
@@ -730,6 +732,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc6-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc6-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc6-jenkins
@@ -741,6 +744,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc7-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc7-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc7-jenkins
@@ -752,6 +756,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc8-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc8-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc8-jenkins
@@ -763,6 +768,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc9-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc9-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc9-jenkins
@@ -774,6 +780,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc10-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc10-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc10-jenkins
@@ -785,6 +792,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc11-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc11-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc11-jenkins
@@ -796,8 +804,21 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc12-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/gcc12-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
+        container_name: gcc12-jenkins
+    gcc13-new-jenkins:
+        platform: ${PLATFORM}
+        build:
+            context: jenkins
+            dockerfile: Dockerfile
+            args:
+                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
+                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
+                <<: *common-args
+        image: "${DOCKER_USERNAME}/gcc13-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: gcc12-jenkins
     clang10-new-jenkins:
         platform: ${PLATFORM}
@@ -807,6 +828,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang10-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/clang10-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: clang10-jenkins
@@ -818,6 +840,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang11-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/clang11-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: clang11-jenkins
@@ -829,6 +852,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang12-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/clang12-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: clang12-jenkins
@@ -840,6 +864,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang13-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/clang13-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: clang13-jenkins
@@ -852,6 +877,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang14-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
+                JENKINS_BRANCH: download
                 <<: *common-args
         image: "${DOCKER_USERNAME}/clang14-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
         container_name: clang14-jenkins
