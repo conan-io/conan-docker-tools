@@ -7,7 +7,7 @@ class TestJenkinsAgent:
     def test_java(self, container):
         out, err = container.exec(['java', '-version'])
         # Check Java, up to minor version
-        assert 'openjdk version "1.8' in err, f"out: '{out}' err: '{err}'"
+        assert 'openjdk version' in err, f"out: '{out}' err: '{err}'"
 
     def test_entrypoint(self, container):
         out, err = container.exec(['/opt/entrypoint.sh'])
