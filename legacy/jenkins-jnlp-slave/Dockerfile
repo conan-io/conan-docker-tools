@@ -27,7 +27,7 @@ RUN wget -q --no-check-certificate https://download.java.net/java/ga/jdk${JAVA_J
     && rm -rf /tmp/openjdk.tar.gz
 
 ENV JAVA_HOME=/opt/openjdk
-ENV PATH="$PATH:$JAVA_HOME/bin"
+ENV PATH="$JAVA_HOME/bin:$PATH"
 
 FROM branch-${JENKINS_BRANCH} as final
 
