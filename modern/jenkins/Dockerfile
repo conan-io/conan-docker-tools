@@ -19,15 +19,12 @@ RUN /tmp/install-openjdk-ppa.sh \
     && apt-get -q install -y openjdk-8-jre-headless
 
 FROM base AS branch-download
-RUN wget -q --no-check-certificate https://download.java.net/java/ga/jdk${JAVA_JDK_VERSION}/openjdk-${JAVA_JDK_VERSION}_linux-x64_bin.tar.gz -O /tmp/openjdk.tar.gz \
-    && mkdir -p /opt/openjdk \
-    && tar -xzf /tmp/openjdk.tar.gz -C /opt/openjdk --strip-components=1 \
-    && sudo update-alternatives --install /usr/bin/java java /opt/openjdk/bin/java 100 \
-    && rm -rf /tmp/openjdk.tar.gz
 
-ENV JAVA_HOME=/opt/openjdk
-ENV PATH="$JAVA_HOME/bin:$PATH"
+COPY install-adopt-openjdk-ppa.sh /tmp/install-adopt-openjdk-ppa.sh
 
+RUN /tmp/install-adopt-openjdk-ppa.sh \
+    && apt-get -qq update \
+    && apt-get -q install -y adoptopenjdk-${JAVA_JDK_VERSION}-jre-hotspot-set-default
 
 FROM branch-${JENKINS_BRANCH} as final
 RUN apt-get -qq update \
