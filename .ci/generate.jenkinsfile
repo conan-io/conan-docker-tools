@@ -120,6 +120,7 @@ node('Linux') {
         - jenkins_agent_version: ${params.jenkins_agent_version}
         - jenkins_agent_new_version: ${params.jenkins_agent_new_version}
         - java_jdk_version: ${params.java_jdk_version}
+        - java_jdk_new_version: ${params.java_jdk_new_version}
         """
 
         echo """
@@ -186,6 +187,7 @@ node('Linux') {
         buildArguments.put('JENKINS_AGENT_VERSION', params.jenkins_agent_version)
         buildArguments.put('JENKINS_AGENT_NEW_VERSION', params.jenkins_agent_new_version)
         buildArguments.put('JAVA_JDK_VERSION', params.java_jdk_version)
+        buildArguments.put('JAVA_JDK_NEW_VERSION', params.java_jdk_new_version)
         buildArguments.put('DISTRO', params.distro)
         buildArguments.put('DISTRO_VERSION', params.distro_version)
 
@@ -285,7 +287,7 @@ node('Linux') {
                     String latestNewMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${targetBranch}-latest-${params.jenkins_agent_new_version}"
 
                     dir('modern/jenkins') {
-                        buildImage(latestNewMaster, latestNewBranch, jenkinsNewImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg JENKINS_AGENT_VERSION=${params.jenkins_agent_new_version} --build-arg JAVA_JDK_VERSION=${params.java_jdk_version} --build-arg JENKINS_BRANCH=download")
+                        buildImage(latestNewMaster, latestNewBranch, jenkinsNewImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg JENKINS_AGENT_VERSION=${params.jenkins_agent_new_version} --build-arg JAVA_JDK_VERSION=${params.java_jdk_new_version}")
                     }
 
                     dir('modern') {
