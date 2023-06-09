@@ -1,4 +1,4 @@
-FROM ubuntu:artful
+FROM ubuntu:bionic
 
 LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
 
@@ -10,8 +10,6 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc
-
-COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
