@@ -409,7 +409,7 @@ node('Linux') {
 
                     if (params.upload_latest) {
                         // Upload with tag 'latest'
-                        String uploadNewLatest = "${dockerhubUsername}/${image}:latest-${tagNewVersion}"
+                        String uploadNewLatest = "${dockerhubUsername}/${image}:latest-${params.jenkins_agent_new_version}"
                         sh "docker tag ${builtNewImage} ${uploadNewLatest}"
                         if (!params.dry_run) {
                             sh "docker push ${uploadNewLatest}"
