@@ -13,3 +13,7 @@ class TestJenkinsAgent:
         out, err = container.exec(['/opt/entrypoint.sh'])
         # It shows help (missing arguments), but we know it works
         assert 'java -jar agent.jar [options...] <secret key> <agent name>' in err, f"out: '{out}' err: '{err}'"
+
+    def test_cacert(self, container):
+        out, err = container.exec(['keytool', '-list' '-cacerts', '-storepass', 'changeit'])
+        assert 'Keystore type: JKS' in err, f"out: '{out}' err: '{err}'"
