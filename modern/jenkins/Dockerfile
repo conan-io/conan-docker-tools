@@ -10,13 +10,16 @@ COPY jenkins-client /usr/local/bin/jenkins-client
 COPY entrypoint.sh /opt/entrypoint.sh
 COPY install-openjdk-ppa.sh /tmp/install-openjdk-ppa.sh
 
+# INFO: OpenJDK11 wants cacert but is not installed and the Keystore type is not the expected: https://stackoverflow.com/questions/6784463/error-trustanchors-parameter-must-be-non-empty
+
 RUN /tmp/install-openjdk-ppa.sh \
     && apt-get -qq update \
     && apt-get -q install -y openjdk-${JAVA_JDK_VERSION}-jre-headless curl \
+    && printf '\xfe\xed\xfe\xed\x00\x00\x00\x02\x00\x00\x00\x00\xe2\x68\x6e\x45\xfb\x43\xdf\xa4\xd9\x92\xdd\x41\xce\xb6\xb2\x1c\x63\x30\xd7\x92' > /etc/ssl/certs/java/cacerts \
+    && /var/lib/dpkg/info/ca-certificates-java.postinst configure \
     && apt-get -q clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /var/cache/apt/*.bin \
-    && update-ca-certificates \
     && pip3 install --no-cache virtualenv \
     && curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar \
     && chmod 755 /usr/share/jenkins \
