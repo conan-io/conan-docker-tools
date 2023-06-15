@@ -9,10 +9,14 @@ USER root
 COPY jenkins-client /usr/local/bin/jenkins-client
 COPY entrypoint.sh /opt/entrypoint.sh
 COPY install-openjdk-ppa.sh /tmp/install-openjdk-ppa.sh
+COPY cacert /etc/ssl/certs/java/cacerts
+
+# INFO: OpenJDK11 wants cacert but is not installed and the Keystore type is not the expected: https://stackoverflow.com/questions/6784463/error-trustanchors-parameter-must-be-non-empty
 
 RUN /tmp/install-openjdk-ppa.sh \
     && apt-get -qq update \
     && apt-get -q install -y openjdk-${JAVA_JDK_VERSION}-jre-headless curl \
+    && /var/lib/dpkg/info/ca-certificates-java.postinst configure \
     && apt-get -q clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /var/cache/apt/*.bin \
