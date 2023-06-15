@@ -16,6 +16,7 @@ RUN /tmp/install-openjdk-ppa.sh \
     && apt-get -q clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /var/cache/apt/*.bin \
+    && update-ca-certificates \
     && pip3 install --no-cache virtualenv \
     && curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar \
     && chmod 755 /usr/share/jenkins \
