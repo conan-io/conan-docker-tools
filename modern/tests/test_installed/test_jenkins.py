@@ -15,5 +15,5 @@ class TestJenkinsAgent:
         assert 'java -jar agent.jar [options...] <secret key> <agent name>' in err, f"out: '{out}' err: '{err}'"
 
     def test_cacert(self, container):
-        out, err = container.exec(['keytool', '-list' '-keystore', '/etc/ssl/certs/java/cacerts', '-storepass', 'changeit', '-storetype', 'JKS'])
+        out, err = container.exec(['keytool', '-list', '-keystore', '/etc/ssl/certs/java/cacerts', '-storepass', 'changeit', '-storetype', 'JKS'])
         assert 'Keystore type: JKS' in err, f"out: '{out}' err: '{err}'"
