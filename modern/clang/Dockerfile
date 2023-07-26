@@ -127,6 +127,7 @@ RUN apt-get -qq update \
        -DLIBCXXABI_LIBUNWIND_INCLUDES_INTERNAL=OFF \
        -DCOMPILER_RT_INCLUDE_TESTS=OFF \
        -DCOMPILER_RT_USE_LIBCXX=ON \
+       -DENABLE_LINKER_BUILD_ID=ON \
     && ninja unwind \
     && ninja cxxabi \
     && cp lib/libc++abi* /usr/lib/ \
