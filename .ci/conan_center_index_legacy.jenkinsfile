@@ -26,12 +26,24 @@ node('Linux') {
     stage('Input parameters') {
         echo """
         - dry_run: ${params.dry_run}
+        - conan_versions: ${params.conan_versions}
         """
     }
 
     def conanVersions = []
     def latestVersion = null
     stage('Legacy - Compute Conan versions') {
+        if (params.conan_versions) {
+            for (String version in params.conan_versions.split(',')) {
+                try {
+                    conanVersions.add(parseVersion(version))
+                }
+                catch(e) {
+                    echo "Failed to parse version '$version'"
+                }
+            }
+            return
+        }
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/.ci/tests.jenkins
             echo "Read lowest version from CCI requirements"
