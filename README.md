@@ -104,7 +104,7 @@ GCC>=5 is ABI compatible for minor versions. To solve multiple minors, there are
 | [conanio/clang9-x86: clang 9](https://hub.docker.com/r/conanio/clang9-x86/)           | x86     | :warning: Deprecated         |
 | [conanio/clang9: clang 9](https://hub.docker.com/r/conanio/clang9/)                   | x86_64  | :warning: Deprecated         |
 | [conanio/clang10: clang 10](https://hub.docker.com/r/conanio/clang10/)                | x86_64  | :warning: Deprecated         |
-| [conanio/clang10: clang 11](https://hub.docker.com/r/conanio/clang11/)                | x86_64  | :white_check_mark: Supported |
+| [conanio/clang11: clang 11](https://hub.docker.com/r/conanio/clang11/)                | x86_64  | :white_check_mark: Supported |
 
 
 #### Visual Studio
@@ -253,10 +253,10 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 | [conanio/clang7-jnlp-slave: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave/)                 | x86_64 | :warning: Deprecated         |
 | [conanio/clang8-jnlp-slave-x86: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
 | [conanio/clang8-jnlp-slave: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave/)                 | x86_64 | :warning: Deprecated         |
-| [conanio/clang8-jnlp-slave-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
-| [conanio/clang8-jnlp-slave: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave/)                 | x86_64 | :warning: Deprecated         |
-| [conanio/clang8-jnlp-slave: clang 10](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 | :warning: Deprecated         |
-| [conanio/clang8-jnlp-slave: clang 11](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)               | x86_64 | :white_check_mark: Supported |
+| [conanio/clang9-jnlp-slave-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
+| [conanio/clang9-jnlp-slave: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave/)                 | x86_64 | :warning: Deprecated         |
+| [conanio/clang10-jnlp-slave: clang 10](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)              | x86_64 | :warning: Deprecated         |
+| [conanio/clang11-jnlp-slave: clang 11](https://hub.docker.com/r/conanio/clang11-jnlp-slave/)              | x86_64 | :white_check_mark: Supported |
 
 
 
