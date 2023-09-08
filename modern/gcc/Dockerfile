@@ -49,6 +49,7 @@ RUN cd gcc-${GCC_VERSION} \
                    --without-isl \
                    --with-system-zlib \
                    --prefix=/tmp/install \
+                   --enable-linker-build-id \
     && make -s -j$(nproc) \
     && make install-strip
 
