@@ -49,7 +49,7 @@ node('Linux') {
 
             // Up to latest version in pypi
             echo "Read latest version from pypi"
-            def response = httpRequest(url: 'https://pypi.python.org/pypi/conan/json')
+            def response = httpRequest(url: 'https://pypi.org/pypi/conan/json')
             Map<String, Object> requestJson = readJSON(text: response.content)
             latestVersion = requestJson.info.version
 
