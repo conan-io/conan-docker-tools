@@ -38,6 +38,7 @@ node('Linux') {
             // INFO: Check that all versions are valid
             conanVersions.collect{ parseVersion(it) }
             echo "INFO: Skipping Conan versions computation because of input parameter."
+            return
         }
 
         dir('tmp') {
