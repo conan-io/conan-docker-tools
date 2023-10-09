@@ -171,10 +171,13 @@ node('Linux') {
     for (strVersion in conanVersions) {
         boolean isLatest = (strVersion == latestVersion)
         stage("Build images for Conan '${strVersion}' (latest=${isLatest})") {
-            build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
-                [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
-                [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
-            ])
+            // INFO: When building docker images, networking errors are frequent. We retry 3 times.
+            retry(3) {
+                build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters + [
+                    [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
+                    [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
+                ])
+            }
         }
     }
 }
