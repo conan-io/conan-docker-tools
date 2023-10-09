@@ -44,7 +44,7 @@ node('Linux') {
 
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/resources/org/jfrog/c3i/configs/library_requirements.yml
-            echo "Read lowest version from CCI requirements"
+            echo "INFO: Read lowest version from CCI requirements"
             checkout([$class           : 'GitSCM',
                     branches         : [[name: 'master']],
                     userRemoteConfigs: [[credentialsId: 'conanci-gh-token', url: 'https://github.com/conan-io/c3i_jenkins.git']],
