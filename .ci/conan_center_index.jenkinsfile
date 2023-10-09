@@ -27,6 +27,7 @@ node('Linux') {
     stage('Input parameters') {
         echo """
         - dry_run: ${params.dry_run}
+        - conan_versions: ${params.conan_versions}
         """
     }
 
@@ -34,6 +35,13 @@ node('Linux') {
     List<String> ignoreVersions = []
     String latestVersion = null
     stage('Compute Conan versions') {
+        if (params.conan_versions) {
+            conanVersions = params.conan_versions.trim().split(',')
+            // INFO: Check that all versions are valid
+            conanVersions.collect{ parseVersion(it) }
+            echo "INFO: Skipping Conan versions computation because of input parameter."
+        }
+
         dir('tmp') {
             // Minimum from https://github.com/conan-io/c3i_jenkins/blob/master/resources/org/jfrog/c3i/configs/library_requirements.yml
             echo "Read lowest version from CCI requirements"
@@ -52,9 +60,14 @@ node('Linux') {
             def response = httpRequest(url: 'https://pypi.org/pypi/conan/json')
             Map<String, Object> requestJson = readJSON(text: response.content)
             latestVersion = requestJson.info.version
+            def keyVersions = requestJson.releases.keySet()
 
-            for (String release in requestJson.releases.keySet()) {
+            echo "INFO: Latest version available in pypi: ${latestVersion}"
+            echo "INFO: Found versions in pypi: ${keyVersions.size()}"
+
+            for (String release in keyVersions) {
                 try {
+                    echo "DEBUG: Parsing release '$release'"
                     def version = parseVersion(release)
 
                     // Ignore Conan < 1.44: https://github.com/conan-io/conan/issues/10611
@@ -70,12 +83,15 @@ node('Linux') {
                     }
 
                     if (version[0] > minVersion[0] && !hasPreVersion(release)) {
+                        echo "DEBUG: Adding '$release' to the list of versions because of major version."
                         conanVersions.add(release)
                     }
                     else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
+                        echo "DEBUG: Adding '$release' to the list of versions because of minor version."
                         conanVersions.add(release)
                     }
                     else if (version[0] == minVersion[0] && version[1] == minVersion[1] &&  version[2] >= minVersion[2]) {
+                        echo "DEBUG: Adding '$release' to the list of versions because of patch version."
                         conanVersions.add(release)
                     }
                 }
@@ -84,6 +100,7 @@ node('Linux') {
                 }
             }
             conanVersions = conanVersions.reverse()
+            echo "DEBUG: Filtering Conan versions: ${conanVersions}"
 
             // Ensure at least one version of Conan 1.x and three from Conan 2.x
             def conan2Versions = conanVersions.findAll{element -> element[0] == '2'}
@@ -93,8 +110,8 @@ node('Linux') {
         }
     }
 
-    echo "Versions: ${conanVersions}"
-    echo "- latest: ${latestVersion}"
+    echo "INFO: Conan versions: ${conanVersions}"
+    echo "INFO: Conan latest version: ${latestVersion}"
 
     List parameters = []
 
