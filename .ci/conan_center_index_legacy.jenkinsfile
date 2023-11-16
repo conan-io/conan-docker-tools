@@ -12,12 +12,10 @@ def getMinConanVersion(content) {
     return [minVersion[0][1] as int, minVersion[0][2] as int, minVersion[0][3] as int]
 }
 
-@NonCPS
 def parseVersion(String version) {
     def matcher = (version =~ /(\d+).(\d+).(\d+)/)
     return [matcher[0][1] as int, matcher[0][2] as int, matcher[0][3] as int]
 }
-
 
 node('Linux') {
 
@@ -122,13 +120,14 @@ node('Linux') {
     parameters.add([$class: 'BooleanParameterValue', name: 'build_conan_server', value: true])
     parameters.add([$class: 'BooleanParameterValue', name: 'build_conan_client', value: true])
 
-    for (version in conanVersions) {
-        boolean isLatest = (version == latestVersion)
-        stage("Build legacy images for Conan '${version}' (latest=${isLatest})") {
+    for (v in conanVersions) {
+        String strVersion = "${v[0]}.${v[1]}.${v[2]}"
+        boolean isLatest = (v == latestVersion)
+        stage("Build legacy images for Conan '${strVersion}' (latest=${isLatest})") {
             // INFO: When building docker images, networking errors are frequent. We retry 3 times.
             retry(3) {
                 build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters + [
-                    [$class: 'StringParameterValue', name: 'conan_version', value: version],
+                    [$class: 'StringParameterValue', name: 'conan_version', value: strVersion],
                     [$class: 'BooleanParameterValue', name: 'upload_latest', value: isLatest],
                 ])
             }
