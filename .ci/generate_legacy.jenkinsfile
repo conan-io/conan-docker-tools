@@ -96,9 +96,20 @@ boolean isLegacyJenkinsUsed(String compiler, String version) {
     return true
 }
 
+List<String> parseVersions(String versions) {
+    List<String> result = []
+    versions.split('\n').each { v ->
+        String version = v.trim()
+        if (version.size() > 0 && version.isNumber()) {
+            result.add(version)
+        }
+    }
+    return result
+}
+
 node('Linux') {
-    List<String> gccVersions = params.gcc_versions.split('\n')
-    List<String> clangVersions = params.clang_versions.split('\n')
+    List<String> gccVersions = parseVersions(params.gcc_versions)
+    List<String> clangVersions = parseVersions(params.clang_versions)
 
     environment {
         DOCKER_BUILDKIT = 0
@@ -134,7 +145,9 @@ node('Linux') {
         - clang_versions: ${clangVersions.join(', ')}
         """
         assert gccVersions.size() > 0: 'Expecting to build some GCC versions at least'
-        assert clangVersions.size() > 0: 'Expecting to build some Clang versions at least'
+        if (clangVersion.size() == 0) {
+            echo 'WARNING: No Clang versions to build'
+        }
 
         echo """
         About docker images generated:
