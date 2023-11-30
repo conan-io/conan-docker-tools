@@ -9,7 +9,8 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
-    CC=/usr/bin/gcc
+    CC=/usr/bin/gcc \
+    FC=/usr/bin/gfortran
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
@@ -24,6 +25,7 @@ RUN dpkg --add-architecture i386 \
        libc6-dev-i386 \
        linux-libc-dev:i386 \
        g++-7-multilib \
+       gfortran-7-multilib \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \
@@ -53,6 +55,7 @@ RUN dpkg --add-architecture i386 \
     && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 100 \
     && update-alternatives --install /usr/bin/gcov-dump gcov-dump /usr/bin/gcov-dump-7 100 \
     && update-alternatives --install /usr/bin/gcov-tool gcov-tool /usr/bin/gcov-tool-7 100 \
+    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
