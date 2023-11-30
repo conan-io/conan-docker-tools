@@ -145,7 +145,7 @@ node('Linux') {
         - clang_versions: ${clangVersions.join(', ')}
         """
         assert gccVersions.size() > 0: 'Expecting to build some GCC versions at least'
-        if (clangVersion.size() == 0) {
+        if (clangVersions.size() == 0) {
             echo 'WARNING: No Clang versions to build'
         }
 
