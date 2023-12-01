@@ -9,7 +9,8 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
-    CC=/usr/bin/gcc
+    CC=/usr/bin/gcc \
+    FC=/usr/bin/gfortran
 
 RUN dpkg --add-architecture i386 \
     && apt-get -qq update \
@@ -23,6 +24,7 @@ RUN dpkg --add-architecture i386 \
        git \
        libc6-dev-i386 \
        g++-multilib \
+       gfortran-multilib \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \

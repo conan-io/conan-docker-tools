@@ -8,6 +8,7 @@ ENV GCC_VERSION=10 \
     CMAKE_VERSION_FULL=3.18.2 \
     CC=/usr/bin/gcc \
     CXX=/usr/bin/g++ \
+    FC=/usr/bin/gfortran \
     PYENV_ROOT=/opt/pyenv \
     PYTHON_VERSION=3.7.13 \
     PATH=/opt/pyenv/shims:${PATH} \
@@ -24,6 +25,7 @@ RUN apt-get -qq update \
        git \
        libc6-dev \
        g++-${GCC_VERSION} \
+       gfortran-${GCC_VERSION} \
        libgmp-dev \
        libmpfr-dev \
        libmpc-dev \
@@ -52,6 +54,7 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-${GCC_VERSION} 100 \
     && update-alternatives --install /usr/bin/gcov-dump gcov-dump /usr/bin/gcov-dump-${GCC_VERSION} 100 \
     && update-alternatives --install /usr/bin/gcov-tool gcov-tool /usr/bin/gcov-tool-${GCC_VERSION} 100 \
+    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-${GCC_VERSION} 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/* \
     && curl -sfL https://getcli.jfrog.io | sh \
