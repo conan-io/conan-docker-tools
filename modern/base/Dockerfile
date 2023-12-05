@@ -124,4 +124,4 @@ WORKDIR /home/conan
 RUN pip install conan~=1.0 \
     && CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt \
     && rm -rf /tmp/conan \
-    && pip install conan==${CONAN_VERSION} packaging==23.2
+    && pip install conan==${CONAN_VERSION} mako==1.3.0 packaging==23.2
