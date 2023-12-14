@@ -300,20 +300,6 @@ node('Linux') {
     clangBuilds.failFast = true
     parallel(clangBuilds)
 
-    if (params.build_conan_client) {
-        Map conanClientBuilds = [:]
-        conanClientBuilds['Legacy Conan Client'] = appBuild('conan_client', 'conan')
-        conanClientBuilds.failFast = true
-        parallel(conanClientBuilds)
-    }
-
-    if (params.build_conan_server) {
-        Map conanServerBuilds = [:]
-        conanServerBuilds['Legacy Conan Serve'] = appBuild('conan_server', 'conan_server')
-        conanServerBuilds.failFast = true
-        parallel(conanServerBuilds)
-    }
-
     if (isMaster) {
         // If it was master and everything is ok up to here
         stage('Legacy - Upload images') {
@@ -335,12 +321,6 @@ node('Linux') {
                 if (params.upload_jenkins_images && isLegacyJenkinsUsed('clang', versionMajor)) {
                     images.add("clang${versionMajor}-jnlp-slave")
                 }
-            }
-            if (params.build_conan_client) {
-                images.add('conan')
-            }
-            if (params.build_conan_server) {
-                images.add('conan_server')
             }
 
             images.each { image ->

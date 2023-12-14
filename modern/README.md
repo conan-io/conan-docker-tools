@@ -123,16 +123,6 @@ Tags will use the Conan version available in those images.
 | [conanio/clang14-ubuntu16.04: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04/) | x86_64 | :white_check_mark: Supported |
 
 
-
-### Conan Server
-
-Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host. It's based on Alpine.
-
-| Version                                                                | Arch   | Status, Life cycle           |
-|------------------------------------------------------------------------|--------|------------------------------|
-| [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/) | ANY    | :white_check_mark: Supported |
-
-
 ### Jenkins Client
 
 If you use Jenkins to build your packages and also you use Jenkins clients to run each docker container, you could use our Docker images prepared for Jenkins. Those images run the script [jenkins-client.sh](jenkins/jenkins-client), which starts the client during the container entrypoint.

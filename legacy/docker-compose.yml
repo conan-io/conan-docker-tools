@@ -496,22 +496,6 @@ services:
         image: "${DOCKER_USERNAME}/clang7-x86:${DOCKER_BUILD_TAG}"
         container_name: clang7-x86
         tty: true
-    conan_server:
-        build:
-            context: conan_server
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/conan_server:${DOCKER_BUILD_TAG}"
-        container_name: conan_server
-    conan:
-        build:
-            context: conan_client
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/conan:${DOCKER_BUILD_TAG}"
-        container_name: conan_client
     clang8:
         build:
             context: clang_8

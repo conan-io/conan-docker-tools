@@ -128,8 +128,6 @@ node('Linux') {
     parameters.add([$class: 'BooleanParameterValue', name: 'upload_main_images', value: true])
     parameters.add([$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true])
     parameters.add([$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run])
-    parameters.add([$class: 'BooleanParameterValue', name: 'build_conan_server', value: true])
-    parameters.add([$class: 'BooleanParameterValue', name: 'build_conan_client', value: true])
 
     for (v in conanVersions) {
         String strVersion = "${v[0]}.${v[1]}.${v[2]}"
