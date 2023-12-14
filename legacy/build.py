@@ -66,8 +66,6 @@ class ConanDockerTools(object):
         docker_upload = self._get_boolean_var("DOCKER_UPLOAD")
         docker_upload_retry = os.getenv("DOCKER_UPLOAD_RETRY", 10)
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
-        build_server = self._get_boolean_var("BUILD_CONAN_SERVER_IMAGE")
-        build_client = self._get_boolean_var("BUILD_CONAN_CLIENT_IMAGE")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
@@ -90,13 +88,13 @@ class ConanDockerTools(object):
             "Variables", "docker_upload, docker_password, "
             "docker_username, docker_login_username, "
             "gcc_versions, docker_distro, "
-            "clang_versions, visual_versions, build_server, "
-            "build_client, docker_build_tag, docker_archs, sudo_command, "
+            "clang_versions, visual_versions, "
+            "docker_build_tag, docker_archs, sudo_command, "
             "docker_upload_only_when_stable, docker_cross, docker_cache, "
             "docker_upload_retry")
         return Variables(docker_upload, docker_password, docker_username, docker_login_username,
-                         gcc_versions, docker_distro, clang_versions, visual_versions, build_server,
-                         build_client, docker_build_tag, docker_archs, sudo_command, docker_upload_only_when_stable,
+                         gcc_versions, docker_distro, clang_versions, visual_versions,
+                         docker_build_tag, docker_archs, sudo_command, docker_upload_only_when_stable,
                          docker_cross, docker_cache, docker_upload_retry)
 
     def _get_boolean_var(self, var, default="false"):
@@ -329,35 +327,6 @@ class ConanDockerTools(object):
                                          self.created_image_name), shell=True)
         assert "java -jar agent.jar [options...]" in output.decode()
 
-    def test_server(self):
-        """Validate Conan Server image
-        :param service: Docker compose service name
-        """
-        logging.info("Testing Docker running service %s." % self.service)
-        try:
-            subprocess.check_call(
-                "docker run -t -d -p 9300:9300 --name %s %s" % (self.service,
-                    self.created_image_name), shell=True)
-            time.sleep(3)
-            response = requests.get("http://0.0.0.0:9300/v1/ping")
-            assert response.ok
-        finally:
-            subprocess.call("docker stop %s" % self.service, shell=True)
-            subprocess.call("docker rm %s" % self.service, shell=True)
-
-    def test_client(self):
-        """Validate Conan client image
-        :param service: Docker compose service name
-        """
-        logging.info("Testing Docker running service %s." % self.service)
-        try:
-            subprocess.check_call(
-                "docker run -t -d --name %s %s conan --version" % (self.service,
-                    self.created_image_name.replace("_client", "")), shell=True)
-        finally:
-            subprocess.call("docker stop %s" % self.service, shell=True)
-            subprocess.call("docker rm %s" % self.service, shell=True)
-
     def deploy(self):
         """Upload Docker image to dockerhub
         """
@@ -414,38 +383,6 @@ class ConanDockerTools(object):
         logging.info("Show Docker image %s info:" % self.created_image_name)
         subprocess.call('docker inspect %s' % self.created_image_name, shell=True)
 
-    def process_conan_server(self):
-        """ Execute all steps required to build Conan Server image
-        """
-        self.service = image_name = "conan_server"
-        if self.variables.build_server:
-            logging.info("Bulding %s image..." % image_name)
-            self.login()
-            self.linter(self.service)
-            self.build()
-            self.test_server()
-            self.tag()
-            self.info()
-            self.deploy()
-        else:
-            logging.info("Skipping %s image creation" % image_name)
-
-    def process_conan_client(self):
-        """ Execute all steps required to build Conan Client image
-        """
-        self.service = image_name = "conan"
-        if self.variables.build_client:
-            logging.info("Bulding %s image..." % image_name)
-            self.login()
-            self.linter(self.service)
-            self.build()
-            self.test_client()
-            self.tag()
-            self.info()
-            self.deploy()
-        else:
-            logging.info("Skipping %s image creation" % image_name)
-
     def process_regular_images(self):
         cross = "" if not self.variables.docker_cross else "%s-" % self.variables.docker_cross
         for arch in self.variables.docker_archs:
@@ -491,8 +428,6 @@ class ConanDockerTools(object):
         """
         self.process_regular_images()
         self.process_distro_images()
-        self.process_conan_server()
-        self.process_conan_client()
 
 
 if __name__ == "__main__":

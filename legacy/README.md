@@ -112,17 +112,21 @@ To learn how to build using Android docker images, please, visit [official docs]
 
 Conan Docker Tools provides an image version with only Conan Server installed, very useful for the cases it is necessary to run a server without touching the host.
 
+**NOTE**: In case looking for a Conan server, please, try Artifactory (including docker image) listed at https://conan.io/downloads
+
 | Version                                                                                       | Arch   | Status, Life cycle           |
 |-----------------------------------------------------------------------------------------------|--------|------------------------------|
-| [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)                        | ANY    | :white_check_mark: Supported |
+| [conanio/conan_server](https://hub.docker.com/r/conanio/conan_server/)                        | ANY    | :warning: Deprecated         |
 
 #### Conan Client
 
 Conan Docker Tools provides an image version with only Conan client installed, very useful for the cases it is necessary to run a command without touching the host.
 
+**NOTE**: Please, check self-contained version at https://conan.io/downloads in case you need a minimal executable
+
 | Version                                                                                       | Arch   | Status, Life cycle           |
 |-----------------------------------------------------------------------------------------------|--------|------------------------------|
-| [conanio/conan](https://hub.docker.com/r/conanio/conan/)                                      | ANY    | :white_check_mark: Supported |
+| [conanio/conan](https://hub.docker.com/r/conanio/conan/)                                      | ANY    | :warning: Deprecated         |
 
 
 #### Conan Installer
