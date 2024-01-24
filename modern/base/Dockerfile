@@ -18,7 +18,7 @@ ARG CONAN_VERSION
 
 WORKDIR /root
 
-COPY conan.lock conanfile.txt /opt/conan/
+COPY conan.lock conanfile.txt conan_bootstrap.sh /opt/conan/
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
@@ -121,4 +121,4 @@ RUN apt-get -qq update \
 USER conan
 WORKDIR /home/conan
 
-RUN pip install conan==${CONAN_VERSION}
+RUN /opt/conan/conan_bootstrap.sh
