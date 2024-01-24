@@ -74,7 +74,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc5]
         image: ${DOCKER_USERNAME}/gcc5-builder-${DISTRO}:${DOCKER_TAG}
@@ -85,7 +85,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc6]
         image: ${DOCKER_USERNAME}/gcc6-builder-${DISTRO}:${DOCKER_TAG}
@@ -96,7 +96,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc7]
         image: ${DOCKER_USERNAME}/gcc7-builder-${DISTRO}:${DOCKER_TAG}
@@ -107,7 +107,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc8]
         image: ${DOCKER_USERNAME}/gcc8-builder-${DISTRO}:${DOCKER_TAG}
@@ -118,7 +118,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc9]
         image: ${DOCKER_USERNAME}/gcc9-builder-${DISTRO}:${DOCKER_TAG}
@@ -129,7 +129,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc10]
         image: ${DOCKER_USERNAME}/gcc10-builder-${DISTRO}:${DOCKER_TAG}
@@ -140,7 +140,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc11]
         image: ${DOCKER_USERNAME}/gcc11-builder-${DISTRO}:${DOCKER_TAG}
@@ -151,7 +151,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc12]
         image: ${DOCKER_USERNAME}/gcc12-builder-${DISTRO}:${DOCKER_TAG}
@@ -162,7 +162,7 @@ services:
         build:
             context: gcc
             dockerfile: Dockerfile
-            target: gcc-builder
+            target: builder
             args:
                 <<: [*common-args, *gcc13]
         image: ${DOCKER_USERNAME}/gcc13-builder-${DISTRO}:${DOCKER_TAG}
