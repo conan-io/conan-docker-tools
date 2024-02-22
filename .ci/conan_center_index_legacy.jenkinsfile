@@ -111,7 +111,7 @@ node('Linux') {
     // CCI uses same hardcoded values from the repository for the tools (only Conan version is changed)
     stage('Legacy - Parse environment file') {
         checkout scm
-        List<String> gccVersions = ["5", "7", "9", "10", "11"]
+        List<String> gccVersions = ["5", "7", "9"]
         List<String> clangVersions = []
 
         parameters.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
