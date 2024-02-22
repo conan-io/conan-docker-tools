@@ -247,7 +247,7 @@ RUN apt-get -qq update \
     && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
     && cp $(find lib -name "*.so*") /tmp/install/lib
 
-FROM ${DOCKER_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}${SUFFIX}:${DOCKER_TAG} as libstdcpp
+FROM docker.io/conanio/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:latest as libstdcpp
 
 FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 

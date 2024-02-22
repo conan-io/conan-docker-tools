@@ -148,8 +148,8 @@ node('Linux') {
     // CCI uses same hardcoded values from the repository for the tools (only Conan version is changed)
     stage('Parse environment file') {
         checkout scm
-        List<String> gccVersions = []
-        List<String> clangVersions = []
+        List<String> gccVersions = ["11"]
+        List<String> clangVersions = ["13"]
 
         String content = readFile('modern/.env')
         content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
