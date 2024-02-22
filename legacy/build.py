@@ -68,6 +68,7 @@ class ConanDockerTools(object):
         docker_upload_only_when_stable = self._get_boolean_var("DOCKER_UPLOAD_ONLY_WHEN_STABLE", "true")
         docker_password = os.getenv("DOCKER_PASSWORD", "").replace('"', '\\"')
         docker_username = os.getenv("DOCKER_USERNAME", "conanio")
+        dockerhub_username = os.getenv("DOCKERHUB_USERNAME", "conanio")
         docker_login_username = os.getenv("DOCKER_LOGIN_USERNAME", "lasote")
         docker_build_tag = os.getenv("DOCKER_BUILD_TAG", TARGET_CONAN_VERSION)
         docker_archs = os.getenv("DOCKER_ARCHS").split(",") if os.getenv("DOCKER_ARCHS") else [
@@ -77,6 +78,7 @@ class ConanDockerTools(object):
         docker_cache = self._get_boolean_var("DOCKER_CACHE")
         docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else ["jnlp-slave"]
         os.environ["DOCKER_USERNAME"] = docker_username
+        os.environ["DOCKERHUB_USERNAME"] = dockerhub_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
         gcc_versions = os.getenv("GCC_VERSIONS").split(",") if os.getenv("GCC_VERSIONS") else []
         clang_versions = os.getenv("CLANG_VERSIONS").split(",") if os.getenv("CLANG_VERSIONS") else []

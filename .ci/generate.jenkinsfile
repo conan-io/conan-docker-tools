@@ -184,6 +184,7 @@ node('Linux') {
         buildArguments.put('LIBSTDCPP_PATCH_VERSION', params.libstdcpp_patch_version)
         buildArguments.put('LIBSTDCPP_MAJOR_VERSION', params.libstdcpp_major_version)
         buildArguments.put('DOCKER_USERNAME', dockerUsername)
+        buildArguments.put('DOCKERHUB_USERNAME', dockerhubUsername)
         buildArguments.put('JENKINS_AGENT_VERSION', params.jenkins_agent_version)
         buildArguments.put('JENKINS_AGENT_NEW_VERSION', params.jenkins_agent_new_version)
         buildArguments.put('JAVA_JDK_VERSION', params.java_jdk_version)
