@@ -1,7 +1,7 @@
 ARG SOURCE_CONANIO_IMAGE
 FROM $SOURCE_CONANIO_IMAGE
 
-ARG AGENT_VERSION=3.27
+ARG AGENT_VERSION=3206.vb_15dcf73f6a_9
 USER root
 
 COPY jenkins-slave /usr/local/bin/jenkins-slave
