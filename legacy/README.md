@@ -217,8 +217,8 @@ If you use Jenkins to build your packages and also you use Jenkins Slave to run 
 | [conanio/gcc8-jnlp-slave-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
 | [conanio/gcc9-jnlp-slave: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
 | [conanio/gcc9-jnlp-slave-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
-| [conanio/gcc10-jnlp-slave: gcc 10](https://hub.docker.com/r/conanio/gcc10-jnlp-slave/)                    | x86_64 | :white_check_mark: Supported |
-| [conanio/gcc11-jnlp-slave: gcc 11](https://hub.docker.com/r/conanio/gcc11-jnlp-slave/)                    | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc10-jnlp-slave: gcc 10](https://hub.docker.com/r/conanio/gcc10-jnlp-slave/)                    | x86_64 | :warning: Deprecated         |
+| [conanio/gcc11-jnlp-slave: gcc 11](https://hub.docker.com/r/conanio/gcc11-jnlp-slave/)                    | x86_64 | :warning: Deprecated         |
 | [conanio/gcc7-jnlp-slave-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6/)       | x86_64 | :warning: Deprecated         |
 | [conanio/gcc7-jnlp-slave-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6-x86/) | x86  | :warning: Deprecated         |
 
