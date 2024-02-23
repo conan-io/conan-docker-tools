@@ -76,7 +76,7 @@ class ConanDockerTools(object):
         ]
         docker_cross = os.getenv("DOCKER_CROSS", False)
         docker_cache = self._get_boolean_var("DOCKER_CACHE")
-        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else ["jnlp-slave"]
+        docker_distro = os.getenv("DOCKER_DISTRO").split(",") if os.getenv("DOCKER_DISTRO") else ["jenkins"]
         os.environ["DOCKER_USERNAME"] = docker_username
         os.environ["DOCKERHUB_USERNAME"] = dockerhub_username
         os.environ["DOCKER_BUILD_TAG"] = docker_build_tag
@@ -202,7 +202,7 @@ class ConanDockerTools(object):
         try:
             if compiler_name == "Visual Studio":
                 self.test_visual_studio(arch, compiler_name, compiler_version)
-            elif "jnlp-slave" in str(distro):
+            elif "jenkins" in str(distro):
                 self.test_jenkins()
             else:
                 self.test_linux(arch, compiler_name, compiler_version, distro)
