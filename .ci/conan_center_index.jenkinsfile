@@ -171,13 +171,10 @@ node('Linux') {
                 parameters.add([$class: 'StringParameterValue', name: 'python_version', value: value])
             }
             else if (name == 'JENKINS_AGENT_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
+                parameters.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value, defaultValue: '3206.vb_15dcf73f6a_9'])
             }
             else if (name == 'JAVA_JDK_VERSION') {
                 parameters.add([$class: 'StringParameterValue', name: 'java_jdk_version', value: value, defaultValue: '11'])
-            }
-            else if (name == 'JAVA_JDK_NEW_VERSION') {
-                parameters.add([$class: 'StringParameterValue', name: 'java_jdk_new_version', value: value, defaultValue: '11'])
             }
 
             // compiler versions

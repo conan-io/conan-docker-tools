@@ -1,2 +1,2 @@
 #!/bin/bash
-jenkins-slave $@
+jenkins-client $@

@@ -118,9 +118,7 @@ node('Linux') {
         - cmake_version: ${params.cmake_version}
         - python_version: ${params.python_version}
         - jenkins_agent_version: ${params.jenkins_agent_version}
-        - jenkins_agent_new_version: ${params.jenkins_agent_new_version}
         - java_jdk_version: ${params.java_jdk_version}
-        - java_jdk_new_version: ${params.java_jdk_new_version}
         """
 
         echo """
@@ -186,9 +184,7 @@ node('Linux') {
         buildArguments.put('DOCKER_USERNAME', dockerUsername)
         buildArguments.put('DOCKERHUB_USERNAME', dockerhubUsername)
         buildArguments.put('JENKINS_AGENT_VERSION', params.jenkins_agent_version)
-        buildArguments.put('JENKINS_AGENT_NEW_VERSION', params.jenkins_agent_new_version)
         buildArguments.put('JAVA_JDK_VERSION', params.java_jdk_version)
-        buildArguments.put('JAVA_JDK_NEW_VERSION', params.java_jdk_new_version)
         buildArguments.put('DISTRO', params.distro)
         buildArguments.put('DISTRO_VERSION', params.distro_version)
 
@@ -230,8 +226,7 @@ node('Linux') {
 
             String builderImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-builder:${branchName}-${commit}"
             String deployImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}:${branchName}-${commit}"
-            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}"
-            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}-${params.jenkins_agent_new_version}"
+            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-${commit}-${params.jenkins_agent_version}"
             String compilerArgs = "${buildArgs} --build-arg ${compiler.toUpperCase()}_VERSION=${version}"
             if (suffix) {
                 compilerArgs = "${compilerArgs} --build-arg SUFFIX=${suffix}"
@@ -271,28 +266,15 @@ node('Linux') {
                 }
 
                 stage("${compiler.toUpperCase()} ${version} jenkins") {
-                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-latest"
-                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${targetBranch}-latest"
+                    String latestNewBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-latest-${params.jenkins_agent_version}"
+                    String latestNewMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${targetBranch}-latest-${params.jenkins_agent_version}"
 
                     dir('modern/jenkins') {
-                        buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage}")
+                        buildImage(latestNewMaster, latestNewBranch, jenkinsImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg JENKINS_AGENT_VERSION=${params.jenkins_agent_version} --build-arg JAVA_JDK_VERSION=${params.java_jdk_version}")
                     }
 
                     dir('modern') {
-                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
-                    }
-                }
-
-                stage("${compiler.toUpperCase()} ${version} jenkins new") {
-                    String latestNewBranch = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${branchName}-latest-${params.jenkins_agent_new_version}"
-                    String latestNewMaster = "${dockerUsername}/${compiler}${versionMajor}-${params.distro}${suffix}-jenkins:${targetBranch}-latest-${params.jenkins_agent_new_version}"
-
-                    dir('modern/jenkins') {
-                        buildImage(latestNewMaster, latestNewBranch, jenkinsNewImage, "${compilerArgs} --build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg JENKINS_AGENT_VERSION=${params.jenkins_agent_new_version} --build-arg JAVA_JDK_VERSION=${params.java_jdk_new_version}")
-                    }
-
-                    dir('modern') {
-                        sh "pytest tests --image ${jenkinsNewImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
+                        sh "pytest tests --image ${jenkinImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
                     }
                 }
             }
@@ -352,23 +334,22 @@ node('Linux') {
                 if (params.upload_main_images) {
                     images.add("gcc${versionMajor}-${params.distro}${suffix}")
                 }
-                if (params.upload_jenkins_images) {
-                    images.add("gcc${versionMajor}-${params.distro}${suffix}-jenkins")
-                }
             }
             clangVersions.each { v ->
                 String versionMajor = getVersionMajor(v)
                 if (params.upload_main_images) {
                     images.add("clang${versionMajor}-${params.distro}${suffix}")
                 }
-                if (params.upload_jenkins_images) {
-                    images.add("clang${versionMajor}-${params.distro}${suffix}-jenkins")
-                }
             }
 
             images.each { image ->
                 String builtImage = "${dockerUsername}/${image}:${branchName}-${commit}"
+                String builtJenkinsImage = "${dockerUsername}/${image}-jenkins:${branchName}-${commit}-${params.jenkins_agent_version}"
+
                 sh "docker pull ${builtImage}"
+                if (params.upload_jenkins_images) {
+                    sh "docker pull ${builtJenkinsImage}"
+                }
 
                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh 'docker login --username $USERNAME --password $PASSWORD'
@@ -382,6 +363,16 @@ node('Linux') {
                     sh "docker push ${uploadImage}"
                 }
 
+                if (params.upload_jenkins_images) {
+                    String tagJenkinsVersion = "${params.conan_version}-${params.jenkins_agent_version}"
+                    // Upload with the corresponding tag version
+                    String uploadJenkinsImage = "${dockerhubUsername}/${image}-jenkins:${tagJenkinsVersion}"
+                    sh "docker tag ${builtJenkinsImage} ${uploadJenkinsImage}"
+                    if (!params.dry_run) {
+                        sh "docker push ${uploadJenkinsImage}"
+                    }
+                }
+
                 if (params.upload_latest) {
                     // Upload with tag 'latest'
                     String uploadLatest = "${dockerhubUsername}/${image}:latest"
@@ -389,31 +380,11 @@ node('Linux') {
                     if (!params.dry_run) {
                         sh "docker push ${uploadLatest}"
                     }
-                }
-
-                // Upload Jenkins images with new client version
-                if (params.upload_jenkins_images && image.endsWith('-jenkins')) {
-                    String builtNewImage = "${dockerUsername}/${image}:${branchName}-${commit}-${params.jenkins_agent_new_version}"
-                    sh "docker pull ${builtNewImage}"
-
-                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        sh 'docker login --username $USERNAME --password $PASSWORD'
-                    }
-
-                    String tagNewVersion = "${params.conan_version}-${params.jenkins_agent_new_version}"
-                    // Upload with the corresponding tag version
-                    String uploadNewImage = "${dockerhubUsername}/${image}:${tagNewVersion}"
-                    sh "docker tag ${builtNewImage} ${uploadNewImage}"
-                    if (!params.dry_run) {
-                        sh "docker push ${uploadNewImage}"
-                    }
-
-                    if (params.upload_latest) {
-                        // Upload with tag 'latest'
-                        String uploadNewLatest = "${dockerhubUsername}/${image}:latest-${params.jenkins_agent_new_version}"
-                        sh "docker tag ${builtNewImage} ${uploadNewLatest}"
+                    if (params.upload_jenkins_images) {
+                        String uploadJenkinsLatest = "${dockerhubUsername}/${image}-jenkins:latest-${params.jenkins_agent_version}"
+                        sh "docker tag ${builtJenkinsImage} ${uploadJenkinsLatest}"
                         if (!params.dry_run) {
-                            sh "docker push ${uploadNewLatest}"
+                            sh "docker push ${uploadJenkinsLatest}"
                         }
                     }
                 }

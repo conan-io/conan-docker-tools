@@ -563,8 +563,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc5-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc5-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc5-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc5-jenkins
     gcc6-jenkins:
         platform: ${PLATFORM}
@@ -574,8 +575,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc6-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc6-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc6-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc6-jenkins
     gcc7-jenkins:
         platform: ${PLATFORM}
@@ -585,8 +587,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc7-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc7-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc7-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc7-jenkins
     gcc8-jenkins:
         platform: ${PLATFORM}
@@ -596,8 +599,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc8-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc8-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc8-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc8-jenkins
     gcc9-jenkins:
         platform: ${PLATFORM}
@@ -607,8 +611,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc9-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc9-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc9-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc9-jenkins
     gcc10-jenkins:
         platform: ${PLATFORM}
@@ -618,8 +623,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc10-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc10-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc10-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc10-jenkins
     gcc11-jenkins:
         platform: ${PLATFORM}
@@ -629,8 +635,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc11-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc11-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc11-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc11-jenkins
     gcc12-jenkins:
         platform: ${PLATFORM}
@@ -640,8 +647,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc12-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc12-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/gcc12-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc12-jenkins
     gcc13-jenkins:
         platform: ${PLATFORM}
@@ -651,9 +659,10 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc13-${DISTRO}-jenkins:${DOCKER_TAG}"
-        container_name: gcc13-jenkins
+        image: "${DOCKER_USERNAME}/gcc13-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc12-jenkins
     clang10-jenkins:
         platform: ${PLATFORM}
         build:
@@ -662,8 +671,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang10-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang10-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/clang10-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: clang10-jenkins
     clang11-jenkins:
         platform: ${PLATFORM}
@@ -673,8 +683,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang11-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang11-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/clang11-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: clang11-jenkins
     clang12-jenkins:
         platform: ${PLATFORM}
@@ -684,8 +695,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang12-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang12-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/clang12-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: clang12-jenkins
     clang13-jenkins:
         platform: ${PLATFORM}
@@ -695,8 +707,9 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang13-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang13-${DISTRO}-jenkins:${DOCKER_TAG}"
+        image: "${DOCKER_USERNAME}/clang13-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: clang13-jenkins
 
     clang14-jenkins:
@@ -707,177 +720,7 @@ services:
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang14-${DISTRO}:${DOCKER_TAG}
                 JENKINS_AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
                 <<: *common-args
-        image: "${DOCKER_USERNAME}/clang14-${DISTRO}-jenkins:${DOCKER_TAG}"
-        container_name: clang14-jenkins
-
-    # Jenkins NEW images
-    gcc5-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc5-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc5-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc5-jenkins
-    gcc6-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc6-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc6-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc6-jenkins
-    gcc7-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc7-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc7-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc7-jenkins
-    gcc8-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc8-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc8-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc8-jenkins
-    gcc9-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc9-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc9-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc9-jenkins
-    gcc10-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc10-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc10-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc10-jenkins
-    gcc11-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc11-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc11-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc11-jenkins
-    gcc12-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc12-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc12-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc12-jenkins
-    gcc13-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc13-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/gcc13-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc12-jenkins
-    clang10-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang10-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/clang10-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang10-jenkins
-    clang11-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang11-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/clang11-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang11-jenkins
-    clang12-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang12-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/clang12-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang12-jenkins
-    clang13-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang13-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/clang13-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang13-jenkins
-
-    clang14-new-jenkins:
-        platform: ${PLATFORM}
-        build:
-            context: jenkins
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/clang14-${DISTRO}:${DOCKER_TAG}
-                JENKINS_AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-                <<: *common-args
-        image: "${DOCKER_USERNAME}/clang14-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_NEW_VERSION}"
+        image: "${DOCKER_USERNAME}/clang14-${DISTRO}-jenkins:${DOCKER_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: clang14-jenkins

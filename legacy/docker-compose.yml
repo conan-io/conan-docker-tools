@@ -639,713 +639,222 @@ services:
         image: "${DOCKER_USERNAME}/android-clang14-armv8:${DOCKER_BUILD_TAG}"
         container_name: android-clang14-armv8
     # Jenkins Images
-    gcc46-jnlp-slave:
+    gcc46-jenkins:
         build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc46:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc46-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc46-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+        image: "${DOCKER_USERNAME}/gcc46-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc46-jenkins
         tty: true
-    gcc48-jnlp-slave:
+    gcc48-jenkins:
         build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc48:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc48-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc48-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc48-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc48-jenkins
         tty: true
-    gcc48-jnlp-slave-x86:
+    gcc49-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc48-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc48-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc48-jnlp-slave-x86
-        tty: true
-    gcc49-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc49:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc49-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc49-jnlp-slave
-    gcc49-jnlp-slave-x86:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc49-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc49-jenkins
+    gcc5-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc49-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc49-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc49-jnlp-slave-x86
-        tty: true
-    gcc5-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc5:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc5-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc5-jnlp-slave
-    gcc5-jnlp-slave-x86:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc5-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc5-jenkins
+    gcc6-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc5-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc5-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc5-jnlp-slave-x86
-        tty: true
-    gcc6-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc6:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc6-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc6-jnlp-slave
-    gcc6-jnlp-slave-x86:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc6-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc6-jenkins
+    gcc7-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc6-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc6-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc6-jnlp-slave-x86
-        tty: true
-    gcc7-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc7:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc7-jnlp-slave
-    gcc7-jnlp-slave-x86:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc7-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc7-jenkins
+    gcc8-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc7-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc7-jnlp-slave-x86
-        tty: true
-    gcc8-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc8:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc8-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc8-jnlp-slave
-    gcc8-jnlp-slave-x86:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc8-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc8-jenkins
+    gcc9-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc8-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc8-jnlp-slave-x86
-        tty: true
-    gcc9-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc9:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc9-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc9-jnlp-slave
-    gcc9-jnlp-slave-x86:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc9-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc9-jenkins
+    gcc10-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc9-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: gcc9-jnlp-slave-x86
-        tty: true
-    gcc10-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc10:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc10-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc10-jnlp-slave
-    gcc11-jnlp-slave:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc10-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc10-jenkins
+    gcc11-jenkins:
         build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc11:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/gcc11-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: gcc11-jnlp-slave
-    clang39-jnlp-slave:
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/gcc11-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: gcc11-jenkins
+    clang39-jenkins:
         build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang39:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang39-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang39-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang39-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang39-jenkins
         tty: true
-    clang39-jnlp-slave-x86:
+    clang40-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang39-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang39-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang39-jnlp-slave-x86
-        tty: true
-    clang40-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang40:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang40-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang40-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang40-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang40-jenkins
         tty: true
-    clang40-jnlp-slave-x86:
+    clang50-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang40-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang40-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang40-jnlp-slave-x86
-        tty: true
-    clang50-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang50:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang50-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang50-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang50-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang50-jenkins
         tty: true
-    clang50-jnlp-slave-x86:
+    clang60-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang50-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang50-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang50-jnlp-slave-x86
-        tty: true
-    clang60-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang60:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang60-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang60-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang60-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang60-jenkins
         tty: true
-    clang60-jnlp-slave-x86:
+    clang7-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang60-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang60-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang60-jnlp-slave-x86
-        tty: true
-    clang7-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang7:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang7-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang7-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang7-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang7-jenkins
         tty: true
-    clang7-jnlp-slave-x86:
+    clang8-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang7-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang7-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang7-jnlp-slave-x86
-        tty: true
-    clang8-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang8:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang8-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang8-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang8-jenkins
         tty: true
-    clang8-jnlp-slave-x86:
+    clang9-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang8-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang8-jnlp-slave-x86
-        tty: true
-    clang9-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang9:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang9-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang9-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang9-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang9-jenkins
         tty: true
-    clang9-jnlp-slave-x86:
+    clang10-jenkins:
         build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang9-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang9-jnlp-slave-x86:${DOCKER_BUILD_TAG}"
-        container_name: clang9-jnlp-slave-x86
-        tty: true
-    clang10-jnlp-slave:
-        build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang10:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang10-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang10-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang10-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang10-jenkins
         tty: true
-    clang11-jnlp-slave:
+    clang11-jenkins:
         build:
-            context: jenkins-jnlp-slave
+            context: jenkins-jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang11:${DOCKER_BUILD_TAG}
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/clang11-jnlp-slave:${DOCKER_BUILD_TAG}"
-        container_name: clang11-jnlp-slave
-        tty: true
-    # Jenkins new client versions
-    gcc46-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc46:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc46-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc46-jnlp-slave
-        tty: true
-    gcc48-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc48:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc48-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc48-jnlp-slave
-        tty: true
-    gcc48-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc48-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc48-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc48-jnlp-slave-x86
-        tty: true
-    gcc49-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc49:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc49-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc49-jnlp-slave
-    gcc49-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc49-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc49-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc49-jnlp-slave-x86
-        tty: true
-    gcc5-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc5:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc5-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc5-jnlp-slave
-    gcc5-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc5-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc5-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc5-jnlp-slave-x86
-        tty: true
-    gcc6-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc6:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc6-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc6-jnlp-slave
-    gcc6-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc6-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc6-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc6-jnlp-slave-x86
-        tty: true
-    gcc7-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc7:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc7-jnlp-slave
-    gcc7-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc7-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc7-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc7-jnlp-slave-x86
-        tty: true
-    gcc8-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc8:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc8-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc8-jnlp-slave
-    gcc8-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc8-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc8-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc8-jnlp-slave-x86
-        tty: true
-    gcc9-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc9:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc9-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc9-jnlp-slave
-    gcc9-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc9-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc9-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc9-jnlp-slave-x86
-        tty: true
-    gcc10-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc10:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc10-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc10-jnlp-slave
-    gcc11-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/gcc11:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/gcc11-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: gcc11-jnlp-slave
-    clang39-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang39:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang39-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang39-jnlp-slave
-        tty: true
-    clang39-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang39-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang39-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang39-jnlp-slave-x86
-        tty: true
-    clang40-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang40:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang40-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang40-jnlp-slave
-        tty: true
-    clang40-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang40-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang40-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang40-jnlp-slave-x86
-        tty: true
-    clang50-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang50:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang50-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang50-jnlp-slave
-        tty: true
-    clang50-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang50-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang50-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang50-jnlp-slave-x86
-        tty: true
-    clang60-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang60:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang60-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang60-jnlp-slave
-        tty: true
-    clang60-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang60-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang60-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang60-jnlp-slave-x86
-        tty: true
-    clang7-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang7:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang7-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang7-jnlp-slave
-        tty: true
-    clang7-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang7-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang7-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang7-jnlp-slave-x86
-        tty: true
-    clang8-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang8:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang8-jnlp-slave
-        tty: true
-    clang8-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang8-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang8-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang8-jnlp-slave-x86
-        tty: true
-    clang9-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang9:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang9-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang9-jnlp-slave
-        tty: true
-    clang9-jnlp-slave-x86-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang9-x86:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang9-jnlp-slave-x86:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang9-jnlp-slave-x86
-        tty: true
-    clang10-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang10:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang10-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang10-jnlp-slave
-        tty: true
-    clang11-jnlp-slave-new:
-        build:
-            context: jenkins-jnlp-slave
-            dockerfile: Dockerfile
-            args:
-                SOURCE_CONANIO_IMAGE: conanio/clang11:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_NEW_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_NEW_VERSION}
-        image: "${DOCKER_USERNAME}/clang11-jnlp-slave:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_NEW_VERSION}"
-        container_name: clang11-jnlp-slave
+                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+        image: "${DOCKER_USERNAME}/clang11-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
+        container_name: clang11-jenkins
         tty: true

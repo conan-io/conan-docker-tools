@@ -194,55 +194,55 @@ cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 ```
 
-#### Jenkins Slave
+#### Jenkins Client
 
-If you use Jenkins to build your packages and also you use Jenkins Slave to run each docker container, you could use our Docker images prepared for Jenkins Slave. Those images run the script [jenkins-slave.sh](jenkins-jenkins/jenkins-slave), which starts the slave during the container entrypoint.
+If you use Jenkins to build your packages and also you use Jenkins Agent to run each docker container, you could use our Docker images prepared for Jenkins Agent. Those images run the script [jenkins-client.sh](jenkins/jenkins-client), which starts the slave during the container entrypoint.
 
 #### GCC
 
 | Version                                                                                                   | Arch   | Status, Life cycle           |
 |-----------------------------------------------------------------------------------------------------------|--------|------------------------------|
-| [conanio/gcc46-jnlp-slave: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
-| [conanio/gcc48-jnlp-slave: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
-| [conanio/gcc48-jnlp-slave-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jnlp-slave-x86/)           | x86    | :warning: Deprecated         |
-| [conanio/gcc49-jnlp-slave: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave/)                   | x86_64 | :warning: Deprecated         |
-| [conanio/gcc49-jnlp-slave-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jnlp-slave-x86/)           | x86    | :warning: Deprecated         |
-| [conanio/gcc5-jnlp-slave: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
-| [conanio/gcc5-jnlp-slave-x86: gcc 5](https://hub.docker.com/r/conanio/gcc5-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
-| [conanio/gcc6-jnlp-slave: gcc 6](https://hub.docker.com/r/conanio/gcc6-jnlp-slave/)                       | x86_64 | :warning: Deprecated         |
-| [conanio/gcc6-jnlp-slave-x86: gcc 6](https://hub.docker.com/r/conanio/gcc6-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
-| [conanio/gcc7-jnlp-slave: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
-| [conanio/gcc7-jnlp-slave-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
-| [conanio/gcc8-jnlp-slave: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave/)                       | x86_64 | :warning: Deprecated         |
-| [conanio/gcc8-jnlp-slave-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
-| [conanio/gcc9-jnlp-slave: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave/)                       | x86_64 | :white_check_mark: Supported |
-| [conanio/gcc9-jnlp-slave-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-jnlp-slave-x86/)               | x86    | :warning: Deprecated         |
-| [conanio/gcc10-jnlp-slave: gcc 10](https://hub.docker.com/r/conanio/gcc10-jnlp-slave/)                    | x86_64 | :warning: Deprecated         |
-| [conanio/gcc11-jnlp-slave: gcc 11](https://hub.docker.com/r/conanio/gcc11-jnlp-slave/)                    | x86_64 | :warning: Deprecated         |
-| [conanio/gcc7-jnlp-slave-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6/)       | x86_64 | :warning: Deprecated         |
-| [conanio/gcc7-jnlp-slave-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jnlp-slave-centos6-x86/) | x86  | :warning: Deprecated         |
+| [conanio/gcc46-jenkins: gcc 4.6](https://hub.docker.com/r/conanio/gcc46-jenkins/)                   | x86_64 | :warning: Deprecated         |
+| [conanio/gcc48-jenkins: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jenkins/)                   | x86_64 | :warning: Deprecated         |
+| [conanio/gcc48-jenkins-x86: gcc 4.8](https://hub.docker.com/r/conanio/gcc48-jenkins-x86/)           | x86    | :warning: Deprecated         |
+| [conanio/gcc49-jenkins: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jenkins/)                   | x86_64 | :warning: Deprecated         |
+| [conanio/gcc49-jenkins-x86: gcc 4.9](https://hub.docker.com/r/conanio/gcc49-jenkins-x86/)           | x86    | :warning: Deprecated         |
+| [conanio/gcc5-jenkins: gcc 5](https://hub.docker.com/r/conanio/gcc5-jenkins/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc5-jenkins-x86: gcc 5](https://hub.docker.com/r/conanio/gcc5-jenkins-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc6-jenkins: gcc 6](https://hub.docker.com/r/conanio/gcc6-jenkins/)                       | x86_64 | :warning: Deprecated         |
+| [conanio/gcc6-jenkins-x86: gcc 6](https://hub.docker.com/r/conanio/gcc6-jenkins-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc7-jenkins: gcc 7](https://hub.docker.com/r/conanio/gcc7-jenkins/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc7-jenkins-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jenkins-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc8-jenkins: gcc 8](https://hub.docker.com/r/conanio/gcc8-jenkins/)                       | x86_64 | :warning: Deprecated         |
+| [conanio/gcc8-jenkins-x86: gcc 8](https://hub.docker.com/r/conanio/gcc8-jenkins-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc9-jenkins: gcc 9](https://hub.docker.com/r/conanio/gcc9-jenkins/)                       | x86_64 | :white_check_mark: Supported |
+| [conanio/gcc9-jenkins-x86: gcc 9](https://hub.docker.com/r/conanio/gcc9-jenkins-x86/)               | x86    | :warning: Deprecated         |
+| [conanio/gcc10-jenkins: gcc 10](https://hub.docker.com/r/conanio/gcc10-jenkins/)                    | x86_64 | :warning: Deprecated         |
+| [conanio/gcc11-jenkins: gcc 11](https://hub.docker.com/r/conanio/gcc11-jenkins/)                    | x86_64 | :warning: Deprecated         |
+| [conanio/gcc7-jenkins-centos6: gcc 7](https://hub.docker.com/r/conanio/gcc7-jenkins-centos6/)       | x86_64 | :warning: Deprecated         |
+| [conanio/gcc7-jenkins-centos6-x86: gcc 7](https://hub.docker.com/r/conanio/gcc7-jenkins-centos6-x86/) | x86  | :warning: Deprecated         |
 
 
 #### Clang
 
 | Version                                                                                                   | Arch   | Status, Life cycle           |
 |-----------------------------------------------------------------------------------------------------------|--------|------------------------------|
-| [conanio/clang39-jnlp-slave-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave-x86/)     | x86    | :warning: Deprecated         |
-| [conanio/clang39-jnlp-slave: clang 3.9](https://hub.docker.com/r/conanio/clang39-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
-| [conanio/clang40-jnlp-slave-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave-x86)      | x86    | :warning: Deprecated         |
-| [conanio/clang40-jnlp-slave: clang 4.0](https://hub.docker.com/r/conanio/clang40-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
-| [conanio/clang50-jnlp-slave-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave-x86/)     | x86    | :warning: Deprecated         |
-| [conanio/clang50-jnlp-slave: clang 5.0](https://hub.docker.com/r/conanio/clang50-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
-| [conanio/clang60-jnlp-slave-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave-x86/)     | x86    | :warning: Deprecated         |
-| [conanio/clang60-jnlp-slave: clang 6.0](https://hub.docker.com/r/conanio/clang60-jnlp-slave/)             | x86_64 | :warning: Deprecated         |
-| [conanio/clang7-jnlp-slave-x86: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
-| [conanio/clang7-jnlp-slave: clang 7](https://hub.docker.com/r/conanio/clang7-jnlp-slave/)                 | x86_64 | :warning: Deprecated         |
-| [conanio/clang8-jnlp-slave-x86: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
-| [conanio/clang8-jnlp-slave: clang 8](https://hub.docker.com/r/conanio/clang8-jnlp-slave/)                 | x86_64 | :warning: Deprecated         |
-| [conanio/clang9-jnlp-slave-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave-x86/)         | x86    | :warning: Deprecated         |
-| [conanio/clang9-jnlp-slave: clang 9](https://hub.docker.com/r/conanio/clang9-jnlp-slave/)                 | x86_64 | :warning: Deprecated         |
-| [conanio/clang10-jnlp-slave: clang 10](https://hub.docker.com/r/conanio/clang10-jnlp-slave/)              | x86_64 | :warning: Deprecated         |
-| [conanio/clang11-jnlp-slave: clang 11](https://hub.docker.com/r/conanio/clang11-jnlp-slave/)              | x86_64 | :warning: Deprecated         |
+| [conanio/clang39-jenkins-x86: clang 3.9](https://hub.docker.com/r/conanio/clang39-jenkins-x86/)     | x86    | :warning: Deprecated         |
+| [conanio/clang39-jenkins: clang 3.9](https://hub.docker.com/r/conanio/clang39-jenkins/)             | x86_64 | :warning: Deprecated         |
+| [conanio/clang40-jenkins-x86: clang 4.0](https://hub.docker.com/r/conanio/clang40-jenkins-x86)      | x86    | :warning: Deprecated         |
+| [conanio/clang40-jenkins: clang 4.0](https://hub.docker.com/r/conanio/clang40-jenkins/)             | x86_64 | :warning: Deprecated         |
+| [conanio/clang50-jenkins-x86: clang 5.0](https://hub.docker.com/r/conanio/clang50-jenkins-x86/)     | x86    | :warning: Deprecated         |
+| [conanio/clang50-jenkins: clang 5.0](https://hub.docker.com/r/conanio/clang50-jenkins/)             | x86_64 | :warning: Deprecated         |
+| [conanio/clang60-jenkins-x86: clang 6.0](https://hub.docker.com/r/conanio/clang60-jenkins-x86/)     | x86    | :warning: Deprecated         |
+| [conanio/clang60-jenkins: clang 6.0](https://hub.docker.com/r/conanio/clang60-jenkins/)             | x86_64 | :warning: Deprecated         |
+| [conanio/clang7-jenkins-x86: clang 7](https://hub.docker.com/r/conanio/clang7-jenkins-x86/)         | x86    | :warning: Deprecated         |
+| [conanio/clang7-jenkins: clang 7](https://hub.docker.com/r/conanio/clang7-jenkins/)                 | x86_64 | :warning: Deprecated         |
+| [conanio/clang8-jenkins-x86: clang 8](https://hub.docker.com/r/conanio/clang8-jenkins-x86/)         | x86    | :warning: Deprecated         |
+| [conanio/clang8-jenkins: clang 8](https://hub.docker.com/r/conanio/clang8-jenkins/)                 | x86_64 | :warning: Deprecated         |
+| [conanio/clang9-jenkins-x86: clang 9](https://hub.docker.com/r/conanio/clang9-jenkins-x86/)         | x86    | :warning: Deprecated         |
+| [conanio/clang9-jenkins: clang 9](https://hub.docker.com/r/conanio/clang9-jenkins/)                 | x86_64 | :warning: Deprecated         |
+| [conanio/clang10-jenkins: clang 10](https://hub.docker.com/r/conanio/clang10-jenkins/)              | x86_64 | :warning: Deprecated         |
+| [conanio/clang11-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-jenkins/)              | x86_64 | :warning: Deprecated         |
 
 ### Library Versions
 
