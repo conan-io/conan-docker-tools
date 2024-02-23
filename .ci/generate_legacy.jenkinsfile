@@ -79,22 +79,6 @@ def checkoutSources() {
         ])
     }
     sh 'git log -n 10 --graph --pretty=oneline --abbrev-commit --all --decorate=full'
-}
-
-boolean isLegacyJenkinsUsed(String compiler, String version) {
-    // Returns if this legacy image is being used in Jenkins or not. We don't want to create them
-    //  if they are not to be used in the future.
-    int v = version as int
-    if (compiler == 'gcc' && v >= 11) {
-        echo 'Do not create (legacy) jenkins images for GCC >= 11'
-        return false
-    }
-    else if (compiler == 'clang' && v >= 12) {
-        echo 'Do not create (legacy) jenkins images for Clang >= 12'
-        return false
-    }
-    return true
-}
 
 List<String> parseVersions(String versions) {
     List<String> result = []
@@ -136,7 +120,7 @@ node('Linux') {
         About tools installed:
         - conan_version: ${params.conan_version}
         - jenkins_agent_version: ${params.jenkins_agent_version}
-        - jenkins_agent_new_version: ${params.jenkins_agent_new_version}
+        - java_jdk_version: ${params.java_jdk_version}
         """
 
         echo """
@@ -208,8 +192,7 @@ node('Linux') {
             String versionMajor = version
 
             String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
-            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}"
-            String jenkinsNewImage = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-${commit}-${params.jenkins_agent_new_version}"
+            String jenkinsImage = "${dockerUsername}/${compiler}${versionMajor}-jenkins:${branchName}-${commit}-${params.jenkins_agent_version}"
             String compilerArgs = "${buildArgs}"
 
             node('Linux') {
@@ -227,25 +210,13 @@ node('Linux') {
                     }
                 }
 
-                if (isLegacyJenkinsUsed(compiler, version)) {
-                    stage("Legacy - ${compiler.toUpperCase()} ${version} jenkins") {
-                        String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-latest"
-                        String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${targetBranch}-latest"
+                stage("Legacy - ${compiler.toUpperCase()} ${version} jenkins") {
+                    String latestBranch = "${dockerUsername}/${compiler}${versionMajor}-jenkins:${branchName}-latest-${params.jenkins_agent_version}"
+                    String latestMaster = "${dockerUsername}/${compiler}${versionMajor}-jenkins:${targetBranch}-latest-${params.jenkins_agent_version}"
 
-                        dir('legacy/jenkins-jnlp-slave') {
-                            String jenkins_args = "--build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg AGENT_VERSION=${params.jenkins_agent_version}"
-                            buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} ${jenkins_args}")
-                        }
-                    }
-
-                    stage("Legacy - ${compiler.toUpperCase()} ${version} new jenkins") {
-                        String latestNewBranch = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${branchName}-latest-${params.jenkins_agent_new_version}"
-                        String latestNewMaster = "${dockerUsername}/${compiler}${versionMajor}-jnlp-slave:${targetBranch}-latest-${params.jenkins_agent_new_version}"
-
-                        dir('legacy/jenkins-jnlp-slave') {
-                            String jenkins_new_args = "--build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg AGENT_VERSION=${params.jenkins_agent_new_version} --build-arg JAVA_JDK_VERSION=${params.java_jdk_new_version}"
-                            buildImage(latestNewMaster, latestNewBranch, jenkinsNewImage, "${compilerArgs} ${jenkins_new_args}")
-                        }
+                    dir('legacy/jenkins') {
+                        String jenkins_args = "--build-arg SOURCE_CONANIO_IMAGE=${deployImage} --build-arg AGENT_VERSION=${params.jenkins_agent_version} --build-arg JAVA_JDK_VERSION=${params.java_jdk_version}"
+                        buildImage(latestMaster, latestBranch, jenkinsImage, "${compilerArgs} ${jenkins_args}")
                     }
                 }
             }
@@ -309,8 +280,8 @@ node('Linux') {
                 if (params.upload_main_images) {
                     images.add("gcc${versionMajor}")
                 }
-                if (params.upload_jenkins_images && isLegacyJenkinsUsed('gcc', versionMajor)) {
-                    images.add("gcc${versionMajor}-jnlp-slave")
+                if (params.upload_jenkins_images) {
+                    images.add("gcc${versionMajor}-jenkins")
                 }
             }
             clangVersions.each { v ->
@@ -318,8 +289,8 @@ node('Linux') {
                 if (params.upload_main_images) {
                     images.add("clang${versionMajor}")
                 }
-                if (params.upload_jenkins_images && isLegacyJenkinsUsed('clang', versionMajor)) {
-                    images.add("clang${versionMajor}-jnlp-slave")
+                if (params.upload_jenkins_images) {
+                    images.add("clang${versionMajor}-jenkins")
                 }
             }
 
@@ -348,8 +319,8 @@ node('Linux') {
                 }
 
                 // Upload Docker images with newer Jenkins client version
-                if (params.upload_jenkins_images && image.endsWith('-jnlp-slave')) {
-                    String builtNewImage = "${dockerUsername}/${image}:${branchName}-${commit}-${params.jenkins_agent_new_version}"
+                if (params.upload_jenkins_images && image.endsWith('-jenkins')) {
+                    String builtNewImage = "${dockerUsername}/${image}:${branchName}-${commit}-${params.jenkins_agent_version}"
                     sh "docker pull ${builtNewImage}"
 
                     withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -357,7 +328,7 @@ node('Linux') {
                     }
 
                     // Upload with the corresponding tag version
-                    String uploadNewImage = "${dockerhubUsername}/${image}:${params.conan_version}-${params.jenkins_agent_new_version}"
+                    String uploadNewImage = "${dockerhubUsername}/${image}:${params.conan_version}-${params.jenkins_agent_version}"
                     sh "docker tag ${builtNewImage} ${uploadNewImage}"
                     if (!params.dry_run) {
                         sh "docker push ${uploadNewImage}"
@@ -365,7 +336,7 @@ node('Linux') {
 
                     if (params.upload_latest) {
                         // Upload with tag 'latest'
-                        String uploadNewLatest = "${dockerhubUsername}/${image}:latest-${params.jenkins_agent_new_version}"
+                        String uploadNewLatest = "${dockerhubUsername}/${image}:latest-${params.jenkins_agent_version}"
                         sh "docker tag ${builtNewImage} ${uploadNewLatest}"
                         if (!params.dry_run) {
                             sh "docker push ${uploadNewLatest}"
