@@ -5,10 +5,9 @@ import pytest
 class TestJenkinsAgent:
 
     def test_java(self, container):
-        # TODO: Pass expected JDK version as parameter
         out, err = container.exec(['java', '-version'])
-        # Check Java, up to minor version
-        assert 'openjdk version' in err, f"out: '{out}' err: '{err}'"
+        # TODO: Pass expected JDK version as parameter. For now, we know it's 11 and we don't need to update it.
+        assert 'openjdk version "11.' in err, f"out: '{out}' err: '{err}'"
 
     def test_agent(self, container):
         """The Jenkins agent version should match the image tag version
