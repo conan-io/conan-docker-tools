@@ -274,7 +274,7 @@ node('Linux') {
                     }
 
                     dir('modern') {
-                        sh "pytest tests --image ${jenkinImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
+                        sh "pytest tests --image ${jenkinsImage} --service jenkins -vv --volumes-from ${containerID} --user 0:0"
                     }
                 }
             }
