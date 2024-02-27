@@ -568,41 +568,6 @@ services:
         image: "${DOCKER_USERNAME}/msvc15:${DOCKER_BUILD_TAG}"
         container_name: msvc15
         tty: true
-    android-clang8:
-        build:
-            context: android-clang_8
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8
-        tty: true
-    android-clang8-x86:
-        build:
-            context: android-clang_8-x86
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8-x86:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8-x86
-        tty: true
-    android-clang8-armv7:
-        build:
-            context: android-clang_8-armv7
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8-armv7:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8-armv7
-        tty: true
-    android-clang8-armv8:
-        build:
-            context: android-clang_8-armv8
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8-armv8:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8-armv8
     android-clang14:
         build:
             context: android-clang_14
