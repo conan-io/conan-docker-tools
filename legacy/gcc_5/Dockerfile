@@ -2,8 +2,6 @@ FROM ubuntu:xenial
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
-ARG CONAN_VERSION
-
 ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2 \
     PYENV_ROOT=/opt/pyenv \
@@ -79,9 +77,7 @@ RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.c
        && pyenv global 3.7.13 \
        && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.7.13/lib/python3.7/lsb_release.py
 
-RUN pip install -q --upgrade --no-cache-dir pip \
-       && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
-       && chown -R conan:1001 /opt/pyenv \
+RUN chown -R conan:1001 /opt/pyenv \
        # remove all __pycache__ directories created by pyenv
        && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
        && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
@@ -107,6 +103,11 @@ RUN apt-get -qq purge -y \
        && apt-get -qq autoclean \
        && apt-get -qq update \
        && rm -rf /var/lib/apt/lists/*
+
+ARG CONAN_VERSION
+
+RUN pip install -q --upgrade --no-cache-dir pip \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION}
 
 USER conan
 WORKDIR /home/conan
