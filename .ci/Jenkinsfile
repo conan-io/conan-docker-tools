@@ -80,14 +80,8 @@ node('Linux') {
             else if (name == 'JENKINS_AGENT_VERSION') {
                 parameters_legacy.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
             }
-            else if (name == 'JENKINS_AGENT_NEW_VERSION') {
-                parameters_legacy.add([$class: 'StringParameterValue', name: 'jenkins_agent_new_version', value: value])
-            }
             else if (name == 'JAVA_JDK_VERSION') {
                 parameters_legacy.add([$class: 'StringParameterValue', name: 'java_jdk_version', value: value])
-            }
-            else if (name == 'JAVA_JDK_NEW_VERSION') {
-                parameters_legacy.add([$class: 'StringParameterValue', name: 'java_jdk_new_version', value: value])
             }
 
             // compiler versions
@@ -133,14 +127,8 @@ node('Linux') {
             else if (name == 'JENKINS_AGENT_VERSION') {
                 parameters_modern.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
             }
-            else if (name == 'JENKINS_AGENT_NEW_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'jenkins_agent_new_version', value: value])
-            }
             else if (name == 'JAVA_JDK_VERSION') {
                 parameters_modern.add([$class: 'StringParameterValue', name: 'java_jdK_version', value: value])
-            }
-            else if (name == 'JAVA_JDK_NEW_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'java_jdK_new_version', value: value])
             }
 
             // compiler versions

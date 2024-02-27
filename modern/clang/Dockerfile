@@ -1,4 +1,5 @@
 ARG DOCKER_USERNAME
+ARG DOCKERHUB_USERNAME
 ARG LIBSTDCPP_MAJOR_VERSION
 ARG DOCKER_TAG
 ARG DISTRO_VERSION
@@ -247,7 +248,7 @@ RUN apt-get -qq update \
     && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
     && cp $(find lib -name "*.so*") /tmp/install/lib
 
-FROM docker.io/conanio/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:latest as libstdcpp
+FROM ${DOCKERHUB_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:latest as libstdcpp
 
 FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 
@@ -255,6 +256,7 @@ ARG LIBSTDCPP_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
 
 ARG DOCKER_USERNAME
+ARG DOCKERHUB_USERNAME
 ARG DOCKER_TAG
 ARG DISTRO
 
