@@ -1,8 +1,6 @@
 FROM ubuntu:xenial
 
-LABEL maintainer="Luis Martinez de Bartolome <luism@jfrog.com>"
-
-ARG CONAN_VERSION
+LABEL maintainer="Conan.io <info@conan.io>"
 
 ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CMAKE_VERSION_FULL=3.18.2 \
@@ -12,8 +10,7 @@ ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
     CC=/usr/bin/gcc \
     FC=/usr/bin/gfortran
 
-RUN dpkg --add-architecture i386 \
-    && apt-get -qq update \
+RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
     && add-apt-repository ppa:git-core/ppa -y \
     && apt-get -qq update \
@@ -47,8 +44,9 @@ RUN dpkg --add-architecture i386 \
        liblzma-dev \
        ca-certificates \
        autoconf-archive \
-       && rm -rf /var/lib/apt/lists/* \
-       && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+       && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
        && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
           --exclude=bin/cmake-gui \
           --exclude=doc/cmake \
@@ -56,8 +54,9 @@ RUN dpkg --add-architecture i386 \
        --exclude=share/vim \
        && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
        && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-       && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-       && curl -fL https://getcli.jfrog.io | sh \
+       && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz
+
+RUN curl -fL https://getcli.jfrog.io | sh \
        && mv jfrog /usr/local/bin/jfrog \
        && chmod +x /usr/local/bin/jfrog \
        && groupadd -f conan-1001 -g 1001 \
@@ -67,25 +66,26 @@ RUN dpkg --add-architecture i386 \
        && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
        && printf "conan:conan" | chpasswd \
        && adduser conan sudo \
-       && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
-       && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
+       && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+
+RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
        && chmod +x /tmp/pyenv-installer \
        && /tmp/pyenv-installer \
        && rm /tmp/pyenv-installer \
        && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
        && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.13 \
        && pyenv global 3.7.13 \
-       && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.7.13/lib/python3.7/lsb_release.py \
-       && pip install -q --upgrade --no-cache-dir pip \
-       && pip install -q --no-cache-dir conan==${CONAN_VERSION} conan-package-tools \
-       && chown -R conan:1001 /opt/pyenv \
+       && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.7.13/lib/python3.7/lsb_release.py
+
+RUN chown -R conan:1001 /opt/pyenv \
        # remove all __pycache__ directories created by pyenv
        && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
        && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
        && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
        && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
-       && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100 \
-       && apt-get -qq purge -y \
+       && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
+
+RUN apt-get -qq purge -y \
           libgmp-dev \
           libmpfr-dev \
           libmpc-dev \
@@ -103,6 +103,11 @@ RUN dpkg --add-architecture i386 \
        && apt-get -qq autoclean \
        && apt-get -qq update \
        && rm -rf /var/lib/apt/lists/*
+
+ARG CONAN_VERSION
+
+RUN pip install -q --upgrade --no-cache-dir pip \
+    && pip install -q --no-cache-dir conan==${CONAN_VERSION}
 
 USER conan
 WORKDIR /home/conan

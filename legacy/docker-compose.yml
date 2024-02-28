@@ -568,41 +568,6 @@ services:
         image: "${DOCKER_USERNAME}/msvc15:${DOCKER_BUILD_TAG}"
         container_name: msvc15
         tty: true
-    android-clang8:
-        build:
-            context: android-clang_8
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8
-        tty: true
-    android-clang8-x86:
-        build:
-            context: android-clang_8-x86
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8-x86:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8-x86
-        tty: true
-    android-clang8-armv7:
-        build:
-            context: android-clang_8-armv7
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8-armv7:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8-armv7
-        tty: true
-    android-clang8-armv8:
-        build:
-            context: android-clang_8-armv8
-            dockerfile: Dockerfile
-            args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-        image: "${DOCKER_USERNAME}/android-clang8-armv8:${DOCKER_BUILD_TAG}"
-        container_name: android-clang8-armv8
     android-clang14:
         build:
             context: android-clang_14
@@ -641,7 +606,7 @@ services:
     # Jenkins Images
     gcc46-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc46:${DOCKER_BUILD_TAG}
@@ -652,7 +617,7 @@ services:
         tty: true
     gcc48-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc48:${DOCKER_BUILD_TAG}
@@ -664,7 +629,7 @@ services:
         tty: true
     gcc49-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc49:${DOCKER_BUILD_TAG}
@@ -675,7 +640,7 @@ services:
         container_name: gcc49-jenkins
     gcc5-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc5:${DOCKER_BUILD_TAG}
@@ -686,7 +651,7 @@ services:
         container_name: gcc5-jenkins
     gcc6-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc6:${DOCKER_BUILD_TAG}
@@ -697,7 +662,7 @@ services:
         container_name: gcc6-jenkins
     gcc7-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc7:${DOCKER_BUILD_TAG}
@@ -708,7 +673,7 @@ services:
         container_name: gcc7-jenkins
     gcc8-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc8:${DOCKER_BUILD_TAG}
@@ -719,7 +684,7 @@ services:
         container_name: gcc8-jenkins
     gcc9-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc9:${DOCKER_BUILD_TAG}
@@ -730,7 +695,7 @@ services:
         container_name: gcc9-jenkins
     gcc10-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc10:${DOCKER_BUILD_TAG}
@@ -741,7 +706,7 @@ services:
         container_name: gcc10-jenkins
     gcc11-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/gcc11:${DOCKER_BUILD_TAG}
@@ -752,7 +717,7 @@ services:
         container_name: gcc11-jenkins
     clang39-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang39:${DOCKER_BUILD_TAG}
@@ -764,7 +729,7 @@ services:
         tty: true
     clang40-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang40:${DOCKER_BUILD_TAG}
@@ -776,7 +741,7 @@ services:
         tty: true
     clang50-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang50:${DOCKER_BUILD_TAG}
@@ -788,7 +753,7 @@ services:
         tty: true
     clang60-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang60:${DOCKER_BUILD_TAG}
@@ -800,7 +765,7 @@ services:
         tty: true
     clang7-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang7:${DOCKER_BUILD_TAG}
@@ -812,7 +777,7 @@ services:
         tty: true
     clang8-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang8:${DOCKER_BUILD_TAG}
@@ -824,7 +789,7 @@ services:
         tty: true
     clang9-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang9:${DOCKER_BUILD_TAG}
@@ -836,7 +801,7 @@ services:
         tty: true
     clang10-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang10:${DOCKER_BUILD_TAG}
@@ -848,7 +813,7 @@ services:
         tty: true
     clang11-jenkins:
         build:
-            context: jenkins-jenkins
+            context: jenkins
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: conanio/clang11:${DOCKER_BUILD_TAG}
