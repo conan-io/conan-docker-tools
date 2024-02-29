@@ -72,13 +72,11 @@ def uploadImage(Map image, String registry, String crendentialsID) {
         sh 'docker login --username $USERNAME --password $PASSWORD'
     }
 
-    images.each { Map image ->
-        // Upload with the corresponding tag version
-        String uploadImage = "${registryName}/${image["image"]}"
-        sh "docker tag ${image["name"]} ${uploadImage}"
-        //FIXME sh "docker push ${uploadImage}"
-        echo "DOCKER PUSH ${uploadImage}"
-    }
+    // Upload with the corresponding tag version
+    String uploadImage = "${registryName}/${image["name"]}"
+    sh "docker tag ${image["name"]} ${uploadImage}"
+    //FIXME sh "docker push ${uploadImage}"
+    echo "DOCKER PUSH ${uploadImage}"
 }
 
 def getLegacyImages() {
@@ -164,7 +162,6 @@ def getModernImages(String branchName, String commit) {
         String libstdcppPatchVersion = envValues["LIBSTDCPP_PATCH_VERSION"]
         String libstdcppMajorVersion = envValues["LIBSTDCPP_MAJOR_VERSION"]
 
-        List<Map> images = []
         Map baseImage = [:]
         baseImage["name"] = "${dockerUsername}/base-${distro}:${branchName}-${commit}" 
         baseImage["path"] = "modern/base"
