@@ -412,7 +412,9 @@ node('Linux') {
     }
 
     List<Map> legacyImages = getLegacyImages()
+    echo "${legacyImages}"
     List<Map> modernImages = getModernImages()
+    echo "${modernImages}"
 
     if (!isMasterbranch) { // || rebuild
         // Build Legacy Images
