@@ -26,23 +26,6 @@ def readEnvValues(String envFile) {
     return envContent
 }
 
-def get_container_id() {
-    // This is quite fragile and might depends on the Jenkins configuration and deployment, but it is the best
-    //  I can figure out to get the ID of the running container to be able to mount the same volume when
-    //  using docker-in-docker.
-    String nodeName = "${NODE_NAME}"
-    String output = sh(script: 'docker ps --no-trunc', returnStdout: true)
-    String nodeId = null
-    output.split('\n').each({
-        String line = it.trim()
-        if (line.contains(nodeName) && line.contains('/opt/entrypoint.sh')) {
-            nodeId = line.split(' ')[0]
-        }
-    })
-    echo "Node ${nodeName} with docker ID '${nodeId}'"
-    return nodeId
-}
-
 List<String> parseVersions(String versions) {
     List<String> result = []
     versions.split('\n').each { v ->
@@ -155,7 +138,7 @@ def getModernImages(String branchName, String commit) {
         List<String> conanVersions = [envValues["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
         String cmakeVersion = envValues["CMAKE_VERSION"]
-        String pythonVersion envValues["PYTHON_VERSION"]
+        String pythonVersion = envValues["PYTHON_VERSION"]
         String dockerUsername = envValues["DOCKER_USERNAME"]
         String dockerHubUsername = envValues["DOCKERHUB_USERNAME"]
         String distro = envValues["DISTRO"]
@@ -173,7 +156,7 @@ def getModernImages(String branchName, String commit) {
         List<String> compilerImages = []
         gccVersions.each({ String gccVersion ->
             String image = "${dockerUsername}/gcc${gccVersion}-${distro}"
-            gccImages.add(image)
+            compilerImages.add(image)
         })
 
         clangVersions.each({ String clangVersion ->
@@ -285,12 +268,6 @@ def buildLegacyImages(List<Map> images) {
     }
 }
 
-def runModernTests() {
-    dir('modern') {
-        sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
-    }
-}
-
 def buildModernImage(Map image, String buildArgs) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
@@ -300,21 +277,6 @@ def buildModernImage(Map image, String buildArgs) {
 }
 
 def buildModernImages(List<Map> images) {
-    String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
-
-    stage('Xenial - Build base image') {
-        String expectedImage = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
-        String latestBranch = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-latest"
-        String latestMaster = "${dockerUsername}/base-${params.distro}${suffix}:${targetBranch}-latest"
-        dir('modern/base') {
-            buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
-        }
-
-        dir('modern') {
-            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
-        }
-    }
-
     // Define helper function to build the compiler
     Closure compilerBuild = { Map image ->
         return {
@@ -333,8 +295,6 @@ def buildModernImages(List<Map> images) {
                     dir(image["path"]) {
                         buildModernImage(image, buildArgsStr)
                     }
-
-                    //runModernTests()
                 }
 
                 stage("Modern - Upload image ${image["name"]} to Artifactory") {
