@@ -80,7 +80,7 @@ def uploadImage(Map image, String registry, String crendentialsID) {
 }
 
 def getLegacyImages() {
-    Map<String, String> envLegacy = []
+    Map<String, String> envLegacy = [:]
     stage('Legacy - Parse environment file') {
         envLegacy = readEnvValues("legacy/.env")
     }
@@ -141,7 +141,7 @@ def getLegacyImages() {
 }
 
 def getModernImages(String branchName, String commit) {
-    Map<String, String> envValues = []
+    Map<String, String> envValues = [:]
     stage('Legacy - Parse environment file') {
         envValues = readEnvValues("legacy/.env")
     }
