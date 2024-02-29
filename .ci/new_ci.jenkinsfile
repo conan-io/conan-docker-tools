@@ -57,7 +57,7 @@ List<String> parseVersions(String versions) {
 def buildLegacyImage(Map image, String buildArgs) {
     sh 'export DOCKER_BUILDKIT=0'
 
-    withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD'
         sh 'docker pull docker.io/library/ubuntu:xenial'
         sh 'docker pull docker.io/library/ubuntu:bionic'
@@ -71,7 +71,7 @@ def buildLegacyImage(Map image, String buildArgs) {
 
 def uploadImage(Map image, String registry, String crendentialsID) {
     withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD'
+        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
     }
 
     // Upload with the corresponding tag version
@@ -90,7 +90,7 @@ def getLegacyImages() {
     List<Map> images = []
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envLegacy["GCC_LEGACY_VERSIONS"].split(",")
-        List<String> clangVersions = envLegacy.containsKey("CLANG_LEGACY_VERSIONS") ? envLegacy["CLANG_LEGACY_VERSIONS"].split(",") : []
+        List<String> clangVersions = envLegac["CLANG_LEGACY_VERSIONS"] != null ? envLegacy["CLANG_LEGACY_VERSIONS"].split(",") : []
         List<String> conanVersions = envLegacy["CONAN_VERSIONS"].split(",")
         List<String> jenkinsAgentVersions = envLegacy["JENKINS_AGENT_VERSION"].split(",")
         String dockerUsername = envLegacy["DOCKER_USERNAME"]
@@ -242,12 +242,9 @@ def buildLegacyImages(List<Map> images) {
 
         checkout scm
 
-        stage('Legacy - Install deps') {
-            sh 'pip install docker-compose humanfriendly conan conan-package-tools'
-        }
-
         stage('Legacy - Login Artifactory') {
             // Execute login: 1) Validate the login 2) Needed for docker pull/push
+            // TODO: Check that connection to artifactory does not fail (before creating images)
             withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
             }
@@ -296,7 +293,7 @@ def runModernTests() {
 
 def buildModernImage(Map image, String buildArgs) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD '// + "${dockerUsername}"
+        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
     }
 
     sh "docker build -t ${image["name"]} ${buildArgs} ."
@@ -429,5 +426,6 @@ node('Linux') {
         // Promote to dockerhub
         promoteImages(legacyImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
         promoteImages(modernImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
+        // TODO: Clean images ffrom PR that are in Artifactory
     }
 }
