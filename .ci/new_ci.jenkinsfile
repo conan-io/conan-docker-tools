@@ -91,7 +91,7 @@ def getLegacyImages() {
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envLegacy["GCC_LEGACY_VERSIONS"].split(",")
         List<String> clangVersions = envLegacy["CLANG_LEGACY_VERSIONS"] != null ? envLegacy["CLANG_LEGACY_VERSIONS"].split(",") : []
-        List<String> conanVersions = envLegacy["CONAN_VERSIONS"].split(",")
+        List<String> conanVersions = [envLegacy["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envLegacy["JENKINS_AGENT_VERSION"].split(",")
         String dockerUsername = envLegacy["DOCKER_USERNAME"]
 
@@ -152,7 +152,7 @@ def getModernImages(String branchName, String commit) {
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
         List<String> clangVersions = envValues["CLANG_LEGACY_VERSIONS"].split(",")
-        List<String> conanVersions = envValues["CONAN_VERSIONS"].split(",")
+        List<String> conanVersions = [envValues["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
         String cmakeVersion = envValues["CMAKE_VERSION"]
         String pythonVersion envValues["PYTHON_VERSION"]
