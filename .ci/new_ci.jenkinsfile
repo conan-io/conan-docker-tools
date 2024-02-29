@@ -87,7 +87,7 @@ def getLegacyImages() {
         envLegacy = readEnvValues("legacy/.env")
     }
 
-    List<Map<String, String> images = []
+    List<Map> images = []
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envLegacy["GCC_LEGACY_VERSIONS"].split(",")
         List<String> clangVersions = envLegacy["CLANG_LEGACY_VERSIONS"].split(",")
@@ -148,7 +148,7 @@ def getModernImages(String branchName, String commit) {
         envValues = readEnvValues("legacy/.env")
     }
 
-    List<Map<String, String> images = []
+    List<Map> images = []
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
         List<String> clangVersions = envValues["CLANG_LEGACY_VERSIONS"].split(",")
