@@ -1,0 +1,434 @@
+
+def detectPRCommits() {
+    String prCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    String masterCommit = sh(script: 'git rev-parse origin/master', returnStdout: true).trim()
+
+    String p = sh(script: 'git log --pretty=%P -n 1 --date-order', returnStdout: true).trim()
+    List<String> parentCommits = p.split(' ')
+    if (parentCommits.size() == 2) {
+        prCommit = parentCommits[0]
+        assert parentCommits[1] == masterCommit
+    } else {
+        // assert parentCommits[0] == masterCommit  (for a rebased PR this is not true, Jenkins uses fast-forward)
+    }
+    return [masterCommit, prCommit]
+}
+
+def readEnvValues(String envFile) {
+    Map<String, String> envContent = [:]
+    String content = readFile(envFile)  // legacy/.env or modern/.env
+    content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
+        def (name, value) = it.split('=')
+        envContent[name] = value
+    }
+    return envContent
+}
+
+def get_container_id() {
+    // This is quite fragile and might depends on the Jenkins configuration and deployment, but it is the best
+    //  I can figure out to get the ID of the running container to be able to mount the same volume when
+    //  using docker-in-docker.
+    String nodeName = "${NODE_NAME}"
+    String output = sh(script: 'docker ps --no-trunc', returnStdout: true)
+    String nodeId = null
+    output.split('\n').each({
+        String line = it.trim()
+        if (line.contains(nodeName) && line.contains('/opt/entrypoint.sh')) {
+            nodeId = line.split(' ')[0]
+        }
+    })
+    echo "Node ${nodeName} with docker ID '${nodeId}'"
+    return nodeId
+}
+
+List<String> parseVersions(String versions) {
+    List<String> result = []
+    versions.split('\n').each { v ->
+        String version = v.trim()
+        if (version.size() > 0 && version.isNumber()) {
+            result.add(version)
+        }
+    }
+    return result
+}
+
+def buildLegacyImage(Map image, String buildArgs) {
+    sh 'export DOCKER_BUILDKIT=0'
+
+    withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD'
+        sh 'docker pull docker.io/library/ubuntu:xenial'
+        sh 'docker pull docker.io/library/ubuntu:bionic'
+        sh 'docker pull docker.io/library/ubuntu:eoan'
+    }
+
+    // TODO: Add --cache-from value to speed-up the build
+
+    sh "docker build -t ${image["name"]} ${buildArgs} ."
+}
+
+def uploadImage(Map image, String registry, String crendentialsID) {
+    withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD'
+    }
+
+    images.each { Map image ->
+        // Upload with the corresponding tag version
+        String uploadImage = "${registryName}/${image["image"]}"
+        sh "docker tag ${image["name"]} ${uploadImage}"
+        //FIXME sh "docker push ${uploadImage}"
+        echo "DOCKER PUSH ${uploadImage}"
+    }
+}
+
+def getLegacyImages() {
+    Map<String, String> envLegacy = []
+    stage('Legacy - Parse environment file') {
+        envLegacy = readEnvValues("legacy/.env")
+    }
+
+    List<Map<String, String> images = []
+    stage('Legacy - Generate build matrix') {
+        List<String> gccVersions = envLegacy["GCC_LEGACY_VERSIONS"].split(",")
+        List<String> clangVersions = envLegacy["CLANG_LEGACY_VERSIONS"].split(",")
+        List<String> conanVersions = envLegacy["CONAN_VERSIONS"].split(",")
+        List<String> jenkinsAgentVersions = envLegacy["JENKINS_AGENT_VERSION"].split(",")
+        String dockerUsername = envLegacy["DOCKER_USERNAME"]
+
+        // <registry>/    <docker_username>/<compiler><majorVersion>(-jenkins):<conan_version>(-<jenkins_agent_version>)
+        List<String> compilerImages = []
+        gccVersions.each({ String gccVersion ->
+            String image = "${dockerUsername}/gcc${gccVersion}"
+            gccImages.add(image)
+        })
+
+        clangVersions.each({ String clangVersion ->
+            String image = "${dockerUsername}/clang${clangVersion}"
+            compilerImages.add(image)
+        })
+
+        List<String> conanImages = []
+        conanVersions.each({ String conanVersion ->
+            compilerImages.each({ String compilerImage ->
+                conanImages.add("${compilerImage}:${conanVersion}")
+            })
+        })
+
+        List<String> allImages = conanImages
+        conanImages.each({String conanImage ->
+            def (name, conanVersion) = conanImage.split(':')
+            jenkinsAgentVersions.each({String jenkinsAgentVersion ->
+                allImages.add("${name}-jenkins:${conanVersion}-${jenkinsAgentVersion}")
+            })
+        })
+
+        allImages.each({ String image ->
+            Map imageData = [:]
+            imageData["name"] = image
+            imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
+            imageData["compilerVersion"] = image.split("compiler").last().split("/").first()
+            imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
+            imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
+
+            if (image.contains("jenkins")) {
+                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
+                imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
+                imageData["buildArgs"]["JAVA_JDK_VERSION"] = envLegacy["JAVA_JDK_VERSION"]
+                imageData["path"] = "legacy/jenkins"
+            }
+            images.add(imageData)
+        })
+    }
+    return images
+}
+
+def getModernImages(String branchName, String commit) {
+    Map<String, String> envValues = []
+    stage('Legacy - Parse environment file') {
+        envValues = readEnvValues("legacy/.env")
+    }
+
+    List<Map<String, String> images = []
+    stage('Legacy - Generate build matrix') {
+        List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
+        List<String> clangVersions = envValues["CLANG_LEGACY_VERSIONS"].split(",")
+        List<String> conanVersions = envValues["CONAN_VERSIONS"].split(",")
+        List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
+        String cmakeVersion = envValues["CMAKE_VERSION"]
+        String pythonVersion envValues["PYTHON_VERSION"]
+        String dockerUsername = envValues["DOCKER_USERNAME"]
+        String dockerHubUsername = envValues["DOCKERHUB_USERNAME"]
+        String distro = envValues["DISTRO"]
+        String distroVersion = envValues["DISTRO_VERSION"]
+        String libstdcppVersion = envValues["LIBSTDCPP_VERSION"]
+        String libstdcppPatchVersion = envValues["LIBSTDCPP_PATCH_VERSION"]
+        String libstdcppMajorVersion = envValues["LIBSTDCPP_MAJOR_VERSION"]
+
+        List<Map> images = []
+        Map baseImage = [:]
+        baseImage["name"] = "${dockerUsername}/base-${distro}:${branchName}-${commit}" 
+        baseImage["path"] = "modern/base"
+        images.add(baseImage)
+
+        // <registry>/    "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
+        List<String> compilerImages = []
+        gccVersions.each({ String gccVersion ->
+            String image = "${dockerUsername}/gcc${gccVersion}-${distro}"
+            gccImages.add(image)
+        })
+
+        clangVersions.each({ String clangVersion ->
+            String image = "${dockerUsername}/clang${clangVersion}-${distro}"
+            compilerImages.add(image)
+        })
+
+        List<String> conanImages = []
+        conanVersions.each({ String conanVersion ->
+            compilerImages.each({ String compilerImage ->
+                conanImages.add("${compilerImage}:${conanVersion}")
+            })
+        })
+
+        List<String> allImages = conanImages
+        conanImages.each({String conanImage ->
+            def (name, conanVersion) = conanImage.split(':')
+            allImages.add("${name}-builder:${conanVersion}")
+
+            jenkinsAgentVersions.each({String jenkinsAgentVersion ->
+                allImages.add("${name}-jenkins:${conanVersion}-${jenkinsAgentVersion}")
+            })
+        })
+
+        allImages.each({ String image ->
+            Map imageData = [:]
+            imageData["name"] = image
+            imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
+            String compilerName = imageData["compiler"].toUpperCase()
+            imageData["compilerVersion"] = image.split("compiler").last().split("/").first() // remove??
+            imageData["buildArgs"]["CMAKE_VERSION_FULL"] = cmakeVersion
+            def (major, minor, _) = parseVersion(cmakeVersion)
+            imageData["buildArgs"]['CMAKE_VERSION'] = "$major.$minor"
+            imageData["buildArgs"]['PYTHON_VERSION'] = pythonVersion
+            imageData["buildArgs"]['LIBSTDCPP_VERSION'] = libstdcppVersion
+            imageData["buildArgs"]['LIBSTDCPP_PATCH_VERSION'] = libstdcppPatchVersion
+            imageData["buildArgs"]['LIBSTDCPP_MAJOR_VERSION'] = libstdcppMajorVersion
+            imageData["buildArgs"]['DOCKER_USERNAME'] = dockerUsername
+            imageData["buildArgs"]['DOCKERHUB_USERNAME'] = dockerhubUsername
+            imageData["buildArgs"]['DISTRO'] = distro
+            imageData["buildArgs"]['DISTRO_VERSION'] = distroVersion
+            //TODO: imageData["buildArgs"]['DOCKER_TAG'] = "${branchName}-${commit}")
+
+            if (!image.contains("base")) {
+                imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
+                imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
+                imageData["path"] = "modern/${imageData["compiler"]}"
+
+                if (image.contains("jenkins")) {
+                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
+                    imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
+                    imageData["buildArgs"]["JAVA_JDK_VERSION"] = envLegacy["JAVA_JDK_VERSION"]
+                    imageData["path"] = "modern/jenkins"
+                }
+            }
+        })
+    }
+    return images
+}
+
+def buildLegacyImages(List<Map> images) {
+    node('Linux') {
+        environment {
+            DOCKER_BUILDKIT = 0
+        }
+
+        checkout scm
+
+        stage('Legacy - Install deps') {
+            sh 'pip install docker-compose humanfriendly conan conan-package-tools'
+        }
+
+        stage('Legacy - Login Artifactory') {
+            // Execute login: 1) Validate the login 2) Needed for docker pull/push
+            withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
+            }
+        }
+
+        // Define helper function to build the image
+        Closure imageBuild = { Map image ->
+            return {
+                //String versionMajor = version
+                String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+                //String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
+
+                node('Linux') {
+                    stage('Legacy - Checkout sources') {
+                        checkout scm
+                    }
+
+                    stage("Legacy - Build image ${image["name"]}") {
+                        dir(image["path"]) {
+                            buildLegacyImage(image, buildArgsStr)
+                        }
+                    }
+
+                    stage("Legacy - Upload image ${image["name"]} to Artifactory") {
+                        uploadImage(image, "center-c3i-docker", "center-c3i-docker") // TODO: check registry name
+                    }
+                }
+            }
+        }
+
+        // Build images in parallel
+        Map builds = [:]
+        images.each { Map image ->
+            builds["Legacy image ${image['name']}"] = imageBuild(image)
+        }
+        builds.failFast = true
+        parallel(builds)  // TODO: Maybe too many things building in parallel??
+    }
+}
+
+def runModernTests() {
+    dir('modern') {
+        sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
+    }
+}
+
+def buildModernImage(Map image, String buildArgs) {
+    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD '// + "${dockerUsername}"
+    }
+
+    sh "docker build -t ${image["name"]} ${buildArgs} ."
+}
+
+def buildModernImages(List<Map> images) {
+    String buildArgs = buildArguments.collect({ k, v -> "--build-arg ${k }=${v }"}).join(' ') as String
+
+    stage('Xenial - Build base image') {
+        String expectedImage = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
+        String latestBranch = "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-latest"
+        String latestMaster = "${dockerUsername}/base-${params.distro}${suffix}:${targetBranch}-latest"
+        dir('modern/base') {
+            buildImage(latestMaster, latestBranch, expectedImage, buildArgs)
+        }
+
+        dir('modern') {
+            sh "pytest tests --image ${expectedImage} --service base -vv --volumes-from ${mainContainerID} --user 0:0"
+        }
+    }
+
+    // Define helper function to build the compiler
+    Closure compilerBuild = { Map image ->
+        return {
+            node('Linux') {
+                String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+
+                stage('Modern - Checkout sources and install deps') {
+                    checkout scm
+                    // sh 'pip install pytest'
+                    // TODO: Pass expected in a different way
+                    // writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+                    // sh 'cat modern/.env'
+                }
+
+                stage("Modern - Build image ${image["name"]}") {
+                    dir(image["path"]) {
+                        buildModernImage(image, buildArgsStr)
+                    }
+
+                    //runModernTests()
+                }
+
+                stage("Modern - Upload image ${image["name"]} to Artifactory") {
+                    uploadImage(image, "center-c3i-docker", "center-c3i-docker") // TODO: check registry name
+                }
+            }
+        }
+    }
+
+    // Build images in parallel
+    Map builds = [:]
+    images.each { Map image ->
+        builds["Modern image ${image['name']}"] = imageBuild(image)
+    }
+    builds.failFast = true
+    parallel(builds)  // TODO: Maybe too many things building in parallel??
+}
+
+def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
+                  String toRegistryName, String toRegistryCredentialsId) {
+    withCredentials([usernamePassword(credentialsId: fromRegistryCredentialsId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD'
+    }
+
+    images.each { Map image ->
+        // Download from registry
+        String builtImage = "${fromRegistryName}/${image["name"]}"
+        sh "docker pull ${builtImage}"
+    }
+
+    images.each { Map image ->
+       uploadImage(image, toRegistryName, toRegistryCredentialsId)
+    }
+}
+
+node('Linux') {
+    String scm_repository
+    String scm_commit
+    String scm_base_branch = null
+    String scm_pr_number = null
+    String scm_pr_commit = null
+    boolean isMasterbranch
+
+    // Check for skip build
+    String scmTitle = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+    if (scmTitle.contains('[skip ci]') || scmTitle.contains('[ci skip]')) {
+        currentBuild.result = 'SUCCESS'  // Keep success, so GitHub shows green status check
+        echo 'Aborting: Found [skip ci] on the commit message'
+        return  // Outside stage
+    }
+
+    stage('Get build job information') {
+        checkout scm
+
+        scm_repository = scm.userRemoteConfigs[0].url
+        scm_base_branch = scm.branches[0].name
+        scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        isMasterbranch = !env.BRANCH_NAME.startsWith('PR')  // Because it is Github
+        if (!isMasterbranch) {  // It is a pull-request
+            scm_base_branch = "${env.CHANGE_TARGET}"
+            scm_pr_number = env.BRANCH_NAME.replace('PR-', '')
+
+            // Get commits from master branch and from PR
+            (scm_commit, scm_pr_commit) = detectPRCommits()
+        }
+
+        echo """
+            Build job information:
+            - scm_repository: ${scm_repository}
+            - scm_commit: ${scm_commit}
+            - scm_base_branch: ${scm_base_branch}
+            - scm_pr_number: ${scm_pr_number}
+            - scm_pr_commit: ${scm_pr_commit}
+            """
+    }
+
+    List<Map> legacyImages = getLegacyImages()
+    List<Map> modernImages = getModernImages()
+
+    if (!isMasterbranch) { // || rebuild
+        // Build Legacy Images
+        buildLegacyImages(legacyImages)
+
+        // Build Modern Images
+        buildModernImages(modernImages)
+    }
+
+    if (isMasterbranch) {
+        // Promote to dockerhub
+        promoteImages(legacyImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(modernImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
+    }
+}
