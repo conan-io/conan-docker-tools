@@ -379,14 +379,6 @@ node('Linux') {
     String scm_pr_commit = null
     boolean isMasterbranch
 
-    // Check for skip build
-    String scmTitle = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-    if (scmTitle.contains('[skip ci]') || scmTitle.contains('[ci skip]')) {
-        currentBuild.result = 'SUCCESS'  // Keep success, so GitHub shows green status check
-        echo 'Aborting: Found [skip ci] on the commit message'
-        return  // Outside stage
-    }
-
     stage('Get build job information') {
         checkout scm
 
@@ -410,6 +402,14 @@ node('Linux') {
             - scm_pr_number: ${scm_pr_number}
             - scm_pr_commit: ${scm_pr_commit}
             """
+    }
+
+    // Check for skip build
+    String scmTitle = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+    if (scmTitle.contains('[skip ci]') || scmTitle.contains('[ci skip]')) {
+        currentBuild.result = 'SUCCESS'  // Keep success, so GitHub shows green status check
+        echo 'Aborting: Found [skip ci] on the commit message'
+        return  // Outside stage
     }
 
     List<Map> legacyImages = getLegacyImages()
