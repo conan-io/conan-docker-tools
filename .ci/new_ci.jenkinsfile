@@ -17,8 +17,10 @@ def detectPRCommits() {
 def readEnvValues(String envFile) {
     Map<String, String> envContent = [:]
     String content = readFile(envFile)  // legacy/.env or modern/.env
+    echo content
     content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
         def (name, value) = it.split('=')
+        echo "${name},${value}"
         envContent[name] = value
     }
     return envContent
