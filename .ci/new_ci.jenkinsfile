@@ -99,7 +99,7 @@ def getLegacyImages() {
         List<String> compilerImages = []
         gccVersions.each({ String gccVersion ->
             String image = "${dockerUsername}/gcc${gccVersion}"
-            gccImages.add(image)
+            compilerImages.add(image)
         })
 
         clangVersions.each({ String clangVersion ->
