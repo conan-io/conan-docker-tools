@@ -59,18 +59,18 @@ def uploadImage(Map image, String registry, String crendentialsID) {
 }
 
 def getLegacyImages() {
-    Map<String, String> envLegacy = [:]
+    Map<String, String> envValues = [:]
     stage('Legacy - Parse environment file') {
-        envLegacy = readEnvValues("legacy/.env")
+        envValues = readEnvValues("legacy/.env")
     }
 
     List<Map> images = []
     stage('Legacy - Generate build matrix') {
-        List<String> gccVersions = envLegacy["GCC_LEGACY_VERSIONS"].split(",")
-        List<String> clangVersions = envLegacy["CLANG_LEGACY_VERSIONS"] != null ? envLegacy["CLANG_LEGACY_VERSIONS"].split(",") : []
-        List<String> conanVersions = [envLegacy["CONAN_VERSION"]]
-        List<String> jenkinsAgentVersions = envLegacy["JENKINS_AGENT_VERSION"].split(",")
-        String dockerUsername = envLegacy["DOCKER_USERNAME"]
+        List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
+        List<String> clangVersions = envValues["CLANG_LEGACY_VERSIONS"] != null ? envValues["CLANG_LEGACY_VERSIONS"].split(",") : []
+        List<String> conanVersions = [envValues["CONAN_VERSION"]]
+        List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
+        String dockerUsername = envValues["DOCKER_USERNAME"]
 
         // <registry>/    <docker_username>/<compiler><majorVersion>(-jenkins):<conan_version>(-<jenkins_agent_version>)
         List<String> compilerImages = []
@@ -112,7 +112,7 @@ def getLegacyImages() {
             if (image.contains("jenkins")) {
                 imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
                 imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
-                imageData["buildArgs"]["JAVA_JDK_VERSION"] = envLegacy["JAVA_JDK_VERSION"]
+                imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                 imageData["path"] = "legacy/jenkins"
             }
             echo "${imageData}"
@@ -209,7 +209,7 @@ def getModernImages() {
                 if (image.contains("jenkins")) {
                     imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
                     imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
-                    imageData["buildArgs"]["JAVA_JDK_VERSION"] = envLegacy["JAVA_JDK_VERSION"]
+                    imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
                 }
             }
