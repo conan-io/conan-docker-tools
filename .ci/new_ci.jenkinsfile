@@ -48,7 +48,7 @@ def buildLegacyImage(Map image, String buildArgs) {
 
 def uploadImage(Map image, String registry, String crendentialsID) {
     withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh "docker login --username $USERNAME --password $PASSWORD ${registry}"
+        //sh "docker login --username $USERNAME --password $PASSWORD ${registry}"
     }
 
     // Upload with the corresponding tag version
@@ -313,7 +313,7 @@ def buildModernImages(List<Map> images) {
 def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
                   String toRegistryName, String toRegistryCredentialsId) {
     withCredentials([usernamePassword(credentialsId: fromRegistryCredentialsId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD'
+        //sh 'docker login --username $USERNAME --password $PASSWORD'
     }
 
     images.each { Map image ->
