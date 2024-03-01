@@ -31,6 +31,11 @@ def parseVersion(String version) {
     return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
 }
 
+String getVersionMajor(String version) {
+    def (major, _1, _2) = parseVersion(version)
+    return major
+}
+
 def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
@@ -127,8 +132,8 @@ def getModernImages(String commit, String registry) {
 
     List<Map> images = []
     stage('Modern - Generate build matrix') {
-        List<String> gccVersions = envValues["GCC_VERSIONS"].split(",")
-        List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",")
+        List<String> gccVersions = envValues["GCC_VERSIONS"].split(",").collect({String version -> return getVersionMajor(v)})
+        List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",").collect({String version -> return getVersionMajor(v)})
         List<String> conanVersions = [envValues["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
         String cmakeVersion = envValues["CMAKE_VERSION_FULL"]
@@ -195,11 +200,11 @@ def getModernImages(String commit, String registry) {
             imageData["buildArgs"]['DOCKERHUB_USERNAME'] = dockerhubUsername
             imageData["buildArgs"]['DISTRO'] = distro
             imageData["buildArgs"]['DISTRO_VERSION'] = distroVersion
+            String conanVersionSubStr = image.split(":").last()
+            imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
             echo "${imageData}"
 
             if (!image.contains("base")) {
-                String conanVersionSubStr = image.split(":").last()
-                imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
                 imageData["buildArgs"]['DOCKER_TAG'] = "${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
                 imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
                 imageData["path"] = "modern/${imageData["compiler"]}"
