@@ -58,7 +58,7 @@ def uploadImage(Map image, String registry, String crendentialsID, String docker
     echo "DOCKER PUSH ${uploadImage}"
 }
 
-def getLegacyImages() {
+def getLegacyImages(String commit) {
     Map<String, String> envValues = [:]
     stage('Legacy - Parse environment file') {
         envValues = readEnvValues("legacy/.env")
@@ -101,7 +101,7 @@ def getLegacyImages() {
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:]]
-            imageData["name"] = image
+            imageData["name"] = "${image}-${commit}"
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
             imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
@@ -122,7 +122,7 @@ def getLegacyImages() {
     return images
 }
 
-def getModernImages() {
+def getModernImages(String commit) {
     Map<String, String> envValues = [:]
     stage('Modern - Parse environment file') {
         envValues = readEnvValues("modern/.env")
@@ -181,7 +181,7 @@ def getModernImages() {
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:]]
-            imageData["name"] = image
+            imageData["name"] = "${image}-${commit}"
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
@@ -274,7 +274,7 @@ def buildParallel(String stageName, List images, Closure closure) {
 
 def buildModernImage(Map image, String buildArgs) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        //sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
+        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
     }
 
     sh "docker build -t ${image["name"]} ${buildArgs} ."
@@ -302,7 +302,7 @@ def buildModernImages(List<Map> images) {
                 }
 
                 stage("Modern - Upload image ${image["name"]} to Artifactory") {
-                    uploadImage(image, "center-c3i-docker", "center-c3i-docker") // TODO: check registry name
+                    uploadImage(image, "center-c3i-docker.jfrog.io", "center-c3i-docker")  // TODO: check registry name
                 }
             }
         }
@@ -317,7 +317,7 @@ def buildModernImages(List<Map> images) {
     parallel(builds)  // TODO: Maybe too many things building in parallel??
 }
 
-def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
+def promoteImages(List<Map> images, String commit, String fromRegistryName, String fromRegistryCredentialsId,
                   String toRegistryName, String toRegistryCredentialsId) {
     withCredentials([usernamePassword(credentialsId: fromRegistryCredentialsId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         //sh 'docker login --username $USERNAME --password $PASSWORD'
@@ -375,9 +375,9 @@ node('Linux') {
         return  // Outside stage
     }
 
-    List<Map> legacyImages = getLegacyImages()
+    List<Map> legacyImages = getLegacyImages(scm_commit)
     echo "${legacyImages}"
-    List<Map> modernImages = getModernImages()
+    List<Map> modernImages = getModernImages(scm_commit)
     echo "${modernImages}"
 
     if (!isMasterbranch || true) { // || rebuild
@@ -389,9 +389,29 @@ node('Linux') {
     }
 
     if (isMasterbranch) {
+        // Tag images as definitive (without commit)
+        legacyImages = tagImagesWithoutCommit(legacyImages, commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        modernImages = tagImagesWithoutCommit(modernImages, commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         // Promote to dockerhub
         promoteImages(legacyImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
         promoteImages(modernImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
         // TODO: Clean images ffrom PR that are in Artifactory
     }
+}
+
+def tagImagesWithoutCommit(List<Map> images, String commit, String registry, String credentialsID) {
+    withCredentials([usernamePassword(credentialsId: credentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD' + "${registry}"
+    }
+
+    images.each { Map image ->
+        // Download from registry
+        String registryImage = "${registry}/${image["name"]}"
+        sh "docker pull ${builtImage}"
+        String registryImageWithoutCommit = registryImage.replace("-${commit}", "")
+        sh "docker tag ${registryImage} ${registryImageWithoutCommit}"
+        sh "docker push ${registryImageWithoutCommit}"
+        image["name"] = registryImageWithoutCommit
+    }
+    return images
 }
