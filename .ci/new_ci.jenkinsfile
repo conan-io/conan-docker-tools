@@ -144,10 +144,7 @@ def getModernImages(String commit, String registry) {
         List<String> allImages = []
 
         conanVersions.each({ String conanVersion ->
-            Map baseImage = [:]
-            baseImage["name"] = "${dockerUsername}/base-${distro}:${conanVersion}"
-            baseImage["path"] = "modern/base"
-            allImages.add(baseImage)
+            allImages.add("${dockerUsername}/base-${distro}:${conanVersion}")  // :${branchName}-${commit} 
         })
 
         // <registry>/    "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
@@ -169,7 +166,7 @@ def getModernImages(String commit, String registry) {
             })
         })
 
-        allImages.addAll(conanImages.collect())
+        List<String> allImages.addAll(conanImages.collect())
         conanImages.each({String conanImage ->
             def (name, conanVersion) = conanImage.split(':')
             allImages.add("${name}-builder:${conanVersion}")
@@ -183,7 +180,7 @@ def getModernImages(String commit, String registry) {
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:], "target": null]
             imageData["name"] = "${image}-${commit}"
-            imageData["compiler"] = image["name"].contains("gcc") ? "gcc" : "clang"  // remove?
+            imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
             imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
@@ -207,9 +204,9 @@ def getModernImages(String commit, String registry) {
                 imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
                 imageData["path"] = "modern/${imageData["compiler"]}"
 
-                if (image["name"].contains("builder")) {
+                if (image.contains("builder")) {
                     imageData["target"] = "builder"
-                } else if (!image["name"].contains("builder") && !image["name"].contains("jenkins")) {
+                } else if (!image.contains("builder") && !image.contains("jenkins")) {
                     imageData["target"] = "deploy"
                 }
 
@@ -219,6 +216,9 @@ def getModernImages(String commit, String registry) {
                     imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
                 }
+            }
+            else {
+                imageData["path"] = "modern/base"
             }
             echo "${imageData}"
             images.add(imageData)
