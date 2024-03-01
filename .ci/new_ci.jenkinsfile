@@ -31,11 +31,11 @@ def parseVersion(String version) {
     return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
 }
 
-def buildLegacyImage(Map image, String buildArgs) {
+def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
     sh 'export DOCKER_BUILDKIT=0'
 
-    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-       // sh 'docker login --username $USERNAME --password $PASSWORD'
+    withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD' + "${registry}"
         sh 'docker pull docker.io/library/ubuntu:xenial'
         sh 'docker pull docker.io/library/ubuntu:bionic'
         sh 'docker pull docker.io/library/ubuntu:eoan'
@@ -54,8 +54,7 @@ def uploadImage(Map image, String registry, String crendentialsID) {
     // Upload with the corresponding tag version
     String uploadImage = "${registry}/${image["name"]}"
     sh "docker tag ${image["name"]} ${uploadImage}"
-    //FIXME sh "docker push ${uploadImage}"
-    echo "DOCKER PUSH ${uploadImage}"
+    FIXME sh "docker push ${uploadImage}"
 }
 
 def getLegacyImages(String commit) {
@@ -220,13 +219,13 @@ def getModernImages(String commit) {
     return images
 }
 
-def buildLegacyImages(List<Map> images) {
+def buildLegacyImages(List<Map> images, String registry, String registryCredentialsID) {
     node('Linux') {
         stage('Legacy - Login Artifactory') {
             // Execute login: 1) Validate the login 2) Needed for docker pull/push
             // TODO: Check that connection to artifactory does not fail (before creating images)
-            withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
+            withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
             }
         }
 
@@ -244,12 +243,12 @@ def buildLegacyImages(List<Map> images) {
 
                     stage("Legacy - Build image ${image["name"]}") {
                         dir(image["path"]) {
-                            buildLegacyImage(image, buildArgsStr)
+                            buildLegacyImage(image, buildArgsStr, registry, registryCredentialsID)
                         }
                     }
 
                     stage("Legacy - Upload image ${image["name"]} to Artifactory") {
-                        uploadImage(image, "center-c3i-docker.jfrog.io", "center-c3i-docker") // TODO: check registry name
+                        uploadImage(image, registry, registryCredentialsID)
                     }
                 }
             }
@@ -272,15 +271,15 @@ def buildParallel(String stageName, List images, Closure closure) {
     parallel(builds)
 }
 
-def buildModernImage(Map image, String buildArgs) {
+def buildModernImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
     sh "docker build -t ${image["name"]} ${buildArgs} ."
 }
 
-def buildModernImages(List<Map> images) {
+def buildModernImages(List<Map> images, String registry, String registryCredentialsID) {
     // Define helper function to build the compiler
     Closure compilerBuild = { Map image ->
         return {
@@ -297,24 +296,27 @@ def buildModernImages(List<Map> images) {
 
                 stage("Modern - Build image ${image["name"]}") {
                     dir(image["path"]) {
-                        buildModernImage(image, buildArgsStr)
+                        buildModernImage(image, buildArgsStr, registry, registryCredentialsID)
                     }
                 }
 
                 stage("Modern - Upload image ${image["name"]} to Artifactory") {
-                    uploadImage(image, "center-c3i-docker.jfrog.io", "center-c3i-docker")  // TODO: check registry name
+                    uploadImage(image, registry, registryCredentialsID)
                 }
             }
         }
     }
 
     // Build images in parallel
-    Map builds = [:]
-    images.each { Map image ->
-        builds["Modern image ${image['name']}"] = imageBuild(image)
-    }
-    builds.failFast = true
-    parallel(builds)  // TODO: Maybe too many things building in parallel??
+    // base, builder, normal, jenkins
+    List<Map> baseImages = images.findAll({ Map image -> image["name"].contains("base") })
+    List<Map> builderImages = images.findAll({ Map image -> image["name"].contains("builder") })
+    List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("base") && !image["name"].contains("builder") && !image["name"].contains("jenkins") })
+    List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
+    buildParallel("Legacy base image", baseImages, imageBuild)
+    buildParallel("Legacy builder image", builderImages, imageBuild)
+    buildParallel("Legacy normal image", normalImages, imageBuild)
+    buildParallel("Legacy image jenkins", jenkinsImages, imageBuild)
 }
 
 def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
@@ -384,10 +386,10 @@ node('Linux') {
 
     if (!isMasterbranch || true) { // || rebuild
         // Build Legacy Images
-        buildLegacyImages(legacyImages)
+        buildLegacyImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
 
         // Build Modern Images
-        buildModernImages(modernImages)
+        buildModernImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
     }
 
     if (isMasterbranch) {
