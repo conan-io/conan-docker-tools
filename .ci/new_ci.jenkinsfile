@@ -107,7 +107,7 @@ def getLegacyImages(String commit, String registry) {
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
 
             if (image.contains("jenkins")) {
-                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
+                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
                 imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
                 imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                 imageData["path"] = "legacy/jenkins"
@@ -204,7 +204,7 @@ def getModernImages(String commit, String registry) {
                 imageData["path"] = "modern/${imageData["compiler"]}"
 
                 if (image.contains("jenkins")) {
-                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
+                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
                     imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
                     imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
