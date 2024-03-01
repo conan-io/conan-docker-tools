@@ -183,7 +183,7 @@ def getModernImages(String commit, String registry) {
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:], "target": null]
             imageData["name"] = "${image}-${commit}"
-            imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
+            imageData["compiler"] = image["name"].contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
             imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
