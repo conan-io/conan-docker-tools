@@ -185,7 +185,7 @@ def getModernImages() {
         })
 
         allImages.each({ String image ->
-            Map imageData = [:]
+            Map imageData = ["buildArgs": [:]]
             imageData["name"] = image
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
