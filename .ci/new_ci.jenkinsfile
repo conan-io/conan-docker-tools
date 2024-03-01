@@ -169,7 +169,7 @@ def getModernImages(String commit, String registry) {
             })
         })
 
-        List<String> allImages.addAll(conanImages.collect())
+        allImages.addAll(conanImages.collect())
         conanImages.each({String conanImage ->
             def (name, conanVersion) = conanImage.split(':')
             allImages.add("${name}-builder:${conanVersion}")
