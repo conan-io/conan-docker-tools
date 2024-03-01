@@ -57,7 +57,7 @@ def uploadImage(Map image, String registry, String crendentialsID) {
     FIXME sh "docker push ${uploadImage}"
 }
 
-def getLegacyImages(String commit) {
+def getLegacyImages(String commit, String registry) {
     Map<String, String> envValues = [:]
     stage('Legacy - Parse environment file') {
         envValues = readEnvValues("legacy/.env")
@@ -109,7 +109,7 @@ def getLegacyImages(String commit) {
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
 
             if (image.contains("jenkins")) {
-                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
+                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
                 imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
                 imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                 imageData["path"] = "legacy/jenkins"
@@ -121,7 +121,7 @@ def getLegacyImages(String commit) {
     return images
 }
 
-def getModernImages(String commit) {
+def getModernImages(String commit, String registry) {
     Map<String, String> envValues = [:]
     stage('Modern - Parse environment file') {
         envValues = readEnvValues("modern/.env")
@@ -206,7 +206,7 @@ def getModernImages(String commit) {
                 imageData["path"] = "modern/${imageData["compiler"]}"
 
                 if (image.contains("jenkins")) {
-                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
+                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
                     imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
                     imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
@@ -220,46 +220,36 @@ def getModernImages(String commit) {
 }
 
 def buildLegacyImages(List<Map> images, String registry, String registryCredentialsID) {
-    node('Linux') {
-        stage('Legacy - Login Artifactory') {
-            // Execute login: 1) Validate the login 2) Needed for docker pull/push
-            // TODO: Check that connection to artifactory does not fail (before creating images)
-            withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
-            }
-        }
+    // Define helper function to build the image
+    Closure imageBuild = { Map image ->
+        return {
+            //String versionMajor = version
+            String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+            //String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
 
-        // Define helper function to build the image
-        Closure imageBuild = { Map image ->
-            return {
-                //String versionMajor = version
-                String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
-                //String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
+            node('Linux') {
+                stage('Legacy - Checkout sources') {
+                    checkout scm
+                }
 
-                node('Linux') {
-                    stage('Legacy - Checkout sources') {
-                        checkout scm
+                stage("Legacy - Build image ${image["name"]}") {
+                    dir(image["path"]) {
+                        buildLegacyImage(image, buildArgsStr, registry, registryCredentialsID)
                     }
+                }
 
-                    stage("Legacy - Build image ${image["name"]}") {
-                        dir(image["path"]) {
-                            buildLegacyImage(image, buildArgsStr, registry, registryCredentialsID)
-                        }
-                    }
-
-                    stage("Legacy - Upload image ${image["name"]} to Artifactory") {
-                        uploadImage(image, registry, registryCredentialsID)
-                    }
+                stage("Legacy - Upload image ${image["name"]} to Artifactory") {
+                    uploadImage(image, registry, registryCredentialsID)
                 }
             }
         }
-
-        // Build images in parallel
-        List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("jenkins") })
-        List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
-        buildParallel("Legacy image", normalImages, imageBuild)
-        buildParallel("Legacy image jenkins", jenkinsImages, imageBuild)
     }
+
+    // Build images in parallel
+    List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("jenkins") })
+    List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
+    buildParallel("Legacy image", normalImages, imageBuild)
+    buildParallel("Legacy image jenkins", jenkinsImages, imageBuild)
 }
 
 def buildParallel(String stageName, List images, Closure closure) {
