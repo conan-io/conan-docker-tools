@@ -124,7 +124,7 @@ def getLegacyImages() {
 
 def getModernImages() {
     Map<String, String> envValues = [:]
-    stage('Legacy - Parse environment file') {
+    stage('Modern - Parse environment file') {
         envValues = readEnvValues("modern/.env")
     }
 
@@ -134,7 +134,7 @@ def getModernImages() {
         List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",")
         List<String> conanVersions = [envValues["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
-        String cmakeVersion = envValues["CMAKE_VERSION"]
+        String cmakeVersion = envValues["CMAKE_VERSION_FULL"]
         String pythonVersion = envValues["PYTHON_VERSION"]
         String dockerUsername = envValues["DOCKER_USERNAME"]
         String dockerHubUsername = envValues["DOCKERHUB_USERNAME"]
@@ -177,6 +177,7 @@ def getModernImages() {
                 allImages.add("${name}-jenkins:${conanVersion}-${jenkinsAgentVersion}")
             })
         })
+        echo "${allImages}"
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:]]
