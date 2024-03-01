@@ -341,7 +341,7 @@ node('Linux') {
         scm_repository = scm.userRemoteConfigs[0].url
         scm_base_branch = scm.branches[0].name
         scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-        isMasterbranch = !env.BRANCH_NAME.startsWith('PR')  // Because it is Github
+        isMasterbranch = env.BRANCH_NAME.startsWith('master')  // Because it is Github
         if (!isMasterbranch) {  // It is a pull-request
             scm_base_branch = "${env.CHANGE_TARGET}"
             scm_pr_number = env.BRANCH_NAME.replace('PR-', '')
