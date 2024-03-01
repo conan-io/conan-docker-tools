@@ -262,7 +262,7 @@ def buildParallel(String stageName, List images, Closure closure) {
 }
 
 def buildModernImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
-    withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
