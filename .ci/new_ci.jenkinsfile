@@ -107,13 +107,12 @@ def getLegacyImages(String commit, String registry) {
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
             imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
-            String conanVersionSubStr = image.split(":").last()
-            imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
+            imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
 
             if (image.contains("jenkins")) {
                 imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
-                imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
+                imageData["buildArgs"]["AGENT_VERSION"] = image.split(":").last().split("-")[1]
                 imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                 imageData["path"] = "legacy/jenkins"
             }
@@ -200,9 +199,7 @@ def getModernImages(String commit, String registry) {
             imageData["buildArgs"]['DOCKERHUB_USERNAME'] = dockerhubUsername
             imageData["buildArgs"]['DISTRO'] = distro
             imageData["buildArgs"]['DISTRO_VERSION'] = distroVersion
-            String conanVersionSubStr = image.split(":").last()
-            imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
-            echo "${imageData}"
+            imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
 
             if (!image.contains("base")) {
                 imageData["buildArgs"]['DOCKER_TAG'] = "${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
@@ -217,7 +214,7 @@ def getModernImages(String commit, String registry) {
 
                 if (image.contains("jenkins")) {
                     imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
-                    imageData["buildArgs"]["AGENT_VERSION"] = image.split("-").last()
+                    imageData["buildArgs"]["AGENT_VERSION"] = image.split(":").last().split("-")[1]
                     imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
                 }
