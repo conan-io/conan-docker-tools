@@ -369,9 +369,9 @@ node('Linux') {
         return  // Outside stage
     }
 
-    List<Map> legacyImages = getLegacyImages(scm_commit)
+    List<Map> legacyImages = getLegacyImages(scm_commit, "center-c3i-docker.jfrog.io")
     echo "${legacyImages}"
-    List<Map> modernImages = getModernImages(scm_commit)
+    List<Map> modernImages = getModernImages(scm_commit, "center-c3i-docker.jfrog.io")
     echo "${modernImages}"
 
     if (!isMasterbranch || true) { // || rebuild
