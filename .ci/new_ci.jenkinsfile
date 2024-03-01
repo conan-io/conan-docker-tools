@@ -131,7 +131,7 @@ def getLegacyImages() {
 def getModernImages() {
     Map<String, String> envValues = [:]
     stage('Legacy - Parse environment file') {
-        envValues = readEnvValues("legacy/.env")
+        envValues = readEnvValues("modern/.env")
     }
 
     List<Map> images = []
