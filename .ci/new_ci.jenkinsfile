@@ -226,7 +226,9 @@ def buildLegacyImages(List<Map> images) {
             DOCKER_BUILDKIT = 0
         }
 
-        checkout scm
+        stage("Legacy - Checkout sources") {
+            checkout scm
+        }
 
         stage('Legacy - Login Artifactory') {
             // Execute login: 1) Validate the login 2) Needed for docker pull/push
