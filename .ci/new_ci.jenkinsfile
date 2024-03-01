@@ -48,7 +48,7 @@ def buildLegacyImage(Map image, String buildArgs) {
 
 def uploadImage(Map image, String registry, String crendentialsID) {
     withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
+        sh "docker login --username $USERNAME --password $PASSWORD ${registry}"
     }
 
     // Upload with the corresponding tag version
@@ -232,7 +232,7 @@ def buildLegacyImages(List<Map> images) {
             // Execute login: 1) Validate the login 2) Needed for docker pull/push
             // TODO: Check that connection to artifactory does not fail (before creating images)
             withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
+                sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
             }
         }
 
