@@ -151,7 +151,7 @@ def getModernImages() {
 
         // <registry>/    "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
         List<String> compilerImages = []
-        gccVersions.each({ String gccVersion ->
+        gccVersions.each({ String gccVersion ->  // FIXME: Add only major gcc version to image name
             String image = "${dockerUsername}/gcc${gccVersion}-${distro}"
             compilerImages.add(image)
         })
@@ -231,9 +231,9 @@ def buildLegacyImages(List<Map> images) {
         stage('Legacy - Login Artifactory') {
             // Execute login: 1) Validate the login 2) Needed for docker pull/push
             // TODO: Check that connection to artifactory does not fail (before creating images)
-            withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
-            }
+            //withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            //    sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
+            //}
         }
 
         // Define helper function to build the image
