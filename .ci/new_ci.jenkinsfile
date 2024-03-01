@@ -109,9 +109,11 @@ def getLegacyImages() {
             Map imageData = [:]
             imageData["name"] = image
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
-            imageData["compilerVersion"] = image.split("compiler").last().split("/").first()
-            imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
+            imageData["compilerVersion"] = image.split(imageData["compiler"]).last().split("/").first()
+            String conanVersionSubStr = image.split(":").last()
+            imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
+            echo "${imageData}"
 
             if (image.contains("jenkins")) {
                 imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
