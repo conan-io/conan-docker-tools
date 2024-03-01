@@ -177,7 +177,7 @@ def getModernImages(String commit, String registry) {
         echo "${allImages}"
 
         allImages.each({ String image ->
-            Map imageData = ["buildArgs": [:]]
+            Map imageData = ["buildArgs": [:], "target": null]
             imageData["name"] = "${image}-${commit}"
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
@@ -194,14 +194,20 @@ def getModernImages(String commit, String registry) {
             imageData["buildArgs"]['DOCKERHUB_USERNAME'] = dockerhubUsername
             imageData["buildArgs"]['DISTRO'] = distro
             imageData["buildArgs"]['DISTRO_VERSION'] = distroVersion
-            //TODO: imageData["buildArgs"]['DOCKER_TAG'] = "${branchName}-${commit}")
             echo "${imageData}"
 
             if (!image.contains("base")) {
                 String conanVersionSubStr = image.split(":").last()
                 imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
+                imageData["buildArgs"]['DOCKER_TAG'] = "${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
                 imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
                 imageData["path"] = "modern/${imageData["compiler"]}"
+
+                if (image.contains("builder")) {
+                    imageData["target"] = "builder"
+                } else if (!image.contains("builder") && !image.contains("jenkins")) {
+                    imageData["target"] = "deploy"
+                }
 
                 if (image.contains("jenkins")) {
                     imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
@@ -262,20 +268,21 @@ def buildParallel(String stageName, List images, Closure closure) {
     parallel(builds)
 }
 
-def buildModernImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
+def buildModernImage(Map image, String buildArgs, String target, String registry, String registryCredentialsID) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
-    sh "docker build -t ${image["name"]} ${buildArgs} ."
+    sh "docker build -t ${image["name"]} ${buildArgs} ${target} ."
 }
 
 def buildModernImages(List<Map> images, String registry, String registryCredentialsID) {
     // Define helper function to build the compiler
-    Closure compilerBuild = { Map image ->
+    Closure imageBuild = { Map image ->
         return {
             node('Linux') {
                 String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+                String target = image["target"] != null ? "--target ${image["target"]}" : ""
 
                 environment {
                     DOCKER_BUILDKIT = 0
@@ -292,7 +299,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
 
                 stage("Modern - Build image ${image["name"]}") {
                     dir(image["path"]) {
-                        buildModernImage(image, buildArgsStr, registry, registryCredentialsID)
+                        buildModernImage(image, buildArgsStr, target, registry, registryCredentialsID)
                     }
                 }
 
