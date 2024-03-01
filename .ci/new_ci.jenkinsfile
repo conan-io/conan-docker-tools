@@ -35,7 +35,7 @@ def buildLegacyImage(Map image, String buildArgs) {
     sh 'export DOCKER_BUILDKIT=0'
 
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD'
+       // sh 'docker login --username $USERNAME --password $PASSWORD'
         sh 'docker pull docker.io/library/ubuntu:xenial'
         sh 'docker pull docker.io/library/ubuntu:bionic'
         sh 'docker pull docker.io/library/ubuntu:eoan'
@@ -273,7 +273,7 @@ def buildLegacyImages(List<Map> images) {
 
 def buildModernImage(Map image, String buildArgs) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
+        //sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
     }
 
     sh "docker build -t ${image["name"]} ${buildArgs} ."
