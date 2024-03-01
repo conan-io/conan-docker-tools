@@ -222,14 +222,6 @@ def getModernImages() {
 
 def buildLegacyImages(List<Map> images) {
     node('Linux') {
-        environment {
-            DOCKER_BUILDKIT = 0
-        }
-
-        stage("Legacy - Checkout sources") {
-            checkout scm
-        }
-
         stage('Legacy - Login Artifactory') {
             // Execute login: 1) Validate the login 2) Needed for docker pull/push
             // TODO: Check that connection to artifactory does not fail (before creating images)
