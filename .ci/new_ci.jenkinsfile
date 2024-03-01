@@ -137,7 +137,7 @@ def getModernImages() {
         String cmakeVersion = envValues["CMAKE_VERSION_FULL"]
         String pythonVersion = envValues["PYTHON_VERSION"]
         String dockerUsername = envValues["DOCKER_USERNAME"]
-        String dockerHubUsername = envValues["DOCKERHUB_USERNAME"]
+        String dockerhubUsername = envValues["DOCKERHUB_USERNAME"]
         String distro = envValues["DISTRO"]
         String distroVersion = envValues["DISTRO_VERSION"]
         String libstdcppVersion = envValues["LIBSTDCPP_VERSION"]
