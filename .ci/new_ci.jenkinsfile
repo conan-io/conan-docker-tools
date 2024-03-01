@@ -32,8 +32,6 @@ def parseVersion(String version) {
 }
 
 def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
-    sh 'export DOCKER_BUILDKIT=0'
-
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
         sh 'docker pull docker.io/library/ubuntu:xenial'
@@ -223,11 +221,13 @@ def buildLegacyImages(List<Map> images, String registry, String registryCredenti
     // Define helper function to build the image
     Closure imageBuild = { Map image ->
         return {
-            //String versionMajor = version
-            String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
-            //String deployImage = "${dockerUsername}/${compiler}${versionMajor}:${branchName}-${commit}"
-
             node('Linux') {
+                String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+
+                environment {
+                    DOCKER_BUILDKIT = 0
+                }
+
                 stage('Legacy - Checkout sources') {
                     checkout scm
                 }
@@ -275,6 +275,10 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
         return {
             node('Linux') {
                 String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+
+                environment {
+                    DOCKER_BUILDKIT = 0
+                }
 
                 stage('Modern - Checkout sources and install deps') {
                     checkout scm
