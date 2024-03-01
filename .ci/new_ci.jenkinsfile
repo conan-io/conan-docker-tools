@@ -109,12 +109,11 @@ def getLegacyImages() {
             Map imageData = ["buildArgs": [:]]
             imageData["name"] = image
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
-            String compilerVesionSubStr = image.split(imageData["compiler"]).last()
+            String compilerVersionSubStr = image.split(imageData["compiler"]).last()
             imageData["compilerVersion"] = compilerVesionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
             String conanVersionSubStr = image.split(":").last()
             imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
-            echo "${imageData}"
 
             if (image.contains("jenkins")) {
                 imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}"
@@ -122,6 +121,7 @@ def getLegacyImages() {
                 imageData["buildArgs"]["JAVA_JDK_VERSION"] = envLegacy["JAVA_JDK_VERSION"]
                 imageData["path"] = "legacy/jenkins"
             }
+            echo "${imageData}"
             images.add(imageData)
         })
     }
@@ -215,6 +215,8 @@ def getModernImages() {
                     imageData["path"] = "modern/jenkins"
                 }
             }
+            echo "${imageData}"
+            images.add(imageData)
         })
     }
     return images
