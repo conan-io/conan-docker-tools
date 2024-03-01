@@ -46,9 +46,9 @@ def buildLegacyImage(Map image, String buildArgs) {
     sh "docker build -t ${image["name"]} ${buildArgs} ."
 }
 
-def uploadImage(Map image, String registry, String crendentialsID) {
+def uploadImage(Map image, String registry, String crendentialsID, String dockerUsername) {
     withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        //sh "docker login --username $USERNAME --password $PASSWORD ${registry}"
+        sh "docker login --username $USERNAME --password $PASSWORD ${dockerUsername}"
     }
 
     // Upload with the corresponding tag version
@@ -225,9 +225,9 @@ def buildLegacyImages(List<Map> images) {
         stage('Legacy - Login Artifactory') {
             // Execute login: 1) Validate the login 2) Needed for docker pull/push
             // TODO: Check that connection to artifactory does not fail (before creating images)
-            //withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            //    sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
-            //}
+            withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh 'docker login --username $USERNAME --password $PASSWORD center-c3i-docker.jfrog.io'
+            }
         }
 
         // Define helper function to build the image
@@ -249,20 +249,27 @@ def buildLegacyImages(List<Map> images) {
                     }
 
                     stage("Legacy - Upload image ${image["name"]} to Artifactory") {
-                        uploadImage(image, "center-c3i-docker", "center-c3i-docker") // TODO: check registry name
+                        uploadImage(image, "center-c3i-docker.jfrog.io", "center-c3i-docker", "center-c3i-docker.jfrog.io") // TODO: check registry name
                     }
                 }
             }
         }
 
         // Build images in parallel
-        Map builds = [:]
-        images.each { Map image ->
-            builds["Legacy image ${image['name']}"] = imageBuild(image)
-        }
-        builds.failFast = true
-        parallel(builds)  // TODO: Maybe too many things building in parallel??
+        List normalImages = images.collect({ Map image -> !image.name.contains("jenkins") })
+        List jenkinsImages = images.collect({ Map image -> image.name.contains("jenkins") })
+        buildParallel("Legacy image", normalImages, imageBuild)
+        buildParallel("Legacy image jenkins", jenkinsImages, imageBuild)
     }
+}
+
+def buildParallel(String stageName, List images, Closure closure) {
+    Map builds = [:]
+    images.each { Map image ->
+        builds["${stageName} ${image['name']}"] = closure(image)
+    }
+    builds.failFast = true
+    parallel(builds)
 }
 
 def buildModernImage(Map image, String buildArgs) {
