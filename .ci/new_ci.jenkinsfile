@@ -151,7 +151,7 @@ def getModernImages() {
         String libstdcppMajorVersion = envValues["LIBSTDCPP_MAJOR_VERSION"]
 
         Map baseImage = [:]
-        baseImage["name"] = "${dockerUsername}/base-${distro}:${branchName}-${commit}" 
+        baseImage["name"] = "${dockerUsername}/base-${distro}"  // :${branchName}-${commit} 
         baseImage["path"] = "modern/base"
         images.add(baseImage)
 
