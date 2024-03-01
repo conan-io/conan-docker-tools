@@ -207,9 +207,9 @@ def getModernImages(String commit, String registry) {
                 imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
                 imageData["path"] = "modern/${imageData["compiler"]}"
 
-                if (image.contains("builder")) {
+                if (image["name"].contains("builder")) {
                     imageData["target"] = "builder"
-                } else if (!image.contains("builder") && !image.contains("jenkins")) {
+                } else if (!image["name"].contains("builder") && !image["name"].contains("jenkins")) {
                     imageData["target"] = "deploy"
                 }
 
