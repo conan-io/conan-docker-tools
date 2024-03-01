@@ -110,7 +110,7 @@ def getLegacyImages() {
             imageData["name"] = image
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
-            imageData["compilerVersion"] = compilerVesionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
+            imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
             String conanVersionSubStr = image.split(":").last()
             imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
