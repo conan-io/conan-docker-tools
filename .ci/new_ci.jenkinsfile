@@ -97,7 +97,7 @@ def getLegacyImages() {
             })
         })
 
-        List<String> allImages = conanImages
+        List<String> allImages = conanImages.collect()
         conanImages.each({String conanImage ->
             def (name, conanVersion) = conanImage.split(':')
             jenkinsAgentVersions.each({String jenkinsAgentVersion ->
