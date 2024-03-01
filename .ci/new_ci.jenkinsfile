@@ -109,7 +109,8 @@ def getLegacyImages() {
             Map imageData = ["buildArgs": [:]]
             imageData["name"] = image
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
-            imageData["compilerVersion"] = image.split(imageData["compiler"]).last().split("/").first()
+            String compilerVesionSubStr = image.split(imageData["compiler"]).last()
+            imageData["compilerVersion"] = compilerVesionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
             String conanVersionSubStr = image.split(":").last()
             imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
@@ -127,7 +128,7 @@ def getLegacyImages() {
     return images
 }
 
-def getModernImages(String branchName, String commit) {
+def getModernImages() {
     Map<String, String> envValues = [:]
     stage('Legacy - Parse environment file') {
         envValues = readEnvValues("legacy/.env")
