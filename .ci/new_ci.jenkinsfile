@@ -46,13 +46,13 @@ def buildLegacyImage(Map image, String buildArgs) {
     sh "docker build -t ${image["name"]} ${buildArgs} ."
 }
 
-def uploadImage(Map image, String registry, String crendentialsID, String dockerUsername) {
+def uploadImage(Map image, String registry, String crendentialsID) {
     withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
     // Upload with the corresponding tag version
-    String uploadImage = "${registryName}/${image["name"]}"
+    String uploadImage = "${registry}/${image["name"]}"
     sh "docker tag ${image["name"]} ${uploadImage}"
     //FIXME sh "docker push ${uploadImage}"
     echo "DOCKER PUSH ${uploadImage}"
@@ -317,16 +317,18 @@ def buildModernImages(List<Map> images) {
     parallel(builds)  // TODO: Maybe too many things building in parallel??
 }
 
-def promoteImages(List<Map> images, String commit, String fromRegistryName, String fromRegistryCredentialsId,
+def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
                   String toRegistryName, String toRegistryCredentialsId) {
     withCredentials([usernamePassword(credentialsId: fromRegistryCredentialsId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        //sh 'docker login --username $USERNAME --password $PASSWORD'
+        sh 'docker login --username $USERNAME --password $PASSWORD' + "${fromRegistryName}"
     }
 
     images.each { Map image ->
         // Download from registry
-        String builtImage = "${fromRegistryName}/${image["name"]}"
-        sh "docker pull ${builtImage}"
+        String fromRegistryImage = "${fromRegistryName}/${image["name"]}"
+        sh "docker pull ${fromRegistryImage}"
+        String imageName = image["name"].replace("${fromRegistryName}/", "")
+        image["name"] = imageName
     }
 
     images.each { Map image ->
