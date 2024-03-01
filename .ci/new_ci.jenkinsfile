@@ -54,7 +54,7 @@ def uploadImage(Map image, String registry, String crendentialsID) {
     // Upload with the corresponding tag version
     String uploadImage = "${registry}/${image["name"]}"
     sh "docker tag ${image["name"]} ${uploadImage}"
-    FIXME sh "docker push ${uploadImage}"
+    sh "docker push ${uploadImage}"
 }
 
 def getLegacyImages(String commit, String registry) {
