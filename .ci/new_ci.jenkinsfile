@@ -249,7 +249,7 @@ def buildLegacyImages(List<Map> images) {
                     }
 
                     stage("Legacy - Upload image ${image["name"]} to Artifactory") {
-                        uploadImage(image, "center-c3i-docker.jfrog.io", "center-c3i-docker", "center-c3i-docker.jfrog.io") // TODO: check registry name
+                        uploadImage(image, "center-c3i-docker.jfrog.io", "center-c3i-docker") // TODO: check registry name
                     }
                 }
             }
@@ -395,8 +395,8 @@ node('Linux') {
         legacyImages = tagImagesWithoutCommit(legacyImages, commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         modernImages = tagImagesWithoutCommit(modernImages, commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         // Promote to dockerhub
-        promoteImages(legacyImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
-        promoteImages(modernImages, "center-c3i-docker", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
         // TODO: Clean images ffrom PR that are in Artifactory
     }
 }
