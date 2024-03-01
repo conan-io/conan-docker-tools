@@ -48,7 +48,7 @@ def buildLegacyImage(Map image, String buildArgs) {
 
 def uploadImage(Map image, String registry, String crendentialsID, String dockerUsername) {
     withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh "docker login --username $USERNAME --password $PASSWORD ${dockerUsername}"
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${dockerUsername}"
     }
 
     // Upload with the corresponding tag version
