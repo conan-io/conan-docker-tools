@@ -183,7 +183,8 @@ def getModernImages() {
             imageData["name"] = image
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
-            imageData["compilerVersion"] = image.split("compiler").last().split("/").first() // remove??
+            String compilerVersionSubStr = image.split(imageData["compiler"]).last()
+            imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
             imageData["buildArgs"]["CMAKE_VERSION_FULL"] = cmakeVersion
             def (major, minor, _) = parseVersion(cmakeVersion)
             imageData["buildArgs"]['CMAKE_VERSION'] = "$major.$minor"
@@ -198,7 +199,8 @@ def getModernImages() {
             //TODO: imageData["buildArgs"]['DOCKER_TAG'] = "${branchName}-${commit}")
 
             if (!image.contains("base")) {
-                imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
+                String conanVersionSubStr = image.split(":").last()
+                imageData["buildArgs"]["CONAN_VERSION"] = conanVersionSubStr.contains("-") ? conanVersionSubStr.split("-").first() : conanVersionSubStr
                 imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
                 imageData["path"] = "modern/${imageData["compiler"]}"
 
