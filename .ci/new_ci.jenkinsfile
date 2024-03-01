@@ -129,7 +129,7 @@ def getModernImages() {
     }
 
     List<Map> images = []
-    stage('Legacy - Generate build matrix') {
+    stage('Modern - Generate build matrix') {
         List<String> gccVersions = envValues["GCC_VERSIONS"].split(",")
         List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",")
         List<String> conanVersions = [envValues["CONAN_VERSION"]]
