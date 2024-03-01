@@ -136,8 +136,8 @@ def getModernImages() {
 
     List<Map> images = []
     stage('Legacy - Generate build matrix') {
-        List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
-        List<String> clangVersions = envValues["CLANG_LEGACY_VERSIONS"].split(",")
+        List<String> gccVersions = envValues["GCC_VERSIONS"].split(",")
+        List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",")
         List<String> conanVersions = [envValues["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
         String cmakeVersion = envValues["CMAKE_VERSION"]
@@ -174,7 +174,7 @@ def getModernImages() {
             })
         })
 
-        List<String> allImages = conanImages
+        List<String> allImages = conanImages.collect()
         conanImages.each({String conanImage ->
             def (name, conanVersion) = conanImage.split(':')
             allImages.add("${name}-builder:${conanVersion}")
