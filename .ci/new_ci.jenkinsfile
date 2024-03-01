@@ -197,6 +197,7 @@ def getModernImages() {
             imageData["buildArgs"]['DISTRO'] = distro
             imageData["buildArgs"]['DISTRO_VERSION'] = distroVersion
             //TODO: imageData["buildArgs"]['DOCKER_TAG'] = "${branchName}-${commit}")
+            echo "${imageData}"
 
             if (!image.contains("base")) {
                 String conanVersionSubStr = image.split(":").last()
