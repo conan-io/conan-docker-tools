@@ -26,15 +26,9 @@ def readEnvValues(String envFile) {
     return envContent
 }
 
-List<String> parseVersions(String versions) {
-    List<String> result = []
-    versions.split('\n').each { v ->
-        String version = v.trim()
-        if (version.size() > 0 && version.isNumber()) {
-            result.add(version)
-        }
-    }
-    return result
+def parseVersion(String version) {
+    def matcher = (version =~ /(\d+).(\d+).(\d+)(\w{1}\d+)?/)
+    return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
 }
 
 def buildLegacyImage(Map image, String buildArgs) {
