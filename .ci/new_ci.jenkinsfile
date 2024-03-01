@@ -256,8 +256,8 @@ def buildLegacyImages(List<Map> images) {
         }
 
         // Build images in parallel
-        List normalImages = images.collect({ Map image -> !image.name.contains("jenkins") })
-        List jenkinsImages = images.collect({ Map image -> image.name.contains("jenkins") })
+        List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("jenkins") })
+        List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
         buildParallel("Legacy image", normalImages, imageBuild)
         buildParallel("Legacy image jenkins", jenkinsImages, imageBuild)
     }
