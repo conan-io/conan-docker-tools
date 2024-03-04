@@ -131,8 +131,8 @@ def getModernImages(String commit, String registry) {
 
     List<Map> images = []
     stage('Modern - Generate build matrix') {
-        List<String> gccVersions = envValues["GCC_VERSIONS"].split(",").collect({String version -> return getVersionMajor(v)})
-        List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",").collect({String version -> return getVersionMajor(v)})
+        List<String> gccVersions = envValues["GCC_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
+        List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
         List<String> conanVersions = [envValues["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
         String cmakeVersion = envValues["CMAKE_VERSION_FULL"]
@@ -179,7 +179,7 @@ def getModernImages(String commit, String registry) {
                 allImages.add("${name}-jenkins:${conanVersion}-${jenkinsAgentVersion}")
             })
         })
-        echo "${allImages}"
+        echo "All images: ${allImages}"
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:], "target": null]
@@ -222,7 +222,7 @@ def getModernImages(String commit, String registry) {
             else {
                 imageData["path"] = "modern/base"
             }
-            echo "${imageData}"
+            echo "Image data: ${imageData}"
             images.add(imageData)
         })
     }
