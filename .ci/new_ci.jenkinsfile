@@ -393,7 +393,7 @@ node('Linux') {
 
 def tagImagesWithoutCommit(List<Map> images, String commit, String registry, String credentialsID) {
     withCredentials([usernamePassword(credentialsId: credentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh 'docker login --username $USERNAME --password $PASSWORD' + "${registry}"
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
     images.each { Map image ->
