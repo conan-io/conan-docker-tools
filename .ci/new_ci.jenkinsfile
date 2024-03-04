@@ -1,19 +1,4 @@
 
-def detectPRCommits() {
-    String prCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-    String masterCommit = sh(script: 'git rev-parse origin/master', returnStdout: true).trim()
-
-    String p = sh(script: 'git log --pretty=%P -n 1 --date-order', returnStdout: true).trim()
-    List<String> parentCommits = p.split(' ')
-    if (parentCommits.size() == 2) {
-        prCommit = parentCommits[0]
-        assert parentCommits[1] == masterCommit
-    } else {
-        // assert parentCommits[0] == masterCommit  (for a rebased PR this is not true, Jenkins uses fast-forward)
-    }
-    return [masterCommit, prCommit]
-}
-
 def readEnvValues(String envFile) {
     Map<String, String> envContent = [:]
     String content = readFile(envFile)  // legacy/.env or modern/.env
@@ -349,35 +334,28 @@ def promoteImages(List<Map> images, String fromRegistryName, String fromRegistry
 }
 
 node('Linux') {
-    String scm_repository
-    String scm_commit
-    String scm_base_branch = null
-    String scm_pr_number = null
-    String scm_pr_commit = null
-    boolean isMasterbranch
+    String branch_commit = null
+    String merge_commit = null
+    String pr_number = null
+    String pr_base_branch = null
+    boolean isMasterbranch = false
 
     stage('Get build job information') {
-        checkout scm
-
-        scm_repository = scm.userRemoteConfigs[0].url
-        scm_base_branch = scm.branches[0].name
-        scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-        isMasterbranch = !env.BRANCH_NAME.startsWith('PR')  // Because it is Github
+        def scmVars = checkout scm
+        merge_commit = scmVars.GIT_COMMIT
+        branch_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        isMasterbranch = env.BRANCH_NAME.startsWith('master') || true  // Because it is Github
         if (!isMasterbranch) {  // It is a pull-request
-            scm_base_branch = "${env.CHANGE_TARGET}"
-            scm_pr_number = env.BRANCH_NAME.replace('PR-', '')
-
-            // Get commits from master branch and from PR
-            (scm_commit, scm_pr_commit) = detectPRCommits()
+            pr_number = env.BRANCH_NAME.replace('PR-', '')
+            pr_base_branch = "${env.CHANGE_TARGET}"
         }
 
         echo """
             Build job information:
-            - scm_repository: ${scm_repository}
-            - scm_commit: ${scm_commit}
-            - scm_base_branch: ${scm_base_branch}
-            - scm_pr_number: ${scm_pr_number}
-            - scm_pr_commit: ${scm_pr_commit}
+            - branch_commit: ${branch_commit}
+            - merge_commit: ${merge_commit}
+            - pr_number: ${pr_number}
+            - pr_base_branch: ${pr_base_branch}
             """
     }
 
@@ -389,14 +367,14 @@ node('Linux') {
         return  // Outside stage
     }
 
-    List<Map> legacyImages = getLegacyImages(scm_commit, "center-c3i-docker.jfrog.io")
+    List<Map> legacyImages = getLegacyImages(merge_commit, "center-c3i-docker.jfrog.io")
     echo "${legacyImages}"
-    List<Map> modernImages = getModernImages(scm_commit, "center-c3i-docker.jfrog.io")
+    List<Map> modernImages = getModernImages(merge_commit, "center-c3i-docker.jfrog.io")
     echo "${modernImages}"
 
-    if (!isMasterbranch || true) { // || rebuild
+    if (!isMasterbranch || true) {
         // Build Legacy Images
-        //buildLegacyImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        buildLegacyImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
 
         // Build Modern Images
         buildModernImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
@@ -404,8 +382,8 @@ node('Linux') {
 
     if (isMasterbranch) {
         // Tag images as definitive (without commit)
-        legacyImages = tagImagesWithoutCommit(legacyImages, commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
-        modernImages = tagImagesWithoutCommit(modernImages, commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        legacyImages = tagImagesWithoutCommit(legacyImages, merge_commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        modernImages = tagImagesWithoutCommit(modernImages, merge_commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         // Promote to dockerhub
         //promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
         //promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
@@ -419,13 +397,17 @@ def tagImagesWithoutCommit(List<Map> images, String commit, String registry, Str
     }
 
     images.each { Map image ->
-        // Download from registry
+        // Pull image from desired registry
         String registryImage = "${registry}/${image["name"]}"
-        sh "docker pull ${builtImage}"
-        String registryImageWithoutCommit = registryImage.replace("-${commit}", "")
+        sh "docker pull ${registryImage}"
+        // Remove commit from image tag
+        String imageWithoutCommit = image["name"].replace("-${commit}", "")
+        // Tag image without commit and push it to desired registry
+        String registryImageWithoutCommit = "${registry}/${imageWithoutCommit}"
         sh "docker tag ${registryImage} ${registryImageWithoutCommit}"
         sh "docker push ${registryImageWithoutCommit}"
-        image["name"] = registryImageWithoutCommit
+        // Return the image without commit (and without registry)
+        image["name"] = imageWithoutCommit
     }
     return images
 }
