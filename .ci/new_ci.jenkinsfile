@@ -196,7 +196,7 @@ def getModernImages(String commit, String registry) {
             imageData["buildArgs"]['LIBSTDCPP_VERSION'] = libstdcppVersion
             imageData["buildArgs"]['LIBSTDCPP_PATCH_VERSION'] = libstdcppPatchVersion
             imageData["buildArgs"]['LIBSTDCPP_MAJOR_VERSION'] = libstdcppMajorVersion
-            imageData["buildArgs"]['DOCKER_USERNAME'] = dockerUsername
+            imageData["buildArgs"]['DOCKER_USERNAME'] = "${registry}/${dockerUsername}"  // Use registry name to pull image from the right registry
             imageData["buildArgs"]['DOCKERHUB_USERNAME'] = dockerhubUsername
             imageData["buildArgs"]['DISTRO'] = distro
             imageData["buildArgs"]['DISTRO_VERSION'] = distroVersion
