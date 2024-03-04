@@ -214,7 +214,7 @@ def getModernImages(String commit, String registry) {
                 }
 
                 if (image.contains("jenkins")) {
-                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
+                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}-${image.split("-")[1]}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
                     imageData["buildArgs"]["AGENT_VERSION"] = image.split(":").last().split("-")[1]
                     imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
