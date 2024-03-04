@@ -187,7 +187,8 @@ def getModernImages(String commit, String registry) {
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
-            imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
+            String compilerVersionMajor = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
+            imageData["compilerVersion"] = envValues["${compilerName}${compilerVersionMajor}_VERSION"]
             imageData["buildArgs"]["CMAKE_VERSION_FULL"] = cmakeVersion
             def (major, minor, _) = parseVersion(cmakeVersion)
             imageData["buildArgs"]['CMAKE_VERSION'] = "$major.$minor"
@@ -322,10 +323,10 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
     List<Map> builderImages = images.findAll({ Map image -> image["name"].contains("builder") })
     List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("base") && !image["name"].contains("builder") && !image["name"].contains("jenkins") })
     List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
-    buildParallel("Legacy base image", baseImages, imageBuild)
-    buildParallel("Legacy builder image", builderImages, imageBuild)
-    buildParallel("Legacy normal image", normalImages, imageBuild)
-    buildParallel("Legacy image jenkins", jenkinsImages, imageBuild)
+    buildParallel("Modern base image", baseImages, imageBuild)
+    buildParallel("Modern builder image", builderImages, imageBuild)
+    buildParallel("Modern normal image", normalImages, imageBuild)
+    buildParallel("Modern image jenkins", jenkinsImages, imageBuild)
 }
 
 def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
@@ -395,7 +396,7 @@ node('Linux') {
 
     if (!isMasterbranch || true) { // || rebuild
         // Build Legacy Images
-        buildLegacyImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        //buildLegacyImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
 
         // Build Modern Images
         buildModernImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
