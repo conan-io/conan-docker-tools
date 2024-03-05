@@ -402,10 +402,16 @@ def tagImagesWithoutCommit(List<Map> images, String commit, String registry, Str
         sh "docker pull ${registryImage}"
         // Remove commit from image tag
         String imageWithoutCommit = image["name"].replace("-${commit}", "")
+        echo "Tagging ${image["name"]} as ${imageWithoutCommit}"
         // Tag image without commit and push it to desired registry
         String registryImageWithoutCommit = "${registry}/${imageWithoutCommit}"
         sh "docker tag ${registryImage} ${registryImageWithoutCommit}"
-        sh "docker push ${registryImageWithoutCommit}"
+        try {
+            sh "docker push ${registryImageWithoutCommit}"
+        } catch (Exception e) {
+            echo "Docker push failed. Retrying..."
+            sh "docker push ${registryImageWithoutCommit}"
+        }
         // Return the image without commit (and without registry)
         image["name"] = imageWithoutCommit
     }
