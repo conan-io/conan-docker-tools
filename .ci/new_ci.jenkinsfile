@@ -1,4 +1,20 @@
 
+def detectPullRequestMerged() {
+    script.stage("Detect Pull Request merged") {
+        script.checkout script.scm
+        String prNumber = ""
+        String commitMessage = sh returnStdout: true, script: 'git show -s --format=%s'
+        commitMessage = commitMessage.trim()
+        // WARN: This is very, very fragile... if someone changes the message, if it contains # at some point...
+        def regex = /(.*?)#(\d+)(.*)/
+        def findPR = (commitMessage =~ /$regex/)
+        if (findPR.size() != 1) {
+            return null
+        }
+        return findPR[0][2]
+    }
+}
+
 def readEnvValues(String envFile) {
     Map<String, String> envContent = [:]
     String content = readFile(envFile)  // legacy/.env or modern/.env
@@ -45,7 +61,7 @@ def uploadImage(Map image, String registry, String crendentialsID) {
     sh "docker push ${uploadImage}"
 }
 
-def getLegacyImages(String commit, String registry) {
+def getLegacyImages(String pr_number, String registry) {
     Map<String, String> envValues = [:]
     stage('Legacy - Parse environment file') {
         envValues = readEnvValues("legacy/.env")
@@ -88,7 +104,7 @@ def getLegacyImages(String commit, String registry) {
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:]]
-            imageData["name"] = "${image}-${commit}"
+            imageData["name"] = "${image}-${pr_number}"
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
             imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
@@ -96,7 +112,7 @@ def getLegacyImages(String commit, String registry) {
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
 
             if (image.contains("jenkins")) {
-                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
+                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${pr_number}"
                 imageData["buildArgs"]["AGENT_VERSION"] = image.split(":").last().split("-")[1]
                 imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                 imageData["path"] = "legacy/jenkins"
@@ -108,7 +124,7 @@ def getLegacyImages(String commit, String registry) {
     return images
 }
 
-def getModernImages(String commit, String registry) {
+def getModernImages(String pr_number, String registry) {
     Map<String, String> envValues = [:]
     stage('Modern - Parse environment file') {
         envValues = readEnvValues("modern/.env")
@@ -133,12 +149,11 @@ def getModernImages(String commit, String registry) {
         List<String> allImages = []
 
         conanVersions.each({ String conanVersion ->
-            allImages.add("${dockerUsername}/base-${distro}:${conanVersion}")  // :${branchName}-${commit} 
+            allImages.add("${dockerUsername}/base-${distro}:${conanVersion}")
         })
 
-        // <registry>/    "${dockerUsername}/base-${params.distro}${suffix}:${branchName}-${commit}"
         List<String> compilerImages = []
-        gccVersions.each({ String gccVersion ->  // FIXME: Add only major gcc version to image name
+        gccVersions.each({ String gccVersion ->
             String image = "${dockerUsername}/gcc${gccVersion}-${distro}"
             compilerImages.add(image)
         })
@@ -168,7 +183,7 @@ def getModernImages(String commit, String registry) {
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:], "target": null]
-            imageData["name"] = "${image}-${commit}"
+            imageData["name"] = "${image}-${pr_number}"
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
@@ -188,7 +203,7 @@ def getModernImages(String commit, String registry) {
             imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
 
             if (!image.contains("base")) {
-                imageData["buildArgs"]['DOCKER_TAG'] = "${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
+                imageData["buildArgs"]['DOCKER_TAG'] = "${imageData["buildArgs"]["CONAN_VERSION"]}-${pr_number}"
                 imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
                 imageData["path"] = "modern/${imageData["compiler"]}"
 
@@ -199,7 +214,7 @@ def getModernImages(String commit, String registry) {
                 }
 
                 if (image.contains("jenkins")) {
-                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}-${image.split("-")[1]}:${imageData["buildArgs"]["CONAN_VERSION"]}-${commit}"
+                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}-${image.split("-")[1]}:${imageData["buildArgs"]["CONAN_VERSION"]}-${pr_number}"
                     imageData["buildArgs"]["AGENT_VERSION"] = image.split(":").last().split("-")[1]
                     imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
@@ -348,7 +363,10 @@ node('Linux') {
         if (!isMasterbranch) {  // It is a pull-request
             pr_number = env.BRANCH_NAME.replace('PR-', '')
             pr_base_branch = "${env.CHANGE_TARGET}"
+        } else {
+            pr_number = detectPullRequestMerged()
         }
+        assert pr_number != null, "Could not detect pull request number"
 
         echo """
             Build job information:
@@ -367,9 +385,9 @@ node('Linux') {
         return  // Outside stage
     }
 
-    List<Map> legacyImages = getLegacyImages(merge_commit, "center-c3i-docker.jfrog.io")
+    List<Map> legacyImages = getLegacyImages(pr_number, "center-c3i-docker.jfrog.io")
     echo "${legacyImages}"
-    List<Map> modernImages = getModernImages(merge_commit, "center-c3i-docker.jfrog.io")
+    List<Map> modernImages = getModernImages(pr_number, "center-c3i-docker.jfrog.io")
     echo "${modernImages}"
 
     if (!isMasterbranch) {
@@ -381,9 +399,9 @@ node('Linux') {
     }
 
     if (isMasterbranch) {
-        // Tag images as definitive (without commit)
-        legacyImages = tagImagesWithoutCommit(legacyImages, merge_commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
-        modernImages = tagImagesWithoutCommit(modernImages, merge_commit, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        // Tag images as definitive (without pr_number)
+        legacyImages = tagImagesWithoutPRNumber(legacyImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        modernImages = tagImagesWithoutPRNumber(modernImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         // Promote to dockerhub
         //promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
         //promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
@@ -391,7 +409,7 @@ node('Linux') {
     }
 }
 
-def tagImagesWithoutCommit(List<Map> images, String commit, String registry, String credentialsID) {
+def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry, String credentialsID) {
     withCredentials([usernamePassword(credentialsId: credentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
@@ -400,20 +418,20 @@ def tagImagesWithoutCommit(List<Map> images, String commit, String registry, Str
         // Pull image from desired registry
         String registryImage = "${registry}/${image["name"]}"
         sh "docker pull ${registryImage}"
-        // Remove commit from image tag
-        String imageWithoutCommit = image["name"].replace("-${commit}", "")
-        echo "Tagging ${image["name"]} as ${imageWithoutCommit}"
-        // Tag image without commit and push it to desired registry
-        String registryImageWithoutCommit = "${registry}/${imageWithoutCommit}"
-        sh "docker tag ${registryImage} ${registryImageWithoutCommit}"
+        // Remove pr_number from image tag
+        String imageWithoutPRNumber = image["name"].replace("-${pr_number}", "")
+        echo "Tagging ${image["name"]} as ${imageWithoutPRNumber}"
+        // Tag image without pr_number and push it to desired registry
+        String registryImageWithoutPRNumber = "${registry}/${imageWithoutPRNumber}"
+        sh "docker tag ${registryImage} ${registryImageWithoutPRNumber}"
         try {
-            sh "docker push ${registryImageWithoutCommit}"
+            sh "docker push ${registryImageWithoutPRNumber}"
         } catch (Exception e) {
             echo "Docker push failed. Retrying..."
-            sh "docker push ${registryImageWithoutCommit}"
+            sh "docker push ${registryImageWithoutPRNumber}"
         }
-        // Return the image without commit (and without registry)
-        image["name"] = imageWithoutCommit
+        // Return the image without pr_number (and without registry)
+        image["name"] = imageWithoutPRNumber
     }
     return images
 }
