@@ -102,7 +102,7 @@ def getLegacyImages(String pr_number, String registry) {
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:]]
-            imageData["name"] = "${image}-${pr_number}"
+            imageData["name"] = "${image}-#${pr_number}"
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
             imageData["compilerVersion"] = compilerVersionSubStr.contains("-") ? compilerVersionSubStr.split("-").first() : compilerVersionSubStr.split(":").first()
@@ -110,7 +110,7 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["path"] = "legacy/${imageData["compiler"]}_${imageData["compilerVersion"]}"
 
             if (image.contains("jenkins")) {
-                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-${pr_number}"
+                imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}:${imageData["buildArgs"]["CONAN_VERSION"]}-#${pr_number}"
                 imageData["buildArgs"]["AGENT_VERSION"] = image.split(":").last().split("-")[1]
                 imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                 imageData["path"] = "legacy/jenkins"
@@ -181,7 +181,7 @@ def getModernImages(String pr_number, String registry) {
 
         allImages.each({ String image ->
             Map imageData = ["buildArgs": [:], "target": null]
-            imageData["name"] = "${image}-${pr_number}"
+            imageData["name"] = "${image}-#${pr_number}"
             imageData["compiler"] = image.contains("gcc") ? "gcc" : "clang"  // remove?
             String compilerName = imageData["compiler"].toUpperCase()
             String compilerVersionSubStr = image.split(imageData["compiler"]).last()
@@ -201,7 +201,7 @@ def getModernImages(String pr_number, String registry) {
             imageData["buildArgs"]["CONAN_VERSION"] = image.split(":").last().split("-").first()
 
             if (!image.contains("base")) {
-                imageData["buildArgs"]['DOCKER_TAG'] = "${imageData["buildArgs"]["CONAN_VERSION"]}-${pr_number}"
+                imageData["buildArgs"]['DOCKER_TAG'] = "${imageData["buildArgs"]["CONAN_VERSION"]}-#${pr_number}"
                 imageData["buildArgs"]["${compilerName}_VERSION"] = imageData["compilerVersion"]
                 imageData["path"] = "modern/${imageData["compiler"]}"
 
@@ -212,7 +212,7 @@ def getModernImages(String pr_number, String registry) {
                 }
 
                 if (image.contains("jenkins")) {
-                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}-${image.split("-")[1]}:${imageData["buildArgs"]["CONAN_VERSION"]}-${pr_number}"
+                    imageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${image.split("-").first()}-${image.split("-")[1]}:${imageData["buildArgs"]["CONAN_VERSION"]}-#${pr_number}"
                     imageData["buildArgs"]["AGENT_VERSION"] = image.split(":").last().split("-")[1]
                     imageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
                     imageData["path"] = "modern/jenkins"
@@ -417,7 +417,7 @@ def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry
         String registryImage = "${registry}/${image["name"]}"
         sh "docker pull ${registryImage}"
         // Remove pr_number from image tag
-        String imageWithoutPRNumber = image["name"].replace("-${pr_number}", "")
+        String imageWithoutPRNumber = image["name"].replace("-#${pr_number}", "")
         echo "Tagging ${image["name"]} as ${imageWithoutPRNumber}"
         // Tag image without pr_number and push it to desired registry
         String registryImageWithoutPRNumber = "${registry}/${imageWithoutPRNumber}"
