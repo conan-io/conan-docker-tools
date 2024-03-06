@@ -3,8 +3,7 @@ def detectPullRequestMerged() {
     script.stage("Detect Pull Request merged") {
         script.checkout script.scm
         String prNumber = ""
-        String commitMessage = sh returnStdout: true, script: 'git show -s --format=%s'
-        commitMessage = commitMessage.trim()
+        def commitMessage = sh(returnStdout: true, script: 'git show -s --format=%s').trim()
         // WARN: This is very, very fragile... if someone changes the message, if it contains # at some point...
         def regex = /(.*?)#(\d+)(.*)/
         def findPR = (commitMessage =~ /$regex/)
