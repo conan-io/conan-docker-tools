@@ -344,7 +344,7 @@ node('Linux') {
         def scmVars = checkout scm
         merge_commit = scmVars.GIT_COMMIT
         branch_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-        isMasterbranch = env.BRANCH_NAME.startsWith('master') || true  // Because it is Github
+        isMasterbranch = env.BRANCH_NAME.startsWith('master')  // Because it is Github
         if (!isMasterbranch) {  // It is a pull-request
             pr_number = env.BRANCH_NAME.replace('PR-', '')
             pr_base_branch = "${env.CHANGE_TARGET}"
