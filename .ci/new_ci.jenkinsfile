@@ -68,7 +68,6 @@ def getLegacyImages(String pr_number, String registry) {
     List<Map> images = []
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
-        List<String> clangVersions = envValues["CLANG_LEGACY_VERSIONS"] != null ? envValues["CLANG_LEGACY_VERSIONS"].split(",") : []
         List<String> conanVersions = [envValues["CONAN_VERSION"]]
         List<String> jenkinsAgentVersions = envValues["JENKINS_AGENT_VERSION"].split(",")
         String dockerUsername = envValues["DOCKER_USERNAME"]
@@ -77,11 +76,6 @@ def getLegacyImages(String pr_number, String registry) {
         List<String> compilerImages = []
         gccVersions.each({ String gccVersion ->
             String image = "${dockerUsername}/gcc${gccVersion}"
-            compilerImages.add(image)
-        })
-
-        clangVersions.each({ String clangVersion ->
-            String image = "${dockerUsername}/clang${clangVersion}"
             compilerImages.add(image)
         })
 
