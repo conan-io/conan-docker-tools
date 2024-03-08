@@ -309,6 +309,7 @@ def promoteImages(List<Map> images, String fromRegistryName, String fromRegistry
 
     images.each { Map image ->
         // Download from registry
+        // TODO: We need to add a retry here as we may face networking errors.
         String fromRegistryImage = "${fromRegistryName}/${image["name"]}"
         sh "docker pull ${fromRegistryImage}"
         String imageName = image["name"].replace("${fromRegistryName}/", "")
