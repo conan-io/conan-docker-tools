@@ -2,8 +2,6 @@
 
 ![logo](../logo.png)
 
-force change
-
 Dockerfiles for Conan Center Continuous Integration system.
 
 > :warning: **Warning:**
