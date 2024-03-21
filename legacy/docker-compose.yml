@@ -7,9 +7,7 @@ services:
             args:
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
                 CMAKE_VERSION: ${CMAKE_VERSION}
-                CMAKE_VERSION_FULL: ${CMAKE_VERSION_FULL}
                 PYTHON_VERSION: ${PYTHON_VERSION}
-                PYTHON_VERSION_FULL: ${PYTHON_VERSION_FULL}
         image: "${DOCKER_USERNAME}/gcc5:${DOCKER_BUILD_TAG}"
         container_name: gcc5
         tty: true
@@ -20,9 +18,7 @@ services:
             args:
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
                 CMAKE_VERSION: ${CMAKE_VERSION}
-                CMAKE_VERSION_FULL: ${CMAKE_VERSION_FULL}
                 PYTHON_VERSION: ${PYTHON_VERSION}
-                PYTHON_VERSION_FULL: ${PYTHON_VERSION_FULL}
         image: "${DOCKER_USERNAME}/gcc7:${DOCKER_BUILD_TAG}"
         container_name: gcc7
         tty: true
@@ -33,9 +29,7 @@ services:
             args:
                 CONAN_VERSION: ${DOCKER_BUILD_TAG}
                 CMAKE_VERSION: ${CMAKE_VERSION}
-                CMAKE_VERSION_FULL: ${CMAKE_VERSION_FULL}
                 PYTHON_VERSION: ${PYTHON_VERSION}
-                PYTHON_VERSION_FULL: ${PYTHON_VERSION_FULL}
         image: "${DOCKER_USERNAME}/gcc9:${DOCKER_BUILD_TAG}"
         container_name: gcc9
         tty: true
