@@ -2,9 +2,7 @@ FROM ubuntu:xenial
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
-# TODO: Comsume from .env file only
-ENV CMAKE_VERSION=3.18.6 \
-    PYENV_ROOT=/opt/pyenv \
+ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc \
@@ -46,6 +44,8 @@ RUN apt-get -qq update \
        autoconf-archive \
        && rm -rf /var/lib/apt/lists/*
 
+ARG CMAKE_VERSION=3.18.6
+
 RUN wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
        && tar -xzf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
           --exclude=bin/cmake-gui \
@@ -78,7 +78,7 @@ RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.c
        && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
        && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
        && pyenv global ${PYTHON_VERSION} \
-       && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python${PYTHON_VRSION%.*}/lsb_release.py
+       && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python${PYTHON_VERSION%.*}/lsb_release.py
 
 RUN chown -R conan:1001 /opt/pyenv \
        # remove all __pycache__ directories created by pyenv

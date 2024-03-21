@@ -2,9 +2,7 @@ FROM ubuntu:bionic
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
-# TODO: Comsume from .env file only
-ENV CMAKE_VERSION=3.18.6 \
-    PYENV_ROOT=/opt/pyenv \
+ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc \
@@ -54,6 +52,8 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-7 100 \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/*
+
+ARG CMAKE_VERSION=3.18.6
 
 RUN wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
     && tar -xzf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
