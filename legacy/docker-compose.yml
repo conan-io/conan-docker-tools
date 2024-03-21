@@ -1,13 +1,21 @@
 version: '3'
+
+x-common-args: &common-args
+    CMAKE_VERSION: ${CMAKE_VERSION}
+    PYTHON_VERSION: ${PYTHON_VERSION}
+    CONAN_VERSION: ${CONAN_VERSION}
+    DOCKER_USERNAME: ${DOCKER_USERNAME}
+    DOCKER_BUILD_TAG: ${DOCKER_BUILD_TAG}
+    AGENT_VERSION: ${JENKINS_AGENT_VERSION}
+    JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+
 services:
     gcc5:
         build:
             context: gcc_5
             dockerfile: Dockerfile
             args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                CMAKE_VERSION: ${CMAKE_VERSION}
-                PYTHON_VERSION: ${PYTHON_VERSION}
+                <<: *common-args
         image: "${DOCKER_USERNAME}/gcc5:${DOCKER_BUILD_TAG}"
         container_name: gcc5
         tty: true
@@ -16,9 +24,7 @@ services:
             context: gcc_7
             dockerfile: Dockerfile
             args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                CMAKE_VERSION: ${CMAKE_VERSION}
-                PYTHON_VERSION: ${PYTHON_VERSION}
+                <<: *common-args
         image: "${DOCKER_USERNAME}/gcc7:${DOCKER_BUILD_TAG}"
         container_name: gcc7
         tty: true
@@ -27,9 +33,7 @@ services:
             context: gcc_9
             dockerfile: Dockerfile
             args:
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                CMAKE_VERSION: ${CMAKE_VERSION}
-                PYTHON_VERSION: ${PYTHON_VERSION}
+                <<: *common-args
         image: "${DOCKER_USERNAME}/gcc9:${DOCKER_BUILD_TAG}"
         container_name: gcc9
         tty: true
@@ -41,9 +45,7 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc5:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+                <<: *common-args
         image: "${DOCKER_USERNAME}/gcc5-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc5-jenkins
     gcc7-jenkins:
@@ -54,9 +56,7 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc7:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+                <<: *common-args
         image: "${DOCKER_USERNAME}/gcc7-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc7-jenkins
     gcc9-jenkins:
@@ -67,8 +67,6 @@ services:
             dockerfile: Dockerfile
             args:
                 SOURCE_CONANIO_IMAGE: ${DOCKER_USERNAME}/gcc9:${DOCKER_BUILD_TAG}
-                CONAN_VERSION: ${DOCKER_BUILD_TAG}
-                AGENT_VERSION: ${JENKINS_AGENT_VERSION}
-                JAVA_JDK_VERSION: ${JAVA_JDK_VERSION}
+                <<: *common-args
         image: "${DOCKER_USERNAME}/gcc9-jenkins:${DOCKER_BUILD_TAG}-${JENKINS_AGENT_VERSION}"
         container_name: gcc9-jenkins
