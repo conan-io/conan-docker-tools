@@ -12,7 +12,6 @@ ENV PYENV_ROOT=/opt/pyenv \
     LANGUAGE="en_US.UTF-8"
 
 ARG CMAKE_VERSION
-ARG CMAKE_VERSION_FULL
 ARG PYTHON_VERSION
 ARG CONAN_VERSION
 
@@ -53,16 +52,16 @@ RUN apt-get -qq update \
        language-pack-en \
     && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
-       --exclude=share/cmake-${CMAKE_VERSION}/Help \
+       --exclude=share/cmake-${CMAKE_VERSION%.*}/Help \
        --exclude=share/vim \
        --exclude=share/vim \
-    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
-    && rm -rf /root/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-    && rm /root/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && cp -fR cmake-${CMAKE_VERSION}-Linux-x86_64/* /usr \
+    && rm -rf /root/cmake-${CMAKE_VERSION}-Linux-x86_64 \
+    && rm /root/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
     && curl -fL https://getcli.jfrog.io | sh -s 1.48.1 \
     && mv jfrog /usr/local/bin/jfrog \
     && chmod +x /usr/local/bin/jfrog \

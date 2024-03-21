@@ -1,0 +1,10 @@
+[settings]
+os=Linux
+arch=x86_64
+compiler=gcc
+compiler.version=5
+compiler.libcxx=libstdc++11
+compiler.cppstd=11
+build_type=Release
+[options]
+[conf]
