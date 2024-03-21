@@ -164,7 +164,7 @@ node('Linux') {
             }
 
             // tools installed
-            else if (name == 'CMAKE_VERSION_FULL') {
+            else if (name == 'CMAKE_VERSION') {
                 parameters.add([$class: 'StringParameterValue', name: 'cmake_version', value: value])
             }
             else if (name == 'PYTHON_VERSION') {
