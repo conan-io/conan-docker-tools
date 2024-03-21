@@ -3,7 +3,7 @@ FROM ubuntu:eoan
 LABEL maintainer="Conan.io <info@conan.io>"
 
 ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
-    CMAKE_VERSION_FULL=3.18.2 \
+    CMAKE_VERSION_FULL=3.18.6 \
     PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
@@ -79,14 +79,17 @@ RUN curl -fL https://getcli.jfrog.io | sh \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
 
+ARG PYTHON_VERSION=3.7
+ARG PYTHON_VERSION_FULL=3.7.17
+
 RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.13 \
-    && pyenv global 3.7.13 \
-    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.7.13/lib/python3.7/lsb_release.py
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION_FULL} \
+    && pyenv global ${PYTHON_VERSION_FULL} \
+    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION_FULL}/lib/python${PYTHON_VERSION}/lsb_release.py
 
 RUN chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv
