@@ -291,7 +291,7 @@ $ docker compose build gcc10
 
 > Take into account that in order to build Clang images it is required to build
 first the GCC image that will provide the `stdlibc++` version (whatever is
-defined in `${LIBSTDCPP_VERSION%%.*}` inside `.env` file).
+defined in `LIBSTDCPP_MAJOR_VERSION` inside `.env` file).
 
 
 ### Test
