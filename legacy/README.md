@@ -284,7 +284,7 @@ You can change the directory or execute any other command that works for your ne
 If you are familiarized with Docker compose, also it's possible to start a new container by:
 
 ```shell
-docker-compose run -v /tmp/.conan:/home/conan/.conan gcc11 bash -c "conan install boost/1.74.0@ --build"
+docker compose run -v /tmp/.conan:/home/conan/.conan gcc11 bash -c "conan install boost/1.74.0@ --build"
 ```
 
 

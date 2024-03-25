@@ -152,7 +152,7 @@ node('Linux') {
     }
 
     stage('Legacy - Install deps') {
-        sh 'pip install docker-compose humanfriendly conan conan-package-tools'
+        sh 'pip install humanfriendly conan conan-package-tools'
     }
 
     // Get some global information, used later
