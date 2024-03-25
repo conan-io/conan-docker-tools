@@ -9,7 +9,7 @@ The images listed below are intended for **generating open-source library packag
 
 ## New Docker Strategy (June 2021)
 
-> **TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same system library versions (smae `glibc` version).
+> **TL;DR** New Docker images will use Ubuntu 16.04 as base and build all compilers from sources. Thus, all binaries generated will link with the same system library versions (same `glibc` version).
 
 > :warning: **Warning:**
 The docker images with Ubuntu 18.04 are not used in ConanCenterIndex anymore, but they are still available in DockerHub. They are unmaintained and untested, you can use them at your own risk.
