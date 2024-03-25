@@ -174,9 +174,7 @@ node('Linux') {
     Map<String, String> testArguments = [:]
     stage("Build arguments") {
         buildArguments.put('CONAN_VERSION', params.conan_version)
-        buildArguments.put('CMAKE_VERSION_FULL', params.cmake_version)
-        def (major, minor, _) = parseVersion(params.cmake_version)
-        buildArguments.put('CMAKE_VERSION', "$major.$minor")
+        buildArguments.put('CMAKE_VERSION', params.cmake_version)
         buildArguments.put('PYTHON_VERSION', params.python_version)
         buildArguments.put('LIBSTDCPP_VERSION', params.libstdcpp_version)
         buildArguments.put('LIBSTDCPP_PATCH_VERSION', params.libstdcpp_patch_version)

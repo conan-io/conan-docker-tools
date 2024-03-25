@@ -2,9 +2,7 @@ FROM ubuntu:eoan
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
-ENV CMAKE_VERSION_MAJOR_MINOR=3.18 \
-    CMAKE_VERSION_FULL=3.18.2 \
-    PYENV_ROOT=/opt/pyenv \
+ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:${PATH} \
     CXX=/usr/bin/g++ \
     CC=/usr/bin/gcc \
@@ -57,15 +55,17 @@ RUN apt-get -qq update \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION_MAJOR_MINOR}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+ARG CMAKE_VERSION=3.18.6
+
+RUN wget --no-check-certificate --quiet https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
-       --exclude=share/cmake-${CMAKE_VERSION_MAJOR_MINOR}/Help \
+       --exclude=share/cmake-${CMAKE_VERSION%.*}/Help \
        --exclude=share/vim \
-    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
-    && rm -rf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-    && rm cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz
+    && cp -fR cmake-${CMAKE_VERSION}-Linux-x86_64/* /usr \
+    && rm -rf cmake-${CMAKE_VERSION}-Linux-x86_64 \
+    && rm cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
 
 RUN curl -fL https://getcli.jfrog.io | sh \
     && mv jfrog /usr/local/bin/jfrog \
@@ -79,14 +79,16 @@ RUN curl -fL https://getcli.jfrog.io | sh \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
 
+ARG PYTHON_VERSION=3.7.17
+
 RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.13 \
-    && pyenv global 3.7.13 \
-    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/3.7.13/lib/python3.7/lsb_release.py
+    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
+    && pyenv global ${PYTHON_VERSION} \
+    && ln -s /usr/lib/python3/dist-packages/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python${PYTHON_VERSION%.*}/lsb_release.py
 
 RUN chown -R conan:1001 /opt/pyenv \
     # remove all __pycache__ directories created by pyenv

@@ -12,7 +12,6 @@ ENV PYENV_ROOT=/opt/pyenv \
     LANGUAGE="en_US.UTF-8"
 
 ARG CMAKE_VERSION
-ARG CMAKE_VERSION_FULL
 ARG PYTHON_VERSION
 ARG CONAN_VERSION
 
@@ -52,29 +51,33 @@ RUN apt-get -qq update \
        autoconf-archive \
        language-pack-en \
     && locale-gen en_US.UTF-8 \
-    && rm -rf /var/lib/apt/lists/* \
-    && wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && tar -xzf cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
-       --exclude=share/cmake-${CMAKE_VERSION}/Help \
+       --exclude=share/cmake-${CMAKE_VERSION%.*}/Help \
        --exclude=share/vim \
        --exclude=share/vim \
-    && cp -fR cmake-${CMAKE_VERSION_FULL}-Linux-x86_64/* /usr \
-    && rm -rf /root/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64 \
-    && rm /root/cmake-${CMAKE_VERSION_FULL}-Linux-x86_64.tar.gz \
-    && curl -fL https://getcli.jfrog.io | sh -s 1.48.1 \
+    && cp -fR cmake-${CMAKE_VERSION}-Linux-x86_64/* /usr \
+    && rm -rf /root/cmake-${CMAKE_VERSION}-Linux-x86_64 \
+    && rm /root/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
+
+RUN curl -fL https://getcli.jfrog.io | sh -s 1.48.1 \
     && mv jfrog /usr/local/bin/jfrog \
-    && chmod +x /usr/local/bin/jfrog \
-    && groupadd -f conan-1001 -g 1001 \
+    && chmod +x /usr/local/bin/jfrog
+
+RUN groupadd -f conan-1001 -g 1001 \
     && groupadd -f conan-1000 -g 1000 \
     && groupadd -f conan-2000 -g 2000 \
     && groupadd -f conan-999 -g 999 \
     && useradd -ms /bin/bash conan -g 1001 -G 1000,2000,999 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
-    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
-    && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.githubusercontent.com/pyenv/pyenv-installer/56d708c8bda56370c4bc1e2fce68087cfcd007eb/bin/pyenv-installer \
+    && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+
+RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.githubusercontent.com/pyenv/pyenv-installer/56d708c8bda56370c4bc1e2fce68087cfcd007eb/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
@@ -87,8 +90,9 @@ RUN apt-get -qq update \
     && update-alternatives --install /usr/local/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/local/bin/pip pip /opt/pyenv/shims/pip 100 \
     && ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python${PYTHON_VERSION%.*}/site-packages/lsb_release.py \
-    && pip install -q --upgrade --no-cache-dir pip \
-    && printf '/usr/local/lib\n' > /etc/ld.so.conf.d/20local-lib.conf \
+    && pip install -q --upgrade --no-cache-dir pip
+
+RUN printf '/usr/local/lib\n' > /etc/ld.so.conf.d/20local-lib.conf \
     && printf '/usr/local/lib64\n' >> /etc/ld.so.conf.d/20local-lib.conf \
     && mv /etc/ld.so.conf.d/libc.conf /etc/ld.so.conf.d/10libc.conf \
     && rm /etc/ld.so.cache \
@@ -112,8 +116,9 @@ RUN apt-get -qq update \
     && apt-get -qq autoclean \
     && apt-get -qq update \
     && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/* \
-    && runuser -u conan -- printf 'eval "$(pyenv init -)"\n' >> /home/conan/.bashrc \
+    && rm -rf /tmp/*
+
+RUN runuser -u conan -- printf 'eval "$(pyenv init -)"\n' >> /home/conan/.bashrc \
     && runuser -u conan -- printf 'eval "$(pyenv virtualenv-init -)"\n' >> /home/conan/.bashrc \
     && chown -R conan:1001 /opt/pyenv \
     && chown -R conan:1001 /opt/conan

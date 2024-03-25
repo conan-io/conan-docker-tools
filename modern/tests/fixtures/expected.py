@@ -100,7 +100,7 @@ def expected(request) -> Expected:
 
     distro = Distro(m.group('distro'), Version(m.group('distro_version')))
     python = Version(env_values.get('PYTHON_VERSION'))
-    cmake = Version(env_values.get('CMAKE_VERSION_FULL'))
+    cmake = Version(env_values.get('CMAKE_VERSION'))
     expected = Expected(distro, m.group('username'), m.group('tag'), python, cmake)
     expected.conan = Version(env_values.get('CONAN_VERSION'))
     expected.compiler_versions = get_compiler_versions()

@@ -125,9 +125,7 @@ def defineModernBaseImageData(String envValues) {
     imageData['distro'] = envValues["DISTRO"]
     imageData["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
     imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
-    imageData["buildArgs"]["CMAKE_VERSION_FULL"] = envValues["CMAKE_VERSION_FULL"]
-    def (major, minor, _) = parseVersion(cmakeVersion)
-    imageData["buildArgs"]['CMAKE_VERSION'] = "$major.$minor"
+    imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     imageData["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     imageData["name"] = getModernImageName(imageData)
     return imageData
@@ -140,9 +138,7 @@ def defineModernImagesData(String compiler, String compilerVersion Map envValues
     builderImage["compiler"] = compiler
     builderImage["compilerVersion"] = envValues["${compiler.toUpperCase()}${compilerVersion}_VERSION"]
     builderImage["pr_numer"] = pr_number
-    builderImage["buildArgs"]["CMAKE_VERSION_FULL"] = envValues["CMAKE_VERSION_FULL"]
-    def (major, minor, _) = parseVersion(cmakeVersion)
-    builderImage["buildArgs"]['CMAKE_VERSION'] = "$major.$minor"
+    builderImage["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     builderImage["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_VERSION'] = envValues["LIBSTDCPP_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_PATCH_VERSION'] = envValues["LIBSTDCPP_PATCH_VERSION"]

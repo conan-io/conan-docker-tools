@@ -118,7 +118,7 @@ node('Linux') {
             else if (name == 'CONAN_VERSION') {
                 parameters_modern.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
             }
-            else if (name == 'CMAKE_VERSION_FULL') {
+            else if (name == 'CMAKE_VERSION') {
                 parameters_modern.add([$class: 'StringParameterValue', name: 'cmake_version', value: value])
             }
             else if (name == 'PYTHON_VERSION') {
