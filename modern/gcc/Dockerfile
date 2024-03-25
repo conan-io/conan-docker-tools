@@ -1,4 +1,8 @@
 ARG DISTRO_VERSION
+ARG DOCKER_USERNAME
+ARG DOCKER_TAG
+ARG DISTRO
+ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
 
@@ -49,15 +53,9 @@ RUN cd gcc-${GCC_VERSION} \
     && make -s -j$(nproc) \
     && make install-strip
 
-ARG DOCKER_USERNAME
-ARG DOCKER_TAG
-ARG DISTRO
-ARG SUFFIX
-
 FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 
 ARG GCC_VERSION
-ARG LIBSTDCPP_PATCH_VERSION
 
 COPY --from=builder /tmp/install /tmp/install
 COPY gcc_bootstrap.sh /opt/conan/gcc_bootstrap.sh

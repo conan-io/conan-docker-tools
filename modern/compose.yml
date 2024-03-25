@@ -56,6 +56,9 @@ services:
 
     gcc11-deploy:
         platform: ${PLATFORM}
+        depends_on:
+          - gcc11-builder
+          - base
         build:
             context: gcc
             dockerfile: Dockerfile
@@ -70,6 +73,9 @@ services:
 
     clang13-deploy:
         platform: ${PLATFORM}
+        depends_on:
+          - clang13-builder
+          - base
         build:
             context: clang
             dockerfile: Dockerfile
@@ -84,6 +90,8 @@ services:
 
     gcc11:
         platform: ${PLATFORM}
+        depends_on:
+          - base
         build:
             context: gcc
             dockerfile: Dockerfile
@@ -91,10 +99,14 @@ services:
                 <<: [*common-args, *gcc11]
         image: ${DOCKER_USERNAME}/gcc11-${DISTRO}:${DOCKER_TAG}
         container_name: gcc11
+        env_file:
+          - .env
         tty: true
 
     clang13:
         platform: ${PLATFORM}
+        depends_on:
+          - base
         build:
             context: clang
             dockerfile: Dockerfile
@@ -106,6 +118,8 @@ services:
 
     gcc11-jenkins:
         platform: ${PLATFORM}
+        depends_on:
+          - gcc11
         build:
             context: jenkins
             dockerfile: Dockerfile
@@ -119,6 +133,8 @@ services:
 
     clang13-jenkins:
         platform: ${PLATFORM}
+        depends_on:
+          - clang13
         build:
             context: jenkins
             dockerfile: Dockerfile
