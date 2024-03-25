@@ -144,9 +144,6 @@ node('Linux') {
             else if (name == 'LIBSTDCPP_PATCH_VERSION') {
                 parameters_modern.add([$class: 'StringParameterValue', name: 'libstdcpp_patch_version', value: value])
             }
-            else if (name == 'LIBSTDCPP_MAJOR_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'libstdcpp_major_version', value: value])
-            }
         }
         parameters_modern.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
         parameters_modern.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])

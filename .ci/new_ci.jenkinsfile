@@ -142,7 +142,6 @@ def defineModernImagesData(String compiler, String compilerVersion Map envValues
     builderImage["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_VERSION'] = envValues["LIBSTDCPP_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_PATCH_VERSION'] = envValues["LIBSTDCPP_PATCH_VERSION"]
-    builderImage["buildArgs"]['LIBSTDCPP_MAJOR_VERSION'] = envValues["LIBSTDCPP_MAJOR_VERSION"]
     builderImage["buildArgs"]['DOCKER_USERNAME'] = "${registry}/${envValues["DOCKER_USERNAME"]}"  // Use registry name to pull image from the right registry
     builderImage["buildArgs"]['DOCKERHUB_USERNAME'] = envValues["DOCKERHUB_USERNAME"]
     builderImage["buildArgs"]['DISTRO'] = envValues["DISTRO"]
