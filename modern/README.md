@@ -223,7 +223,7 @@ You can change the directory or execute any other command that works for your ne
 If you are familiarized with Docker compose, also it's possible to start a new container by:
 
 ```shell
-docker-compose run -v /tmp/.conan:/home/conan/.conan gcc11 bash -c "conan install boost/1.74.0@ --build"
+docker compose run -v /tmp/.conan:/home/conan/.conan gcc11 bash -c "conan install boost/1.74.0@ --build"
 ```
 
 
@@ -258,7 +258,7 @@ The Docker image `base` (same service name), installs all basic system APT packa
 image without compiler, `base` is your candidate.
 
 ```shell
-$ docker-compose build base
+$ docker compose build base
 ```
 
 The produced image can be configured by `.env`. Most important package versions installed in Base are listed there.
@@ -271,7 +271,7 @@ The decision made serves to avoid possible rebuilds when updating Base for some 
 The Builder image can be built directly, it's useful if you want to investigate compiler building steps and all artifacts produced.
 
 ```shell
-$ docker-compose build gcc10-builder
+$ docker compose build gcc10-builder
 ```
 
 It will build image for GCC 10, which takes around 15 minutes. For Clang case, it can take 1 hour.
@@ -286,7 +286,7 @@ This image avoids all Builder cache, using Docker multi-stage feature, we copy o
 It's the default build command, for instance:
 
 ```shell
-$ docker-compose build gcc10
+$ docker compose build gcc10
 ```
 
 > Take into account that in order to build Clang images it is required to build
@@ -339,7 +339,7 @@ Or, using Docker compose
 
 ```shell
 $ docker login -p <password> -u <username>
-$ docker-compose push gcc10
+$ docker compose push gcc10
 ```
 
 If you don't want to use hub.docker as default Docker registry, you may use [Artifactory](https://jfrog.com/start-free/#saas), which

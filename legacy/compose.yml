@@ -1,4 +1,4 @@
-version: '3'
+name: 'conan-docker-tools-legacy'
 
 x-common-args: &common-args
     CMAKE_VERSION: ${CMAKE_VERSION}
