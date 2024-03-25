@@ -1,15 +1,6 @@
-ARG DOCKER_USERNAME
-ARG DOCKERHUB_USERNAME
-ARG LIBSTDCPP_MAJOR_VERSION
-ARG DOCKER_TAG
 ARG DISTRO_VERSION
-ARG DISTRO
-ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
-
-ARG CLANG_VERSION
-ARG LIBSTDCPP_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -32,19 +23,24 @@ RUN apt-get -qq update \
        git \
        python3 \
        unzip \
-       gnupg \
-    && wget -q --no-check-certificate https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip \
+       gnupg
+
+RUN wget -q --no-check-certificate https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip \
     && unzip ninja-linux.zip \
-    && mv ninja /usr/bin/ninja \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.7-Linux-x86_64.tar.gz \
+    && mv ninja /usr/bin/ninja
+
+RUN wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.7-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.15.7-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.15/Help \
        --exclude=share/vim \
        --exclude=share/vim \
-    && cp -fR cmake-3.15.7-Linux-x86_64/* /usr \
-    && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
+    && cp -fR cmake-3.15.7-Linux-x86_64/* /usr
+
+ARG CLANG_VERSION
+
+RUN printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
     && apt-get -qq update \
@@ -52,8 +48,9 @@ RUN apt-get -qq update \
     && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${CLANG_VERSION}.tar.gz \
     && tar zxf llvmorg-${CLANG_VERSION}.tar.gz \
     && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${CLANG_VERSION}/libunwind/src/CMakeLists.txt \
-    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${CLANG_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp \
-    && cd llvm-project-llvmorg-${CLANG_VERSION} \
+    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${CLANG_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp
+
+RUN cd llvm-project-llvmorg-${CLANG_VERSION} \
     && mkdir build \
     && cd build/ \
     && cmake ../llvm \
@@ -248,17 +245,20 @@ RUN apt-get -qq update \
     && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
     && cp $(find lib -name "*.so*") /tmp/install/lib
 
-FROM ${DOCKERHUB_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:latest as libstdcpp
+ARG DOCKERHUB_USERNAME
+ARG LIBSTDCPP_VERSION
+
+FROM ${DOCKERHUB_USERNAME}/gcc${LIBSTDCPP_VERSION%%.*}-${DISTRO}:latest as libstdcpp
+
+ARG DOCKER_USERNAME
+ARG DOCKER_TAG
+ARG DISTRO
+ARG SUFFIX
 
 FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 
 ARG LIBSTDCPP_VERSION
 ARG LIBSTDCPP_PATCH_VERSION
-
-ARG DOCKER_USERNAME
-ARG DOCKERHUB_USERNAME
-ARG DOCKER_TAG
-ARG DISTRO
 
 COPY --from=builder /tmp/install /tmp/clang
 COPY --from=libstdcpp /usr/local /tmp/gcc

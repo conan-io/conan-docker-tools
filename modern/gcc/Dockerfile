@@ -1,12 +1,6 @@
-ARG DOCKER_USERNAME
-ARG DOCKER_TAG
 ARG DISTRO_VERSION
-ARG DISTRO
-ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
-
-ARG GCC_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -28,6 +22,8 @@ RUN apt-get -qq update \
        libffi-dev \
        libssl-dev \
        pkg-config
+
+ARG GCC_VERSION
 
 RUN wget -q --no-check-certificate http://mirror.koddos.net/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
     && tar Jxf gcc-${GCC_VERSION}.tar.xz
@@ -52,6 +48,11 @@ RUN cd gcc-${GCC_VERSION} \
                    --enable-linker-build-id \
     && make -s -j$(nproc) \
     && make install-strip
+
+ARG DOCKER_USERNAME
+ARG DOCKER_TAG
+ARG DISTRO
+ARG SUFFIX
 
 FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 

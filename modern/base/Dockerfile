@@ -11,10 +11,6 @@ ENV PYENV_ROOT=/opt/pyenv \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8"
 
-ARG CMAKE_VERSION
-ARG PYTHON_VERSION
-ARG CONAN_VERSION
-
 WORKDIR /root
 
 COPY conan.lock conanfile.txt /opt/conan/
@@ -53,6 +49,8 @@ RUN apt-get -qq update \
     && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
+ARG CMAKE_VERSION
+
 RUN wget -q --no-check-certificate https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
     && tar -xzf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
@@ -76,6 +74,8 @@ RUN groupadd -f conan-1001 -g 1001 \
     && printf "conan:conan" | chpasswd \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+
+ARG PYTHON_VERSION
 
 RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.githubusercontent.com/pyenv/pyenv-installer/56d708c8bda56370c4bc1e2fce68087cfcd007eb/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
@@ -125,6 +125,8 @@ RUN runuser -u conan -- printf 'eval "$(pyenv init -)"\n' >> /home/conan/.bashrc
 
 USER conan
 WORKDIR /home/conan
+
+ARG CONAN_VERSION
 
 RUN pip install conan~=1.0 \
     && CONAN_REVISIONS_ENABLED=1 CONAN_USER_HOME=/tmp/conan conan install -r conancenter -g deploy -if /opt/conan -l /opt/conan/conan.lock /opt/conan/conanfile.txt \
