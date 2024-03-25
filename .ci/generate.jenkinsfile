@@ -127,6 +127,7 @@ node('Linux') {
         - clang_versions: ${clangVersions.join(', ')}
         - libstdcpp_version: ${params.libstdcpp_version}
         - libstdcpp_patch_version: ${params.libstdcpp_patch_version}
+        - libstdcpp_major_version: ${params.libstdcpp_major_version}
         """
         assert gccVersions.size() > 0: "Expecting to build some GCC versions at least"
         assert clangVersions.size() > 0: "Expecting to build some Clang versions at least"
@@ -177,6 +178,7 @@ node('Linux') {
         buildArguments.put('PYTHON_VERSION', params.python_version)
         buildArguments.put('LIBSTDCPP_VERSION', params.libstdcpp_version)
         buildArguments.put('LIBSTDCPP_PATCH_VERSION', params.libstdcpp_patch_version)
+        buildArguments.put('LIBSTDCPP_MAJOR_VERSION', params.libstdcpp_major_version)
         buildArguments.put('DOCKER_USERNAME', dockerUsername)
         buildArguments.put('DOCKERHUB_USERNAME', dockerhubUsername)
         buildArguments.put('JENKINS_AGENT_VERSION', params.jenkins_agent_version)
