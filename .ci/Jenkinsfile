@@ -1,61 +1,349 @@
 
-def detectPRCommits() {
-    String prCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-    String masterCommit = sh(script: 'git rev-parse origin/master', returnStdout: true).trim()
-
-    String p = sh(script: 'git log --pretty=%P -n 1 --date-order', returnStdout: true).trim()
-    List<String> parentCommits = p.split(' ')
-    if (parentCommits.size() == 2) {
-        prCommit = parentCommits[0]
-        assert parentCommits[1] == masterCommit
-    } else {
-        // assert parentCommits[0] == masterCommit  (for a rebased PR this is not true, Jenkins uses fast-forward)
+def detectPullRequestMerged() {
+    stage("Detect Pull Request merged") {
+        String prNumber = ""
+        def commitMessage = sh(returnStdout: true, script: 'git show -s --format=%s').trim()
+        // WARN: This is very, very fragile... if someone changes the message, if it contains # at some point...
+        def regex = /(.*?)#(\d+)(.*)/
+        def findPR = (commitMessage =~ /$regex/)
+        if (findPR.size() != 1) {
+            return null
+        }
+        return findPR[0][2]
     }
-    return [masterCommit, prCommit]
+}
+
+def readEnvValues(String envFile) {
+    Map<String, String> envContent = [:]
+    String content = readFile(envFile)  // legacy/.env or modern/.env
+    echo content
+    content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
+        def (name, value) = it.split('=')
+        echo "${name},${value}"
+        envContent[name] = value
+    }
+    return envContent
+}
+
+def parseVersion(String version) {
+    def matcher = (version =~ /(\d+).(\d+).(\d+)(\w{1}\d+)?/)
+    return [matcher[0][1] as String, matcher[0][2] as String, matcher[0][3] as String]
+}
+
+String getVersionMajor(String version) {
+    def (major, _1, _2) = parseVersion(version)
+    return major
+}
+
+def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
+    withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
+        sh 'docker pull docker.io/library/ubuntu:xenial'
+        sh 'docker pull docker.io/library/ubuntu:bionic'
+        sh 'docker pull docker.io/library/ubuntu:eoan'
+    }
+
+    // TODO: Add --cache-from value to speed-up the build
+
+    sh "docker build -t ${image["name"]} ${buildArgs} ."
+}
+
+def uploadImage(Map image, String registry, String crendentialsID) {
+    withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
+    }
+
+    // Upload with the corresponding tag version
+    String uploadImage = "${registry}/${image["name"]}"
+    sh "docker tag ${image["name"]} ${uploadImage}"
+    sh "docker push ${uploadImage}"
+}
+
+def getLegacyImageName(Map image) {
+    // <docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-#<pr_number>
+    String name = "${image["dockerusername"]}/${image["compiler"]}${image["compilerVersion"]}"
+    name = image["suffix"] != null ? "${name}-${suffix}" : name
+    String tag = "${image["buildArgs"]["CONAN_VERSION"]}-#${image["pr_number"]}"
+    return "${name}:${tag}"
+}
+
+def getLegacyImages(String pr_number, String registry) {
+    Map<String, String> envValues = [:]
+    stage('Legacy - Parse environment file') {
+        envValues = readEnvValues("legacy/.env")
+    }
+
+    List<Map> images = []
+    stage('Legacy - Generate build matrix') {
+        List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
+
+        List<String> compilerImages = []
+        gccVersions.each({ String gccVersion ->
+            String image = "${dockerUsername}/gcc${gccVersion}"
+            compilerImages.add(image)
+            Map imageData = ["suffix": null]
+            imageData["dockerUsername"] = envValues["DOCKER_USERNAME"]
+            imageData["compiler"] = "gcc"
+            imageData["compilerVersion"] = gccVersion
+            imageData["pr_number"] = pr_number
+            imageData["path"] = "legacy/gcc_${gccVersion}"
+            imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
+            imageData["name"] = getLegacyImageName(image)
+            images.add(imageData)
+            Map jenkinsImageData = imageData.collect()
+            jenkinsImage["suffix"] = "jenkins"
+            jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "$registry}/${imageData["name"]}"
+            jenkinsImageData["buildArgs"]["AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
+            jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
+            jenkinsImageData["path"] = "legacy/jenkins"
+            jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData)
+            images.add(jenkinsImageData)
+        })
+    }
+    return images
+}
+
+def getModernImageName(Map image) {
+    if (image["prefix"] == "base") {
+        // base:                   <docker_username>/<prefix>-<distro>:<conan_version>
+        return "${image["dockerUsername"]}/${image["prefix"]}-${image["distro"]}:${image["buildArgs"]["CONAN_VERSION"]}"
+    } else {
+        // builder/deploy/jenkins: <docker_username>/<compiler><compilerVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-#<pr_number>
+        String name = "${image["dockerUsername"]}/${image["compiler"]}${image["compilerVersion"]}-${image["buildArgs"]["distro"]}"
+        name = image["suffix"] != null ? "${name}-${image["suffix"]}" : name
+        String tag = image["buildArgs"]["CONAN_VERSION"]
+        String tag = image["suffix"] == "jenkins" ? "${tag}-${image["buildArgs"]["AGENT_VERSION"]}" : tag
+        tag = "${tag}-#${image["pr_number"]}"
+        return "${name}:${tag}"
+    }
+}
+
+def defineModernBaseImageData(String envValues) {
+    Map imageData = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
+    imageData["prefix"] = "base"
+    imageData["path"] = "modern/base"
+    imageData['distro'] = envValues["DISTRO"]
+    imageData["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
+    imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
+    imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
+    imageData["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
+    imageData["name"] = getModernImageName(imageData)
+    return imageData
+}
+
+def defineModernImagesData(String compiler, String compilerVersion Map envValues, String pr_number, String registry) {
+    List<Map> images = []
+
+    Map builderImage = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
+    builderImage["compiler"] = compiler
+    builderImage["compilerVersion"] = envValues["${compiler.toUpperCase()}${compilerVersion}_VERSION"]
+    builderImage["pr_numer"] = pr_number
+    builderImage["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
+    builderImage["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
+    builderImage["buildArgs"]['LIBSTDCPP_VERSION'] = envValues["LIBSTDCPP_VERSION"]
+    builderImage["buildArgs"]['LIBSTDCPP_PATCH_VERSION'] = envValues["LIBSTDCPP_PATCH_VERSION"]
+    builderImage["buildArgs"]['LIBSTDCPP_MAJOR_VERSION'] = envValues["LIBSTDCPP_MAJOR_VERSION"]
+    builderImage["buildArgs"]['DOCKER_USERNAME'] = "${registry}/${envValues["DOCKER_USERNAME"]}"  // Use registry name to pull image from the right registry
+    builderImage["buildArgs"]['DOCKERHUB_USERNAME'] = envValues["DOCKERHUB_USERNAME"]
+    builderImage["buildArgs"]['DISTRO'] = envValues["DISTRO"]
+    builderImage["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
+    imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
+    builderImage["buildArgs"]['DOCKER_TAG'] = "${envValues["CONAN_VERSION"]}-#${pr_number}"
+    builderImage["buildArgs"]["${compilerName}_VERSION"] = compilerVersion
+    builderImage["path"] = "modern/${compiler}"
+    builderImage["suffix"] = "builder"
+    builderImage["target"] = "builder"
+    builderImage["name"] = getModernImageName(builderImage)
+    images.add(builderImage)
+
+    Map deployImage = builderImage.collect()
+    deployImage["target"] = "deploy"
+    deployImage["suffix"] = null
+    deployImage["name"] = getModernImageName(deployImage)
+    images.add(deployImage)
+
+    Map jenkinsImage = deployImage.collect()
+    jenkinsImage["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${deployImage["name"]}"
+    jenkinsImage["buildArgs"]["AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
+    jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
+    jenkinsImage["suffix"] = "jenkins"
+    jenkinsImage["path"] = "modern/jenkins"
+    jenkinsImage["name"] = getModernImageName(jenkinsImage)
+    images.add(jenkinsImage)
+
+    return images
+}
+
+def getModernImages(String pr_number, String registry) {
+    Map<String, String> envValues = [:]
+    stage('Modern - Parse environment file') {
+        envValues = readEnvValues("modern/.env")
+    }
+
+    List<Map> images = []
+    stage('Modern - Generate build matrix') {
+        List<String> gccVersions = envValues["GCC_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
+        List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
+
+        images.add(defineModernBaseImageData(envValues))
+
+        gccVersions.each({ String gccVersion ->
+            images.addAll(defineModernImagesData("gcc", gccVersion, envValues, pr_number, registry))
+        })
+
+        clangVersions.each({ String clangVersion ->
+            images.addAll(defineModernImagesData("clang", clangVersion, envValues, pr_number, registry))
+        })
+    }
+    return images
+}
+
+def buildLegacyImages(List<Map> images, String registry, String registryCredentialsID) {
+    // Define helper function to build the image
+    Closure imageBuild = { Map image ->
+        return {
+            node('Linux') {
+                String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+
+                environment {
+                    DOCKER_BUILDKIT = 0
+                    COMPOSE_DOCKER_CLI_BUILD = 0
+                }
+
+                stage('Legacy - Checkout sources') {
+                    checkout scm
+                }
+
+                stage("Legacy - Build image ${image["name"]}") {
+                    dir(image["path"]) {
+                        buildLegacyImage(image, buildArgsStr, registry, registryCredentialsID)
+                    }
+                }
+
+                stage("Legacy - Upload image ${image["name"]} to Artifactory") {
+                    uploadImage(image, registry, registryCredentialsID)
+                }
+            }
+        }
+    }
+
+    // Build images in parallel
+    List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("jenkins") })
+    List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
+    buildParallel("Legacy image", normalImages, imageBuild)
+    buildParallel("Legacy image jenkins", jenkinsImages, imageBuild)
+}
+
+def buildParallel(String stageName, List images, Closure closure) {
+    Map builds = [:]
+    images.each { Map image ->
+        builds["${stageName} ${image['name']}"] = closure(image)
+    }
+    builds.failFast = true
+    parallel(builds)
+}
+
+def buildModernImage(Map image, String buildArgs, String target, String registry, String registryCredentialsID) {
+    withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
+    }
+
+    sh "docker build -t ${image["name"]} ${buildArgs} ${target} ."
+}
+
+def buildModernImages(List<Map> images, String registry, String registryCredentialsID) {
+    // Define helper function to build the compiler
+    Closure imageBuild = { Map image ->
+        return {
+            node('Linux') {
+                String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+                String target = image["target"] != null ? "--target ${image["target"]}" : ""
+
+                environment {
+                    DOCKER_BUILDKIT = 0
+                    COMPOSE_DOCKER_CLI_BUILD = 0
+                }
+
+                stage('Modern - Checkout sources and install deps') {
+                    checkout scm
+                    // sh 'pip install pytest'
+                    // TODO: Pass expected in a different way
+                    // writeFile(file: 'modern/.env', text: testArguments.collect({ k, v -> "${k }=${v }"}).join('\n') as String)
+                    // sh 'cat modern/.env'
+                }
+
+                stage("Modern - Build image ${image["name"]}") {
+                    dir(image["path"]) {
+                        buildModernImage(image, buildArgsStr, target, registry, registryCredentialsID)
+                    }
+                }
+
+                stage("Modern - Upload image ${image["name"]} to Artifactory") {
+                    uploadImage(image, registry, registryCredentialsID)
+                }
+            }
+        }
+    }
+
+    // Build images in parallel
+    // base, builder, normal, jenkins
+    List<Map> baseImages = images.findAll({ Map image -> image["name"].contains("base") })
+    List<Map> builderImages = images.findAll({ Map image -> image["name"].contains("builder") })
+    List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("base") && !image["name"].contains("builder") && !image["name"].contains("jenkins") })
+    List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
+    buildParallel("Modern base image", baseImages, imageBuild)
+    buildParallel("Modern builder image", builderImages, imageBuild)
+    buildParallel("Modern normal image", normalImages, imageBuild)
+    buildParallel("Modern image jenkins", jenkinsImages, imageBuild)
+}
+
+def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
+                  String toRegistryName, String toRegistryCredentialsId) {
+    withCredentials([usernamePassword(credentialsId: fromRegistryCredentialsId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${fromRegistryName}"
+    }
+
+    images.each { Map image ->
+        // Download from registry
+        // TODO: We need to add a retry here as we may face networking errors.
+        String fromRegistryImage = "${fromRegistryName}/${image["name"]}"
+        sh "docker pull ${fromRegistryImage}"
+        String imageName = image["name"].replace("${fromRegistryName}/", "")
+        image["name"] = imageName
+    }
+
+    images.each { Map image ->
+       uploadImage(image, toRegistryName, toRegistryCredentialsId)
+    }
 }
 
 node('Linux') {
-    // We need to build the list of parameters to call next job
-    List parameters = [
-        [$class: 'BooleanParameterValue', name: 'upload_main_images', value: true],
-        [$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: false],  // TODO: Jenkins ones only uploaded by CCI
-        [$class: 'BooleanParameterValue', name: 'upload_latest', value: true],
-    ]
+    String branch_commit = null
+    String merge_commit = null
+    String pr_number = null
+    String pr_base_branch = null
+    boolean isMasterbranch = false
 
-    stage('Parameters from repository') {
-        checkout scm
-        String scm_repository = scm.userRemoteConfigs[0].url
-
-        //String branchName = scm.branches[0].name
-        String scm_base_branch = scm.branches[0].name  // Implicit knowledge of the underlying repository
-        String scm_pr_number = null
-        String scm_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-        String scm_pr_commit = null
-        if (env.BRANCH_NAME.startsWith('PR')) {  // Because it is Github
-            scm_base_branch = "${env.CHANGE_TARGET}"
-            scm_pr_number = env.BRANCH_NAME.replace('PR-', '')
-
-            // Get commits from master branch and from PR
-            (scm_commit, scm_pr_commit) = detectPRCommits()
+    stage('Get build job information') {
+        def scmVars = checkout scm
+        merge_commit = scmVars.GIT_COMMIT
+        branch_commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        isMasterbranch = env.BRANCH_NAME.startsWith('master')  // Because it is Github
+        if (!isMasterbranch) {  // It is a pull-request
+            pr_number = env.BRANCH_NAME.replace('PR-', '')
+            pr_base_branch = "${env.CHANGE_TARGET}"
+        } else {
+            pr_number = detectPullRequestMerged()
         }
+        assert pr_number != null, "Could not detect pull request number"
 
         echo """
-            Parsing arguments:
-            - scm_repository: ${scm_repository}
-            - scm_commit: ${scm_commit}
-            // - branchName: \${branchName}
-            - scm_base_branch: ${scm_base_branch}
-            - scm_pr_number: ${scm_pr_number}
-            - scm_pr_commit: ${scm_pr_commit}
+            Build job information:
+            - branch_commit: ${branch_commit}
+            - merge_commit: ${merge_commit}
+            - pr_number: ${pr_number}
+            - pr_base_branch: ${pr_base_branch}
             """
-
-        parameters.add([$class: 'StringParameterValue', name: 'scm_repository', value: scm_repository])
-        parameters.add([$class: 'StringParameterValue', name: 'scm_commit', value: scm_commit])
-        parameters.add([$class: 'StringParameterValue', name: 'scm_base_branch', value: scm_base_branch])
-        if (scm_pr_number) {
-            parameters.add([$class: 'StringParameterValue', name: 'scm_pr_number', value: scm_pr_number])
-            parameters.add([$class: 'StringParameterValue', name: 'scm_pr_commit', value: scm_pr_commit])
-        }
     }
 
     // Check for skip build
@@ -66,91 +354,53 @@ node('Linux') {
         return  // Outside stage
     }
 
-    // Legacy CI builds will follow versions from the '.env' file
-    List parameters_legacy = parameters.clone()
-    stage('Legacy - Parse environment file') {
-        String content = readFile('legacy/.env')
-        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
-            def (name, value) = it.split('=')
+    List<Map> legacyImages = getLegacyImages(pr_number, "center-c3i-docker.jfrog.io")
+    echo "Legacy images: ${legacyImages}"
+    List<Map> modernImages = getModernImages(pr_number, "center-c3i-docker.jfrog.io")
+    echo "Modern images: ${modernImages}"
 
-            // tools installed
-            if (name == 'CONAN_VERSION') {
-                parameters_legacy.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
-            }
-            else if (name == 'JENKINS_AGENT_VERSION') {
-                parameters_legacy.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
-            }
-            else if (name == 'JAVA_JDK_VERSION') {
-                parameters_legacy.add([$class: 'StringParameterValue', name: 'java_jdk_version', value: value])
-            }
+    if (!isMasterbranch) {
+        // Build Legacy Images
+        buildLegacyImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
 
-            // compiler versions
-            else if (name == 'GCC_LEGACY_VERSIONS') {
-                parameters_legacy.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${value.replaceAll(',', '\n')}"])
-            }
-            else if (name == 'CLANG_LEGACY_VERSIONS') {
-                parameters_legacy.add([$class: 'StringParameterValue', name: 'clangVersions', value: "${value.replaceAll(',', '\n')}"])
-            }
-        }
+        // Build Modern Images
+        buildModernImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker")
     }
 
-    build(job: 'ConanDockerTools/_generate_legacy', propagate: true, wait: true, parameters: parameters_legacy)
+    if (isMasterbranch) {
+        // Tag images as definitive (without pr_number)
+        legacyImages = tagImagesWithoutPRNumber(legacyImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        modernImages = tagImagesWithoutPRNumber(modernImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+        // Promote to dockerhub
+        //promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        //promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        // TODO: Clean images ffrom PR that are in Artifactory
+    }
+}
 
-    List<String> parameters_modern = parameters.clone()
-    // Regular CI builds will follow versions from the '.env' file
-    stage('Parse environment file') {
-        List<String> gccVersions = []
-        List<String> clangVersions = []
-
-        String content = readFile('modern/.env')
-        content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
-            def (name, value) = it.split('=')
-
-            // docker
-            if (name == 'DISTRO') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'distro', value: value])
-            }
-            else if (name == 'DISTRO_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'distro_version', value: value])
-            }
-
-            // tools installed
-            else if (name == 'CONAN_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'conan_version', value: value])
-            }
-            else if (name == 'CMAKE_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'cmake_version', value: value])
-            }
-            else if (name == 'PYTHON_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'python_version', value: value])
-            }
-            else if (name == 'JENKINS_AGENT_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'jenkins_agent_version', value: value])
-            }
-            else if (name == 'JAVA_JDK_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'java_jdK_version', value: value])
-            }
-
-            // compiler versions
-            else if (name =~ /GCC\d+_VERSION/) {
-                gccVersions.add(value)
-            }
-            else if (name =~ /CLANG\d+_VERSION/) {
-                clangVersions.add(value)
-            }
-            else if (name == 'LIBSTDCPP_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'libstdcpp_version', value: value])
-            }
-            else if (name == 'LIBSTDCPP_PATCH_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'libstdcpp_patch_version', value: value])
-            }
-            else if (name == 'LIBSTDCPP_MAJOR_VERSION') {
-                parameters_modern.add([$class: 'StringParameterValue', name: 'libstdcpp_major_version', value: value])
-            }
-        }
-        parameters_modern.add([$class: 'StringParameterValue', name: 'gcc_versions', value: "${gccVersions.join('\n')}"])
-        parameters_modern.add([$class: 'StringParameterValue', name: 'clang_versions', value: "${clangVersions.join('\n')}"])
+def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry, String credentialsID) {
+    withCredentials([usernamePassword(credentialsId: credentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
-    build(job: 'ConanDockerTools/_generate', propagate: true, wait: true, parameters: parameters_modern)
+    images.each { Map image ->
+        // Pull image from desired registry
+        String registryImage = "${registry}/${image["name"]}"
+        sh "docker pull ${registryImage}"
+        // Remove pr_number from image tag
+        String imageWithoutPRNumber = image["name"].replace("-#${pr_number}", "")
+        echo "Tagging ${image["name"]} as ${imageWithoutPRNumber}"
+        // Tag image without pr_number and push it to desired registry
+        String registryImageWithoutPRNumber = "${registry}/${imageWithoutPRNumber}"
+        sh "docker tag ${registryImage} ${registryImageWithoutPRNumber}"
+        try {
+            sh "docker push ${registryImageWithoutPRNumber}"
+        } catch (Exception e) {
+            echo "Docker push failed. Retrying..."
+            sh "docker push ${registryImageWithoutPRNumber}"
+        }
+        // Return the image without pr_number (and without registry)
+        image["name"] = imageWithoutPRNumber
+    }
+    return images
 }
