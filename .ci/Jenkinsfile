@@ -43,6 +43,8 @@ def buildLegacyImage(Map image, String buildArgs, String registry, String regist
         sh 'docker pull docker.io/library/ubuntu:eoan'
     }
 
+    sh "docker pull ${registry}/${image["name"]} || true"
+
     sh "docker build -t ${image["name"]} --cache-from ${registry}/${image["name"]} ${buildArgs} ."
 }
 
@@ -248,7 +250,9 @@ def buildModernImage(Map image, String buildArgs, String target, String registry
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
-    sh "docker build -t ${image["name"]} ${buildArgs} ${target} ."
+    sh "docker pull ${registry}/${image["name"]} || true"
+
+    sh "docker build -t ${image["name"]} --cache-from=${registry}/${image["name"]} ${buildArgs} ${target} ."
 }
 
 def buildModernImages(List<Map> images, String registry, String registryCredentialsID) {
