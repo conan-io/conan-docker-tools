@@ -22,6 +22,16 @@ String getVersionMajor(String version) {
     return major
 }
 
+List<String> parseParamVersions(String versions) {
+    List<String> result = []
+    versions.split(',').each { v ->
+        String version = v.trim()
+        if (version.size() > 0) {
+            result.add(version)
+        }
+    }
+    return result
+}
 
 def buildImage(String latestMaster, String latestBranch, String expectedImage, String buildArgs, String target = null, String extraCacheFrom = null) {
     withCredentials([usernamePassword(credentialsId: 'center-c3i-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -85,8 +95,8 @@ def checkoutSources() {
 }
 
 node('Linux') {
-    List<String> gccVersions = params.gcc_versions.split("\n")
-    List<String> clangVersions = params.clang_versions.split("\n")
+    List<String> gccVersions = parseParamVersions(params.gcc_versions)
+    List<String> clangVersions = parseParamVersions(clang_versions)
 
 
     stage('Input parameters') {
@@ -123,8 +133,8 @@ node('Linux') {
 
         echo """
         Images to generate:
-        - gcc_versions: ${gccVersions.join(', ')}
-        - clang_versions: ${clangVersions.join(', ')}
+        - gcc_versions: ${gccVersions}
+        - clang_versions: ${clangVersions}
         - libstdcpp_version: ${params.libstdcpp_version}
         - libstdcpp_patch_version: ${params.libstdcpp_patch_version}
         - libstdcpp_major_version: ${params.libstdcpp_major_version}
