@@ -66,7 +66,8 @@ node('Linux') {
         if (params.conan_versions) {
             List parsedVersions = parseParamVersions(params.conan_versions)
             // INFO: Check that all versions are valid
-            conanVersions = parsedVersions.collect{ parseVersion(it) }
+            parsedVersions.collect{ parseVersion(it) }
+            conanVersions = parsedVersions
             echo "INFO: Skipping Conan versions computation because of input parameter."
             return
         }
