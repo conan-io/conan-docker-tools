@@ -19,7 +19,7 @@ def readEnvValues(String envFile) {
     echo content
     content.split('\n').each({ it.trim() }).findAll({ it.size() && !it.startsWith('#') }).each {
         def (name, value) = it.split('=')
-        echo "${name},${value}"
+        echo "${name}=${value}"
         envContent[name] = value
     }
     return envContent
@@ -59,12 +59,11 @@ def uploadImage(Map image, String registry, String crendentialsID) {
     sh "docker push ${uploadImage}"
 }
 
-@NonCPS
-def getLegacyImageName(Map image) {
+def getLegacyImageName(Map imageData) {
     // <docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-#<pr_number>
-    String name = "${image["dockerusername"]}/${image["compiler"]}${image["compilerVersion"]}"
-    name = image["suffix"] != null ? "${name}-${suffix}" : name
-    String tag = "${image["buildArgs"]["CONAN_VERSION"]}-#${image["pr_number"]}"
+    String name = "${imageData["dockerusername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}"
+    name = imageData["suffix"] != null ? "${name}-${suffix}" : name
+    String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-#${imageData["pr_number"]}"
     return "${name}:${tag}"
 }
 
@@ -90,7 +89,7 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["pr_number"] = pr_number
             imageData["path"] = "legacy/gcc_${gccVersion}"
             imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
-            imageData["name"] = getLegacyImageName(image)
+            imageData["name"] = getLegacyImageName(imageData)
             images.add(imageData)
             Map jenkinsImageData = imageData.collect()
             jenkinsImage["suffix"] = "jenkins"
@@ -105,17 +104,17 @@ def getLegacyImages(String pr_number, String registry) {
     return images
 }
 
-def getModernImageName(Map image) {
-    if (image["prefix"] == "base") {
+def getModernImageName(Map imageData) {
+    if (imageData["prefix"] == "base") {
         // base:                   <docker_username>/<prefix>-<distro>:<conan_version>
-        return "${image["dockerUsername"]}/${image["prefix"]}-${image["distro"]}:${image["buildArgs"]["CONAN_VERSION"]}"
+        return "${imageData["dockerUsername"]}/${imageData["prefix"]}-${imageData["distro"]}:${imageData["buildArgs"]["CONAN_VERSION"]}"
     } else {
         // builder/deploy/jenkins: <docker_username>/<compiler><compilerVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-#<pr_number>
-        String name = "${image["dockerUsername"]}/${image["compiler"]}${image["compilerVersion"]}-${image["buildArgs"]["distro"]}"
-        name = image["suffix"] != null ? "${name}-${image["suffix"]}" : name
-        String conanVersion = image["buildArgs"]["CONAN_VERSION"]
-        String tag = image["suffix"] == "jenkins" ? "${conanVersion}-${image["buildArgs"]["AGENT_VERSION"]}" : conanVersion
-        tag = "${tag}-#${image["pr_number"]}"
+        String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}-${imageData["buildArgs"]["distro"]}"
+        name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
+        String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
+        String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["AGENT_VERSION"]}" : conanVersion
+        tag = "${tag}-#${imageData["pr_number"]}"
         return "${name}:${tag}"
     }
 }
