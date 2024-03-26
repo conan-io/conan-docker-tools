@@ -43,6 +43,8 @@ def buildLegacyImage(Map image, String buildArgs, String registry, String regist
         sh 'docker pull docker.io/library/ubuntu:eoan'
     }
 
+    sh "docker pull ${registry}/${image["name"]} || true"
+
     sh "docker build -t ${image["name"]} --cache-from ${registry}/${image["name"]} ${buildArgs} ."
 }
 
