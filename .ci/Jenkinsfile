@@ -43,9 +43,7 @@ def buildLegacyImage(Map image, String buildArgs, String registry, String regist
         sh 'docker pull docker.io/library/ubuntu:eoan'
     }
 
-    // TODO: Add --cache-from value to speed-up the build
-
-    sh "docker build -t ${image["name"]} ${buildArgs} ."
+    sh "docker build -t ${image["name"]} --cache-from ${registry}/${image["name"]} ${buildArgs} ."
 }
 
 def uploadImage(Map image, String registry, String crendentialsID) {
@@ -122,6 +120,7 @@ def defineModernBaseImageData(Map envValues) {
     imageData["prefix"] = "base"
     imageData["path"] = "modern/base"
     imageData['distro'] = envValues["DISTRO"]
+    imageData["dockerUsername"] = envValues["DOCKER_USERNAME"]
     imageData["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
     imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
