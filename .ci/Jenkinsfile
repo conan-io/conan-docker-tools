@@ -148,7 +148,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
     builderImage["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
     builderImage["buildArgs"]['DOCKER_TAG'] = "${envValues["CONAN_VERSION"]}-#${pr_number}"
-    builderImage["buildArgs"]["${compilerName}_VERSION"] = compilerVersion
+    builderImage["buildArgs"]["${compiler.toUpperCase()}_VERSION"] = compilerVersion
     builderImage["path"] = "modern/${compiler}"
     builderImage["suffix"] = "builder"
     builderImage["target"] = "builder"
