@@ -111,8 +111,8 @@ def getModernImageName(Map image) {
         // builder/deploy/jenkins: <docker_username>/<compiler><compilerVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-#<pr_number>
         String name = "${image["dockerUsername"]}/${image["compiler"]}${image["compilerVersion"]}-${image["buildArgs"]["distro"]}"
         name = image["suffix"] != null ? "${name}-${image["suffix"]}" : name
-        String tag = image["buildArgs"]["CONAN_VERSION"]
-        String tag = image["suffix"] == "jenkins" ? "${tag}-${image["buildArgs"]["AGENT_VERSION"]}" : tag
+        String conanVersion = image["buildArgs"]["CONAN_VERSION"]
+        String tag = image["suffix"] == "jenkins" ? "${conanVersion}-${image["buildArgs"]["AGENT_VERSION"]}" : conanVersion
         tag = "${tag}-#${image["pr_number"]}"
         return "${name}:${tag}"
     }
