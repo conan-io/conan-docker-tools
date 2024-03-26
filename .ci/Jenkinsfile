@@ -59,6 +59,7 @@ def uploadImage(Map image, String registry, String crendentialsID) {
     sh "docker push ${uploadImage}"
 }
 
+@NonCPS
 def getLegacyImageName(Map image) {
     // <docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-#<pr_number>
     String name = "${image["dockerusername"]}/${image["compiler"]}${image["compilerVersion"]}"
