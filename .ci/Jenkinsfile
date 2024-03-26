@@ -60,10 +60,10 @@ def uploadImage(Map image, String registry, String crendentialsID) {
 }
 
 def getLegacyImageName(Map imageData) {
-    // <docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-#<pr_number>
+    // <docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-PR<pr_number>
     String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}"
     name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
-    String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-#${imageData["pr_number"]}"
+    String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-PR${imageData["pr_number"]}"
     return "${name}:${tag}"
 }
 
@@ -112,7 +112,7 @@ def getModernImageName(Map imageData) {
         name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
         String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
         String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["AGENT_VERSION"]}" : conanVersion
-        tag = "${tag}-#${imageData["pr_number"]}"
+        tag = "${tag}-PR${imageData["pr_number"]}"
         return "${name}:${tag}"
     }
 }
@@ -147,7 +147,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["buildArgs"]['DISTRO'] = envValues["DISTRO"]
     builderImage["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
     builderImage["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
-    builderImage["buildArgs"]['DOCKER_TAG'] = "${envValues["CONAN_VERSION"]}-#${pr_number}"
+    builderImage["buildArgs"]['DOCKER_TAG'] = "${envValues["CONAN_VERSION"]}-PR${pr_number}"
     builderImage["buildArgs"]["${compiler.toUpperCase()}_VERSION"] = compilerVersion
     builderImage["path"] = "modern/${compiler}"
     builderImage["suffix"] = "builder"
@@ -387,7 +387,7 @@ def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry
         String registryImage = "${registry}/${image["name"]}"
         sh "docker pull ${registryImage}"
         // Remove pr_number from image tag
-        String imageWithoutPRNumber = image["name"].replace("-#${pr_number}", "")
+        String imageWithoutPRNumber = image["name"].replace("-PR${pr_number}", "")
         echo "Tagging ${image["name"]} as ${imageWithoutPRNumber}"
         // Tag image without pr_number and push it to desired registry
         String registryImageWithoutPRNumber = "${registry}/${imageWithoutPRNumber}"
