@@ -88,7 +88,7 @@ node('Linux') {
             echo "Read latest version from pypi"
             def response = httpRequest(url: 'https://pypi.org/pypi/conan/json')
             Map<String, Object> requestJson = readJSON(text: response.content)
-            latestVersion = requestJson.info.version
+            latestVersion = parseVersion(requestJson.info.version)
             def keyVersions = requestJson.releases.keySet()
 
             echo "INFO: Latest version available in pypi: ${latestVersion}"
@@ -113,15 +113,15 @@ node('Linux') {
 
                     if (version[0] > minVersion[0] && !hasPreVersion(release)) {
                         echo "DEBUG: Adding '$release' to the list of versions because of major version."
-                        conanVersions.add(release)
+                        conanVersions.add(version)
                     }
                     else if (version[0] == minVersion[0] && version[1] > minVersion[1]) {
                         echo "DEBUG: Adding '$release' to the list of versions because of minor version."
-                        conanVersions.add(release)
+                        conanVersions.add(version)
                     }
                     else if (version[0] == minVersion[0] && version[1] == minVersion[1] &&  version[2] >= minVersion[2]) {
                         echo "DEBUG: Adding '$release' to the list of versions because of patch version."
-                        conanVersions.add(release)
+                        conanVersions.add(version)
                     }
                 }
                 catch(e) {
@@ -209,8 +209,9 @@ node('Linux') {
     parameters.add([$class: 'BooleanParameterValue', name: 'upload_jenkins_images', value: true])
     parameters.add([$class: 'BooleanParameterValue', name: 'dry_run', value: params.dry_run])
 
-    for (strVersion in conanVersions) {
-        boolean isLatest = (strVersion == latestVersion)
+    for (v in conanVersions) {
+        String strVersion = "${v[0]}.${v[1]}.${v[2]}"
+        boolean isLatest = (v == latestVersion)
         stage("Build images for Conan '${strVersion}' (latest=${isLatest})") {
             // INFO: When building docker images, networking errors are frequent. We retry 3 times.
             retry(3) {
