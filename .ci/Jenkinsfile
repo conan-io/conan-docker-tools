@@ -131,7 +131,7 @@ def defineModernBaseImageData(String envValues) {
     return imageData
 }
 
-def defineModernImagesData(String compiler, String compilerVersion Map envValues, String pr_number, String registry) {
+def defineModernImagesData(String compiler, String compilerVersion, Map envValues, String pr_number, String registry) {
     List<Map> images = []
 
     Map builderImage = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
