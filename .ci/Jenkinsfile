@@ -135,7 +135,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     Map builderImage = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
     builderImage["compiler"] = compiler
     builderImage["compilerVersion"] = envValues["${compiler.toUpperCase()}${compilerVersion}_VERSION"]
-    builderImage["pr_numer"] = pr_number
+    builderImage["pr_number"] = pr_number
+    builderImage["dockerUsername"] = envValues["DOCKER_USERNAME"]
+    builderImage['distro'] = envValues["DISTRO"]
     builderImage["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     builderImage["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_VERSION'] = envValues["LIBSTDCPP_VERSION"]
