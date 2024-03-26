@@ -77,11 +77,9 @@ def getLegacyImages(String pr_number, String registry) {
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
 
-        List<String> compilerImages = []
         gccVersions.each({ String gccVersion ->
             String dockerUsername = envValues["DOCKER_USERNAME"]
             String image = "${dockerUsername}/gcc${gccVersion}"
-            compilerImages.add(image)
             Map imageData = ["suffix": null, "buildArgs": [:], "target": null, "prefix": null]
             imageData["dockerUsername"] = dockerUsername
             imageData["compiler"] = "gcc"
@@ -91,9 +89,9 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
             imageData["name"] = getLegacyImageName(imageData)
             images.add(imageData)
-            Map jenkinsImageData = imageData.collect()
+            Map jenkinsImageData = imageData.clone()
             jenkinsImage["suffix"] = "jenkins"
-            jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "$registry}/${imageData["name"]}"
+            jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${imageData["name"]}"
             jenkinsImageData["buildArgs"]["AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
@@ -157,13 +155,13 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["name"] = getModernImageName(builderImage)
     images.add(builderImage)
 
-    Map deployImage = builderImage.collect()
+    Map deployImage = builderImage.clone()
     deployImage["target"] = "deploy"
     deployImage["suffix"] = null
     deployImage["name"] = getModernImageName(deployImage)
     images.add(deployImage)
 
-    Map jenkinsImage = deployImage.collect()
+    Map jenkinsImage = deployImage.clone()
     jenkinsImage["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${deployImage["name"]}"
     jenkinsImage["buildArgs"]["AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
