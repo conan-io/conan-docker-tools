@@ -119,7 +119,7 @@ def getModernImageName(Map imageData) {
     }
 }
 
-def defineModernBaseImageData(String envValues) {
+def defineModernBaseImageData(Map envValues) {
     Map imageData = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
     imageData["prefix"] = "base"
     imageData["path"] = "modern/base"
