@@ -122,6 +122,7 @@ def defineModernBaseImageData(Map envValues) {
     imageData["prefix"] = "base"
     imageData["path"] = "modern/base"
     imageData['distro'] = envValues["DISTRO"]
+    imageData["dockerUsername"] = envValues["DOCKER_USERNAME"]
     imageData["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
     imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
