@@ -376,9 +376,10 @@ node('Linux') {
         legacyImages = tagImagesWithoutPRNumber(legacyImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         modernImages = tagImagesWithoutPRNumber(modernImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         // Promote to dockerhub
-        //promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
-        //promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
-        // TODO: Clean images ffrom PR that are in Artifactory
+        promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+
+        // TODO: Clean images from PR that are in Artifactory
     }
 }
 
