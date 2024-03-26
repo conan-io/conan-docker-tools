@@ -82,7 +82,7 @@ def getLegacyImages(String pr_number, String registry) {
             String dockerUsername = envValues["DOCKER_USERNAME"]
             String image = "${dockerUsername}/gcc${gccVersion}"
             compilerImages.add(image)
-            Map imageData = ["suffix": null]
+            Map imageData = ["suffix": null, "buildArgs": [:], "target": null, "prefix": null]
             imageData["dockerUsername"] = dockerUsername
             imageData["compiler"] = "gcc"
             imageData["compilerVersion"] = gccVersion
