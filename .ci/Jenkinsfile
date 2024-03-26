@@ -61,7 +61,7 @@ def uploadImage(Map image, String registry, String crendentialsID) {
 
 def getLegacyImageName(Map imageData) {
     // <docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-#<pr_number>
-    String name = "${imageData["dockerusername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}"
+    String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}"
     name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
     String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-#${imageData["pr_number"]}"
     return "${name}:${tag}"
@@ -108,7 +108,7 @@ def getModernImageName(Map imageData) {
         return "${imageData["dockerUsername"]}/${imageData["prefix"]}-${imageData["distro"]}:${imageData["buildArgs"]["CONAN_VERSION"]}"
     } else {
         // builder/deploy/jenkins: <docker_username>/<compiler><compilerVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-#<pr_number>
-        String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}-${imageData["buildArgs"]["distro"]}"
+        String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}-${imageData["buildArgs"]["DISTRO"]}"
         name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
         String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
         String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["AGENT_VERSION"]}" : conanVersion
@@ -148,7 +148,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
     builderImage["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
     builderImage["buildArgs"]['DOCKER_TAG'] = "${envValues["CONAN_VERSION"]}-#${pr_number}"
-    builderImage["buildArgs"]["${compilerName}_VERSION"] = compilerVersion
+    builderImage["buildArgs"]["${compiler.toUpperCase()}_VERSION"] = compilerVersion
     builderImage["path"] = "modern/${compiler}"
     builderImage["suffix"] = "builder"
     builderImage["target"] = "builder"
