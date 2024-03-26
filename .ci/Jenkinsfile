@@ -104,10 +104,12 @@ def getLegacyImages(String pr_number, String registry) {
 
 def getModernImageName(Map imageData) {
     if (imageData["prefix"] == "base") {
-        // base:                   <docker_username>/<prefix>-<distro>:<conan_version>
-        return "${imageData["dockerUsername"]}/${imageData["prefix"]}-${imageData["distro"]}:${imageData["buildArgs"]["CONAN_VERSION"]}"
+        // base:                   <docker_username>/<prefix>-<distro>:<conan_version>-PR<pr_number>
+        String name = "${imageData["dockerUsername"]}/${imageData["prefix"]}-${imageData["distro"]}"
+        String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-PR${imageData["pr_number"]}"
+        return "${name}:${tag}"
     } else {
-        // builder/deploy/jenkins: <docker_username>/<compiler><compilerVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-#<pr_number>
+        // builder/deploy/jenkins: <docker_username>/<compiler><compilerVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-PR<pr_number>
         String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}-${imageData["buildArgs"]["DISTRO"]}"
         name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
         String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
@@ -117,12 +119,13 @@ def getModernImageName(Map imageData) {
     }
 }
 
-def defineModernBaseImageData(Map envValues) {
+def defineModernBaseImageData(Map envValues, String pr_number) {
     Map imageData = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
     imageData["prefix"] = "base"
     imageData["path"] = "modern/base"
     imageData['distro'] = envValues["DISTRO"]
     imageData["dockerUsername"] = envValues["DOCKER_USERNAME"]
+    imageData["pr_number"] = pr_number
     imageData["buildArgs"]['DISTRO_VERSION'] = envValues["DISTRO_VERSION"]
     imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
@@ -162,6 +165,8 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     deployImage["target"] = "deploy"
     deployImage["suffix"] = null
     deployImage["name"] = getModernImageName(deployImage)
+    Map baseImage = defineModernBaseImageData(envValues, pr_number)
+    deployImage["base"] = baseImage["name"]
     images.add(deployImage)
 
     Map jenkinsImage = deployImage.clone()
@@ -187,7 +192,7 @@ def getModernImages(String pr_number, String registry) {
         List<String> gccVersions = envValues["GCC_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
         List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
 
-        images.add(defineModernBaseImageData(envValues))
+        images.add(defineModernBaseImageData(envValues, pr_number))
 
         gccVersions.each({ String gccVersion ->
             images.addAll(defineModernImagesData("gcc", gccVersion, envValues, pr_number, registry))
@@ -248,6 +253,11 @@ def buildParallel(String stageName, List images, Closure closure) {
 def buildModernImage(Map image, String buildArgs, String target, String registry, String registryCredentialsID) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
+    }
+
+    if (image["target"] == 'deploy') {
+        // deploy image uses the base image as cache
+        sh "docker pull ${registry}/${image["base"]}"
     }
 
     sh "docker pull ${registry}/${image["name"]} || true"
@@ -376,9 +386,10 @@ node('Linux') {
         legacyImages = tagImagesWithoutPRNumber(legacyImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         modernImages = tagImagesWithoutPRNumber(modernImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         // Promote to dockerhub
-        //promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
-        //promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
-        // TODO: Clean images ffrom PR that are in Artifactory
+        promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+
+        // TODO: Clean images from PR that are in Artifactory
     }
 }
 
