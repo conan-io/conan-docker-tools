@@ -59,7 +59,7 @@ def uploadImage(Map image, String fromRegistryName, String toRegistryName, Strin
 
     // Upload with the corresponding tag version
     String uploadImageName = "${toRegistryName}/${image["name"]}"
-    String localImageName = "${toRegistryName}/${image["name"]}"
+    String localImageName = "${fromRegistryName}/${image["name"]}"
     sh "docker tag ${localImageName} ${uploadImageName}"
     sh "docker push ${uploadImageName}"
 }
