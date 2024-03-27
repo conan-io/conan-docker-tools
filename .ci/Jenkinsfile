@@ -109,8 +109,9 @@ def getModernImageName(Map imageData) {
         String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-PR${imageData["pr_number"]}"
         return "${name}:${tag}"
     } else {
-        // builder/deploy/jenkins: <docker_username>/<compiler><compilerVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-PR<pr_number>
-        String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}-${imageData["buildArgs"]["DISTRO"]}"
+        // builder/deploy/jenkins: <docker_username>/<compiler><compilerMajorVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-PR<pr_number>
+        String compilerMajorVersion = getVersionMajor(imageData["compilerVersion"])
+        String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${compilerMajorVersion}-${imageData["buildArgs"]["DISTRO"]}"
         name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
         String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
         String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["AGENT_VERSION"]}" : conanVersion
@@ -170,8 +171,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     images.add(deployImage)
 
     Map jenkinsImage = deployImage.clone()
+    deployImage["target"] = null
     jenkinsImage["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${deployImage["name"]}"
-    jenkinsImage["buildArgs"]["AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
+    jenkinsImage["buildArgs"]["JENKINS_AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
     jenkinsImage["suffix"] = "jenkins"
     jenkinsImage["path"] = "modern/jenkins"
