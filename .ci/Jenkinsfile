@@ -144,7 +144,7 @@ def defineModernBaseImageData(Map envValues, String pr_number) {
 def defineModernImagesData(String compiler, String compilerVersion, Map envValues, String pr_number, String registry) {
     List<Map> images = []
 
-    Map builderImage = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null: "pull": [], "cache": []]
+    Map builderImage = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null, "pull": [], "cache": []]
     builderImage["compiler"] = compiler
     builderImage["compilerVersion"] = envValues["${compiler.toUpperCase()}${compilerVersion}_VERSION"]
     builderImage["pr_number"] = pr_number
