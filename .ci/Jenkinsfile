@@ -98,7 +98,7 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["path"] = "legacy/gcc_${gccVersion}"
             imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
             imageData["buildArgs"]["BUILDKIT_INLINE_CACHE"] = "1" // Enable BuildKit cache
-            imageData["name"] = getLegacyImageName(imageData)
+            imageData["name"] = getLegacyImageName(imageData, registry)
             // pull images from registry to be used as cache
             String masterImageName = getImageMasterName(imageData)
             imageData["cache"] = [imageData["name"], masterImageName]
@@ -156,7 +156,7 @@ def defineModernBaseImageData(Map envValues, String pr_number, String registry) 
     // pull images from registry to be used as cache
     String masterImageName = getImageMasterName(imageData)
     imageData["cache"] = [imageData["name"], masterImageName]
-    imageData["pull"] = [envValues["DISTRO"], imageData["name"], masterImageName]
+    imageData["pull"] = ["ubuntu:${envValues["DISTRO_VERSION"]}", imageData["name"], masterImageName]
     return imageData
 }
 
@@ -188,7 +188,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["name"] = getModernImageName(builderImage, registry)
     // pull images from registry to be used as cache
     String builderImageMasterName = getImageMasterName(builderImage)
-    builderImage["pull"] = [envValues["DISTRO"], builderImage["name"], builderImageMasterName]
+    builderImage["pull"] = ["ubuntu:${envValues["DISTRO_VERSION"]}", builderImage["name"], builderImageMasterName]
     builderImage["cache"] = [builderImage["name"], builderImageMasterName]
     images.add(builderImage)
 
@@ -199,7 +199,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     // pull images from registry to be used as cache
     Map baseImage = defineModernBaseImageData(envValues, pr_number, registry)
     String deployImageMasterName = getImageMasterName(deployImage)
-    deployImage["cache"] = [deployImage["name"], "${registry}/${deployImageMasterName}"]
+    deployImage["cache"] = [baseImage["name"], builderImage["name"], deployImage["name"], deployImageMasterName]
     deployImage["pull"] = [baseImage["name"], builderImage["name"], deployImage["name"], deployImageMasterName]
     images.add(deployImage)
 
