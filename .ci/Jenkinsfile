@@ -57,19 +57,23 @@ def uploadImage(Map image, String fromRegistryName, String toRegistryName, Strin
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${toRegistryName}"
     }
 
-    // Upload with the corresponding tag version
-    String uploadImageName = "${toRegistryName}/${image["name"]}"
-    String localImageName = "${fromRegistryName}/${image["name"]}"
-    sh "docker tag ${localImageName} ${uploadImageName}"
+    // Upload with the corresponding tag version.
+    // image["name"] can or not contain the registry name
+    String imageName = image["name"].replace("${fromRegistryName}/", "")
+    String uploadImageName = "${toRegistryName}/${imageName}"
+    String localImageName = "${fromRegistryName}/${imageName}"
+    if (localImageName != uploadImageName) {
+        sh "docker tag ${localImageName} ${uploadImageName}"
+    }
     sh "docker push ${uploadImageName}"
 }
 
-def getLegacyImageName(Map imageData) {
-    // <docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-PR<pr_number>
+def getLegacyImageName(Map imageData, String registry) {
+    // <registry>/<docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-PR<pr_number>
     String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}"
     name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
     String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-PR${imageData["pr_number"]}"
-    return "${name}:${tag}"
+    return "${registry}/${name}:${tag}"
 }
 
 def getLegacyImages(String pr_number, String registry) {
@@ -97,8 +101,8 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["name"] = getLegacyImageName(imageData)
             // pull images from registry to be used as cache
             String masterImageName = getImageMasterName(imageData)
-            imageData["cache"] = ["${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
-            imageData["pull"] = ["${registry}/${imageData["name"]}", "${registry}/${masterImageName}", baseDockerImage[gccVersion]]
+            imageData["cache"] = [imageData["name"], "${registry}/${masterImageName}"]
+            imageData["pull"] = [imageData["name"], "${registry}/${masterImageName}", baseDockerImage[gccVersion]]
             images.add(imageData)
 
             Map jenkinsImageData = imageData.clone()
@@ -107,11 +111,11 @@ def getLegacyImages(String pr_number, String registry) {
             jenkinsImageData["buildArgs"]["JENKINS_AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
-            jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData)
+            jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData, registry)
             // pull images from registry to be used as cache
             String jenkinsImageMasterName = getImageMasterName(jenkinsImageData)
-            jenkinsImageData["cache"] = ["${registry}/${jenkinsImageData["name"]}", "${registry}/${jenkinsImageMasterName}"]
-            jenkinsImageData["pull"] = ["${registry}/${jenkinsImageData["name"]}", "${registry}/${imageData["name"]}", "${registry}/${jenkinsImageMasterName}"]
+            jenkinsImageData["cache"] = [jenkinsImageData["name"], "${registry}/${jenkinsImageMasterName}"]
+            jenkinsImageData["pull"] = [jenkinsImageData["name"], imageData["name"], "${registry}/${jenkinsImageMasterName}"]
             images.add(jenkinsImageData)
         })
     }
@@ -151,8 +155,8 @@ def defineModernBaseImageData(Map envValues, String pr_number, String registry) 
     imageData["name"] = getModernImageName(imageData, registry)
     // pull images from registry to be used as cache
     String masterImageName = getImageMasterName(imageData)
-    imageData["cache"] = ["${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
-    imageData["pull"] = [envValues["DISTRO"], "${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
+    imageData["cache"] = [imageData["name"], "${registry}/${masterImageName}"]
+    imageData["pull"] = [envValues["DISTRO"], imageData["name"], "${registry}/${masterImageName}"]
     return imageData
 }
 
@@ -184,8 +188,8 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["name"] = getModernImageName(builderImage, registry)
     // pull images from registry to be used as cache
     String builderImageMasterName = getImageMasterName(builderImage)
-    builderImage["pull"] = [envValues["DISTRO"], "${registry}/${builderImage["name"]}", "${registry}/${builderImageMasterName}"]
-    builderImage["cache"] = ["${registry}/${builderImage["name"]}", "${registry}/${builderImageMasterName}"]
+    builderImage["pull"] = [envValues["DISTRO"], builderImage["name"], "${registry}/${builderImageMasterName}"]
+    builderImage["cache"] = [builderImage["name"], "${registry}/${builderImageMasterName}"]
     images.add(builderImage)
 
     Map deployImage = builderImage.clone()
@@ -195,22 +199,22 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     // pull images from registry to be used as cache
     Map baseImage = defineModernBaseImageData(envValues, pr_number, registry)
     String deployImageMasterName = getImageMasterName(deployImage)
-    deployImage["cache"] = ["${registry}/${deployImage["name"]}", "${registry}/${deployImageMasterName}"]
-    deployImage["pull"] = ["${registry}/${baseImage["name"]}", "${registry}/${builderImage["name"]}", "${registry}/${deployImage["name"]}", "${registry}/${deployImageMasterName}"]
+    deployImage["cache"] = [deployImage["name"], "${registry}/${deployImageMasterName}"]
+    deployImage["pull"] = [baseImage["name"], builderImage["name"], deployImage["name"], "${registry}/${deployImageMasterName}"]
     images.add(deployImage)
 
     Map jenkinsImage = deployImage.clone()
     jenkinsImage["target"] = null
     jenkinsImage["suffix"] = "jenkins"
-    jenkinsImage["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${deployImage["name"]}"
+    jenkinsImage["buildArgs"]["SOURCE_CONANIO_IMAGE"] = deployImage["name"]
     jenkinsImage["buildArgs"]["JENKINS_AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
     jenkinsImage["path"] = "modern/jenkins"
     jenkinsImage["name"] = getModernImageName(jenkinsImage, registry)
     // pull images from registry to be used as cache
     String jenkinsImageMasterName = getImageMasterName(jenkinsImage)
-    jenkinsImage["pull"] = ["${registry}/${deployImage["name"]}", "${registry}/${jenkinsImage["name"]}", "${registry}/${jenkinsImageMasterName}"]
-    jenkinsImage["cache"] = ["${registry}/${jenkinsImage["name"]}", "${registry}/${jenkinsImageMasterName}"]
+    jenkinsImage["pull"] = [deployImage["name"], jenkinsImage["name"], "${registry}/${jenkinsImageMasterName}"]
+    jenkinsImage["cache"] = [jenkinsImage["name"], "${registry}/${jenkinsImageMasterName}"]
 
     images.add(jenkinsImage)
 
@@ -354,8 +358,7 @@ def promoteImages(List<Map> images, String fromRegistryName, String fromRegistry
     images.each { Map image ->
         // Download from registry
         // TODO: We need to add a retry here as we may face networking errors.
-        String imageNameFull = "${fromRegistryName}/${image["name"]}"
-        sh "docker pull ${imageNameFull}"
+        sh "docker pull ${image["name"]}"
         String imageName = image["name"].replace("${fromRegistryName}/", "")
         image["name"] = imageName
     }
