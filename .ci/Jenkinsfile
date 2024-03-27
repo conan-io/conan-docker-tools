@@ -35,6 +35,12 @@ String getVersionMajor(String version) {
     return major
 }
 
+String getImageMasterName(Map image) {
+    String conanVersion = image["buildArgs"]["CONAN_VERSION"]
+    String pr_number = image["pr_number"]
+    return image["name"].replace("-PR${pr_number}", "").replace(conanVersion , "master")
+}
+
 def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID, String cacheFrom) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
@@ -46,15 +52,16 @@ def buildLegacyImage(Map image, String buildArgs, String registry, String regist
     sh "docker build -t ${image["name"]} ${cacheFrom} ${buildArgs} ."
 }
 
-def uploadImage(Map image, String registry, String crendentialsID) {
+def uploadImage(Map image, String fromRegistryName, String toRegistryName, String crendentialsID) {
     withCredentials([usernamePassword(credentialsId: crendentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
     // Upload with the corresponding tag version
-    String uploadImage = "${registry}/${image["name"]}"
-    sh "docker tag ${image["name"]} ${uploadImage}"
-    sh "docker push ${uploadImage}"
+    String uploadImageName = "${toRegistryName}/${image["name"]}"
+    String localImageName = "${toRegistryName}/${image["name"]}"
+    sh "docker tag ${localImageName} ${uploadImageName}"
+    sh "docker push ${uploadImageName}"
 }
 
 def getLegacyImageName(Map imageData) {
@@ -136,8 +143,9 @@ def defineModernBaseImageData(Map envValues, String pr_number, String registry) 
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     imageData["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     imageData["name"] = getModernImageName(imageData)
-    imageData["cache"] = ["${registry}/${imageData["name"]}"]
-    imageData["pull"] = [envValues["DISTRO"], "${registry}/${imageData["name"]}"]
+    String masterImageName = getImageMasterName(imageData)
+    imageData["cache"] = ["${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
+    imageData["pull"] = [envValues["DISTRO"], "${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
     return imageData
 }
 
@@ -167,8 +175,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["suffix"] = "builder"
     builderImage["target"] = "builder"
     builderImage["name"] = getModernImageName(builderImage)
-    builderImage["pull"] = [envValues["DISTRO"], "${registry}/${builderImage["name"]}"]
-    builderImage["cache"] = ["${registry}/${builderImage["name"]}"]
+    String builderImageMasterName = getImageMasterName(builderImage)
+    builderImage["pull"] = [envValues["DISTRO"], "${registry}/${builderImage["name"]}", "${registry}/${builderImageMasterName}"]
+    builderImage["cache"] = ["${registry}/${builderImage["name"]}", "${registry}/${builderImageMasterName}"]
     images.add(builderImage)
 
     Map deployImage = builderImage.clone()
@@ -176,8 +185,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     deployImage["suffix"] = null
     deployImage["name"] = getModernImageName(deployImage)
     Map baseImage = defineModernBaseImageData(envValues, pr_number, registry)
-    deployImage["cache"] = ["${registry}/${deployImage["name"]}"]
-    deployImage["pull"] = ["${registry}/${baseImage["name"]}", "${registry}/${builderImage["name"]}", "${registry}/${deployImage["name"]}"]
+    String deployImageMasterName = getImageMasterName(deployImage)
+    deployImage["cache"] = ["${registry}/${deployImage["name"]}", "${registry}/${deployImageMasterName}"]
+    deployImage["pull"] = ["${registry}/${baseImage["name"]}", "${registry}/${builderImage["name"]}", "${registry}/${deployImage["name"]}", "${registry}/${deployImageMasterName}"]
     images.add(deployImage)
 
     Map jenkinsImage = deployImage.clone()
@@ -188,8 +198,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
     jenkinsImage["path"] = "modern/jenkins"
     jenkinsImage["name"] = getModernImageName(jenkinsImage)
-    jenkinsImage["pull"] = ["${registry}/${deployImage["name"]}", "${registry}/${jenkinsImage["name"]}"]
-    jenkinsImage["cache"] = ["${registry}/${jenkinsImage["name"]}"]
+    String jenkinsImageMasterName = getImageMasterName(jenkinsImage)
+    jenkinsImage["pull"] = ["${registry}/${deployImage["name"]}", "${registry}/${jenkinsImage["name"]}", "${registry}/${jenkinsImageMasterName}"]
+    jenkinsImage["cache"] = ["${registry}/${jenkinsImage["name"]}", "${registry}/${jenkinsImageMasterName}"]
 
     images.add(jenkinsImage)
 
@@ -244,7 +255,7 @@ def buildLegacyImages(List<Map> images, String registry, String registryCredenti
                 }
 
                 stage("Legacy - Upload image ${image["name"]} to Artifactory") {
-                    uploadImage(image, registry, registryCredentialsID)
+                    uploadImage(image, registry, registry, registryCredentialsID)
                 }
             }
         }
@@ -306,7 +317,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
                 }
 
                 stage("Modern - Upload image ${image["name"]} to Artifactory") {
-                    uploadImage(image, registry, registryCredentialsID)
+                    uploadImage(image, registry, registry, registryCredentialsID)
                 }
             }
         }
@@ -333,14 +344,14 @@ def promoteImages(List<Map> images, String fromRegistryName, String fromRegistry
     images.each { Map image ->
         // Download from registry
         // TODO: We need to add a retry here as we may face networking errors.
-        String fromRegistryImage = "${fromRegistryName}/${image["name"]}"
-        sh "docker pull ${fromRegistryImage}"
+        String imageNameFull = "${fromRegistryName}/${image["name"]}"
+        sh "docker pull ${imageNameFull}"
         String imageName = image["name"].replace("${fromRegistryName}/", "")
         image["name"] = imageName
     }
 
     images.each { Map image ->
-       uploadImage(image, toRegistryName, toRegistryCredentialsId)
+       uploadImage(image, fromRegistryName, toRegistryName, toRegistryCredentialsId)
     }
 }
 
@@ -400,9 +411,14 @@ node('Linux') {
         // Tag images as definitive (without pr_number)
         legacyImages = tagImagesWithoutPRNumber(legacyImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         modernImages = tagImagesWithoutPRNumber(modernImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
+
+        // Filter images to promote
+        List<Map> legacyDeployImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
+        List<Map> legacyModernImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
+
         // Promote to dockerhub
-        promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
-        promoteImages(modernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(legacyDeployImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(legacyModernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
 
         // TODO: Clean images from PR that are in Artifactory
     }
@@ -418,7 +434,7 @@ def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry
         String registryImage = "${registry}/${image["name"]}"
         sh "docker pull ${registryImage}"
         // Remove pr_number from image tag
-        String imageWithoutPRNumber = image["name"].replace("-PR${pr_number}", "")
+        String imageWithoutPRNumber = getImageMasterName(image)
         echo "Tagging ${image["name"]} as ${imageWithoutPRNumber}"
         // Tag image without pr_number and push it to desired registry
         String registryImageWithoutPRNumber = "${registry}/${imageWithoutPRNumber}"
