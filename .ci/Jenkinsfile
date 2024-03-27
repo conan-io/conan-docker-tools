@@ -59,7 +59,7 @@ def uploadImage(Map image, String fromRegistryName, String toRegistryName, Strin
 
     // Upload with the corresponding tag version
     String uploadImageName = "${toRegistryName}/${image["name"]}"
-    String localImageName = "${toRegistryName}/${image["name"]}"
+    String localImageName = "${fromRegistryName}/${image["name"]}"
     sh "docker tag ${localImageName} ${uploadImageName}"
     sh "docker push ${uploadImageName}"
 }
@@ -104,7 +104,7 @@ def getLegacyImages(String pr_number, String registry) {
             Map jenkinsImageData = imageData.clone()
             jenkinsImageData["suffix"] = "jenkins"
             jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${imageData["name"]}"
-            jenkinsImageData["buildArgs"]["AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
+            jenkinsImageData["buildArgs"]["JENKINS_AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
             jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData)
