@@ -38,7 +38,7 @@ String getVersionMajor(String version) {
 def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID, String cacheFrom) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
-        image["pull"].each { it ->
+        image["pull"].each {
             sh "docker pull ${it} || true"
         }
     }
