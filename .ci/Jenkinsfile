@@ -87,8 +87,8 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
             imageData["buildArgs"]["BUILDKIT_INLINE_CACHE"] = "1" // Enable BuildKit cache
             imageData["name"] = getLegacyImageName(imageData)
-            imageData["cache"] = [imageData["name"]]
-            imageData["pull"] = [imageData["name"], "docker.io/library/ubuntu:xenial", "docker.io/library/ubuntu:bionic", "docker.io/library/ubuntu:eoan"]
+            imageData["cache"] = ["${registry}/${imageData["name"]}"]
+            imageData["pull"] = ["${registry}/${imageData["name"]}", "docker.io/library/ubuntu:xenial", "docker.io/library/ubuntu:bionic", "docker.io/library/ubuntu:eoan"]
             images.add(imageData)
             Map jenkinsImageData = imageData.clone()
             jenkinsImageData["suffix"] = "jenkins"
@@ -97,8 +97,8 @@ def getLegacyImages(String pr_number, String registry) {
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
             jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData)
-            jenkinsImageData["cache"] = [jenkinsImageData["name"]]
-            jenkinsImageData["pull"] = [jenkinsImageData["name"], imageData["name"]]
+            jenkinsImageData["cache"] = ["${registry}/${jenkinsImageData["name"]}"]
+            jenkinsImageData["pull"] = ["${registry}/${jenkinsImageData["name"]}", "${registry}/${imageData["name"]}"]
             images.add(jenkinsImageData)
         })
     }
@@ -123,7 +123,7 @@ def getModernImageName(Map imageData) {
     }
 }
 
-def defineModernBaseImageData(Map envValues, String pr_number) {
+def defineModernBaseImageData(Map envValues, String pr_number, String registry) {
     Map imageData = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null , "pull": [], "cache": []]
     imageData["prefix"] = "base"
     imageData["path"] = "modern/base"
@@ -136,8 +136,8 @@ def defineModernBaseImageData(Map envValues, String pr_number) {
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     imageData["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     imageData["name"] = getModernImageName(imageData)
-    imageData["cache"] = [imageData["name"]]
-    imageData["pull"] = [envValues["DISTRO"], imageData["name"]]
+    imageData["cache"] = ["${registry}/${imageData["name"]}"]
+    imageData["pull"] = [envValues["DISTRO"], "${registry}/${imageData["name"]}"]
     return imageData
 }
 
@@ -166,8 +166,8 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["path"] = "modern/${compiler}"
     builderImage["suffix"] = "builder"
     builderImage["target"] = "builder"
-    builderImage["pull"] = [envValues["DISTRO"], builderImage["name"]]
-    builderImage["cache"] = [builderImage["name"]]
+    builderImage["pull"] = [envValues["DISTRO"], "${registry}/${builderImage["name"]}"]
+    builderImage["cache"] = ["${registry}/${builderImage["name"]}"]
     builderImage["name"] = getModernImageName(builderImage)
     images.add(builderImage)
 
@@ -175,9 +175,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     deployImage["target"] = "deploy"
     deployImage["suffix"] = null
     deployImage["name"] = getModernImageName(deployImage)
-    Map baseImage = defineModernBaseImageData(envValues, pr_number)
-    deployImage["cache"] = [deployImage["name"]]
-    deployImage["pull"] = [baseImage["name"], builderImage["name"], deployImage["name"]]
+    Map baseImage = defineModernBaseImageData(envValues, pr_number, registry)
+    deployImage["cache"] = ["${registry}/${deployImage["name"]}"]
+    deployImage["pull"] = ["${registry}/${baseImage["name"]}", "${registry}/${builderImage["name"]}", "${registry}/${deployImage["name"]}"]
     images.add(deployImage)
 
     Map jenkinsImage = deployImage.clone()
@@ -188,8 +188,8 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
     jenkinsImage["path"] = "modern/jenkins"
     jenkinsImage["name"] = getModernImageName(jenkinsImage)
-    jenkinsImage["pull"] = [deployImage["name"], jenkinsImage["name"]]
-    jenkinsImage["cache"] = [jenkinsImage["name"]]
+    jenkinsImage["pull"] = ["${registry}/${deployImage["name"]}", "${registry}/${jenkinsImage["name"]}"]
+    jenkinsImage["cache"] = ["${registry}/${jenkinsImage["name"]}"]
 
     images.add(jenkinsImage)
 
@@ -207,7 +207,7 @@ def getModernImages(String pr_number, String registry) {
         List<String> gccVersions = envValues["GCC_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
         List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
 
-        images.add(defineModernBaseImageData(envValues, pr_number))
+        images.add(defineModernBaseImageData(envValues, pr_number, registry))
 
         gccVersions.each({ String gccVersion ->
             images.addAll(defineModernImagesData("gcc", gccVersion, envValues, pr_number, registry))
