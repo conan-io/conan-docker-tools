@@ -107,7 +107,7 @@ def getLegacyImages(String pr_number, String registry) {
 
             Map jenkinsImageData = imageData.clone()
             jenkinsImageData["suffix"] = "jenkins"
-            jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${imageData["name"]}"
+            jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = imageData["name"]
             jenkinsImageData["buildArgs"]["JENKINS_AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
@@ -444,14 +444,13 @@ def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry
 
     images.each { Map image ->
         // Pull image from desired registry
-        String registryImage = "${registry}/${image["name"]}"
-        sh "docker pull ${registryImage}"
+        sh "docker pull ${image["name"]}"
         // Remove pr_number from image tag
         String imageWithoutPRNumber = getImageMasterName(image)
         echo "Tagging ${image["name"]} as ${imageWithoutPRNumber}"
         // Tag image without pr_number and push it to desired registry
         String registryImageWithoutPRNumber = "${registry}/${imageWithoutPRNumber}"
-        sh "docker tag ${registryImage} ${registryImageWithoutPRNumber}"
+        sh "docker tag ${image["name"]} ${registryImageWithoutPRNumber}"
         try {
             sh "docker push ${registryImageWithoutPRNumber}"
         } catch (Exception e) {
