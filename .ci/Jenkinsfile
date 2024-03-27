@@ -98,7 +98,7 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["path"] = "legacy/gcc_${gccVersion}"
             imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
             imageData["buildArgs"]["BUILDKIT_INLINE_CACHE"] = "1" // Enable BuildKit cache
-            imageData["name"] = getLegacyImageName(imageData)
+            imageData["name"] = getLegacyImageName(imageData, registry)
             // pull images from registry to be used as cache
             String masterImageName = getImageMasterName(imageData)
             imageData["cache"] = [imageData["name"], masterImageName]
