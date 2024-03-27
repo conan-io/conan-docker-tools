@@ -320,7 +320,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
     List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
     buildParallel("Modern base image", baseImages, imageBuild)
     buildParallel("Modern builder image", builderImages, imageBuild)
-    buildParallel("Modern deploy image", normalImages, deployImages)
+    buildParallel("Modern deploy image", deployImages, imageBuild)
     buildParallel("Modern image jenkins", jenkinsImages, imageBuild)
 }
 
