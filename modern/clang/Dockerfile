@@ -8,9 +8,6 @@ ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
 
-ARG CLANG_VERSION
-ARG LIBSTDCPP_VERSION
-
 LABEL maintainer="Conan.io <info@conan.io>"
 
 # FIXME: Clang 9 and 10 fail to build libcxx because they try to link libc++abi from system.
@@ -32,28 +29,35 @@ RUN apt-get -qq update \
        git \
        python3 \
        unzip \
-       gnupg \
-    && wget -q --no-check-certificate https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip \
+       gnupg
+
+RUN wget -q --no-check-certificate https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip \
     && unzip ninja-linux.zip \
-    && mv ninja /usr/bin/ninja \
-    && wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.7-Linux-x86_64.tar.gz \
+    && mv ninja /usr/bin/ninja
+
+RUN wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.7-Linux-x86_64.tar.gz \
     && tar -xzf cmake-3.15.7-Linux-x86_64.tar.gz \
        --exclude=bin/cmake-gui \
        --exclude=doc/cmake \
        --exclude=share/cmake-3.15/Help \
        --exclude=share/vim \
        --exclude=share/vim \
-    && cp -fR cmake-3.15.7-Linux-x86_64/* /usr \
-    && printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
+    && cp -fR cmake-3.15.7-Linux-x86_64/* /usr
+
+RUN printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev \
-    && wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${CLANG_VERSION}.tar.gz \
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev
+
+ARG CLANG_VERSION
+
+RUN wget -q --no-check-certificate https://github.com/llvm/llvm-project/archive/llvmorg-${CLANG_VERSION}.tar.gz \
     && tar zxf llvmorg-${CLANG_VERSION}.tar.gz \
     && sed -E -i 's/OUTPUT_NAME\s+"unwind"/OUTPUT_NAME "llvm-unwind"/g' llvm-project-llvmorg-${CLANG_VERSION}/libunwind/src/CMakeLists.txt \
-    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${CLANG_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp \
-    && cd llvm-project-llvmorg-${CLANG_VERSION} \
+    && sed -i 's/unwind/llvm-unwind/g' llvm-project-llvmorg-${CLANG_VERSION}/clang/lib/Driver/ToolChains/CommonArgs.cpp
+
+RUN cd llvm-project-llvmorg-${CLANG_VERSION} \
     && mkdir build \
     && cd build/ \
     && cmake ../llvm \

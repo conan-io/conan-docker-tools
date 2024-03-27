@@ -1,12 +1,10 @@
+ARG DISTRO_VERSION
 ARG DOCKER_USERNAME
 ARG DOCKER_TAG
-ARG DISTRO_VERSION
 ARG DISTRO
 ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
-
-ARG GCC_VERSION
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -28,6 +26,8 @@ RUN apt-get -qq update \
        libffi-dev \
        libssl-dev \
        pkg-config
+
+ARG GCC_VERSION
 
 RUN wget -q --no-check-certificate http://mirror.koddos.net/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz \
     && tar Jxf gcc-${GCC_VERSION}.tar.xz
@@ -56,7 +56,6 @@ RUN cd gcc-${GCC_VERSION} \
 FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 
 ARG GCC_VERSION
-ARG LIBSTDCPP_PATCH_VERSION
 
 COPY --from=builder /tmp/install /tmp/install
 COPY gcc_bootstrap.sh /opt/conan/gcc_bootstrap.sh
