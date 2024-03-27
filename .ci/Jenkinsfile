@@ -321,7 +321,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
     buildParallel("Modern base image", baseImages, imageBuild)
     buildParallel("Modern builder image", builderImages, imageBuild)
     buildParallel("Modern deploy image", deployImages, imageBuild)
-    buildParallel("Modern image jenkins", jenkinsImages, imageBuild)
+    buildParallel("Modern jenkins image ", jenkinsImages, imageBuild)
 }
 
 def promoteImages(List<Map> images, String fromRegistryName, String fromRegistryCredentialsId,
