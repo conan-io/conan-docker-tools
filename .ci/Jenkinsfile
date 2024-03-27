@@ -386,6 +386,7 @@ node('Linux') {
         } else {
             pr_number = detectPullRequestMerged()
         }
+        pr_number = "557" // TODO REMOVE!
         assert pr_number != null, "Could not detect pull request number"
 
         echo """
