@@ -220,13 +220,13 @@ def getModernImages(String pr_number, String registry) {
     return images
 }
 
-def buildLegacyImages(List<Map> images, String registry, String registryCredentialsID, String cacheFrom) {
+def buildLegacyImages(List<Map> images, String registry, String registryCredentialsID) {
     // Define helper function to build the image
     Closure imageBuild = { Map image ->
         return {
             node('Linux') {
                 String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
-                String cacheFrom = image["cache"].collect({ it -> "--cache-from=${it}"}).join(' ') as String
+                String cacheFrom = image["cache"].collect({"--cache-from=${it}"}).join(' ') as String
 
                 environment {
                     DOCKER_BUILDKIT = 1
@@ -269,7 +269,7 @@ def buildParallel(String stageName, List images, Closure closure) {
 def buildModernImage(Map image, String buildArgs, String target, String registry, String registryCredentialsID, String cacheFrom) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
-        image["pull"].each { it ->
+        image["pull"].each {
             sh "docker pull ${it} || true"
         }
     }
@@ -284,7 +284,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
             node('Linux') {
                 String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
                 String target = image["target"] != null ? "--target ${image["target"]}" : ""
-                String cacheFrom = image["cache"].collect({ it -> "--cache-from=${it}" }).join(' ') as String
+                String cacheFrom = image["cache"].collect({"--cache-from=${it}"}).join(' ') as String
 
                 environment {
                     DOCKER_BUILDKIT = 1
