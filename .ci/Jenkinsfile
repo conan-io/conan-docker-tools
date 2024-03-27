@@ -427,7 +427,7 @@ node('Linux') {
 
         // Filter images to promote in hub.docker only
         List<Map> legacyDeployImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
-        List<Map> modernDeployImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
+        List<Map> modernDeployImages = modernImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
 
         // Promote to dockerhub
         promoteImages(legacyDeployImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
@@ -442,11 +442,31 @@ def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
     }
 
+    List masterImages = images.clone()
+
+    // keep a latest copy of images in artifactory to be used as cache
+    masterImages.each { Map image ->
+        // Pull image from desired registry
+        sh "docker pull ${image["name"]}"
+        // Remove pr_number from image tag
+        String imageMasterName = getImageMasterName(image)
+        echo "Tagging ${image["name"]} as ${imageMasterName}"
+        // Tag image without pr_number and push it to desired registry
+        sh "docker tag ${image["name"]} ${imageMasterName}"
+        try {
+            sh "docker push ${imageMasterName}"
+        } catch (Exception e) {
+            echo "Docker push failed. Retrying..."
+            sh "docker push ${imageMasterName}"
+        }
+    }
+
+    // Tag images without pr_number. This is the one used in ConanCenterIndex and promoted
     images.each { Map image ->
         // Pull image from desired registry
         sh "docker pull ${image["name"]}"
         // Remove pr_number from image tag
-        String imageWithoutPRNumber = getImageMasterName(image)
+        String imageWithoutPRNumber = image["name"].replace("-PR${pr_number}", "")
         echo "Tagging ${image["name"]} as ${imageWithoutPRNumber}"
         // Tag image without pr_number and push it to desired registry
         sh "docker tag ${image["name"]} ${imageWithoutPRNumber}"
@@ -459,5 +479,6 @@ def tagImagesWithoutPRNumber(List<Map> images, String pr_number, String registry
         // Return the image without pr_number (and without registry)
         image["name"] = imageWithoutPRNumber
     }
+
     return images
 }
