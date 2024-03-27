@@ -117,7 +117,7 @@ def getModernImageName(Map imageData) {
         String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${compilerMajorVersion}-${imageData["buildArgs"]["DISTRO"]}"
         name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
         String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
-        String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["AGENT_VERSION"]}" : conanVersion
+        String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["JENKINS_AGENT_VERSION"]}" : conanVersion
         tag = "${tag}-PR${imageData["pr_number"]}"
         return "${name}:${tag}"
     }
