@@ -426,12 +426,11 @@ node('Linux') {
         legacyImages = tagImagesWithoutPRNumber(legacyImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         modernImages = tagImagesWithoutPRNumber(modernImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
 
-        // Filter images to promote in hub.docker only
-        List<Map> legacyDeployImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
+        // Filter images to promote in hub.docker only. Do not promote base and builder images
         List<Map> modernDeployImages = modernImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
 
         // Promote to dockerhub
-        promoteImages(legacyDeployImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(legacyImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
         promoteImages(modernDeployImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
 
         // TODO: Clean images from PR that are in Artifactory
