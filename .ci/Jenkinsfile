@@ -199,7 +199,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     // pull images from registry to be used as cache
     Map baseImage = defineModernBaseImageData(envValues, pr_number, registry)
     String deployImageMasterName = getImageMasterName(deployImage)
-    deployImage["cache"] = [deployImage["name"], "${registry}/${deployImageMasterName}"]
+    deployImage["cache"] = [baseImage["name"], builderImage["name"], deployImage["name"], deployImageMasterName]
     deployImage["pull"] = [baseImage["name"], builderImage["name"], deployImage["name"], deployImageMasterName]
     images.add(deployImage)
 
