@@ -156,7 +156,7 @@ def defineModernBaseImageData(Map envValues, String pr_number, String registry) 
     // pull images from registry to be used as cache
     String masterImageName = getImageMasterName(imageData)
     imageData["cache"] = [imageData["name"], masterImageName]
-    imageData["pull"] = [envValues["DISTRO"], imageData["name"], masterImageName]
+    imageData["pull"] = ["ubuntu:${envValues["DISTRO_VERSION"]}", imageData["name"], masterImageName]
     return imageData
 }
 
@@ -188,7 +188,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["name"] = getModernImageName(builderImage, registry)
     // pull images from registry to be used as cache
     String builderImageMasterName = getImageMasterName(builderImage)
-    builderImage["pull"] = [envValues["DISTRO"], builderImage["name"], builderImageMasterName]
+    builderImage["pull"] = ["ubuntu:${envValues["DISTRO_VERSION"]}", builderImage["name"], builderImageMasterName]
     builderImage["cache"] = [builderImage["name"], builderImageMasterName]
     images.add(builderImage)
 
