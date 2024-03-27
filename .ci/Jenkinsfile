@@ -104,7 +104,7 @@ def getLegacyImages(String pr_number, String registry) {
             Map jenkinsImageData = imageData.clone()
             jenkinsImageData["suffix"] = "jenkins"
             jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${imageData["name"]}"
-            jenkinsImageData["buildArgs"]["AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
+            jenkinsImageData["buildArgs"]["JENKINS_AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
             jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData)
