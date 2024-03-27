@@ -166,9 +166,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["path"] = "modern/${compiler}"
     builderImage["suffix"] = "builder"
     builderImage["target"] = "builder"
+    builderImage["name"] = getModernImageName(builderImage)
     builderImage["pull"] = [envValues["DISTRO"], "${registry}/${builderImage["name"]}"]
     builderImage["cache"] = ["${registry}/${builderImage["name"]}"]
-    builderImage["name"] = getModernImageName(builderImage)
     images.add(builderImage)
 
     Map deployImage = builderImage.clone()
