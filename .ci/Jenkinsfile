@@ -35,17 +35,15 @@ String getVersionMajor(String version) {
     return major
 }
 
-def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID) {
+def buildLegacyImage(Map image, String buildArgs, String registry, String registryCredentialsID, String cacheFrom) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
-        sh 'docker pull docker.io/library/ubuntu:xenial'
-        sh 'docker pull docker.io/library/ubuntu:bionic'
-        sh 'docker pull docker.io/library/ubuntu:eoan'
+        image["pull"].each { it ->
+            sh "docker pull ${it} || true"
+        }
     }
 
-    sh "docker pull ${registry}/${image["name"]} || true"
-
-    sh "docker build -t ${image["name"]} --cache-from ${registry}/${image["name"]} ${buildArgs} ."
+    sh "docker build -t ${image["name"]} ${cacheFrom} ${buildArgs} ."
 }
 
 def uploadImage(Map image, String registry, String crendentialsID) {
@@ -80,7 +78,7 @@ def getLegacyImages(String pr_number, String registry) {
         gccVersions.each({ String gccVersion ->
             String dockerUsername = envValues["DOCKER_USERNAME"]
             String image = "${dockerUsername}/gcc${gccVersion}"
-            Map imageData = ["suffix": null, "buildArgs": [:], "target": null, "prefix": null]
+            Map imageData = ["suffix": null, "buildArgs": [:], "target": null, "prefix": null, "cache": [], "pull": []]
             imageData["dockerUsername"] = dockerUsername
             imageData["compiler"] = "gcc"
             imageData["compilerVersion"] = gccVersion
@@ -89,6 +87,8 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
             imageData["buildArgs"]["BUILDKIT_INLINE_CACHE"] = "1" // Enable BuildKit cache
             imageData["name"] = getLegacyImageName(imageData)
+            imageData["cache"] = [imageData["name"]]
+            imageData["pull"] = [imageData["name"], "docker.io/library/ubuntu:xenial", "docker.io/library/ubuntu:bionic", "docker.io/library/ubuntu:eoan"]
             images.add(imageData)
             Map jenkinsImageData = imageData.clone()
             jenkinsImageData["suffix"] = "jenkins"
@@ -97,6 +97,8 @@ def getLegacyImages(String pr_number, String registry) {
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
             jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData)
+            jenkinsImageData["cache"] = [jenkinsImageData["name"]]
+            jenkinsImageData["pull"] = [jenkinsImageData["name"], imageData["name"]]
             images.add(jenkinsImageData)
         })
     }
@@ -122,7 +124,7 @@ def getModernImageName(Map imageData) {
 }
 
 def defineModernBaseImageData(Map envValues, String pr_number) {
-    Map imageData = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
+    Map imageData = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null , "pull": [], "cache": []]
     imageData["prefix"] = "base"
     imageData["path"] = "modern/base"
     imageData['distro'] = envValues["DISTRO"]
@@ -134,13 +136,15 @@ def defineModernBaseImageData(Map envValues, String pr_number) {
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     imageData["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     imageData["name"] = getModernImageName(imageData)
+    imageData["cache"] = [imageData["name"]]
+    imageData["pull"] = [envValues["DISTRO"], imageData["name"]]
     return imageData
 }
 
 def defineModernImagesData(String compiler, String compilerVersion, Map envValues, String pr_number, String registry) {
     List<Map> images = []
 
-    Map builderImage = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null]
+    Map builderImage = ["buildArgs": [:], "target": null, "suffix": null, "prefix": null: "pull": [], "cache": []]
     builderImage["compiler"] = compiler
     builderImage["compilerVersion"] = envValues["${compiler.toUpperCase()}${compilerVersion}_VERSION"]
     builderImage["pr_number"] = pr_number
@@ -162,6 +166,8 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["path"] = "modern/${compiler}"
     builderImage["suffix"] = "builder"
     builderImage["target"] = "builder"
+    builderImage["pull"] = [envValues["DISTRO"], builderImage["name"]]
+    builderImage["cache"] = [builderImage["name"]]
     builderImage["name"] = getModernImageName(builderImage)
     images.add(builderImage)
 
@@ -170,7 +176,8 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     deployImage["suffix"] = null
     deployImage["name"] = getModernImageName(deployImage)
     Map baseImage = defineModernBaseImageData(envValues, pr_number)
-    deployImage["base"] = baseImage["name"]
+    deployImage["cache"] = [deployImage["name"]]
+    deployImage["pull"] = [baseImage["name"], builderImage["name"], deployImage["name"]]
     images.add(deployImage)
 
     Map jenkinsImage = deployImage.clone()
@@ -181,6 +188,9 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
     jenkinsImage["path"] = "modern/jenkins"
     jenkinsImage["name"] = getModernImageName(jenkinsImage)
+    jenkinsImage["pull"] = [deployImage["name"], jenkinsImage["name"]]
+    jenkinsImage["cache"] = [jenkinsImage["name"]]
+
     images.add(jenkinsImage)
 
     return images
@@ -210,12 +220,13 @@ def getModernImages(String pr_number, String registry) {
     return images
 }
 
-def buildLegacyImages(List<Map> images, String registry, String registryCredentialsID) {
+def buildLegacyImages(List<Map> images, String registry, String registryCredentialsID, String cacheFrom) {
     // Define helper function to build the image
     Closure imageBuild = { Map image ->
         return {
             node('Linux') {
                 String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
+                String cacheFrom = image["cache"].collect({ it -> "--cache-from=${it}"}).join(' ') as String
 
                 environment {
                     DOCKER_BUILDKIT = 1
@@ -228,7 +239,7 @@ def buildLegacyImages(List<Map> images, String registry, String registryCredenti
 
                 stage("Legacy - Build image ${image["name"]}") {
                     dir(image["path"]) {
-                        buildLegacyImage(image, buildArgsStr, registry, registryCredentialsID)
+                        buildLegacyImage(image, buildArgsStr, registry, registryCredentialsID, cacheFrom)
                     }
                 }
 
@@ -255,19 +266,15 @@ def buildParallel(String stageName, List images, Closure closure) {
     parallel(builds)
 }
 
-def buildModernImage(Map image, String buildArgs, String target, String registry, String registryCredentialsID) {
+def buildModernImage(Map image, String buildArgs, String target, String registry, String registryCredentialsID, String cacheFrom) {
     withCredentials([usernamePassword(credentialsId: registryCredentialsID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'docker login --username $USERNAME --password $PASSWORD ' + "${registry}"
+        image["pull"].each { it ->
+            sh "docker pull ${it} || true"
+        }
     }
 
-    if (image["target"] == 'deploy') {
-        // deploy image uses the base image as cache
-        sh "docker pull ${image["base"]}"
-    }
-
-    sh "docker pull ${image["name"]} || true"
-
-    sh "docker build -t ${image["name"]} --cache-from=${image["name"]} ${buildArgs} ${target} ."
+    sh "docker build -t ${image["name"]} ${cacheFrom} ${buildArgs} ${target} ."
 }
 
 def buildModernImages(List<Map> images, String registry, String registryCredentialsID) {
@@ -277,6 +284,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
             node('Linux') {
                 String buildArgsStr = image["buildArgs"].collect({ k, v -> "--build-arg ${k }=${v }" }).join(' ') as String
                 String target = image["target"] != null ? "--target ${image["target"]}" : ""
+                String cacheFrom = image["cache"].collect({ it -> "--cache-from=${it}" }).join(' ') as String
 
                 environment {
                     DOCKER_BUILDKIT = 1
@@ -293,7 +301,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
 
                 stage("Modern - Build image ${image["name"]}") {
                     dir(image["path"]) {
-                        buildModernImage(image, buildArgsStr, target, registry, registryCredentialsID)
+                        buildModernImage(image, buildArgsStr, target, registry, registryCredentialsID, cacheFrom)
                     }
                 }
 
@@ -308,7 +316,7 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
     // base, builder, normal, jenkins
     List<Map> baseImages = images.findAll({ Map image -> image["name"].contains("base") })
     List<Map> builderImages = images.findAll({ Map image -> image["name"].contains("builder") })
-    List<Map> deployImages = images.findAll({ Map image -> !image["name"].contains("base") && !image["name"].contains("builder") && !image["name"].contains("jenkins") })
+    List<Map> deployImages = images.findAll({ Map image -> image["target"] == "deploy" })
     List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
     buildParallel("Modern base image", baseImages, imageBuild)
     buildParallel("Modern builder image", builderImages, imageBuild)
