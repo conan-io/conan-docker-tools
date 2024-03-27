@@ -81,6 +81,7 @@ def getLegacyImages(String pr_number, String registry) {
     List<Map> images = []
     stage('Legacy - Generate build matrix') {
         List<String> gccVersions = envValues["GCC_LEGACY_VERSIONS"].split(",")
+        Map baseDockerImage = ["5": "docker.io/library/ubuntu:xenial", "7": "docker.io/library/ubuntu:bionic", "9": "docker.io/library/ubuntu:eoan"]
 
         gccVersions.each({ String gccVersion ->
             String dockerUsername = envValues["DOCKER_USERNAME"]
@@ -94,9 +95,12 @@ def getLegacyImages(String pr_number, String registry) {
             imageData["buildArgs"]["CONAN_VERSION"] = envValues["CONAN_VERSION"]
             imageData["buildArgs"]["BUILDKIT_INLINE_CACHE"] = "1" // Enable BuildKit cache
             imageData["name"] = getLegacyImageName(imageData)
-            imageData["cache"] = ["${registry}/${imageData["name"]}"]
-            imageData["pull"] = ["${registry}/${imageData["name"]}", "docker.io/library/ubuntu:xenial", "docker.io/library/ubuntu:bionic", "docker.io/library/ubuntu:eoan"]
+            // pull images from registry to be used as cache
+            String masterImageName = getImageMasterName(imageData)
+            imageData["cache"] = ["${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
+            imageData["pull"] = ["${registry}/${imageData["name"]}", "${registry}/${masterImageName}", baseDockerImage[gccVersion]]
             images.add(imageData)
+
             Map jenkinsImageData = imageData.clone()
             jenkinsImageData["suffix"] = "jenkins"
             jenkinsImageData["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${imageData["name"]}"
@@ -104,8 +108,10 @@ def getLegacyImages(String pr_number, String registry) {
             jenkinsImageData["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
             jenkinsImageData["path"] = "legacy/jenkins"
             jenkinsImageData["name"] = getLegacyImageName(jenkinsImageData)
-            jenkinsImageData["cache"] = ["${registry}/${jenkinsImageData["name"]}"]
-            jenkinsImageData["pull"] = ["${registry}/${jenkinsImageData["name"]}", "${registry}/${imageData["name"]}"]
+            // pull images from registry to be used as cache
+            String jenkinsImageMasterName = getImageMasterName(jenkinsImageData)
+            jenkinsImageData["cache"] = ["${registry}/${jenkinsImageData["name"]}", "${registry}/${jenkinsImageMasterName}"]
+            jenkinsImageData["pull"] = ["${registry}/${jenkinsImageData["name"]}", "${registry}/${imageData["name"]}", "${registry}/${jenkinsImageMasterName}"]
             images.add(jenkinsImageData)
         })
     }
@@ -143,6 +149,7 @@ def defineModernBaseImageData(Map envValues, String pr_number, String registry) 
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     imageData["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     imageData["name"] = getModernImageName(imageData)
+    // pull images from registry to be used as cache
     String masterImageName = getImageMasterName(imageData)
     imageData["cache"] = ["${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
     imageData["pull"] = [envValues["DISTRO"], "${registry}/${imageData["name"]}", "${registry}/${masterImageName}"]
@@ -175,6 +182,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["suffix"] = "builder"
     builderImage["target"] = "builder"
     builderImage["name"] = getModernImageName(builderImage)
+    // pull images from registry to be used as cache
     String builderImageMasterName = getImageMasterName(builderImage)
     builderImage["pull"] = [envValues["DISTRO"], "${registry}/${builderImage["name"]}", "${registry}/${builderImageMasterName}"]
     builderImage["cache"] = ["${registry}/${builderImage["name"]}", "${registry}/${builderImageMasterName}"]
@@ -184,6 +192,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     deployImage["target"] = "deploy"
     deployImage["suffix"] = null
     deployImage["name"] = getModernImageName(deployImage)
+    // pull images from registry to be used as cache
     Map baseImage = defineModernBaseImageData(envValues, pr_number, registry)
     String deployImageMasterName = getImageMasterName(deployImage)
     deployImage["cache"] = ["${registry}/${deployImage["name"]}", "${registry}/${deployImageMasterName}"]
@@ -198,6 +207,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
     jenkinsImage["path"] = "modern/jenkins"
     jenkinsImage["name"] = getModernImageName(jenkinsImage)
+    // pull images from registry to be used as cache
     String jenkinsImageMasterName = getImageMasterName(jenkinsImage)
     jenkinsImage["pull"] = ["${registry}/${deployImage["name"]}", "${registry}/${jenkinsImage["name"]}", "${registry}/${jenkinsImageMasterName}"]
     jenkinsImage["cache"] = ["${registry}/${jenkinsImage["name"]}", "${registry}/${jenkinsImageMasterName}"]
@@ -412,13 +422,13 @@ node('Linux') {
         legacyImages = tagImagesWithoutPRNumber(legacyImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
         modernImages = tagImagesWithoutPRNumber(modernImages, pr_number, "center-c3i-docker.jfrog.io", "center-c3i-docker")
 
-        // Filter images to promote
+        // Filter images to promote in hub.docker only
         List<Map> legacyDeployImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
-        List<Map> legacyModernImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
+        List<Map> modernDeployImages = legacyImages.findAll({ Map image -> image["name"].contains("jenkins") || image["target"] == "deploy" })
 
         // Promote to dockerhub
         promoteImages(legacyDeployImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
-        promoteImages(legacyModernImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
+        promoteImages(modernDeployImages, "center-c3i-docker.jfrog.io", "center-c3i-docker", "docker.io", "docker-credentials")
 
         // TODO: Clean images from PR that are in Artifactory
     }
