@@ -174,11 +174,11 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     images.add(deployImage)
 
     Map jenkinsImage = deployImage.clone()
-    deployImage["target"] = null
+    jenkinsImage["target"] = null
+    jenkinsImage["suffix"] = "jenkins"
     jenkinsImage["buildArgs"]["SOURCE_CONANIO_IMAGE"] = "${registry}/${deployImage["name"]}"
     jenkinsImage["buildArgs"]["JENKINS_AGENT_VERSION"] = envValues["JENKINS_AGENT_VERSION"]
     jenkinsImage["buildArgs"]["JAVA_JDK_VERSION"] = envValues["JAVA_JDK_VERSION"]
-    jenkinsImage["suffix"] = "jenkins"
     jenkinsImage["path"] = "modern/jenkins"
     jenkinsImage["name"] = getModernImageName(jenkinsImage)
     images.add(jenkinsImage)
@@ -262,12 +262,12 @@ def buildModernImage(Map image, String buildArgs, String target, String registry
 
     if (image["target"] == 'deploy') {
         // deploy image uses the base image as cache
-        sh "docker pull ${registry}/${image["base"]}"
+        sh "docker pull ${image["base"]}"
     }
 
-    sh "docker pull ${registry}/${image["name"]} || true"
+    sh "docker pull ${image["name"]} || true"
 
-    sh "docker build -t ${image["name"]} --cache-from=${registry}/${image["name"]} ${buildArgs} ${target} ."
+    sh "docker build -t ${image["name"]} --cache-from=${image["name"]} ${buildArgs} ${target} ."
 }
 
 def buildModernImages(List<Map> images, String registry, String registryCredentialsID) {
@@ -308,11 +308,11 @@ def buildModernImages(List<Map> images, String registry, String registryCredenti
     // base, builder, normal, jenkins
     List<Map> baseImages = images.findAll({ Map image -> image["name"].contains("base") })
     List<Map> builderImages = images.findAll({ Map image -> image["name"].contains("builder") })
-    List<Map> normalImages = images.findAll({ Map image -> !image["name"].contains("base") && !image["name"].contains("builder") && !image["name"].contains("jenkins") })
+    List<Map> deployImages = images.findAll({ Map image -> !image["name"].contains("base") && !image["name"].contains("builder") && !image["name"].contains("jenkins") })
     List<Map> jenkinsImages = images.findAll({ Map image -> image["name"].contains("jenkins") })
     buildParallel("Modern base image", baseImages, imageBuild)
     buildParallel("Modern builder image", builderImages, imageBuild)
-    buildParallel("Modern normal image", normalImages, imageBuild)
+    buildParallel("Modern deploy image", normalImages, deployImages)
     buildParallel("Modern image jenkins", jenkinsImages, imageBuild)
 }
 
