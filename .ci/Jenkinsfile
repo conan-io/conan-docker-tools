@@ -75,7 +75,7 @@ def getLegacyImageName(Map imageData, String registry) {
     name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
     String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
     String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["JENKINS_AGENT_VERSION"]}" : conanVersion
-    String tag = "${tag}-PR${imageData["pr_number"]}"
+    tag = "${tag}-PR${imageData["pr_number"]}"
     return "${registry}/${name}:${tag}"
 }
 
