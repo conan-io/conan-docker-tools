@@ -70,9 +70,12 @@ def uploadImage(Map image, String fromRegistryName, String toRegistryName, Strin
 
 def getLegacyImageName(Map imageData, String registry) {
     // <registry>/<docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-PR<pr_number>
-    String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}"
+    String compilerMajorVersion = getVersionMajor(imageData["compilerVersion"])
+    String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${compilerMajorVersion}"
     name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
-    String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-PR${imageData["pr_number"]}"
+    String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
+    String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["JENKINS_AGENT_VERSION"]}" : conanVersion
+    String tag = "${tag}-PR${imageData["pr_number"]}"
     return "${registry}/${name}:${tag}"
 }
 
