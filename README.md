@@ -1,6 +1,6 @@
 | Service | OS |  Status  |
 |---------|----|----------|
-| Jenkins | Linux | [![Build Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools%2FXenial%2Fmaster)](https://ci.conan.io/job/ConanDockerTools/job/Xenial/job/master/) |
+| Jenkins | Linux | [![Build Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools%2Ftesting%2Fmaster)](https://ci.conan.io/job/ConanDockerTools/job/testing/job/master/)  |
 
 
 # Conan Docker Tools
@@ -13,7 +13,26 @@ You can use these images directly in your project or with the [conan-package-too
 > :warning: **Warning:**
 The images listed below are intended for **generating open-source library packages** and we cannot guarantee any kind of stability. We strongly recommend using your own generated images for production environments taking the dockerfiles in this repository as a reference.
 
-### Legacy and Modern folders
+### Installation and Usage
+
+You can use the images directly from Docker Hub, for example:
+
+```bash
+$ docker pull conanio/gcc11-ubuntu16.04:2.2.2
+$ docker run -it conanio/gcc11-ubuntu16.04:2.2.2
+```
+
+**NOTE**: Always use a specific tag, like `2.2.2`, to ensure the stability of your builds. The `latest` tag is **not** stable and can change at any time.
+
+### Storage and availability
+
+First, check what images are still maintained in the [legacy](legacy/README.md#official-docker-images) and [modern](modern/README.md#official-docker-images) folder.
+
+All public images are stored in the Docker Hub under the `conanio` organization. You can find them [here](https://hub.docker.com/r/conanio/).
+
+Also, there is a copy for each image used internally by ConanCenterIndexCI. These images are private and consumed by the Jenkins server. It keeps the images up-to-date, avoiding the Docker Hub rate limit and network delays.
+
+### Legacy and Modern images
 
 There are two main folders which store our Dockerfiles [legacy](legacy/) and [modern](modern/).
 
