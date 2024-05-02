@@ -74,3 +74,5 @@ RUN sudo rm -rf /usr/lib/gcc/x86_64-linux-gnu/* \
     && sudo chmod +x /opt/conan/gcc_bootstrap.sh \
     && /opt/conan/gcc_bootstrap.sh \
     && sudo rm -f /opt/conan/gcc_bootstrap.sh
+
+COPY specs /usr/local/lib/gcc/x86_64-linux-gnu/${GCC_VERSION}/specs
