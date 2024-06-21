@@ -10,6 +10,8 @@ def update_versions(file_path, new_version):
                 file.write(f'CONAN_VERSION={new_version}\n')
             elif line.startswith('DOCKER_TAG='):
                 file.write(f'DOCKER_TAG={new_version}\n')
+            elif line.startswith('DOCKER_BUILD_TAG='):
+                file.write(f'DOCKER_BUILD_TAG={new_version}\n')
             else:
                 file.write(line)
 
