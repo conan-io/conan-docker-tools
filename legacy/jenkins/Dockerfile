@@ -20,10 +20,14 @@ COPY entrypoint.sh /opt/entrypoint.sh
 
 ARG JENKINS_AGENT_VERSION
 
-RUN curl --create-dirs -sSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar \
-    && chmod 755 /usr/share/jenkins \
-    && chmod 644 /usr/share/jenkins/agent.jar \
-    && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-client
+ADD --chown="conan":"conan" "https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar" /usr/share/jenkins/agent.jar
+
+RUN chmod 755 /usr/share/jenkins \
+    && chmod 0644 /usr/share/jenkins/agent.jar \
+    && chmod +x /opt/entrypoint.sh /usr/local/bin/jenkins-client \
+    && ln -sf /usr/share/jenkins/agent.jar /usr/share/jenkins/slave.jar \
+    && ln -sf /usr/local/bin/jenkins-client /usr/local/bin/jenkins-agent \
+    && ln -sf /usr/local/bin/jenkins-client /usr/local/bin/jenkins-slave
 
 ARG CONAN_VERSION
 
