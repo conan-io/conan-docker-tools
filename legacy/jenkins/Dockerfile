@@ -7,8 +7,9 @@ USER root
 
 COPY install-openjdk-ppa.sh /tmp/install-openjdk-ppa.sh
 
-RUN /tmp/install-openjdk-ppa.sh \
-    && apt-get -qq update \
+RUN /tmp/install-openjdk-ppa.sh
+
+RUN apt-get -qq update \
     && apt-get -q install -y openjdk-${JAVA_JDK_VERSION}-jre-headless  curl \
     && apt-get -q clean -y \
     && rm -rf /var/lib/apt/lists/* \
