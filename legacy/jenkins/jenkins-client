@@ -114,7 +114,7 @@ else
 			SECRET="-secret ${JENKINS_SECRET}" ;;
 		esac
 	fi
-	
+
 	if [ -n "$JENKINS_AGENT_NAME" ]; then
 		case "$@" in
 			*"${JENKINS_AGENT_NAME}"*) echo "Warning: AGENT_NAME is defined twice in command-line arguments and the environment variable" ;;
