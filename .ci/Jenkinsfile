@@ -73,7 +73,8 @@ def getLegacyImageName(Map imageData, String registry) {
     String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${imageData["compilerVersion"]}"
     name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
     String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
-    String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["JENKINS_AGENT_VERSION"]}" : conanVersion
+    // <registry>/<docker_username>/<compiler><compilerVersion>(-<suffix>):<conan_version>-jdk<JDKVersion>-<JenkinsAgentVersion>-PR<pr_number>
+    String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-jdk${imageData["buildArgs"]["JAVA_JDK_VERSION"]}-${imageData["buildArgs"]["JENKINS_AGENT_VERSION"]}" : conanVersion
     tag = "${tag}-PR${imageData["pr_number"]}"
     return "${registry}/${name}:${tag}"
 }
@@ -136,12 +137,13 @@ def getModernImageName(Map imageData, String registry) {
         String tag = "${imageData["buildArgs"]["CONAN_VERSION"]}-PR${imageData["pr_number"]}"
         return "${registry}/${name}:${tag}"
     } else {
-        // builder/deploy/jenkins: <registry>/<docker_username>/<compiler><compilerMajorVersion>-<distro>(-<suffix>):<conan_version>(_<jenkins_agent>)-PR<pr_number>
+        // builder/deploy: <registry>/<docker_username>/<compiler><compilerMajorVersion>-<distro>(-<suffix>):<conan_version>-PR<pr_number>
+        // jenkins: <registry>/<docker_username>/<compiler><compilerMajorVersion>-<distro>(-<suffix>):<conan_version>-jdk(_<jdk_version>)-(_<jenkins_agent>)-PR<pr_number>
         String compilerMajorVersion = getVersionMajor(imageData["compilerVersion"])
         String name = "${imageData["dockerUsername"]}/${imageData["compiler"]}${compilerMajorVersion}-${imageData["buildArgs"]["DISTRO"]}"
         name = imageData["suffix"] != null ? "${name}-${imageData["suffix"]}" : name
         String conanVersion = imageData["buildArgs"]["CONAN_VERSION"]
-        String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-${imageData["buildArgs"]["JENKINS_AGENT_VERSION"]}" : conanVersion
+        String tag = imageData["suffix"] == "jenkins" ? "${conanVersion}-jdk${imageData["buildArgs"]["JAVA_JDK_VERSION"]}-${imageData["buildArgs"]["JENKINS_AGENT_VERSION"]}" : conanVersion
         tag = "${tag}-PR${imageData["pr_number"]}"
         return "${registry}/${name}:${tag}"
     }
