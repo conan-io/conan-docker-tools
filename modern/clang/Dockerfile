@@ -44,11 +44,11 @@ RUN wget -q --no-check-certificate https://cmake.org/files/v3.15/cmake-3.15.7-Li
        --exclude=share/vim \
     && cp -fR cmake-3.15.7-Linux-x86_64/* /usr
 
-RUN printf 'deb http://apt.llvm.org/xenial/   llvm-toolchain-xenial-10  main\n' > /etc/apt/sources.list.d/llvm.list \
+RUN printf 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy main\n' > /etc/apt/sources.list.d/llvm.list \
     && wget -q --no-check-certificate https://apt.llvm.org/llvm-snapshot.gpg.key \
     && apt-key add llvm-snapshot.gpg.key \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-10 lld-10 libc++-10-dev
+    && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 clang-11 lld-11 libc++-11-dev
 
 ARG CLANG_VERSION
 
@@ -62,8 +62,8 @@ RUN cd llvm-project-llvmorg-${CLANG_VERSION} \
     && cd build/ \
     && cmake ../llvm \
        -G Ninja \
-       -DCMAKE_CXX_COMPILER=clang++-10 \
-       -DCMAKE_C_COMPILER=clang-10 \
+       -DCMAKE_CXX_COMPILER=clang++-11 \
+       -DCMAKE_C_COMPILER=clang-11 \
        -DCMAKE_BUILD_TYPE=Release \
        -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
        -DBUILD_SHARED_LIBS=ON \
@@ -91,7 +91,7 @@ RUN cd llvm-project-llvmorg-${CLANG_VERSION} \
        -DLLVM_BUILD_BENCHMARKS=OFF \
        -DLLVM_BUILD_STATIC=OFF \
        -DLLVM_USE_SANITIZER=OFF \
-       -DLLVM_USE_LINKER=lld-10 \
+       -DLLVM_USE_LINKER=lld-11 \
        -DLLVM_OPTIMIZED_TABLEGEN=ON \
        -DLIBUNWIND_ENABLE_ASSERTIONS=OFF \
        -DLIBUNWIND_ENABLE_PEDANTIC=OFF \

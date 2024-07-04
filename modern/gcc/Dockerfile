@@ -22,6 +22,7 @@ RUN apt-get -qq update \
        libmpfr-dev \
        libmpc-dev \
        nasm \
+       make \
        dh-autoreconf \
        libffi-dev \
        libssl-dev \
