@@ -39,6 +39,8 @@ RUN apt-get -qq update \
        xz-utils \
        curl \
        gpg \
+       patch \
+       make \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
@@ -111,6 +113,7 @@ RUN printf '/usr/local/lib\n' > /etc/ld.so.conf.d/20local-lib.conf \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
+       make \
     && apt-get -qq autoremove -y \
     && apt-get -qq autoclean \
     && apt-get -qq update \
