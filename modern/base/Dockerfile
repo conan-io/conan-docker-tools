@@ -17,8 +17,6 @@ COPY conan.lock conanfile.txt /opt/conan/
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
-    && add-apt-repository ppa:git-core/ppa -y \
-    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \
        sudo \
        binutils \
@@ -40,6 +38,7 @@ RUN apt-get -qq update \
        libreadline-dev \
        xz-utils \
        curl \
+       gpg \
        libncurses5-dev \
        libncursesw5-dev \
        liblzma-dev \
