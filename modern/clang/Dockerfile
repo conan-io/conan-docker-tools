@@ -28,6 +28,7 @@ RUN apt-get -qq update \
        ca-certificates \
        git \
        python3 \
+       python3-distutils \
        unzip \
        gnupg
 
