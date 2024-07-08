@@ -253,7 +253,7 @@ RUN cd llvm-project-llvmorg-${CLANG_VERSION} \
     && cp -a lib/clang/${CLANG_VERSION}/include /tmp/install/lib/clang/${CLANG_VERSION}/include \
     && cp $(find lib -name "*.so*") /tmp/install/lib
 
-FROM ${DOCKERHUB_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:latest as libstdcpp
+FROM ${DOCKERHUB_USERNAME}/gcc${LIBSTDCPP_MAJOR_VERSION}-${DISTRO}:${DOCKER_TAG} as libstdcpp
 
 FROM ${DOCKER_USERNAME}/base-${DISTRO}${SUFFIX}:${DOCKER_TAG} as deploy
 
