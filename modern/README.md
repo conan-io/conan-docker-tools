@@ -139,7 +139,7 @@ These images are mainly focused for Conan Center CI.
 | [conanio/gcc8-ubuntu16.04-jenkins: gcc 8](https://hub.docker.com/r/conanio/gcc8-ubuntu16.04-jenkins/)     | x86_64  | :warning: Deprecated         |
 | [conanio/gcc9-ubuntu16.04-jenkins: gcc 9](https://hub.docker.com/r/conanio/gcc9-ubuntu16.04-jenkins/)     | x86_64  | :warning: Deprecated         |
 | [conanio/gcc10-ubuntu16.04-jenkins: gcc 10](https://hub.docker.com/r/conanio/gcc10-ubuntu16.04-jenkins/)  | x86_64  | :warning: Deprecated         |
-| [conanio/gcc11-ubuntu16.04-jenkins: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04-jenkins/)  | x86_64  | :warning: Supported          |
+| [conanio/gcc11-ubuntu16.04-jenkins: gcc 11](https://hub.docker.com/r/conanio/gcc11-ubuntu16.04-jenkins/)  | x86_64  | :white_check_mark: Supported          |
 | [conanio/gcc12-ubuntu16.04-jenkins: gcc 12](https://hub.docker.com/r/conanio/gcc12-ubuntu16.04-jenkins/)  | x86_64  | :warning: Deprecated         |
 | [conanio/gcc13-ubuntu16.04-jenkins: gcc 13](https://hub.docker.com/r/conanio/gcc13-ubuntu16.04-jenkins/)  | x86_64  | :warning: Deprecated         |
 
@@ -156,7 +156,7 @@ These images are mainly focused for Conan Center CI.
 | [conanio/clang10-ubuntu16.04-jenkins: clang 10](https://hub.docker.com/r/conanio/clang10-ubuntu16.04-jenkins/) | x86_64 | :warning: Deprecated         |
 | [conanio/clang11-ubuntu16.04-jenkins: clang 11](https://hub.docker.com/r/conanio/clang11-ubuntu16.04-jenkins/) | x86_64 | :warning: Deprecated         |
 | [conanio/clang12-ubuntu16.04-jenkins: clang 12](https://hub.docker.com/r/conanio/clang12-ubuntu16.04-jenkins/) | x86_64 | :warning: Deprecated         |
-| [conanio/clang13-ubuntu16.04-jenkins: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04-jenkins/) | x86_64 | :warning: Supported          |
+| [conanio/clang13-ubuntu16.04-jenkins: clang 13](https://hub.docker.com/r/conanio/clang13-ubuntu16.04-jenkins/) | x86_64 | :white_check_mark: Supported          |
 | [conanio/clang14-ubuntu16.04-jenkins: clang 14](https://hub.docker.com/r/conanio/clang14-ubuntu16.04-jenkins/) | x86_64 | :warning: Deprecated         |
 
 
