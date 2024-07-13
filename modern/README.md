@@ -214,7 +214,7 @@ Use the images locally
 You can also use the images locally to build or test packages, this is an example command:
 
 ```shell
-docker run --rm -v /tmp/.conan:/home/conan/.conan conanio/gcc11-ubuntu16.04 bash -c "conan install --requires=boost/1.76.0@ --build=boost/1.76.0@"
+docker run --rm -v /tmp/.conan:/home/conan/.conan conanio/gcc11-ubuntu16.04 bash -c "conan install --requires=boost/1.85.0 --build=boost/1.85.0"
 ```
 
 This command is sharing ``/tmp/.conan`` as a shared folder with the conan home, so the Boost package will be built there.
