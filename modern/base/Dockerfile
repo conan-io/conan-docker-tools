@@ -75,6 +75,21 @@ RUN groupadd -f conan-1001 -g 1001 \
     && adduser conan sudo \
     && printf "conan ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
 
+ARG OPENSSL_VERSION
+
+RUN wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz \
+    && tar -xzf openssl-${OPENSSL_VERSION}.tar.gz \
+    && cd openssl-${OPENSSL_VERSION} \
+    && ./config --prefix=/usr/custom-ssl-${OPENSSL_VERSION} --openssldir=/usr/custom-ssl-${OPENSSL_VERSION} shared \
+    && make \
+    && make install \
+    && rm /usr/bin/openssl \
+    && ln -s /usr/local/bin/openssl /usr/bin/openssl \
+    && ldconfig \
+    && rm -rf openssl-${OPENSSL_VERSION}
+
+ENV LD_LIBRARY_PATH=/usr/custom-ssl-${OPENSSL_VERSION}/lib:$LD_LIBRARY_PATH
+
 ARG PYTHON_VERSION
 
 RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.githubusercontent.com/pyenv/pyenv-installer/56d708c8bda56370c4bc1e2fce68087cfcd007eb/bin/pyenv-installer \
@@ -82,7 +97,9 @@ RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.gith
     && /tmp/pyenv-installer \
     && rm /tmp/pyenv-installer \
     && update-alternatives --install /usr/bin/pyenv pyenv /opt/pyenv/bin/pyenv 100 \
-    && PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} \
+    && LDFLAGS="-L/usr/custom-ssl-${OPENSSL_VERSION}/lib" \
+    && CPPFLAGS="-I/usr/custom-ssl-${OPENSSL_VERSION}/include" \
+    && PYTHON_CONFIGURE_OPTS="--enable-shared --with-openssl=/usr/custom-ssl-${OPENSSL_VERSION}" pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
