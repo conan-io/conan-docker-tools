@@ -1,4 +1,0 @@
-deb [arch=armhf] http://old-releases.ubuntu.com/ubuntu/ disco main restricted universe multiverse
-deb [arch=armhf] http://old-releases.ubuntu.com/ubuntu/ disco-updates main restricted universe multiverse
-deb [arch=armhf] http://old-releases.ubuntu.com/ubuntu/ disco-security main restricted universe multiverse
-deb [arch=armhf] http://old-releases.ubuntu.com/ubuntu/ disco-backports main restricted universe multiverse
