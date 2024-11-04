@@ -19,6 +19,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    for file_path in ['legacy/.env', 'modern/.env']:
+    for file_path in ['images/.env']:
         update_versions(file_path, args.conan_version)
         print(f"Updated CONAN_VERSION and DOCKER_TAG to {args.conan_version} in {file_path}")

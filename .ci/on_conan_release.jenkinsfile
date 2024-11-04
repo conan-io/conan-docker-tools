@@ -9,20 +9,16 @@ node('Linux') {
         echo """
         - conan_version: ${params.conan_version}
         - build_new_images: ${params.build_new_images}
-        - build_old_images: ${params.build_old_images}
         """
     }
 
     stage('New docker images') {
         // Trigger the build
-        if (params.build_new_images || params.build_old_images) {
+        if (params.build_new_images) {
             // We need to wait for a while, to be sure that new release will be returned from the API
             sleep time: 120, unit: 'SECONDS'
             if (params.build_new_images) {
                 build(job: 'ConanCenterIndex', wait: false)
-            }
-            if (params.build_old_images) {
-                build(job: 'ConanCenterIndexLegacy', wait: false)
             }
         }
     }
@@ -38,15 +34,10 @@ node('Linux') {
                                        relativeTargetDir: 'conan-docker-tools']],
         ])
 
-        String content1 = readFile(file: 'conan-docker-tools/modern/.env')
+        String content1 = readFile(file: 'conan-docker-tools/images/.env')
         content1 = content1.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
         content1 = content1.replaceAll(/DOCKER_TAG=\d+\.\d+.\d+/, "DOCKER_TAG=${params.conan_version}")
-        writeFile(file: 'conan-docker-tools/modern/.env', text: content1)
-
-        String content2 = readFile(file: 'conan-docker-tools/legacy/.env')
-        content2 = content2.replaceAll(/CONAN_VERSION=\d+\.\d+.\d+/, "CONAN_VERSION=${params.conan_version}")
-        content2 = content2.replaceAll(/DOCKER_BUILD_TAG=\d+\.\d+.\d+/, "DOCKER_BUILD_TAG=${params.conan_version}")
-        writeFile(file: 'conan-docker-tools/legacy/.env', text: content2)
+        writeFile(file: 'conan-docker-tools/images/.env', text: content1)
 
         String branchName = "bot/release-${params.conan_version}".replaceAll(/\./, '_')
         dir('conan-docker-tools') {
