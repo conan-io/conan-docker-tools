@@ -168,16 +168,11 @@ def getModernImages(String pr_number, String registry) {
         List<String> conanVersions = envValues["CONAN_VERSIONS"].split(",")
         conanVersions.each({ String conanVersion ->
             List<String> gccVersions = envValues["GCC_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
-            List<String> clangVersions = envValues["CLANG_VERSIONS"].split(",").collect({String version -> return getVersionMajor(version)})
 
             images.add(defineModernBaseImageData(envValues, pr_number, registry, conanVersion))
 
             gccVersions.each({ String gccVersion ->
                 images.addAll(defineModernImagesData("gcc", gccVersion, envValues, pr_number, registry, conanVersion))
-            })
-
-            clangVersions.each({ String clangVersion ->
-                images.addAll(defineModernImagesData("clang", clangVersion, envValues, pr_number, registry, conanVersion))
             })
         })
     }
