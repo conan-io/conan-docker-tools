@@ -18,8 +18,9 @@ COPY conan.lock conanfile.txt /opt/conan/
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends software-properties-common \
     && add-apt-repository ppa:git-core/ppa -y \
-    && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \
+    && apt-get -qq update
+
+RUN apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \
        sudo \
        binutils \
        wget \
@@ -91,6 +92,23 @@ RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.gith
     && update-alternatives --install /usr/local/bin/pip pip /opt/pyenv/shims/pip 100 \
     && ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python${PYTHON_VERSION%.*}/site-packages/lsb_release.py \
     && pip install -q --upgrade --no-cache-dir pip
+
+# Python +3.10 requires OpenSSL 1.1.x, but Ubuntu 16.04 LTS ships with OpenSSL 1.0.x
+RUN wget --no-check-certificate --quiet -O /tmp/openssl-1.1.1w.tar.gz https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1w/openssl-1.1.1w.tar.gz \
+    && tar -xzf /tmp/openssl-1.1.1w.tar.gz -C /tmp \
+    && cd /tmp/openssl-1.1.1w \
+    && ./Configure linux-x86_64 --prefix=/opt/ssl --openssldir=/etc/ssl --libdir=lib no-tests no-unit-test shared \
+    && make -j$(nproc) \
+    && make install_sw install_ssldirs \
+    && rm -rf /tmp/openssl-1.1.1w*
+
+ARG PYTHON_SECOND_VERSION
+
+RUN CPPFLAGS=-I/opt/ssl/include \
+    LDFLAGS="-Wl,-rpath,/opt/ssl/lib" \
+    PYTHON_CONFIGURE_OPTS="--enable-shared --with-openssl=/opt/ssl --with-openssl-rpath=auto" \
+    pyenv install ${PYTHON_SECOND_VERSION} \
+    && update-alternatives --install /usr/local/bin/python${PYTHON_SECOND_VERSION%.*} python${PYTHON_SECOND_VERSION%.*} /opt/pyenv/versions/${PYTHON_SECOND_VERSION}/bin/python${PYTHON_SECOND_VERSION%.*} 100
 
 RUN printf '/usr/local/lib\n' > /etc/ld.so.conf.d/20local-lib.conf \
     && printf '/usr/local/lib64\n' >> /etc/ld.so.conf.d/20local-lib.conf \
