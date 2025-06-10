@@ -89,6 +89,7 @@ def defineModernBaseImageData(Map envValues, String pr_number, String registry, 
     imageData["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     imageData["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     imageData["buildArgs"]['PYTHON_SECOND_VERSION'] = envValues["PYTHON_SECOND_VERSION"]
+    imageData["buildArgs"]['OPENSSL_VERSION'] = envValues["OPENSSL_VERSION"]
     imageData["name"] = getModernImageName(imageData, registry)
     // pull images from registry to be used as cache
     String masterImageName = getImageMasterName(imageData)
@@ -110,6 +111,7 @@ def defineModernImagesData(String compiler, String compilerVersion, Map envValue
     builderImage["buildArgs"]["CMAKE_VERSION"] = envValues["CMAKE_VERSION"]
     builderImage["buildArgs"]['PYTHON_VERSION'] = envValues["PYTHON_VERSION"]
     builderImage["buildArgs"]['PYTHON_SECOND_VERSION'] = envValues["PYTHON_SECOND_VERSION"]
+    builderImage["buildArgs"]['OPENSSL_VERSION'] = envValues["OPENSSL_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_VERSION'] = envValues["LIBSTDCPP_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_PATCH_VERSION'] = envValues["LIBSTDCPP_PATCH_VERSION"]
     builderImage["buildArgs"]['LIBSTDCPP_MAJOR_VERSION'] = envValues["LIBSTDCPP_MAJOR_VERSION"]

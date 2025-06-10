@@ -93,14 +93,16 @@ RUN wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://raw.gith
     && ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/${PYTHON_VERSION}/lib/python${PYTHON_VERSION%.*}/site-packages/lsb_release.py \
     && pip install -q --upgrade --no-cache-dir pip
 
-# Python +3.10 requires OpenSSL 1.1.x, but Ubuntu 16.04 LTS ships with OpenSSL 1.0.x
-RUN wget --no-check-certificate --quiet -O /tmp/openssl-1.1.1w.tar.gz https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1w/openssl-1.1.1w.tar.gz \
-    && tar -xzf /tmp/openssl-1.1.1w.tar.gz -C /tmp \
-    && cd /tmp/openssl-1.1.1w \
+# Python +3.10 requires OpenSSL +1.1.x, but Ubuntu 16.04 LTS ships with OpenSSL 1.0.x
+ARG OPENSSL_VERSION
+
+RUN wget --no-check-certificate --quiet -O /tmp/openssl.tar.gz https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz \
+    && tar -xzf /tmp/openssl.tar.gz -C /tmp \
+    && cd /tmp/openssl-${OPENSSL_VERSION} \
     && ./Configure linux-x86_64 --prefix=/opt/ssl --openssldir=/etc/ssl --libdir=lib no-tests no-unit-test shared \
     && make -j$(nproc) \
     && make install_sw install_ssldirs \
-    && rm -rf /tmp/openssl-1.1.1w*
+    && rm -rf /tmp/openssl*
 
 ARG PYTHON_SECOND_VERSION
 
