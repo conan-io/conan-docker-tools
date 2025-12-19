@@ -1,6 +1,10 @@
 ARG SOURCE_CONANIO_IMAGE
 FROM $SOURCE_CONANIO_IMAGE as base
 
+LABEL deprecated="true"
+LABEL deprecation.message="This image is deprecated."
+LABEL deprecation.date="2025-12-19"
+
 USER root
 
 COPY install-openjdk-ppa.sh /tmp/install-openjdk-ppa.sh

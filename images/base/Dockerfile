@@ -3,6 +3,9 @@ ARG DISTRO_VERSION
 FROM ubuntu:${DISTRO_VERSION}
 
 LABEL maintainer="Conan.io <info@conan.io>"
+LABEL deprecated="true"
+LABEL deprecation.message="This image is deprecated."
+LABEL deprecation.date="2025-12-19"
 
 ENV PYENV_ROOT=/opt/pyenv \
     PATH=/opt/pyenv/shims:/opt/conan/binutils/bin:${PATH} \

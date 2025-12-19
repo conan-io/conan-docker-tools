@@ -7,6 +7,9 @@ ARG SUFFIX
 FROM ubuntu:${DISTRO_VERSION} as builder
 
 LABEL maintainer="Conan.io <info@conan.io>"
+LABEL deprecated="true"
+LABEL deprecation.message="This image is deprecated."
+LABEL deprecation.date="2025-12-19"
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 \

@@ -1,3 +1,5 @@
+> :no_entry: This repository is now deprecated. The Docker recipes and images provided by this repository are no longer used by ConanCenterIndex CI. Users are encouraged to explore alternative solutions for their Docker image needs.
+
 | Service | OS |  Status  |
 |---------|----|----------|
 | Jenkins | Linux | [![Build Status](https://ci.conan.io/buildStatus/icon?job=ConanDockerTools%2Ftesting%2Fmaster)](https://ci.conan.io/job/ConanDockerTools/job/testing/job/master/)  |

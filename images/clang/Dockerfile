@@ -8,6 +8,10 @@ ARG SUFFIX
 
 FROM ubuntu:${DISTRO_VERSION} as builder
 
+LABEL deprecated="true"
+LABEL deprecation.message="This image is deprecated."
+LABEL deprecation.date="2025-12-19"
+
 LABEL maintainer="Conan.io <info@conan.io>"
 
 # FIXME: Clang 9 and 10 fail to build libcxx because they try to link libc++abi from system.
